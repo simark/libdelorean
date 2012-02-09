@@ -24,7 +24,7 @@ RM = rm -f
 all: $(TARGET)
 
 # run target
-run:
+run: $(TARGET)
 	LD_LIBRARY_PATH=$(LIB_PATH) ./test
 
 # target

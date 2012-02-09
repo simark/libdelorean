@@ -13,10 +13,9 @@ class Interval : public IPrintable
 public:
 	Interval(uint64_t start, uint64_t end, int attribute);
 	virtual ~Interval();
-	virtual std::string getStringValue(void) const = 0;	
+	virtual std::string getStringValue(void) const = 0;
 	static std::tr1::shared_ptr<Interval> readFrom(/*Buffer*/);
 	std::string toString(void) const;
-	friend std::ostream& operator<<(std::ostream& out, Interval& intr);
 	bool intersects(uint64_t ts) const;
 	uint64_t getStart(void) const {
 		return _start;
@@ -27,6 +26,14 @@ public:
 	uint64_t getAttribute(void) const {
 		return _attribute;
 	}
+	bool operator==(const Interval& other);
+	bool operator<(const Interval& other);
+	bool operator<=(const Interval& other);
+	bool operator!=(const Interval& other);
+	bool operator>(const Interval& other);
+	bool operator>=(const Interval& other);
+	
+	friend std::ostream& operator<<(const std::ostream& out, const Interval& intr);
 
 private:
 	uint64_t _start;

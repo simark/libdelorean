@@ -22,4 +22,3 @@ std::string IntInterval::getStringValue(void) const
 	oss << _value;
 	return oss.str();
 }
-

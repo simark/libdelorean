@@ -38,15 +38,7 @@ std::tr1::shared_ptr<Interval> Interval::readFrom(/*Buffer*/)
 }
 
 std::string Interval::toString(void) const
-{
-	/*
-	StringBuffer buf = new StringBuffer(start + " to ");
-        buf.append(end + "  ");
-        buf.append(String.format("key = %4d, ", attribute));
-        buf.append("value = " + sv.toString());
-        return buf.toString();
-        */
-	
+{	
 	std::ostringstream oss;
 	oss << "[" << this->_start << " to " << this->_end << "] " <<
 		"[key = " << std::setw(5) << this->_attribute << "] " <<
@@ -58,9 +50,39 @@ bool Interval::intersects(uint64_t ts) const {
 	return this->_start <= ts && this->_end >= ts;
 }
 
-ostream& operator<<(ostream& out, Interval& intr)
+ostream& operator<<(ostream& out, const Interval& intr)
 {
 	out << intr.toString();
 	
 	return out;
+}
+
+bool Interval::operator==(const Interval& other)
+{
+	return this->_end == other._end;
+}
+
+bool Interval::operator<(const Interval& other)
+{
+	return this->_end < other._end;
+}
+
+bool Interval::operator<=(const Interval& other)
+{
+	return this->_end <= other._end;
+}
+
+bool Interval::operator!=(const Interval& other)
+{
+	return this->_end != other._end;
+}
+
+bool Interval::operator>(const Interval& other)
+{
+	return this->_end > other._end;
+}
+
+bool Interval::operator>=(const Interval& other)
+{
+	return this->_end >= other._end;
 }
