@@ -2,6 +2,7 @@
 #include "HistoryTree.hpp"
 
 HistoryTreeNode::HistoryTreeNode()
+:nbChildren(0)
 {
 }
 

@@ -31,6 +31,26 @@ std::vector< std::tr1::shared_ptr<Interval> > HistoryTreeBackend::query(uint64_t
 		vecInterval.push_back(interval);
 	}
 	return vecInterval;
+	
+	if ( !checkValidTime(t) ) {
+		//FIXME : Throw an exception here
+	}
+	
+	/* We start by reading the information in the root node */
+	//FIXME using CoreNode for now, we'll have to redo this part to handle different node types
+	HistoryTreeNode currentNode = sht.latestBranch.firstElement();
+	vector<shared_ptr<Interval> > relevantIntervals;
+	currentNode.writeInfoFromNode(relevantIntervals, timestamp);
+	
+	/* Then we follow the branch down in the relevant children */
+	while ( currentNode.getNbChildren() > 0 ) {
+		currentNode = sht.selectNextChild(currentNode, timestamp);
+		currentNode.writeInfoFromNode(relevantIntervals, timestamp);
+	}
+	
+	/* The relevantIntervals should now be filled with everything needed, we pass
+	 * the control back to the State System. */
+	return;	
 }
 
 std::tr1::shared_ptr<Interval> HistoryTreeBackend::query(uint64_t timestamp, int key) const
