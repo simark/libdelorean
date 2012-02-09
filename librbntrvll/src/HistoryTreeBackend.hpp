@@ -29,6 +29,8 @@ public:
 private:
 	HistoryTree _historyTree;
 	
+	bool checkValidTime(uint64_t timestamp) const;
+	
 };
 
 #endif // _HISTORYTREEBACKEND_HPP

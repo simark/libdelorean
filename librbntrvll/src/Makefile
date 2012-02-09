@@ -3,8 +3,8 @@
 # author:	Philippe Proulx <philippe.proulx@polymtl.ca>
 
 # files
-SRC = HistoryTreeBackend.cpp HistoryTree.cpp HistoryTreeNode.cpp Interval.cpp IntInterval.cpp
-H_SRC = HistoryTreeBackend.hpp HistoryTree.hpp HistoryTreeNode.hpp Interval.hpp IntInterval.hpp IPrintable.hpp
+SRC = HistoryTreeBackend.cpp HistoryTree.cpp HistoryTreeNode.cpp HistoryTreeConfig.cpp HistoryTreeIO.cpp Interval.cpp IntInterval.cpp
+H_SRC = HistoryTreeBackend.hpp HistoryTree.hpp HistoryTreeNode.hpp HistoryTreeConfig.hpp HistoryTreeIO.hpp Interval.hpp IntInterval.hpp IPrintable.hpp
 TARGET_NAME = librbntrvll
 TARGET_SONAME = $(TARGET_NAME).so.1
 TARGET_SO = $(TARGET_NAME).so.1.0
