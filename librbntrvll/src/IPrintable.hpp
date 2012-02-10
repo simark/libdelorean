@@ -1,5 +1,5 @@
-#ifndef _IPRINTABLE_H
-#define _IPRINTABLE_H
+#ifndef _IPRINTABLE_HPP
+#define _IPRINTABLE_HPP
 
 #include <string>
 
@@ -9,4 +9,4 @@ class IPrintable
 	virtual std::string toString(void) const = 0;
 };
 
-#endif // _IPRINTABLE_H
+#endif // _IPRINTABLE_HPP

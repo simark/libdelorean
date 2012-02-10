@@ -16,27 +16,6 @@ Interval::~Interval()
 {
 }
 
-std::tr1::shared_ptr<Interval> Interval::readFrom(/*Buffer*/)
-{
-	//Read start, end, attribute + other generic infos
-	uint64_t start;
-	uint64_t end;
-	int attribute;
-	int type;
-	std::tr1::shared_ptr<Interval> interval;
-	
-	switch(type)
-	{
-		case 0: interval = std::tr1::shared_ptr<Interval>(new IntInterval(start, end, attribute/*Buffer*/));
-			break;
-		case 1:
-			break;
-		default:
-			break;
-	}
-	return interval;
-}
-
 std::string Interval::toString(void) const
 {	
 	std::ostringstream oss;

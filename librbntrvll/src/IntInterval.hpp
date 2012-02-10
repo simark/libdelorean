@@ -6,13 +6,15 @@
 class IntInterval : public Interval
 {
 public:
+	IntInterval(void) { }
 	IntInterval(uint64_t start, uint64_t end, int attribute, int value);
-	IntInterval(uint64_t start, uint64_t end, int attribute/*, Buffer*/);
-	virtual ~IntInterval();
-	virtual std::string getStringValue(void) const;
-	
+	std::string getStringValue(void) const;
+	void serialize(void* var_addr, void* u32_addr) const;
+	void unserialize(void* var_addr, void* u32_addr);
+	unsigned int getVariableValueSize(void) const;
+
 private:
-	int _value;
+	int32_t _value;
 };
 
 #endif // _INTINTERVAL_HPP
