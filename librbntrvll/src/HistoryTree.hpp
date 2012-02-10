@@ -4,12 +4,15 @@
 #include "HistoryTreeNode.hpp"
 #include "HistoryTreeConfig.hpp"
 #include "HistoryTreeIO.hpp"
+#include "Interval.hpp"
 
 class HistoryTree
 {
 public:
 	HistoryTree();
 	virtual ~HistoryTree();
+	
+	void insertInterval(const Interval& interval);
 	
 	HistoryTreeNode selectNextChild(const HistoryTreeNode& currentNode, uint64_t timestamp) const;
 		
@@ -26,21 +29,23 @@ public:
 	
 	uint64_t getTreeEnd() const
 	{
-		return treeEnd;
+		return _treeEnd;
 	}
 	
 	uint64_t getNodeCount() const
 	{
-		return nodeCount;
+		return _nodeCount;
 	}
 private:
 	HistoryTreeConfig _config;
 	HistoryTreeIO _treeIO;
 	
-	uint64_t treeEnd;	/* Latest timestamp found in the tree (at any given moment) */
-	int nodeCount;		/* How many nodes exist in this tree, total */
+	uint64_t _treeEnd;	/* Latest timestamp found in the tree (at any given moment) */
+	int _nodeCount;		/* How many nodes exist in this tree, total */
 	
 	std::vector<HistoryTreeNode> _latestBranch;
+	
+	void tryInsertAtNode(const Interval& interval, int indexOfNode);
 };
 
 #endif // _HISTORYTREE_HPP

@@ -40,3 +40,13 @@ int HistoryTreeNode::getStartIndexFor(uint64_t timestamp) const
 	//FIXME Use a binary search algorithm to find the correct index
 	return 0;
 }
+
+int HistoryTreeNode::getNodeFreeSpace()
+{
+	return _stringSectionOffset - getDataSectionEndOffset();
+}
+
+int HistoryTreeNode::getDataSectionEndOffset() const
+{
+	return getTotalHeaderSize() + Interval::getStaticEntrySize() * _intervals.size();
+}

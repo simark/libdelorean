@@ -19,6 +19,7 @@ HistoryTreeBackend::~HistoryTreeBackend()
 
 void HistoryTreeBackend::insertInterval(const Interval& interval)
 {
+	_historyTree.insertInterval(interval);
 }
 
 void HistoryTreeBackend::finish(uint64_t timestamp)

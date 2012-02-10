@@ -27,6 +27,25 @@ public:
 	uint64_t getAttribute(void) const {
 		return _attribute;
 	}
+	
+	virtual int getVariableEntrySize() const{
+		return _variableEntrySize;
+	}
+	
+	static int getStaticEntrySize(){
+		return    16	/* 2 x Timevalue/long (interval start + end) */
+			 + 4	/* int (key) */
+			 + 1	/* byte (type) */
+			 + 4;	/* int (valueOffset) */
+		      /* = 25 */
+	}
+	
+	int getIntervalSize() const {
+		return getVariableEntrySize() + getStaticEntrySize();
+	}
+protected:
+	//FIXME should this be declared here? It is derived-class specific
+	int _variableEntrySize;
 
 private:
 	uint64_t _start;

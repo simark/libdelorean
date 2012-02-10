@@ -19,6 +19,19 @@ public:
 	
 	int getStartIndexFor(uint64_t timestamp) const;
 	
+	int getNodeFreeSpace();
+	
+	uint64_t getNodeStart() const {return _nodeStart;}
+	
+	uint64_t getNodeEnd() const 
+	{		
+		if ( _isDone ) {
+			return _nodeEnd;
+		} else {
+			return 0;
+		}
+	}
+	
 	int getNbChildren() const
 	{
 		return _nbChildren;
@@ -68,6 +81,9 @@ private:
 	int _nbChildren;	/* Nb. of children this node has */
 	int* _children;		/* Seq. numbers of the children nodes (size = MAX_NB_CHILDREN) */
 	uint64_t* _childStart;	/* Start times of each of the children (size = MAX_NB_CHILDREN) */
+	
+	
+	int getDataSectionEndOffset();
 };
 
 #endif // _HISTORYTREENODE_HPP
