@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-IntInterval::IntInterval(uint64_t start, uint64_t end, int attribute, int value)
+IntInterval::IntInterval(uint64_t start, uint64_t end, uint32_t attribute, int32_t value)
 :Interval(start, end, attribute), _value(value)
 {
 }

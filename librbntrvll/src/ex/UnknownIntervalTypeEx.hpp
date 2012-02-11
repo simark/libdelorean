@@ -2,18 +2,14 @@
 #define _UNKNOWNINTERVALTYPE_HPP
 
 #include <string>
-#include <exception>
+#include <stdexcept>
 
-class UnknownIntervalTypeEx : public std::exception
+class UnknownIntervalTypeEx : public std::runtime_error
 {
 public:
-	UnknownIntervalTypeEx(void);
-	const char* what() const throw();
-	~UnknownIntervalTypeEx(void) throw() { }
-
-private:
-	std::string _msg;
+	UnknownIntervalTypeEx(const std::string& msg) : runtime_error(msg) { }
 };
+
 
 #endif // _UNKNOWNINTERVALTYPE_HPP
 

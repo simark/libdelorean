@@ -8,6 +8,7 @@ class IntIntervalFactory : public IIntervalFactory
 {
 public:
 	IntervalSharedPtr create(void) const;
+	~IntIntervalFactory(void) { }
 };
 
 #endif // _INTINTERVALFACTORY_HPP

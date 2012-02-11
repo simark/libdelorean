@@ -3,12 +3,36 @@
 # author:	Philippe Proulx <philippe.proulx@polymtl.ca>
 
 # files
-SRC = HistoryTreeBackend.cpp HistoryTree.cpp HistoryTreeNode.cpp Interval.cpp \
-	UIntInterval.cpp IntInterval.cpp IntIntervalFactory.cpp IntervalCreator.cpp \
-	ex/UnknownIntervalTypeEx.cpp ex/ExistingIntervalTypeEx.cpp
-H_SRC = HistoryTreeBackend.hpp HistoryTree.hpp HistoryTreeNode.hpp Interval.hpp \
-	UIntInterval.hpp IntInterval.hpp IPrintable.hpp IIntervalFactory.hpp IntIntervalFactory.hpp \
-	IntervalCreator.hpp ex/UnknownIntervalTypeEx.hpp ex/ExistingIntervalTypeEx.hpp
+SRC = \
+	HistoryTreeBackend.cpp \
+	HistoryTree.cpp \
+	HistoryTreeNode.cpp \
+	Interval.cpp \
+	StringInterval.cpp \
+	StringIntervalFactory.cpp \
+	UIntInterval.cpp \
+	UIntIntervalFactory.cpp \
+	IntInterval.cpp \
+	IntIntervalFactory.cpp \
+	IntervalCreator.cpp \
+	ex/UnknownIntervalTypeEx.cpp \
+	ex/ExistingIntervalTypeEx.cpp
+H_SRC = \
+	HistoryTreeBackend.hpp \
+	HistoryTree.hpp \
+	HistoryTreeNode.hpp \
+	Interval.hpp \
+	StringInterval.hpp \
+	StringIntervalFactory.hpp \
+	UIntInterval.hpp \
+	UIntIntervalFactory.hpp \
+	IntInterval.hpp \
+	IntIntervalFactory.hpp \
+	IPrintable.hpp \
+	IIntervalFactory.hpp \
+	IntervalCreator.hpp \
+	ex/UnknownIntervalTypeEx.hpp \
+	ex/ExistingIntervalTypeEx.hpp
 TARGET_NAME = librbntrvll
 TARGET_SONAME = $(TARGET_NAME).so.1
 TARGET_SO = $(TARGET_NAME).so.1.0

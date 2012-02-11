@@ -2,17 +2,12 @@
 #define _EXISTINGINTERVALTYPEEX_HPP
 
 #include <string>
-#include <exception>
+#include <stdexcept>
 
-class ExistingIntervalTypeEx : public std::exception
+class ExistingIntervalTypeEx : public std::runtime_error
 {
 public:
-	ExistingIntervalTypeEx(void);
-	const char* what() const throw();
-	~ExistingIntervalTypeEx(void) throw() { }
-
-private:
-	std::string _msg;
+	ExistingIntervalTypeEx(const std::string& msg) : runtime_error(msg) { }
 };
 
 #endif // _EXISTINGINTERVALTYPEEX_HPP

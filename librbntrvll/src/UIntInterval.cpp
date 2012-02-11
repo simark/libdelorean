@@ -2,8 +2,8 @@
 
 #include <sstream>
 
-UIntInterval::UIntInterval(uint64_t start, uint64_t end, int attribute, int value)
-:Interval(start, end, attribute), _value(value)
+UIntInterval::UIntInterval(uint64_t start, uint64_t end, uint32_t attribute, uint32_t value)
+: Interval(start, end, attribute), _value(value)
 {
 }
 

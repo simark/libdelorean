@@ -7,12 +7,8 @@
 
 using namespace std;
 
-Interval::Interval(uint64_t start, uint64_t end, int attribute)
+Interval::Interval(uint64_t start, uint64_t end, uint32_t attribute)
 : _start(start), _end(end), _attribute(attribute)
-{
-}
-
-Interval::~Interval()
 {
 }
 
@@ -29,7 +25,7 @@ bool Interval::intersects(uint64_t ts) const {
 	return this->_start <= ts && this->_end >= ts;
 }
 
-ostream& operator<<(ostream& out, const Interval& intr)
+ostream& operator<<(ostream& out, Interval const& intr)
 {
 	out << intr.toString();
 	
