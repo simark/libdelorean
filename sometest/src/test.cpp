@@ -1,29 +1,70 @@
 #include <tr1/memory>
 #include <iostream>
+#include <exception>
+#include <cstring>
 
+#include <IntIntervalFactory.hpp>
 #include <IntInterval.hpp>
+#include <IntervalCreator.hpp>
+#include <StringInterval.hpp>
 
 using namespace std;
 using namespace std::tr1;
 
 static void testInterval(void) {
-	// printing (mostly for debugging)
-	shared_ptr<IntInterval> int_interval(new IntInterval(23, 119, 1, -76));
+	// create factory
+	IIntervalFactory* factory = new IntIntervalFactory();
+	
+	// create interval
+	IntervalSharedPtr interval = factory->create();
+	delete factory;
+	
+	// set attributes
+	interval->setStart(23)->setEnd(119)->setAttribute(11);
+	int32_t val = -4123;
+	interval->unserialize(NULL, &val);	
+	
+	// printing (debugging)
 	cout << "printing:\n" << endl;
-	cout << *int_interval << endl;
+	cout << *interval << endl;
 	
 	// intersects
 	cout << "intersects:\n" << endl;
-	cout << "22 : " << int_interval->intersects(22) << endl <<
-		"23 : " << int_interval->intersects(23) << endl <<
-		"24 : " << int_interval->intersects(24) << endl <<
-		"118 : " << int_interval->intersects(118) << endl <<
-		"119 : " << int_interval->intersects(119) << endl <<
-		"120 : " << int_interval->intersects(120) << endl;
+	cout << "22 : " << interval->intersects(22) << endl <<
+		"23 : " << interval->intersects(23) << endl <<
+		"24 : " << interval->intersects(24) << endl <<
+		"118 : " << interval->intersects(118) << endl <<
+		"119 : " << interval->intersects(119) << endl <<
+		"120 : " << interval->intersects(120) << endl;
+}
+
+static void testStringInterval(void) {
+	char somebuf [] = "    here is a string";
+	uint32_t len = strlen(somebuf) - 4;
+	memcpy(somebuf, &len, 4);
+	IntervalSharedPtr interval(new StringInterval());
+	interval->unserialize(somebuf, NULL);
+	interval->setInterval(13, 4657);
+	interval->setAttribute(1422);
+	cout << *interval << endl;
+}
+
+static void testIntervalCreator(void) {
+	IntervalCreator creator;
+	IntervalSharedPtr interval;
+	
+	try {
+		creator.createIntervalFromType(1);
+		creator.createIntervalFromType(5);
+	} catch (const exception& ex) {
+		cout << ex.what() << endl;
+	}
 }
 
 int main(void) {
-	testInterval();	
+	testInterval();
+	testIntervalCreator();
+	testStringInterval();
 	
 	return 0;
 }
