@@ -6,6 +6,7 @@
 #include "IntIntervalFactory.hpp"
 #include "UIntIntervalFactory.hpp"
 #include "StringIntervalFactory.hpp"
+#include "FloatIntervalFactory.hpp"
 #include "simple_interval_types.h"
 #include "ex/UnknownIntervalTypeEx.hpp"
 #include "ex/ExistingIntervalTypeEx.hpp"
@@ -20,6 +21,7 @@ IntervalCreator::IntervalCreator(void) {
 	this->registerIntervalType(SIT_INT32, new IntIntervalFactory());
 	this->registerIntervalType(SIT_UINT32, new UIntIntervalFactory());
 	this->registerIntervalType(SIT_STRING, new StringIntervalFactory());
+	this->registerIntervalType(SIT_FLOAT32, new FloatIntervalFactory());
 }
 
 void IntervalCreator::unregisterIntervalType(uint8_t type) {

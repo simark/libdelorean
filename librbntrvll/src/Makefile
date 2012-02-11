@@ -14,6 +14,8 @@ SRC = \
 	UIntIntervalFactory.cpp \
 	IntInterval.cpp \
 	IntIntervalFactory.cpp \
+	FloatInterval.cpp \
+	FloatIntervalFactory.cpp \
 	IntervalCreator.cpp \
 	ex/UnknownIntervalTypeEx.cpp \
 	ex/ExistingIntervalTypeEx.cpp
@@ -28,6 +30,8 @@ H_SRC = \
 	UIntIntervalFactory.hpp \
 	IntInterval.hpp \
 	IntIntervalFactory.hpp \
+	FloatInterval.hpp \
+	FloatIntervalFactory.hpp \
 	IPrintable.hpp \
 	IIntervalFactory.hpp \
 	IntervalCreator.hpp \
