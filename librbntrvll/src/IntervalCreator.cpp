@@ -5,6 +5,8 @@
 #include "IntIntervalFactory.hpp"
 #include "IntInterval.hpp"
 #include "simple_interval_types.h"
+#include "ex/UnknownIntervalTypeEx.hpp"
+#include "ex/ExistingIntervalTypeEx.hpp"
 
 IntervalCreator::IntervalCreator(void) {
 	// reset all factories
@@ -13,18 +15,18 @@ IntervalCreator::IntervalCreator(void) {
 	}
 	
 	// register simple ones (we know them)
-	this->registerFactory(IST_INT32, new IntIntervalFactory());
+	this->registerIntervalType(IST_INT32, new IntIntervalFactory());
 }
 
-void IntervalCreator::unregisterFactory(uint8_t type) {
+void IntervalCreator::unregisterIntervalType(uint8_t type) {
 	if (this->_factories[type] != NULL) {
 		delete this->_factories[type];
 	}
 }
 
-void IntervalCreator::registerFactory(uint8_t type, IIntervalFactory* factory) throw(FactoryOverwritingEx) {
+void IntervalCreator::registerIntervalType(uint8_t type, IIntervalFactory* factory) throw(ExistingIntervalTypeEx) {
 	if (this->_factories[type] == NULL) {
-		throw new FactoryOverwritingEx;
+		throw new ExistingIntervalTypeEx();
 	} else {
 		this->_factories[type] = factory;
 	}
@@ -32,13 +34,13 @@ void IntervalCreator::registerFactory(uint8_t type, IIntervalFactory* factory) t
 
 void IntervalCreator::unregisterAll(void) {
 	for (unsigned int i = 0; i < 256; ++i) {
-		this->unregisterFactory(i);
+		this->unregisterIntervalType(i);
 	}
 }
 
-IntervalSharedPtr IntervalCreator::createFromType(uint8_t type) throw(NonexistentFactoryEx) {
+IntervalSharedPtr IntervalCreator::createIntervalFromType(uint8_t type) throw(UnknownIntervalTypeEx) {
 	if (this->_factories[type] == NULL) {
-		throw new NonexistentFactoryEx();
+		throw new UnknownIntervalTypeEx();
 	}
 	
 	return this->_factories[type]->create();

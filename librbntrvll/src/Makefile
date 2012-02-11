@@ -5,10 +5,10 @@
 # files
 SRC = HistoryTreeBackend.cpp HistoryTree.cpp HistoryTreeNode.cpp Interval.cpp \
 	UIntInterval.cpp IntInterval.cpp IntIntervalFactory.cpp IntervalCreator.cpp \
-	ex/NonexistentFactoryEx.cpp ex/FactoryOverwritingEx.cpp
+	ex/UnknownIntervalTypeEx.cpp ex/ExistingIntervalTypeEx.cpp
 H_SRC = HistoryTreeBackend.hpp HistoryTree.hpp HistoryTreeNode.hpp Interval.hpp \
 	UIntInterval.hpp IntInterval.hpp IPrintable.hpp IIntervalFactory.hpp IntIntervalFactory.hpp \
-	IntervalCreator.hpp ex/NonexistentFactoryEx.hpp ex/FactoryOverwritingEx.hpp
+	IntervalCreator.hpp ex/UnknownIntervalTypeEx.hpp ex/ExistingIntervalTypeEx.hpp
 TARGET_NAME = librbntrvll
 TARGET_SONAME = $(TARGET_NAME).so.1
 TARGET_SO = $(TARGET_NAME).so.1.0

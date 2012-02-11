@@ -3,17 +3,17 @@
 
 #include "Interval.hpp"
 #include "IIntervalFactory.hpp"
-#include "ex/NonexistentFactoryEx.hpp"
-#include "ex/FactoryOverwritingEx.hpp"
+#include "ex/UnknownIntervalTypeEx.hpp"
+#include "ex/ExistingIntervalTypeEx.hpp"
 
 class IntervalCreator
 {
 public:
 	IntervalCreator(void);
-	void registerFactory(uint8_t type, IIntervalFactory* factory) throw(FactoryOverwritingEx);
-	void unregisterFactory(uint8_t type);
+	void registerIntervalType(uint8_t type, IIntervalFactory* factory) throw(ExistingIntervalTypeEx);
+	void unregisterIntervalType(uint8_t type);
 	void unregisterAll(void);
-	IntervalSharedPtr createFromType(uint8_t type) throw(NonexistentFactoryEx);
+	IntervalSharedPtr createIntervalFromType(uint8_t type) throw(UnknownIntervalTypeEx);
 
 private:
 	IIntervalFactory* _factories [256];
