@@ -4,6 +4,8 @@
 #include <string>
 #include <stdexcept>
 
+#include "../basic_types.h"
+
 class ExistingIntervalTypeEx : public std::runtime_error
 {
 public:

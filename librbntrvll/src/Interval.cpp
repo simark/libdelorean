@@ -2,26 +2,27 @@
 #include <iomanip>
 #include <iostream>
 
+#include "basic_types.h"
 #include "Interval.hpp"
 #include "IntInterval.hpp"
 
 using namespace std;
 
-Interval::Interval(uint64_t start, uint64_t end, uint32_t attribute)
+Interval::Interval(timestamp_t start, timestamp_t end, attribute_t attribute)
 : _start(start), _end(end), _attribute(attribute)
 {
 }
 
 std::string Interval::toString(void) const
 {	
-	std::ostringstream oss;
+	ostringstream oss;
 	oss << "[" << this->_start << " to " << this->_end << "] " <<
 		"[key = " << std::setw(5) << this->_attribute << "] " <<
 		"[value = " << this->getStringValue() << "]";
 	return oss.str();
 }
 
-bool Interval::intersects(uint64_t ts) const {
+bool Interval::intersects(timestamp_t ts) const {
 	return this->_start <= ts && this->_end >= ts;
 }
 

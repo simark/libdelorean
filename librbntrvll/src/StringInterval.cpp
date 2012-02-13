@@ -1,16 +1,17 @@
-#include "StringInterval.hpp"
-
 #include <sstream>
 #include <cstring>
 
+#include "StringInterval.hpp"
+#include "basic_types.h"
+
 using namespace std;
 
-StringInterval::StringInterval(uint64_t start, uint64_t end, uint32_t attribute, string value)
+StringInterval::StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, string value)
 : Interval(start, end, attribute), _value(value)
 {
 }
 
-StringInterval::StringInterval(uint64_t start, uint64_t end, uint32_t attribute, const char* value)
+StringInterval::StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, const char* value)
 : Interval(start, end, attribute), _value(value)
 {
 }

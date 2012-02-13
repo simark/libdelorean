@@ -62,6 +62,7 @@ static void testIntervalCreator(void) {
 }
 
 int main(void) {
+	cout << sizeof(float) << endl;
 	testInterval();
 	testIntervalCreator();
 	testStringInterval();

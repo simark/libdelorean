@@ -1,7 +1,7 @@
 #ifndef _FLOATINTERVAL_HPP
 #define _FLOATINTERVAL_HPP
 
-#include <stdint.h>
+#include "basic_types.h"
 
 #include "Interval.hpp"
 
@@ -9,7 +9,7 @@ class FloatInterval : public Interval
 {
 public:
 	FloatInterval(void) { }
-	FloatInterval(uint64_t start, uint64_t end, uint32_t attribute, float value);
+	FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value);
 	std::string getStringValue(void) const;
 	void serialize(void* var_addr, void* u32_addr) const;
 	void unserialize(void* var_addr, void* u32_addr);

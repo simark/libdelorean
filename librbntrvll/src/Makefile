@@ -36,7 +36,9 @@ H_SRC = \
 	IIntervalFactory.hpp \
 	IntervalCreator.hpp \
 	ex/UnknownIntervalTypeEx.hpp \
-	ex/ExistingIntervalTypeEx.hpp
+	ex/ExistingIntervalTypeEx.hpp \
+	fixed_config.h \
+	basic_types.h
 TARGET_NAME = librbntrvll
 TARGET_SONAME = $(TARGET_NAME).so.1
 TARGET_SO = $(TARGET_NAME).so.1.0

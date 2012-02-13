@@ -1,8 +1,9 @@
 #include "FloatInterval.hpp"
+#include "basic_types.h"
 
 #include <sstream>
 
-FloatInterval::FloatInterval(uint64_t start, uint64_t end, uint32_t attribute, float value)
+FloatInterval::FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value)
 :Interval(start, end, attribute), _value(value)
 {
 }

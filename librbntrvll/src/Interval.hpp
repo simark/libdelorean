@@ -4,8 +4,8 @@
 #include <string>
 #include <tr1/memory>
 #include <iostream>
-#include <stdint.h>
 
+#include "basic_types.h"
 #include "IPrintable.hpp"
 
 class Interval;
@@ -16,7 +16,7 @@ class Interval : public IPrintable
 {
 public:
 	Interval(void) { }
-	Interval(uint64_t start, uint64_t end, uint32_t attribute);
+	Interval(timestamp_t start, timestamp_t end, attribute_t attribute);
 	virtual ~Interval() { }
 	virtual std::string getStringValue(void) const = 0;
 	virtual void serialize(void* var_addr, void* u32_addr) const = 0;
@@ -24,13 +24,13 @@ public:
 	virtual unsigned int getVariableValueSize(void) const = 0;
 	std::string toString(void) const;
 	bool intersects(uint64_t ts) const;
-	Interval* setInterval(uint64_t start, uint64_t end) {
+	Interval* setInterval(timestamp_t start, timestamp_t end) {
 		this->_start = start;
 		this->_end = end;
 		
 		return this;
 	}
-	Interval* setStart(uint64_t start) {
+	Interval* setStart(timestamp_t start) {
 		this->_start = start;
 		
 		return this;
@@ -38,7 +38,7 @@ public:
 	uint64_t getStart(void) const {
 		return this->_start;
 	}
-	Interval* setEnd(uint64_t end) {
+	Interval* setEnd(timestamp_t end) {
 		this->_end = end;
 		
 		return this;
@@ -46,7 +46,7 @@ public:
 	uint64_t getEnd(void) const {
 		return this->_end;
 	}
-	Interval* setAttribute(uint32_t attr) {
+	Interval* setAttribute(attribute_t attr) {
 		this->_attribute = attr;
 		
 		return this;
@@ -61,16 +61,14 @@ public:
 	bool operator>(const Interval& other);
 	bool operator>=(const Interval& other);
 	friend std::ostream& operator<<(std::ostream& out, const Interval& intr);
-	static std::tr1::shared_ptr<Interval> create(void);
 
 private:
-	uint64_t _start;
-	uint64_t _end;
+	// beggining and end of this interval
+	timestamp_t _start;
+	timestamp_t _end;
 	
-	// this integer identifies the attribute (quark)
-	uint32_t _attribute;
-	//No value for this attribute is defined here
-	//It is derived-class specific
+	// this is a unique integer ID for this interval
+	attribute_t _attribute;
 };
 
-#endif // _IINTERVAL_HPP
+#endif // _INTERVAL_HPP

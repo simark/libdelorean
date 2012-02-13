@@ -4,13 +4,14 @@
 #include <string>
 
 #include "Interval.hpp"
+#include "basic_types.h"
 
 class StringInterval : public Interval
 {
 public:
 	StringInterval(void) { }
-	StringInterval(uint64_t start, uint64_t end, uint32_t attribute, std::string value);
-	StringInterval(uint64_t start, uint64_t end, uint32_t attribute, const char* value);
+	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, std::string value);
+	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, const char* value);
 	std::string getStringValue(void) const;
 	void serialize(void* var_addr, void* u32_addr) const;
 	void unserialize(void* var_addr, void* u32_addr);

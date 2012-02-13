@@ -4,12 +4,13 @@
 #include <stdint.h>
 
 #include "Interval.hpp"
+#include "basic_types.h"
 
 class UIntInterval : public Interval
 {
 public:
 	UIntInterval(void) { }
-	UIntInterval(uint64_t start, uint64_t end, uint32_t attribute, uint32_t value);
+	UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value);
 	~UIntInterval() { }
 	std::string getStringValue(void) const;
 	void serialize(void* var_addr, void* u32_addr) const;

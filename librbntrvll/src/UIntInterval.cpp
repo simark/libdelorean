@@ -1,8 +1,9 @@
-#include "UIntInterval.hpp"
-
 #include <sstream>
 
-UIntInterval::UIntInterval(uint64_t start, uint64_t end, uint32_t attribute, uint32_t value)
+#include "UIntInterval.hpp"
+#include "basic_types.h"
+
+UIntInterval::UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value)
 : Interval(start, end, attribute), _value(value)
 {
 }
