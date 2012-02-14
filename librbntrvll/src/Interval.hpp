@@ -88,10 +88,7 @@ public:
 	
 	int getIntervalSize() const {
 		return getVariableEntrySize() + getStaticEntrySize();
-	}
-protected:
-	//FIXME should this be declared here? It is derived-class specific
-	int _variableEntrySize;
+	}	
 	
 	bool operator==(const Interval& other);
 	bool operator<(const Interval& other);
@@ -99,6 +96,10 @@ protected:
 	bool operator!=(const Interval& other);
 	bool operator>(const Interval& other);
 	bool operator>=(const Interval& other);
+	
+protected:
+	//FIXME should this be declared here? It is derived-class specific
+	int _variableEntrySize;
 	friend std::ostream& operator<<(std::ostream& out, const Interval& intr);
 
 private:

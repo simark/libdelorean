@@ -25,6 +25,8 @@
 using namespace std;
 using namespace std::tr1;
 
+bool orderIntervals (shared_ptr<Interval> i, shared_ptr<Interval> j) { return (*i<*j); }
+
 HistoryTreeNode::HistoryTreeNode()
 :_nbChildren(0)
 {
@@ -89,7 +91,10 @@ void HistoryTreeNode::closeThisNode(uint64_t endtime)
 		/* Sort the intervals by ascending order of their end time.
 		 * This speeds up lookups a bit */
 		 //FIXME uncomment this and make it work!
-		//std::sort(_intervals.begin(), _intervals.end(), std::less<Interval>());
+		std::sort(_intervals.begin(), _intervals.end(), 
+		
+		//[](shared_ptr<Interval> a, shared_ptr<Interval> b) { return *a < *b; });
+		orderIntervals);
 		
 		/* Make sure there are no intervals in this node with their
 		 * EndTime > the one requested. Only need to check the last one
