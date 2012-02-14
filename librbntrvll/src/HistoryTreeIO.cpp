@@ -52,3 +52,17 @@ HistoryTreeNode HistoryTreeIO::readNodeFromDisk(int seqNumber) const
 	//}
 	return HistoryTreeNode();
 }
+
+void HistoryTreeIO::writeNode(HistoryTreeNode& node)
+{
+	//FIXME implement this
+	
+//	try {
+//		/* Position ourselves at the start of the node and write it */
+//		seekFCToNodePos(fcOut, node.getSequenceNumber());
+//		node.writeSelf(fcOut);
+//	} catch (IOException e) {
+//		/* If we were able to open the file, we should be fine now... */
+//		e.printStackTrace();
+//	}	
+}

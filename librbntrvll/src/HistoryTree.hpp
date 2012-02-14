@@ -22,6 +22,11 @@ public:
 		return _latestBranch;
 	}
 	
+	const HistoryTreeConfig& getConfig() const
+	{
+		return _config;
+	}
+	
 	uint64_t getTreeStart() const
 	{
 		return _config._treeStart;
@@ -46,6 +51,12 @@ private:
 	std::vector<HistoryTreeNode> _latestBranch;
 	
 	void tryInsertAtNode(const Interval& interval, int indexOfNode);
+	
+	void addSiblingNode(unsigned int indexOfNode);
+	
+	void addNewRootNode();
+	
+	HistoryTreeNode initNewCoreNode(int parentSeqNumber, uint64_t startTime);
 };
 
 #endif // _HISTORYTREE_HPP
