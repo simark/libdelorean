@@ -30,6 +30,8 @@ public:
 	HistoryTree();
 	virtual ~HistoryTree();
 	
+	void closeTree(uint64_t timestamp);
+	
 	void insertInterval(const Interval& interval);
 	
 	HistoryTreeNode selectNextChild(const HistoryTreeNode& currentNode, uint64_t timestamp) const;

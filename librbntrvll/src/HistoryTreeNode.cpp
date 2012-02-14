@@ -44,11 +44,29 @@ HistoryTreeNode::~HistoryTreeNode()
 {
 }
 
+/**
+ * Reader factory constructor. Build a Node object (of the right type)
+ * by reading a block in the file.
+ *  
+ * @param tree Reference to the HT which will own this node
+ * @param fc FileChannel to the history file, ALREADY SEEKED at the start of the node.
+ * @throws IOException 
+ */
 HistoryTreeNode HistoryTreeNode::readNode(const HistoryTree& tree)
 {
+	//FIXME Do the complex parsing and IO here
 	return HistoryTreeNode();
 }
 
+/**
+ * The method to fill up the stateInfo (passed on from the Current State Tree when
+ * it does a query on the SHT). We'll replace the data in that vector with whatever
+ * relevant we can find from this node
+ * 
+ * @param stateInfo The same stateInfo that comes from SHT's doQuery()
+ * @param t The timestamp for which the query is for. Only return intervals that intersect t.
+ * @throws TimeRangeException 
+ */
 void HistoryTreeNode::writeInfoFromNode(vector<shared_ptr<Interval> >& intervals, uint64_t timestamp) const
 {
 	int startIndex;
@@ -66,6 +84,10 @@ void HistoryTreeNode::writeInfoFromNode(vector<shared_ptr<Interval> >& intervals
 	return;
 }
 
+/**
+ * Add an interval to this node
+ * @param newInterval
+ */
 void HistoryTreeNode::addInterval(const Interval& newInterval)
 {
 	/* Just in case, but should be checked before even calling this function */
@@ -78,6 +100,13 @@ void HistoryTreeNode::addInterval(const Interval& newInterval)
 	_variableSectionOffset -= ( newInterval.getVariableEntrySize() );	
 }
 
+/**
+ * We've received word from the containerTree that newest nodes now exist to
+ * our right. (Puts isDone = true and sets the endtime)
+ * 
+ * @param endtime The nodeEnd time that the node will have
+ * @throws TimeRangeException 
+ */
 void HistoryTreeNode::closeThisNode(uint64_t endtime)
 {
 	assert ( endtime >= _nodeStart );
@@ -91,8 +120,7 @@ void HistoryTreeNode::closeThisNode(uint64_t endtime)
 		/* Sort the intervals by ascending order of their end time.
 		 * This speeds up lookups a bit */
 		 //FIXME uncomment this and make it work!
-		std::sort(_intervals.begin(), _intervals.end(), 
-		
+		std::sort(_intervals.begin(), _intervals.end(), 		
 		//[](shared_ptr<Interval> a, shared_ptr<Interval> b) { return *a < *b; });
 		orderIntervals);
 		
@@ -107,6 +135,11 @@ void HistoryTreeNode::closeThisNode(uint64_t endtime)
 	return;	
 }
 
+/**
+ * Tell this node that it has a new child (Congrats!)
+ * 
+ * @param childNode The SHTNode object of the new child
+ */
 void HistoryTreeNode::linkNewChild(const HistoryTreeNode& childNode)
 {
 	assert( _nbChildren < _ownerTree->getConfig()._maxChildren );
@@ -116,13 +149,25 @@ void HistoryTreeNode::linkNewChild(const HistoryTreeNode& childNode)
 	_nbChildren++;	
 }
 
-
+/**
+ * Finds the minimum index in the intervals container to start the search.
+ * Since the intervals are ordered by ending time, it is possible to skip
+ * the first ones and use an efficient search algorithm to find the first
+ * possible interval that could possibly hold a given timestamp
+ *  
+ * @param timestamp
+ * @return the index of the first interval in _intervals that could hold this timestamp
+ */
 int HistoryTreeNode::getStartIndexFor(uint64_t timestamp) const
 {
 	//FIXME Use a binary search algorithm to find the correct index
 	return 0;
 }
 
+/**
+ * Returns the free space in the node, which is simply put,
+ * the stringSectionOffset - dataSectionOffset
+ */
 int HistoryTreeNode::getNodeFreeSpace()
 {
 	return _variableSectionOffset - getDataSectionEndOffset();
@@ -143,6 +188,9 @@ int HistoryTreeNode::getTotalHeaderSize() const
 	return headerSize;
 }
 
+/**
+ * @return The offset, within the node, where the Data (intervals) section ends
+ */
 int HistoryTreeNode::getDataSectionEndOffset() const
 {
 	return getTotalHeaderSize() + Interval::getStaticEntrySize() * _intervals.size();

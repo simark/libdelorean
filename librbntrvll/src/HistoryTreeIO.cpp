@@ -32,11 +32,6 @@ HistoryTreeNode HistoryTreeIO::readNodeFromMemory(int seqNumber) const
 	return HistoryTreeNode();
 }
 
-/**
- * This method here isn't private, if we know for sure the node cannot be in
- * memory it's a bit faster to use this directly (when opening a file from
- * disk for example)
- */
 HistoryTreeNode HistoryTreeIO::readNodeFromDisk(int seqNumber) const
 {
 	//FIXME implement this

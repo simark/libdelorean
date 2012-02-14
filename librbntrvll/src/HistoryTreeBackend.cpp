@@ -35,6 +35,11 @@ HistoryTreeBackend::~HistoryTreeBackend()
 {
 }
 
+/**
+ * Adds a new interval to the history tree
+ * 
+ * @param interval A new interval to insert
+ */
 void HistoryTreeBackend::insertInterval(const Interval& interval)
 {
 	_historyTree.insertInterval(interval);
@@ -42,6 +47,7 @@ void HistoryTreeBackend::insertInterval(const Interval& interval)
 
 void HistoryTreeBackend::finish(uint64_t timestamp)
 {
+	_historyTree.closeTree(timestamp);
 }
 	
 vector<shared_ptr<Interval> > HistoryTreeBackend::query(uint64_t timestamp) const

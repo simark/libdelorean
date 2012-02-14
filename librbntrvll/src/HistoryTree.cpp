@@ -28,6 +28,24 @@ HistoryTree::~HistoryTree()
 {
 }
 
+/**
+ * "Save" the tree to disk.
+ * This method will cause the treeIO object to commit all nodes to disk
+ * and then return the RandomAccessFile descriptor so the Tree object can
+ * save its configuration into the header of the file.
+ * @throws TimeRangeException 
+ * 
+ */
+HistoryTree::closeTree()
+{
+	//FIXME do the complex work here
+}
+
+/**
+ * Insert an interval in the tree
+ * 
+ * @param interval
+ */
 void HistoryTree::insertInterval(const Interval& interval)
 {	/* FIXME do this throw
 	if ( interval.getStartTime() < config.treeStart ) {
@@ -38,7 +56,15 @@ void HistoryTree::insertInterval(const Interval& interval)
 	tryInsertAtNode(interval, _latestBranch.size()-1);
 }
 
-
+/**
+ * Inner method to select the next child of the current node intersecting
+ * the given timestamp. Useful for moving down the tree following one
+ * branch.
+ * 
+ * @param currentNode
+ * @param t
+ * @return The child node intersecting t
+ */
 HistoryTreeNode HistoryTree::selectNextChild(const HistoryTreeNode& currentNode, uint64_t timestamp) const
 {
 	assert ( currentNode.getNbChildren() > 0 );
@@ -65,7 +91,15 @@ HistoryTreeNode HistoryTree::selectNextChild(const HistoryTreeNode& currentNode,
 	}
 }
 
-
+/**
+ * Inner method to find in which node we should add the interval.
+ * 
+ * @param interval
+ *            The interval to add to the tree
+ * @param indexOfNode
+ *            The index *in the latestBranch* where we are trying the
+ *            insertion
+ */
 void HistoryTree::tryInsertAtNode(const Interval& interval, int indexOfNode)
 {
 	HistoryTreeNode& targetNode(_latestBranch[indexOfNode]);
@@ -97,6 +131,13 @@ void HistoryTree::tryInsertAtNode(const Interval& interval, int indexOfNode)
 	return;
 }
 
+/**
+ * Method to add a sibling to any node in the latest branch. This will add
+ * children back down to the leaf level, if needed.
+ * 
+ * @param indexOfNode
+ *            The index in latestBranch where we start adding
+ */
 void HistoryTree::addSiblingNode(unsigned int indexOfNode)
 {
 	unsigned int i;
@@ -132,6 +173,10 @@ void HistoryTree::addSiblingNode(unsigned int indexOfNode)
 	return;
 }
 
+/**
+ * Similar to the previous method, except here we rebuild a completely new
+ * latestBranch
+ */
 void HistoryTree::addNewRootNode()
 {
 	unsigned int i, depth;
@@ -164,6 +209,15 @@ void HistoryTree::addNewRootNode()
 	}
 }
 
+/**
+ * Add a new empty node to the tree.
+ * 
+ * @param parentSeqNumber
+ *            Sequence number of this node's parent
+ * @param startTime
+ *            Start time of the new node
+ * @return The newly created node
+ */
 HistoryTreeNode HistoryTree::initNewCoreNode(int parentSeqNumber, uint64_t startTime)
 {
 	HistoryTreeNode newNode(*this, _nodeCount, parentSeqNumber, startTime);
