@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
- * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -17,30 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "IntInterval.hpp"
+#ifndef _INTERVALCREATOR_HPP
+#define _INTERVALCREATOR_HPP
 
-#include <sstream>
+#include "Interval.hpp"
+#include "IIntervalFactory.hpp"
+#include "ex/UnknownIntervalTypeEx.hpp"
+#include "ex/ExistingIntervalTypeEx.hpp"
+#include "basic_types.h"
 
-IntInterval::IntInterval(uint64_t start, uint64_t end, uint32_t attribute, int32_t value)
-:Interval(start, end, attribute), _value(value)
+class IntervalCreator
 {
-}
+public:
+	IntervalCreator(void);
+	void registerIntervalType(interval_type_t type, IIntervalFactory* factory) throw(ExistingIntervalTypeEx);
+	void unregisterIntervalType(interval_type_t type);
+	void unregisterAll(void);
+	IntervalSharedPtr createIntervalFromType(interval_type_t type) throw(UnknownIntervalTypeEx);
 
-std::string IntInterval::getStringValue(void) const
-{
-	std::ostringstream oss;
-	oss << _value;
-	return oss.str();
-}
+private:
+	IIntervalFactory* _factories [256];
+};
 
-void IntInterval::serialize(void* var_addr, void* u32_addr) const {
-	*((int32_t*) u32_addr) = this->_value;
-}
-
-void IntInterval::unserialize(void* var_addr, void* u32_addr) {
-	this->_value = *((int32_t*) u32_addr);
-}
-
-unsigned int IntInterval::getVariableValueSize(void) const {
-	return 0;
-}
+#endif // _INTERVALCREATOR_HPP

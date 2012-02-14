@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
- * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -17,30 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "IntInterval.hpp"
+#ifndef _FIXED_CONFIG_H
+#define _FIXED_CONFIG_H
 
-#include <sstream>
+/**
+ * Simple interval types.
+ */
+#define SIT_INT32	0
+#define SIT_STRING	1
+#define SIT_UINT32	2
+#define SIT_FLOAT32	3
 
-IntInterval::IntInterval(uint64_t start, uint64_t end, uint32_t attribute, int32_t value)
-:Interval(start, end, attribute), _value(value)
-{
-}
+/**
+ * History file magic number.
+ */
+#define HF_MAGIC_NUMBER		0x05ffa900
 
-std::string IntInterval::getStringValue(void) const
-{
-	std::ostringstream oss;
-	oss << _value;
-	return oss.str();
-}
-
-void IntInterval::serialize(void* var_addr, void* u32_addr) const {
-	*((int32_t*) u32_addr) = this->_value;
-}
-
-void IntInterval::unserialize(void* var_addr, void* u32_addr) {
-	this->_value = *((int32_t*) u32_addr);
-}
-
-unsigned int IntInterval::getVariableValueSize(void) const {
-	return 0;
-}
+#endif /* _FIXED_CONFIG_H */

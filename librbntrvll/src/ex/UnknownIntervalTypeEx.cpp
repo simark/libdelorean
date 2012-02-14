@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
- * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -17,30 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "IntInterval.hpp"
-
+#include <string>
 #include <sstream>
 
-IntInterval::IntInterval(uint64_t start, uint64_t end, uint32_t attribute, int32_t value)
-:Interval(start, end, attribute), _value(value)
-{
-}
+#include "UnknownIntervalTypeEx.hpp"
+#include "../basic_types.h"
 
-std::string IntInterval::getStringValue(void) const
-{
-	std::ostringstream oss;
-	oss << _value;
+using namespace std;
+
+std::string UnknownIntervalTypeEx::getMsg(interval_type_t type) {
+	ostringstream oss;
+	oss << "unknown interval type " << (unsigned int) type;
+	
 	return oss.str();
-}
-
-void IntInterval::serialize(void* var_addr, void* u32_addr) const {
-	*((int32_t*) u32_addr) = this->_value;
-}
-
-void IntInterval::unserialize(void* var_addr, void* u32_addr) {
-	this->_value = *((int32_t*) u32_addr);
-}
-
-unsigned int IntInterval::getVariableValueSize(void) const {
-	return 0;
 }
