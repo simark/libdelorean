@@ -27,7 +27,9 @@
 class HistoryTree
 {
 public:
-	HistoryTree();
+	HistoryTree(HistoryTreeConfig config);
+	HistoryTree(std::string newFile, int blockSize, int maxChildren, timestamp_t startTime);
+	HistoryTree(std::string existingFile);
 	virtual ~HistoryTree();
 	
 	void closeTree(timestamp_t timestamp);
@@ -35,6 +37,10 @@ public:
 	void insertInterval(const Interval& interval);
 	
 	HistoryTreeNode selectNextChild(const HistoryTreeNode& currentNode, timestamp_t timestamp) const;
+	
+	static int getTreeHeaderSize();
+	
+	const HistoryTreeIO& getTreeIO() const { return _treeIO; };
 		
 	//FIXME const?
 	const std::vector<HistoryTreeNode>& getLatestBranch() const

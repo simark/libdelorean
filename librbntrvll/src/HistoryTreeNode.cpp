@@ -75,7 +75,7 @@ void HistoryTreeNode::writeInfoFromNode(vector<shared_ptr<Interval> >& intervals
 	startIndex = getStartIndexFor(timestamp);
 
 	for ( unsigned int i = startIndex; i < _intervals.size(); i++ ) {
-		/* Now we only have to compare the Start times, since we now
+		/* Now we only have to compare the Start times, since we know
 		 * the End times necessarily fit */
 		if ( _intervals[i]->getStart() <= timestamp ) {
 			intervals[_intervals[i]->getAttribute()] = _intervals[i];
@@ -119,9 +119,9 @@ void HistoryTreeNode::closeThisNode(timestamp_t endtime)
 	if ( _intervals.size() > 0 ) {
 		/* Sort the intervals by ascending order of their end time.
 		 * This speeds up lookups a bit */
-		 //FIXME uncomment this and make it work!
+		 /* Lambda functions will not compile for some reason, using a normal function instead*/
 		std::sort(_intervals.begin(), _intervals.end(), 		
-		//[](shared_ptr<Interval> a, shared_ptr<Interval> b) { return *a < *b; });
+		//[](std::tr1::shared_ptr<Interval> a, std::tr1::shared_ptr<Interval> b) -> bool { return *a < *b; });
 		orderIntervals);
 		
 		/* Make sure there are no intervals in this node with their

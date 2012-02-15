@@ -20,7 +20,8 @@ SRC = \
 	FloatIntervalFactory.cpp \
 	IntervalCreator.cpp \
 	ex/UnknownIntervalTypeEx.cpp \
-	ex/ExistingIntervalTypeEx.cpp
+	ex/ExistingIntervalTypeEx.cpp \
+	ex/TimeRangeEx.cpp
 H_SRC = \
 	HistoryTreeBackend.hpp \
 	HistoryTree.hpp \
@@ -41,6 +42,7 @@ H_SRC = \
 	IntervalCreator.hpp \
 	ex/UnknownIntervalTypeEx.hpp \
 	ex/ExistingIntervalTypeEx.hpp \
+	ex/TimeRangeEx.hpp \
 	fixed_config.h \
 	basic_types.h
 	

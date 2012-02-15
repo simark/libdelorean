@@ -1,4 +1,56 @@
+/**
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
+ *
+ * This file is part of librbntrvll.
+ *
+ * librbntrvll is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * librbntrvll is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "HistoryTreeIO.hpp"
+
+/**
+ * Empty constructor
+ * 
+ * @param tree
+ */
+HistoryTreeIO::HistoryTreeIO()
+:_tree(0)
+{
+}
+
+/**
+ * "New history file" constructor
+ * 
+ * @param tree
+ */
+HistoryTreeIO::HistoryTreeIO(HistoryTree* ownerTree)
+:_tree(ownerTree)
+{
+	//FIXME magic IO init goes here
+}
+
+/**
+ * "Existing history file" constructor
+ * 
+ * @param ownerTree
+ * @param curNodeCount used to distinguish from new history file constructor (ugly)
+ */
+HistoryTreeIO::HistoryTreeIO(HistoryTree* ownerTree, int curNodeCount)
+:_tree(ownerTree)
+{
+	//FIXME magic IO init goes here
+}
 
 /**
  * Generic "read node" method, which checks if the node is in memory first,

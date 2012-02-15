@@ -29,8 +29,20 @@
 using namespace std;
 using namespace std::tr1;
 
-HistoryTreeBackend::HistoryTreeBackend()
+HistoryTreeBackend::HistoryTreeBackend(std::string newFile, int blockSize, int maxChildren, timestamp_t startTime)
+:_historyTree(newFile, blockSize, maxChildren, startTime), _treeIO(_historyTree.getTreeIO())
 {
+	
+}
+HistoryTreeBackend::HistoryTreeBackend(std::string newFile, timestamp_t startTime)
+:_historyTree(newFile, 64 * 1024, 50, startTime), _treeIO(_historyTree.getTreeIO())
+{
+	
+}
+HistoryTreeBackend::HistoryTreeBackend(std::string existingFile)
+:_historyTree(existingFile), _treeIO(_historyTree.getTreeIO())
+{
+	
 }
 
 HistoryTreeBackend::~HistoryTreeBackend()
@@ -76,11 +88,7 @@ vector<shared_ptr<Interval> > HistoryTreeBackend::query(timestamp_t timestamp) c
 
 std::tr1::shared_ptr<Interval> HistoryTreeBackend::query(timestamp_t timestamp, attribute_t key) const
 {
-	//FIXME : simple stub method...
-	if(timestamp >= 100)
-		return std::tr1::shared_ptr<Interval>(new IntInterval(timestamp-100, timestamp+100, key, 100));
-	else
-		return std::tr1::shared_ptr<Interval>(new IntInterval(0, timestamp+100, key, 100));
+	return getRelevantInterval(timestamp, key);
 }
 
 bool HistoryTreeBackend::checkValidTime(timestamp_t timestamp) const

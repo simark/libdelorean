@@ -37,7 +37,9 @@ class Interval;
 class HistoryTreeBackend
 {
 public:
-	HistoryTreeBackend();
+	HistoryTreeBackend(std::string newFile, int blockSize, int maxChildren, timestamp_t startTime);
+	HistoryTreeBackend(std::string newFile, timestamp_t startTime);
+	HistoryTreeBackend(std::string existingFile);
 	virtual ~HistoryTreeBackend();
 	void insertInterval(const Interval& interval);
 	void finish(timestamp_t timestamp);
@@ -46,6 +48,7 @@ public:
 	
 private:
 	HistoryTree _historyTree;
+	HistoryTreeIO _treeIO;
 	
 	bool checkValidTime(timestamp_t timestamp) const;
 	std::tr1::shared_ptr<Interval> getRelevantInterval(timestamp_t timestamp, attribute_t key) const;

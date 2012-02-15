@@ -21,8 +21,71 @@
 
 #include <assert.h>
 
-HistoryTree::HistoryTree()
+/**
+ * Create a new HistoryTree from scratch, using a HistoryTreeConfig object
+ * for configuration
+ * 
+ * @param config
+ */
+HistoryTree::HistoryTree(HistoryTreeConfig config)
+:_config(config)
 {
+	/* Simple assertion to make sure we have enough place
+	 * in the 0th block for the tree configuration */
+	assert( _config._blockSize >= getTreeHeaderSize() );
+	
+	_treeEnd = _config._treeStart;
+	_nodeCount = 0;
+	_latestBranch = std::vector<HistoryTreeNode>();
+	
+	/* Prepare the IO object */
+	_treeIO = HistoryTreeIO(this);
+	
+	/* Add the first node to the tree */
+	HistoryTreeNode firstNode = initNewCoreNode(-1, _config._treeStart);
+	_latestBranch.push_back(firstNode);	
+}
+
+/**
+ * Create a new HistoryTree from scratch, using parameters needed to
+ * construct a HistoryTreeConfig object
+ * 
+ * @param newFile
+ * @param blockSize
+ * @param maxChildren
+ * @param startTime
+ */
+HistoryTree::HistoryTree(std::string newFile, int blockSize, int maxChildren, timestamp_t startTime)
+:_config(newFile, blockSize, maxChildren, startTime)
+{
+	/* Simple assertion to make sure we have enough place
+	 * in the 0th block for the tree configuration */
+	assert( _config._blockSize >= getTreeHeaderSize() );
+	
+	_treeEnd = _config._treeStart;
+	_nodeCount = 0;
+	_latestBranch = std::vector<HistoryTreeNode>();
+	
+	/* Prepare the IO object */
+	_treeIO = HistoryTreeIO(this);
+	
+	/* Add the first node to the tree */
+	HistoryTreeNode firstNode = initNewCoreNode(-1, _config._treeStart);
+	_latestBranch.push_back(firstNode);	
+}
+
+/**
+ * "Reader" constructor : instantiate a HistoryTree from an existing tree file on
+ * disk
+ * 
+ * @param existingFile
+ *            Path/filename of the history-file we are to open
+ */
+HistoryTree::HistoryTree(std::string existingFile)
+{
+	//FIXME put magic I/O sequence here
+	
+	_treeIO = HistoryTreeIO(this);
 }
 
 HistoryTree::~HistoryTree()
@@ -89,6 +152,15 @@ HistoryTreeNode HistoryTree::selectNextChild(const HistoryTreeNode& currentNode,
 	} else {
 		return _treeIO.readNode(potentialNextSeqNb);
 	}
+}
+
+/**
+ * Helper function to get the size of the "tree header" in the tree-file
+ * The nodes will use this offset to know where they should be in the file.
+ * This should always be a multiple of 4K.
+ */
+static int getTreeHeaderSize() {
+	return 4096;
 }
 
 /**
