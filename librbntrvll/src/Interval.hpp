@@ -79,6 +79,10 @@ public:
 		return _variableEntrySize;
 	}
 	
+	/**
+	 * Returns the size of the Interval without the variable-size data
+	 * This is common for all Intervals 
+	 */
 	static int getStaticEntrySize(){
 		return    16	/* 2 x Timevalue/long (interval start + end) */
 			 + 4	/* int (key) */

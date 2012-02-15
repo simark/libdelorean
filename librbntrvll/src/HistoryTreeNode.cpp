@@ -18,6 +18,7 @@
  */
 #include "HistoryTreeNode.hpp"
 #include "HistoryTree.hpp"
+#include "IntInterval.hpp"
 
 #include <algorithm>
 #include <assert.h>
@@ -182,15 +183,27 @@ std::tr1::shared_ptr<Interval> HistoryTreeNode::getRelevantInterval(timestamp_t 
  * Finds the minimum index in the intervals container to start the search.
  * Since the intervals are ordered by ending time, it is possible to skip
  * the first ones and use an efficient search algorithm to find the first
- * possible interval that could possibly hold a given timestamp
+ * interval that could possibly hold a given timestamp
  *  
  * @param timestamp
  * @return the index of the first interval in _intervals that could hold this timestamp
  */
 int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
 {
-	//FIXME Use a binary search algorithm to find the correct index
-	return 0;
+	//FIXME test this thoroughly
+	
+	// This should prevent the rare case when timestamp = 0, and timestamp-1 could behave erratically
+	if(timestamp == _nodeStart) { return 0;}
+	
+	shared_ptr<Interval> dummyInterval(new IntInterval(0, timestamp-1, 0, 0));
+	vector<shared_ptr<Interval> >::const_iterator it;
+	
+	
+	it = lower_bound(_intervals.begin(), _intervals.end(), dummyInterval, 
+	//[](std::tr1::shared_ptr<Interval> a, std::tr1::shared_ptr<Interval> b) -> bool { return *a < *b; });
+	orderIntervals);
+	
+	return it - _intervals.begin();
 }
 
 /**
