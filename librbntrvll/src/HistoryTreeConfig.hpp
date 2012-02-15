@@ -9,10 +9,10 @@ public:
 	std::string _stateFile;
 	int _blockSize;
 	int _maxChildren;
-	uint64_t _treeStart;
+	timestamp_t _treeStart;
 	
 	HistoryTreeConfig(std::string newStateFile, int blockSize, int maxChildren,
-			uint64_t startTime) 
+			timestamp_t startTime) 
 	:_stateFile(newStateFile), _blockSize(blockSize), _maxChildren(maxChildren), _treeStart(startTime)
 	{
 	}
@@ -22,7 +22,7 @@ public:
 	 * @param stateFileName
 	 * @param startTime
 	 */
-	HistoryTreeConfig(std::string newStateFile, uint64_t startTime) 
+	HistoryTreeConfig(std::string newStateFile, timestamp_t startTime) 
 	:_stateFile(newStateFile), _blockSize(64 * 1024), _maxChildren(50), _treeStart(startTime)
 	{
 	}

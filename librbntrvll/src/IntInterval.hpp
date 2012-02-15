@@ -28,11 +28,12 @@ class IntInterval : public Interval
 {
 public:
 	IntInterval(void) { }
-	IntInterval(uint64_t start, uint64_t end, uint32_t attribute, int32_t value);
+	IntInterval(timestamp_t start, timestamp_t end, uint32_t attribute, int32_t value);
 	std::string getStringValue(void) const;
 	void serialize(void* var_addr, void* u32_addr) const;
 	void unserialize(void* var_addr, void* u32_addr);
 	unsigned int getVariableValueSize(void) const;
+	Interval* clone(void) const;
 
 private:
 	int32_t _value;

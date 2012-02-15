@@ -41,8 +41,9 @@ public:
 	virtual void serialize(void* var_addr, void* u32_addr) const = 0;
 	virtual void unserialize(void* var_addr, void* u32_addr) = 0;
 	virtual unsigned int getVariableValueSize(void) const = 0;
+	virtual Interval* clone(void) const = 0;
 	std::string toString(void) const;
-	bool intersects(uint64_t ts) const;
+	bool intersects(timestamp_t ts) const;
 	Interval* setInterval(timestamp_t start, timestamp_t end) {
 		this->_start = start;
 		this->_end = end;
@@ -54,7 +55,7 @@ public:
 		
 		return this;
 	}
-	uint64_t getStart(void) const {
+	timestamp_t getStart(void) const {
 		return this->_start;
 	}
 	Interval* setEnd(timestamp_t end) {
@@ -62,7 +63,7 @@ public:
 		
 		return this;
 	}
-	uint64_t getEnd(void) const {
+	timestamp_t getEnd(void) const {
 		return this->_end;
 	}
 	Interval* setAttribute(attribute_t attr) {
@@ -70,7 +71,7 @@ public:
 		
 		return this;
 	}
-	uint64_t getAttribute(void) const {
+	timestamp_t getAttribute(void) const {
 		return this->_attribute;
 	}
 	

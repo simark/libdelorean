@@ -32,7 +32,7 @@ HistoryTreeNode::HistoryTreeNode()
 {
 }
 
-HistoryTreeNode::HistoryTreeNode(HistoryTree& tree, int seqNumber, int parentSeqNumber, uint64_t start)
+HistoryTreeNode::HistoryTreeNode(HistoryTree& tree, int seqNumber, int parentSeqNumber, timestamp_t start)
 :_ownerTree(&tree), _nodeStart(start), _sequenceNumber(seqNumber), _parentSequenceNumber(parentSeqNumber), _nbChildren(0)
 {
 	_variableSectionOffset = _ownerTree->getConfig()._blockSize;
@@ -67,7 +67,7 @@ HistoryTreeNode HistoryTreeNode::readNode(const HistoryTree& tree)
  * @param t The timestamp for which the query is for. Only return intervals that intersect t.
  * @throws TimeRangeException 
  */
-void HistoryTreeNode::writeInfoFromNode(vector<shared_ptr<Interval> >& intervals, uint64_t timestamp) const
+void HistoryTreeNode::writeInfoFromNode(vector<shared_ptr<Interval> >& intervals, timestamp_t timestamp) const
 {
 	int startIndex;
 
@@ -93,8 +93,8 @@ void HistoryTreeNode::addInterval(const Interval& newInterval)
 	/* Just in case, but should be checked before even calling this function */
 	assert( newInterval.getIntervalSize() <= getNodeFreeSpace() );
 	
-	// FIXME we need a way to duplicate the abstract interval
-	//_intervals.push_back( newInterval );
+	/* We need to clone the interval, to guarantee ownership */
+	_intervals.push_back( shared_ptr<Interval>(newInterval.clone()) );
 	
 	/* Update the in-node offset "pointer" */
 	_variableSectionOffset -= ( newInterval.getVariableEntrySize() );	
@@ -107,7 +107,7 @@ void HistoryTreeNode::addInterval(const Interval& newInterval)
  * @param endtime The nodeEnd time that the node will have
  * @throws TimeRangeException 
  */
-void HistoryTreeNode::closeThisNode(uint64_t endtime)
+void HistoryTreeNode::closeThisNode(timestamp_t endtime)
 {
 	assert ( endtime >= _nodeStart );
 //	/* This also breaks often too */
@@ -150,6 +150,35 @@ void HistoryTreeNode::linkNewChild(const HistoryTreeNode& childNode)
 }
 
 /**
+ * Get a single Interval from the information in this node
+ * If the key/timestamp pair cannot be found, we return a null pointer.
+ * 
+ * @param key
+ * @param t
+ * @return The Interval containing the information we want, or null if it wasn't found
+ * @throw TimeRangeEx
+ */
+std::tr1::shared_ptr<Interval> HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
+{
+	assert ( _isDone );
+	int startIndex;
+	
+	if ( _intervals.size() == 0 ) { return shared_ptr<Interval>(); }
+	
+	startIndex = getStartIndexFor(timestamp);
+	
+	for ( unsigned int i = startIndex; i < _intervals.size(); i++ ) {
+		if ( _intervals[i]->getAttribute() == key ) {
+			if ( _intervals[i]->getStart() <= timestamp ) {
+				return _intervals[i];
+			}
+		}
+	}
+	/* We didn't find the relevant information in this node */
+	return shared_ptr<Interval>();
+}
+
+/**
  * Finds the minimum index in the intervals container to start the search.
  * Since the intervals are ordered by ending time, it is possible to skip
  * the first ones and use an efficient search algorithm to find the first
@@ -158,7 +187,7 @@ void HistoryTreeNode::linkNewChild(const HistoryTreeNode& childNode)
  * @param timestamp
  * @return the index of the first interval in _intervals that could hold this timestamp
  */
-int HistoryTreeNode::getStartIndexFor(uint64_t timestamp) const
+int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
 {
 	//FIXME Use a binary search algorithm to find the correct index
 	return 0;

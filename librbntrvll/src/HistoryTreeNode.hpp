@@ -30,27 +30,29 @@ class HistoryTreeNode
 {
 public:
 	HistoryTreeNode();
-	HistoryTreeNode(HistoryTree& tree, int seqNumber, int parentSeqNumber, uint64_t start);
+	HistoryTreeNode(HistoryTree& tree, int seqNumber, int parentSeqNumber, timestamp_t start);
 	virtual ~HistoryTreeNode();
 	static HistoryTreeNode readNode(const HistoryTree& tree);
 	
-	void writeInfoFromNode(std::vector<std::tr1::shared_ptr<Interval> >& intervals, uint64_t timestamp) const;
+	void writeInfoFromNode(std::vector<std::tr1::shared_ptr<Interval> >& intervals, timestamp_t timestamp) const;
 	
 	void addInterval(const Interval& newInterval);
 	
-	void closeThisNode(uint64_t endtime);
+	void closeThisNode(timestamp_t endtime);
 	
 	void linkNewChild(const HistoryTreeNode& childNode);
 	
-	int getStartIndexFor(uint64_t timestamp) const;
+	std::tr1::shared_ptr<Interval> getRelevantInterval(timestamp_t timestamp, attribute_t key) const;
+	
+	int getStartIndexFor(timestamp_t timestamp) const;
 	
 	int getNodeFreeSpace();
 	
 	int getTotalHeaderSize() const;
 	
-	uint64_t getNodeStart() const {return _nodeStart;}
+	timestamp_t getNodeStart() const {return _nodeStart;}
 	
-	uint64_t getNodeEnd() const 
+	timestamp_t getNodeEnd() const 
 	{		
 		if ( _isDone ) {
 			return _nodeEnd;
@@ -82,7 +84,7 @@ public:
 		return _children[index];
 	}
 	
-	uint64_t getChildStart(int index) const
+	timestamp_t getChildStart(int index) const
 	{
 		return _childStart[index];
 	}
@@ -93,12 +95,12 @@ public:
 	}
 	
 private:
-	/* Reference to the History Tree to whom this node belongs */
+	/* Pointer to the History Tree to whom this node belongs */
 	HistoryTree* _ownerTree;
 	
 	/* Time range of this node */
-	uint64_t _nodeStart;
-	uint64_t _nodeEnd;
+	timestamp_t _nodeStart;
+	timestamp_t _nodeEnd;
 	
 	/* Sequence number = position in the node section of the file */
 	int _sequenceNumber;
@@ -115,7 +117,7 @@ private:
 
 	int _nbChildren;	/* Nb. of children this node has */
 	int* _children;		/* Seq. numbers of the children nodes (size = MAX_NB_CHILDREN) */
-	uint64_t* _childStart;	/* Start times of each of the children (size = MAX_NB_CHILDREN) */
+	timestamp_t* _childStart;	/* Start times of each of the children (size = MAX_NB_CHILDREN) */
 	
 	
 	int getDataSectionEndOffset() const;

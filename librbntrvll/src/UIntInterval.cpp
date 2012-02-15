@@ -44,3 +44,7 @@ void UIntInterval::unserialize(void* var_addr, void* u32_addr) {
 unsigned int UIntInterval::getVariableValueSize(void) const {
 	return 0;
 }
+
+Interval* UIntInterval::clone(void) const{
+	return new UIntInterval(*this);
+}

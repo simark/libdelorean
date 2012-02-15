@@ -40,14 +40,15 @@ public:
 	HistoryTreeBackend();
 	virtual ~HistoryTreeBackend();
 	void insertInterval(const Interval& interval);
-	void finish(uint64_t timestamp);
-	std::vector< std::tr1::shared_ptr<Interval> > query(uint64_t timestamp) const;
-	std::tr1::shared_ptr<Interval> query(uint64_t timestamp, int key) const;
+	void finish(timestamp_t timestamp);
+	std::vector< std::tr1::shared_ptr<Interval> > query(timestamp_t timestamp) const;
+	std::tr1::shared_ptr<Interval> query(timestamp_t timestamp, attribute_t key) const;
 	
 private:
 	HistoryTree _historyTree;
 	
-	bool checkValidTime(uint64_t timestamp) const;
+	bool checkValidTime(timestamp_t timestamp) const;
+	std::tr1::shared_ptr<Interval> getRelevantInterval(timestamp_t timestamp, attribute_t key) const;
 	
 };
 

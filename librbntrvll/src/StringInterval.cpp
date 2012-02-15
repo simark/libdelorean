@@ -61,3 +61,7 @@ unsigned int StringInterval::getVariableValueSize(void) const {
 	// length of string + 32-bit header
 	return sizeof(uint32_t) + _value.size();
 }
+
+Interval* StringInterval::clone(void) const{
+	return new StringInterval(*this);
+}

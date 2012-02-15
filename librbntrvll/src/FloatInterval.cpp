@@ -44,3 +44,7 @@ void FloatInterval::unserialize(void* var_addr, void* u32_addr) {
 unsigned int FloatInterval::getVariableValueSize(void) const {
 	return 0;
 }
+
+Interval* FloatInterval::clone(void) const{
+	return new FloatInterval(*this);
+}

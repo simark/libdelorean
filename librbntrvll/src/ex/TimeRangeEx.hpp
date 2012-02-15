@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -16,26 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _FLOATINTERVAL_HPP
-#define _FLOATINTERVAL_HPP
+#ifndef _TIMERANGEEX_HPP
+#define _TIMERANGEEX_HPP
 
-#include "basic_types.h"
+#include <string>
+#include <stdexcept>
 
-#include "Interval.hpp"
+#include "../basic_types.h"
 
-class FloatInterval : public Interval
+class TimeRangeEx : public std::runtime_error
 {
 public:
-	FloatInterval(void) { }
-	FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value);
-	std::string getStringValue(void) const;
-	void serialize(void* var_addr, void* u32_addr) const;
-	void unserialize(void* var_addr, void* u32_addr);
-	unsigned int getVariableValueSize(void) const;
-	Interval* clone(void) const;
-
-private:
-	float _value;
+	TimeRangeEx(const std::string& msg) : runtime_error(msg) { }
 };
 
-#endif // _FLOATINTERVAL_HPP
+
+#endif // _TIMERANGEEX_HPP
+

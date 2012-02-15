@@ -34,6 +34,7 @@ public:
 	void serialize(void* var_addr, void* u32_addr) const;
 	void unserialize(void* var_addr, void* u32_addr);
 	unsigned int getVariableValueSize(void) const;
+	Interval* clone(void) const;
 
 private:
 	uint32_t _value;

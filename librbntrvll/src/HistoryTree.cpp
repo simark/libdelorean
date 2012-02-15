@@ -17,6 +17,7 @@
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "HistoryTree.hpp"
+#include "ex/TimeRangeEx.hpp"
 
 #include <assert.h>
 
@@ -36,7 +37,7 @@ HistoryTree::~HistoryTree()
  * @throws TimeRangeException 
  * 
  */
-HistoryTree::closeTree()
+void HistoryTree::closeTree(timestamp_t timestamp)
 {
 	//FIXME do the complex work here
 }
@@ -47,11 +48,10 @@ HistoryTree::closeTree()
  * @param interval
  */
 void HistoryTree::insertInterval(const Interval& interval)
-{	/* FIXME do this throw
-	if ( interval.getStartTime() < config.treeStart ) {
-		throw new TimeRangeException();
+{
+	if ( interval.getStart() < _config._treeStart ) {
+		throw TimeRangeEx("Interval start time below IntervalTree start time");
 	}
-	*/
 	
 	tryInsertAtNode(interval, _latestBranch.size()-1);
 }
@@ -65,7 +65,7 @@ void HistoryTree::insertInterval(const Interval& interval)
  * @param t
  * @return The child node intersecting t
  */
-HistoryTreeNode HistoryTree::selectNextChild(const HistoryTreeNode& currentNode, uint64_t timestamp) const
+HistoryTreeNode HistoryTree::selectNextChild(const HistoryTreeNode& currentNode, timestamp_t timestamp) const
 {
 	assert ( currentNode.getNbChildren() > 0 );
 	int potentialNextSeqNb = currentNode.getSequenceNumber();
@@ -142,7 +142,7 @@ void HistoryTree::addSiblingNode(unsigned int indexOfNode)
 {
 	unsigned int i;
 	HistoryTreeNode newNode, prevNode;
-	uint64_t splitTime = _treeEnd;
+	timestamp_t splitTime = _treeEnd;
 	
 	assert ( indexOfNode < _latestBranch.size() );
 	
@@ -180,7 +180,7 @@ void HistoryTree::addSiblingNode(unsigned int indexOfNode)
 void HistoryTree::addNewRootNode()
 {
 	unsigned int i, depth;
-	uint64_t splitTime = _treeEnd;
+	timestamp_t splitTime = _treeEnd;
 	
 	HistoryTreeNode& oldRootNode(_latestBranch[0]);
 	HistoryTreeNode newRootNode = initNewCoreNode(-1, _config._treeStart);
@@ -218,7 +218,7 @@ void HistoryTree::addNewRootNode()
  *            Start time of the new node
  * @return The newly created node
  */
-HistoryTreeNode HistoryTree::initNewCoreNode(int parentSeqNumber, uint64_t startTime)
+HistoryTreeNode HistoryTree::initNewCoreNode(int parentSeqNumber, timestamp_t startTime)
 {
 	HistoryTreeNode newNode(*this, _nodeCount, parentSeqNumber, startTime);
 	_nodeCount++;

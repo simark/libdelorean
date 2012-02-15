@@ -21,7 +21,7 @@
 
 #include <sstream>
 
-IntInterval::IntInterval(uint64_t start, uint64_t end, uint32_t attribute, int32_t value)
+IntInterval::IntInterval(timestamp_t start, timestamp_t end, uint32_t attribute, int32_t value)
 :Interval(start, end, attribute), _value(value)
 {
 }
@@ -43,4 +43,8 @@ void IntInterval::unserialize(void* var_addr, void* u32_addr) {
 
 unsigned int IntInterval::getVariableValueSize(void) const {
 	return 0;
+}
+
+Interval* IntInterval::clone(void) const {
+	return new IntInterval(*this);
 }
