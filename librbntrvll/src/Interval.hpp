@@ -34,14 +34,20 @@ typedef std::tr1::shared_ptr<Interval> IntervalSharedPtr;
 class Interval : public IPrintable
 {
 public:
-	Interval(void) { }
-	Interval(timestamp_t start, timestamp_t end, attribute_t attribute);
+	Interval(interval_type_t type) : _type(type) { }
+	Interval(timestamp_t start, timestamp_t end, attribute_t attribute, interval_type_t type);
 	virtual ~Interval() { }
 	virtual std::string getStringValue(void) const = 0;
-	virtual void serialize(void* var_addr, void* u32_addr) const = 0;
+	void serialize(uint8_t* var_ptr, uint8_t* head_ptr);
 	virtual void unserialize(void* var_addr, void* u32_addr) = 0;
 	virtual unsigned int getVariableValueSize(void) const = 0;
 	virtual Interval* clone(void) const = 0;
+	unsigned int getTotalSize(void) const {
+		return Interval::HEADER_SIZE + this->getVariableValueSize();
+	}
+	static unsigned int getHeaderSize(void) {
+		return Interval::HEADER_SIZE;
+	}
 	std::string toString(void) const;
 	bool intersects(timestamp_t ts) const;
 	Interval* setInterval(timestamp_t start, timestamp_t end) {
@@ -74,26 +80,9 @@ public:
 	timestamp_t getAttribute(void) const {
 		return this->_attribute;
 	}
-	
-	virtual int getVariableEntrySize() const{
-		return _variableEntrySize;
+	uint8_t getType(void) const {
+		return this->_type;
 	}
-	
-	/**
-	 * Returns the size of the Interval without the variable-size data
-	 * This is common for all Intervals 
-	 */
-	static int getStaticEntrySize(){
-		return    16	/* 2 x Timevalue/long (interval start + end) */
-			 + 4	/* int (key) */
-			 + 1	/* byte (type) */
-			 + 4;	/* int (valueOffset) */
-		      /* = 25 */
-	}
-	
-	int getIntervalSize() const {
-		return getVariableEntrySize() + getStaticEntrySize();
-	}	
 	
 	bool operator==(const Interval& other);
 	bool operator<(const Interval& other);
@@ -103,9 +92,9 @@ public:
 	bool operator>=(const Interval& other);
 	
 protected:
-	//FIXME should this be declared here? It is derived-class specific
-	int _variableEntrySize;
 	friend std::ostream& operator<<(std::ostream& out, const Interval& intr);
+	virtual void serializeValues(void* var_addr, void* u32_addr) const = 0;
+	static const unsigned int HEADER_SIZE;
 
 private:
 	// beggining and end of this interval
@@ -114,6 +103,9 @@ private:
 	
 	// this is a unique integer ID for this interval
 	attribute_t _attribute;
+	
+	// type ID
+	interval_type_t _type;
 };
 
 #endif // _INTERVAL_HPP

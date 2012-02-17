@@ -20,6 +20,7 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <cstring>
 
 #include "basic_types.h"
 #include "Interval.hpp"
@@ -27,8 +28,15 @@
 
 using namespace std;
 
-Interval::Interval(timestamp_t start, timestamp_t end, attribute_t attribute)
-: _start(start), _end(end), _attribute(attribute)
+const unsigned int Interval::HEADER_SIZE = (
+	2 * sizeof(timestamp_t) +	// start/end
+	sizeof(attribute_t) +		// attribute
+	sizeof(interval_type_t) +	// interval type
+	sizeof(uint32_t)		// value/variable section pointer
+);
+
+Interval::Interval(timestamp_t start, timestamp_t end, attribute_t attribute, interval_type_t type)
+: _start(start), _end(end), _attribute(attribute), _type(type)
 {
 }
 
@@ -50,6 +58,21 @@ ostream& operator<<(ostream& out, Interval const& intr)
 	out << intr.toString();
 	
 	return out;
+}
+
+void Interval::serialize(uint8_t* var_ptr, uint8_t* head_ptr) {
+	// serialize header
+	memcpy(head_ptr, &this->_start, sizeof(timestamp_t));
+	head_ptr += sizeof(timestamp_t);
+	memcpy(head_ptr, &this->_end, sizeof(timestamp_t));
+	head_ptr += sizeof(timestamp_t);
+	memcpy(head_ptr, &this->_attribute, sizeof(attribute_t));
+	head_ptr += sizeof(attribute_t);
+	memcpy(head_ptr, &this->_type, sizeof(interval_type_t));
+	head_ptr += sizeof(interval_type_t);
+	
+	// serialize values
+	this->serializeValues(var_ptr, head_ptr);
 }
 
 bool Interval::operator==(const Interval& other)

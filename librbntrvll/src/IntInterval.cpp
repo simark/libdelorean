@@ -18,11 +18,12 @@
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "IntInterval.hpp"
+#include "fixed_config.h"
 
 #include <sstream>
 
-IntInterval::IntInterval(timestamp_t start, timestamp_t end, uint32_t attribute, int32_t value)
-:Interval(start, end, attribute), _value(value)
+IntInterval::IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value)
+:Interval(start, end, attribute, SIT_INT32), _value(value)
 {
 }
 
@@ -33,7 +34,7 @@ std::string IntInterval::getStringValue(void) const
 	return oss.str();
 }
 
-void IntInterval::serialize(void* var_addr, void* u32_addr) const {
+void IntInterval::serializeValues(void* var_addr, void* u32_addr) const {
 	*((int32_t*) u32_addr) = this->_value;
 }
 

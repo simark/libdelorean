@@ -1,4 +1,5 @@
 /**
+ * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
  * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
@@ -19,9 +20,12 @@
 #include "HistoryTreeNode.hpp"
 #include "HistoryTree.hpp"
 #include "IntInterval.hpp"
+#include "basic_types.h"
 
 #include <algorithm>
 #include <assert.h>
+#include <ostream>
+#include <cstring>
 
 using namespace std;
 using namespace std::tr1;
@@ -51,7 +55,7 @@ HistoryTreeNode::~HistoryTreeNode()
  *  
  * @param tree Reference to the HT which will own this node
  * @param fc FileChannel to the history file, ALREADY SEEKED at the start of the node.
- * @throws IOException 
+ * @throw IOException 
  */
 HistoryTreeNode HistoryTreeNode::readNode(const HistoryTree& tree)
 {
@@ -66,7 +70,7 @@ HistoryTreeNode HistoryTreeNode::readNode(const HistoryTree& tree)
  * 
  * @param stateInfo The same stateInfo that comes from SHT's doQuery()
  * @param t The timestamp for which the query is for. Only return intervals that intersect t.
- * @throws TimeRangeException 
+ * @throw TimeRangeException 
  */
 void HistoryTreeNode::writeInfoFromNode(vector<shared_ptr<Interval> >& intervals, timestamp_t timestamp) const
 {
@@ -92,13 +96,13 @@ void HistoryTreeNode::writeInfoFromNode(vector<shared_ptr<Interval> >& intervals
 void HistoryTreeNode::addInterval(const Interval& newInterval)
 {
 	/* Just in case, but should be checked before even calling this function */
-	assert( newInterval.getIntervalSize() <= getNodeFreeSpace() );
+	assert( newInterval.getTotalSize() <= getFreeSpace() );
 	
 	/* We need to clone the interval, to guarantee ownership */
 	_intervals.push_back( shared_ptr<Interval>(newInterval.clone()) );
 	
 	/* Update the in-node offset "pointer" */
-	_variableSectionOffset -= ( newInterval.getVariableEntrySize() );	
+	_variableSectionOffset -= ( newInterval.getVariableValueSize() );	
 }
 
 /**
@@ -106,7 +110,7 @@ void HistoryTreeNode::addInterval(const Interval& newInterval)
  * our right. (Puts isDone = true and sets the endtime)
  * 
  * @param endtime The nodeEnd time that the node will have
- * @throws TimeRangeException 
+ * @throw TimeRangeException 
  */
 void HistoryTreeNode::closeThisNode(timestamp_t endtime)
 {
@@ -210,7 +214,7 @@ int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
  * Returns the free space in the node, which is simply put,
  * the stringSectionOffset - dataSectionOffset
  */
-int HistoryTreeNode::getNodeFreeSpace()
+unsigned int HistoryTreeNode::getFreeSpace()
 {
 	return _variableSectionOffset - getDataSectionEndOffset();
 }
@@ -218,7 +222,10 @@ int HistoryTreeNode::getNodeFreeSpace()
 int HistoryTreeNode::getTotalHeaderSize() const
 {
 	int headerSize = 0;
-	
+
+#if 0
+	// FIXME: not so sure about describing the whole header here
+	// FIXME: this only applies to core nodes
 	headerSize +=	  4	/* 1x int (extension node) */
 			+ 4	/* 1x int (nbChildren) */
 			+ 4 * _ownerTree->getConfig()._maxChildren	/* MAX_NB * int ('children' table) */
@@ -227,7 +234,9 @@ int HistoryTreeNode::getTotalHeaderSize() const
 			+ 16	/* 2x long (start time, end time) */
 			+ 16	/* 4x int (seq number, parent seq number, intervalcount, strings section pos.) */
 			+ 1;	/* byte (done or not) */
-	return headerSize;
+#endif
+
+	return 34;
 }
 
 /**
@@ -235,5 +244,73 @@ int HistoryTreeNode::getTotalHeaderSize() const
  */
 int HistoryTreeNode::getDataSectionEndOffset() const
 {
-	return getTotalHeaderSize() + Interval::getStaticEntrySize() * _intervals.size();
+	return getTotalHeaderSize() + Interval::getHeaderSize() * _intervals.size();
+}
+
+void HistoryTreeNode::serialize(ostream& os) {
+	// allocate some byte buffer
+	// TODO: private buffer to avoid new/delete for each block write?
+	unsigned int bufsz = _ownerTree->getConfig()._blockSize;
+	uint8_t* buf = new uint8_t [bufsz];
+	
+	// serialize to buffer
+	this->serialize(buf);
+	
+	// write to output
+	os.write((char*) buf, bufsz);
+	
+	// free buffer
+	delete [] buf;
+}
+
+void HistoryTreeNode::serialize(uint8_t* buf) {
+	// pointer backup
+	uint8_t* bkbuf = buf;
+	
+	// prepare common header fields
+	int32_t interval_count = (int32_t) this->_intervals.size();
+	int32_t var_sect_offset = (int32_t) _variableSectionOffset;
+	uint8_t isDone = this->_isDone ? 1 : 0;
+	
+	// write block common header
+	memcpy(buf, &this->_nodeType, sizeof(uint8_t));
+	buf += sizeof(uint8_t);
+	memcpy(buf, &this->_nodeStart, sizeof(timestamp_t));
+	buf += sizeof(timestamp_t);
+	memcpy(buf, &this->_nodeEnd, sizeof(timestamp_t));
+	buf += sizeof(timestamp_t);
+	memcpy(buf, &this->_sequenceNumber, sizeof(seq_number_t));
+	buf += sizeof(seq_number_t);
+	memcpy(buf, &this->_parentSequenceNumber, sizeof(seq_number_t));
+	buf += sizeof(seq_number_t);
+	memcpy(buf, &interval_count, sizeof(int32_t));
+	buf += sizeof(int32_t);
+	memcpy(buf, &var_sect_offset, sizeof(int32_t));
+	buf += sizeof(int32_t);
+	memcpy(buf, &isDone, sizeof(uint8_t));
+	buf += sizeof(uint8_t);
+	
+	// write node's specific header
+	unsigned int sheadsz = this->writeHeader(buf);
+	buf += sheadsz;
+	
+	// write intervals (OO fashion)
+	vector< shared_ptr<Interval> >::iterator it;
+	uint8_t* var_addr = bkbuf + _ownerTree->getConfig()._blockSize;
+	for (it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {	
+		shared_ptr<Interval> interval = *it;
+		// get interval variable value size
+		unsigned int var_size = interval->getVariableValueSize();
+		var_addr -= var_size;
+		unsigned int offset_ptr = ((unsigned int) var_addr - (unsigned int) bkbuf);
+		
+		// serialize interval
+		interval->serialize(var_addr, buf);
+		
+		// overwrite header's value with variable value "pointer" if variable size isn't 0
+		if (var_size != 0) {
+			memcpy(buf + interval->getHeaderSize() - sizeof(uint32_t), &offset_ptr, sizeof(uint32_t));
+		}
+		buf += interval->getHeaderSize();
+	}
 }

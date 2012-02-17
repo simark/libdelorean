@@ -24,6 +24,7 @@
 class HistoryTreeConfig
 {
 public:
+	// TODO: encapsulate?
 	std::string _stateFile;
 	int _blockSize;
 	int _maxChildren;
@@ -49,7 +50,7 @@ public:
 	 * Default constructor, creates an invalid configuration
 	 */	
 	HistoryTreeConfig()
-	:_stateFile("~/tmp/file"), _blockSize(0), _maxChildren(0), _treeStart(0)
+	:_stateFile("/dev/urandom"), _blockSize(0), _maxChildren(0), _treeStart(0)
 	{
 	}
 };

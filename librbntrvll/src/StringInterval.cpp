@@ -25,12 +25,12 @@
 using namespace std;
 
 StringInterval::StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, string value)
-: Interval(start, end, attribute), _value(value)
+: Interval(start, end, attribute, SIT_STRING), _value(value)
 {
 }
 
 StringInterval::StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, const char* value)
-: Interval(start, end, attribute), _value(value)
+: Interval(start, end, attribute, SIT_STRING), _value(value)
 {
 }
 
@@ -39,7 +39,7 @@ std::string StringInterval::getStringValue(void) const
 	return _value;
 }
 
-void StringInterval::serialize(void* var_addr, void* u32_addr) const {
+void StringInterval::serializeValues(void* var_addr, void* u32_addr) const {
 	// copy string length (enables faster reads than ASCIIZ)
 	uint32_t sz = _value.size();
 	memcpy(var_addr, &sz, sizeof(sz));

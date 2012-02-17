@@ -177,7 +177,7 @@ void HistoryTree::tryInsertAtNode(const Interval& interval, int indexOfNode)
 	HistoryTreeNode& targetNode(_latestBranch[indexOfNode]);
 	
 	/* Verify if there is enough room in this node to store this interval */
-	if ( interval.getIntervalSize() > targetNode.getNodeFreeSpace() ) {
+	if ( interval.getTotalSize() > targetNode.getFreeSpace() ) {
 		/* Nope, not enough room. Insert in a new sibling instead. */
 		addSiblingNode(indexOfNode);
 		tryInsertAtNode(interval, _latestBranch.size()-1);

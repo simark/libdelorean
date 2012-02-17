@@ -1,4 +1,5 @@
 /**
+ * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
  * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
@@ -20,8 +21,10 @@
 #define _HISTORYTREENODE_HPP
 
 #include "Interval.hpp"
+#include "basic_types.h"
 
 #include <stdint.h>
+#include <ostream>
 #include <vector>
 
 class HistoryTree;
@@ -36,6 +39,12 @@ public:
 	
 	void writeInfoFromNode(std::vector<std::tr1::shared_ptr<Interval> >& intervals, timestamp_t timestamp) const;
 	
+	void serialize(uint8_t* buf);
+	
+	void serialize(std::ostream& os);
+	
+	virtual unsigned int writeHeader(uint8_t* buf) { return 0; }
+	
 	void addInterval(const Interval& newInterval);
 	
 	void closeThisNode(timestamp_t endtime);
@@ -46,7 +55,7 @@ public:
 	
 	int getStartIndexFor(timestamp_t timestamp) const;
 	
-	int getNodeFreeSpace();
+	unsigned int getFreeSpace();
 	
 	int getTotalHeaderSize() const;
 	
@@ -93,7 +102,7 @@ public:
 	{
 		return _isDone;
 	}
-	
+
 private:
 	/* Pointer to the History Tree to whom this node belongs */
 	HistoryTree* _ownerTree;
@@ -103,11 +112,11 @@ private:
 	timestamp_t _nodeEnd;
 	
 	/* Sequence number = position in the node section of the file */
-	int _sequenceNumber;
-	int _parentSequenceNumber; /* = -1 if this node is the root node */
+	seq_number_t _sequenceNumber;
+	seq_number_t _parentSequenceNumber; /* = -1 if this node is the root node */
 	
 	/* Where the Strings section begins (from the start of the node */
-	int _variableSectionOffset;
+	unsigned int _variableSectionOffset;
 	
 	/* True if this node is closed (and to be committed to disk) */
 	bool _isDone;
@@ -118,7 +127,7 @@ private:
 	int _nbChildren;	/* Nb. of children this node has */
 	int* _children;		/* Seq. numbers of the children nodes (size = MAX_NB_CHILDREN) */
 	timestamp_t* _childStart;	/* Start times of each of the children (size = MAX_NB_CHILDREN) */
-	
+	uint8_t _nodeType;
 	
 	int getDataSectionEndOffset() const;
 };

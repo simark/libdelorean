@@ -38,7 +38,8 @@ public:
 	
 	HistoryTreeNode selectNextChild(const HistoryTreeNode& currentNode, timestamp_t timestamp) const;
 	
-	static int getTreeHeaderSize();
+	// FIXME: this is a temporary implementation so that we may link with the lib.
+	static int getTreeHeaderSize() { return 0; }
 	
 	const HistoryTreeIO& getTreeIO() const { return _treeIO; };
 		

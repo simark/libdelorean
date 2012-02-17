@@ -23,19 +23,22 @@
 
 #include "Interval.hpp"
 #include "basic_types.h"
+#include "fixed_config.h"
 
 class StringInterval : public Interval
 {
 public:
-	StringInterval(void) { }
+	StringInterval(void) : Interval(SIT_STRING) { }
 	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, std::string value);
 	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, const char* value);
 	std::string getStringValue(void) const;
-	void serialize(void* var_addr, void* u32_addr) const;
 	void unserialize(void* var_addr, void* u32_addr);
 	unsigned int getVariableValueSize(void) const;
 	Interval* clone(void) const;
 
+protected:
+	void serializeValues(void* var_addr, void* u32_addr) const;
+	
 private:
 	std::string _value;
 };

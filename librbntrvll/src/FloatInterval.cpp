@@ -22,7 +22,7 @@
 #include <sstream>
 
 FloatInterval::FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value)
-:Interval(start, end, attribute), _value(value)
+:Interval(start, end, attribute, SIT_FLOAT32), _value(value)
 {
 }
 
@@ -33,7 +33,7 @@ std::string FloatInterval::getStringValue(void) const
 	return oss.str();
 }
 
-void FloatInterval::serialize(void* var_addr, void* u32_addr) const {
+void FloatInterval::serializeValues(void* var_addr, void* u32_addr) const {
 	*((float*) u32_addr) = this->_value;
 }
 
