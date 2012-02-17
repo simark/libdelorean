@@ -41,7 +41,7 @@ public:
 	HistoryTreeBackend(std::string newFile, timestamp_t startTime);
 	HistoryTreeBackend(std::string existingFile);
 	virtual ~HistoryTreeBackend();
-	void insertInterval(const Interval& interval);
+	void insertInterval(std::tr1::shared_ptr<Interval> interval);
 	void finish(timestamp_t timestamp);
 	std::vector< std::tr1::shared_ptr<Interval> > query(timestamp_t timestamp) const;
 	std::tr1::shared_ptr<Interval> query(timestamp_t timestamp, attribute_t key) const;

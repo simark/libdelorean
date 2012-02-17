@@ -93,16 +93,16 @@ void HistoryTreeNode::writeInfoFromNode(vector<shared_ptr<Interval> >& intervals
  * Add an interval to this node
  * @param newInterval
  */
-void HistoryTreeNode::addInterval(const Interval& newInterval)
+void HistoryTreeNode::addInterval(std::tr1::shared_ptr<Interval> newInterval)
 {
 	/* Just in case, but should be checked before even calling this function */
-	assert( newInterval.getTotalSize() <= getFreeSpace() );
+	assert( newInterval->getTotalSize() <= getFreeSpace() );
 	
 	/* We need to clone the interval, to guarantee ownership */
-	_intervals.push_back( shared_ptr<Interval>(newInterval.clone()) );
+	_intervals.push_back( newInterval );
 	
 	/* Update the in-node offset "pointer" */
-	_variableSectionOffset -= ( newInterval.getVariableValueSize() );	
+	_variableSectionOffset -= ( newInterval->getVariableValueSize() );	
 }
 
 /**

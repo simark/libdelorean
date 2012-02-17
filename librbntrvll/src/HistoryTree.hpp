@@ -34,7 +34,7 @@ public:
 	
 	void closeTree(timestamp_t timestamp);
 	
-	void insertInterval(const Interval& interval);
+	void insertInterval(std::tr1::shared_ptr<Interval> interval);
 	
 	HistoryTreeNode selectNextChild(const HistoryTreeNode& currentNode, timestamp_t timestamp) const;
 	
@@ -77,7 +77,7 @@ private:
 	
 	std::vector<HistoryTreeNode> _latestBranch;
 	
-	void tryInsertAtNode(const Interval& interval, int indexOfNode);
+	void tryInsertAtNode(std::tr1::shared_ptr<Interval>, int indexOfNode);
 	
 	void addSiblingNode(unsigned int indexOfNode);
 	

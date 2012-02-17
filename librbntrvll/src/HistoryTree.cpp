@@ -110,9 +110,9 @@ void HistoryTree::closeTree(timestamp_t timestamp)
  * 
  * @param interval
  */
-void HistoryTree::insertInterval(const Interval& interval)
+void HistoryTree::insertInterval(std::tr1::shared_ptr<Interval> interval)
 {
-	if ( interval.getStart() < _config._treeStart ) {
+	if ( interval->getStart() < _config._treeStart ) {
 		throw TimeRangeEx("Interval start time below IntervalTree start time");
 	}
 	
@@ -172,12 +172,12 @@ static int getTreeHeaderSize() {
  *            The index *in the latestBranch* where we are trying the
  *            insertion
  */
-void HistoryTree::tryInsertAtNode(const Interval& interval, int indexOfNode)
+void HistoryTree::tryInsertAtNode(std::tr1::shared_ptr<Interval> interval, int indexOfNode)
 {
 	HistoryTreeNode& targetNode(_latestBranch[indexOfNode]);
 	
 	/* Verify if there is enough room in this node to store this interval */
-	if ( interval.getTotalSize() > targetNode.getFreeSpace() ) {
+	if ( interval->getTotalSize() > targetNode.getFreeSpace() ) {
 		/* Nope, not enough room. Insert in a new sibling instead. */
 		addSiblingNode(indexOfNode);
 		tryInsertAtNode(interval, _latestBranch.size()-1);
@@ -185,7 +185,7 @@ void HistoryTree::tryInsertAtNode(const Interval& interval, int indexOfNode)
 	}
 	
 	/* Make sure the interval time range fits this node */
-	if ( interval.getStart() < targetNode.getNodeStart() ) {
+	if ( interval->getStart() < targetNode.getNodeStart() ) {
 		/* No, this interval starts before the startTime of this node.
 		 * We need to check recursively in parents if it can fit. */
 		assert ( indexOfNode >= 1 );
@@ -197,8 +197,8 @@ void HistoryTree::tryInsertAtNode(const Interval& interval, int indexOfNode)
 	targetNode.addInterval(interval);
 	
 	/* Update treeEnd if needed */
-	if ( interval.getEnd() > _treeEnd ) {
-		_treeEnd = interval.getEnd();
+	if ( interval->getEnd() > _treeEnd ) {
+		_treeEnd = interval->getEnd();
 	}
 	return;
 }

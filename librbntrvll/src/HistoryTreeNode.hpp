@@ -45,7 +45,7 @@ public:
 	
 	virtual unsigned int writeHeader(uint8_t* buf) { return 0; }
 	
-	void addInterval(const Interval& newInterval);
+	void addInterval(std::tr1::shared_ptr<Interval> newInterval);
 	
 	void closeThisNode(timestamp_t endtime);
 	

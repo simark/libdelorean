@@ -54,7 +54,7 @@ HistoryTreeBackend::~HistoryTreeBackend()
  * 
  * @param interval A new interval to insert
  */
-void HistoryTreeBackend::insertInterval(const Interval& interval)
+void HistoryTreeBackend::insertInterval(std::tr1::shared_ptr<Interval> interval)
 {
 	_historyTree.insertInterval(interval);
 }
