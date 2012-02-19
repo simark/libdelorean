@@ -21,14 +21,13 @@
 
 #include "HistoryTreeNode.hpp"
 #include "HistoryTreeConfig.hpp"
-#include "HistoryTreeIO.hpp"
 #include "Interval.hpp"
+#include "HistoryTreeIO.hpp"
 
 class HistoryTree
 {
 public:
 	HistoryTree(HistoryTreeConfig config);
-	HistoryTree(std::string newFile, int blockSize, int maxChildren, timestamp_t startTime);
 	HistoryTree(std::string existingFile);
 	virtual ~HistoryTree();
 	
@@ -36,15 +35,15 @@ public:
 	
 	void insertInterval(const Interval& interval);
 	
-	HistoryTreeNode selectNextChild(const HistoryTreeNode& currentNode, timestamp_t timestamp) const;
+	//HistoryTreeNode selectNextChild(const HistoryTreeNode& currentNode, timestamp_t timestamp) const;
 	
 	// FIXME: this is a temporary implementation so that we may link with the lib.
 	static int getTreeHeaderSize() { return 0; }
 	
 	const HistoryTreeIO& getTreeIO() const { return _treeIO; };
-		
+
 	//FIXME const?
-	const std::vector<HistoryTreeNode>& getLatestBranch() const
+	std::vector<HistoryTreeNodeSharedPtr> getLatestBranch() const
 	{
 		return _latestBranch;
 	}
@@ -75,7 +74,7 @@ private:
 	timestamp_t _treeEnd;	/* Latest timestamp found in the tree (at any given moment) */
 	int _nodeCount;		/* How many nodes exist in this tree, total */
 	
-	std::vector<HistoryTreeNode> _latestBranch;
+	std::vector<HistoryTreeNodeSharedPtr> _latestBranch;
 	
 	void tryInsertAtNode(const Interval& interval, int indexOfNode);
 	
@@ -83,7 +82,7 @@ private:
 	
 	void addNewRootNode();
 	
-	HistoryTreeNode initNewCoreNode(int parentSeqNumber, timestamp_t startTime);
+	std::vector< std::tr1::shared_ptr<HistoryTreeNode> > initNewCoreNode(int parentSeqNumber, timestamp_t startTime);
 };
 
 #endif // _HISTORYTREE_HPP

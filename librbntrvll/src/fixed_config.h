@@ -28,6 +28,12 @@
 #define SIT_FLOAT32	3
 
 /**
+ * Node types.
+ */
+#define NT_CORE		1
+#define NT_LEAF		2
+
+/**
  * History file magic number.
  */
 #define HF_MAGIC_NUMBER		0x05ffa900

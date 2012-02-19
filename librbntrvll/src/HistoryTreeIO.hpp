@@ -21,15 +21,17 @@
 
 #include "HistoryTreeNode.hpp"
 
+class HistoryTree;
+
 class HistoryTreeIO
 {
 public:
 	HistoryTreeIO();
 	HistoryTreeIO(HistoryTree* ownerTree);
 	HistoryTreeIO(HistoryTree* ownerTree, int curNodeCount);
-	HistoryTreeNode readNode(int seqNumber) const;
+	/*HistoryTreeNode readNode(int seqNumber) const;
 	HistoryTreeNode readNodeFromMemory(int seqNumber) const;
-	HistoryTreeNode readNodeFromDisk(int seqNumber) const;
+	HistoryTreeNode readNodeFromDisk(int seqNumber) const;*/
 	
 	void writeNode(HistoryTreeNode& node);
 

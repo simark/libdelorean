@@ -25,6 +25,7 @@
 
 #include "HistoryTree.hpp"
 
+class HistoryTreeIO;
 class Interval;
 
 /**

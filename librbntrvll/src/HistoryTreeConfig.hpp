@@ -21,13 +21,15 @@
 
 #include <string>
 
+#include "basic_types.h"
+
 class HistoryTreeConfig
 {
 public:
 	// TODO: encapsulate?
 	std::string _stateFile;
-	int _blockSize;
-	int _maxChildren;
+	unsigned int _blockSize;
+	unsigned int _maxChildren;
 	timestamp_t _treeStart;
 	
 	HistoryTreeConfig(std::string newStateFile, int blockSize, int maxChildren,

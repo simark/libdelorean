@@ -19,6 +19,8 @@
 
 #include "HistoryTreeIO.hpp"
 
+#if 0
+
 /**
  * Empty constructor
  * 
@@ -113,3 +115,5 @@ void HistoryTreeIO::writeNode(HistoryTreeNode& node)
 //		e.printStackTrace();
 //	}	
 }
+
+#endif

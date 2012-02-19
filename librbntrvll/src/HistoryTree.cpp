@@ -21,6 +21,7 @@
 
 #include <assert.h>
 
+#if 0
 /**
  * Create a new HistoryTree from scratch, using a HistoryTreeConfig object
  * for configuration
@@ -301,3 +302,4 @@ HistoryTreeNode HistoryTree::initNewCoreNode(int parentSeqNumber, timestamp_t st
 	}
 	return newNode;	
 }
+#endif
