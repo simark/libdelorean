@@ -33,12 +33,12 @@ public:
 	
 	void closeTree(timestamp_t timestamp);
 	
-	void insertInterval(const Interval& interval);
+	void insertInterval(IntervalSharedPtr interval);
 	
-	//HistoryTreeNode selectNextChild(const HistoryTreeNode& currentNode, timestamp_t timestamp) const;
+	HistoryTreeNodeSharedPtr selectNextChild(HistoryTreeNodeSharedPtr currentNode, timestamp_t timestamp) const;
 	
 	// FIXME: this is a temporary implementation so that we may link with the lib.
-	static int getTreeHeaderSize() { return 0; }
+	static unsigned int getTreeHeaderSize() { return 0; }
 	
 	const HistoryTreeIO& getTreeIO() const { return _treeIO; };
 
@@ -76,13 +76,13 @@ private:
 	
 	std::vector<HistoryTreeNodeSharedPtr> _latestBranch;
 	
-	void tryInsertAtNode(const Interval& interval, int indexOfNode);
+	void tryInsertAtNode(IntervalSharedPtr, int indexOfNode);
 	
 	void addSiblingNode(unsigned int indexOfNode);
 	
 	void addNewRootNode();
 	
-	std::vector< std::tr1::shared_ptr<HistoryTreeNode> > initNewCoreNode(int parentSeqNumber, timestamp_t startTime);
+	HistoryTreeNodeSharedPtr initNewCoreNode(int parentSeqNumber, timestamp_t startTime);
 };
 
 #endif // _HISTORYTREE_HPP

@@ -24,9 +24,9 @@
 #include <stdint.h>
 
 #include "HistoryTree.hpp"
+#include "Interval.hpp"
 
 class HistoryTreeIO;
-class Interval;
 
 /**
  * @class HistoryTreeBackend
@@ -42,17 +42,17 @@ public:
 	HistoryTreeBackend(std::string newFile, timestamp_t startTime);
 	HistoryTreeBackend(std::string existingFile);
 	virtual ~HistoryTreeBackend();
-	void insertInterval(const Interval& interval);
+	void insertInterval(IntervalSharedPtr interval);
 	void finish(timestamp_t timestamp);
-	std::vector< std::tr1::shared_ptr<Interval> > query(timestamp_t timestamp) const;
-	std::tr1::shared_ptr<Interval> query(timestamp_t timestamp, attribute_t key) const;
+	std::vector< IntervalSharedPtr > query(timestamp_t timestamp) const;
+	IntervalSharedPtr query(timestamp_t timestamp, attribute_t key) const;
 	
 private:
 	HistoryTree _historyTree;
 	HistoryTreeIO _treeIO;
 	
 	bool checkValidTime(timestamp_t timestamp) const;
-	std::tr1::shared_ptr<Interval> getRelevantInterval(timestamp_t timestamp, attribute_t key) const;
+	IntervalSharedPtr getRelevantInterval(timestamp_t timestamp, attribute_t key) const;
 	
 };
 

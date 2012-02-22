@@ -56,7 +56,7 @@ HistoryTreeBackend::~HistoryTreeBackend()
  * 
  * @param interval A new interval to insert
  */
-void HistoryTreeBackend::insertInterval(const Interval& interval)
+void HistoryTreeBackend::insertInterval(IntervalSharedPtr interval)
 {
 	_historyTree.insertInterval(interval);
 }
@@ -89,7 +89,7 @@ vector<IntervalSharedPtr> HistoryTreeBackend::query(timestamp_t timestamp) const
 	return v;	
 }
 
-std::tr1::shared_ptr<Interval> HistoryTreeBackend::query(timestamp_t timestamp, attribute_t key) const
+IntervalSharedPtr HistoryTreeBackend::query(timestamp_t timestamp, attribute_t key) const
 {
 	return getRelevantInterval(timestamp, key);
 }
@@ -99,7 +99,7 @@ bool HistoryTreeBackend::checkValidTime(timestamp_t timestamp) const
 	return ( timestamp >= _historyTree.getTreeStart() && timestamp <= _historyTree.getTreeEnd() );
 }
 
-std::tr1::shared_ptr<Interval> HistoryTreeBackend::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
+IntervalSharedPtr HistoryTreeBackend::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
 {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of TreeInterval bounds.");

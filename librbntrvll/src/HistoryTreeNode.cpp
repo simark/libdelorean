@@ -25,6 +25,7 @@
 #include "IntInterval.hpp"
 #include "HistoryTreeNode.hpp"
 #include "basic_types.h"
+#include "ex/NodeFullEx.hpp"
 
 using namespace std;
 using namespace std::tr1;
@@ -112,7 +113,7 @@ void HistoryTreeNode::closeThisNode(timestamp_t endtime)
 		 * This speeds up lookups a bit */
 		 /* Lambda functions will not compile for some reason, using a normal function instead*/
 		std::sort(_intervals.begin(), _intervals.end(), 		
-		//[](std::tr1::shared_ptr<Interval> a, std::tr1::shared_ptr<Interval> b) -> bool { return *a < *b; });
+		//[](IntervalSharedPtr a, IntervalSharedPtr b) -> bool { return *a < *b; });
 		orderIntervals);
 		
 		/* Make sure there are no intervals in this node with their
@@ -135,7 +136,7 @@ void HistoryTreeNode::closeThisNode(timestamp_t endtime)
  * @return The Interval containing the information we want, or null if it wasn't found
  * @throw TimeRangeEx
  */
-std::tr1::shared_ptr<Interval> HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
+IntervalSharedPtr HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
 {
 	assert ( _isDone );
 	int startIndex;
@@ -176,7 +177,7 @@ int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
 	
 	
 	it = lower_bound(_intervals.begin(), _intervals.end(), dummyInterval, 
-	//[](std::tr1::shared_ptr<Interval> a, std::tr1::shared_ptr<Interval> b) -> bool { return *a < *b; });
+	//[](IntervalSharedPtr a, IntervalSharedPtr b) -> bool { return *a < *b; });
 	orderIntervals);
 	
 	return it - _intervals.begin();
@@ -194,6 +195,11 @@ unsigned int HistoryTreeNode::getFreeSpace() const
 unsigned int HistoryTreeNode::getTotalHeaderSize() const
 {
 	return HistoryTreeNode::COMMON_HEADER_SIZE + this->getSpecificHeaderSize();
+}
+
+void HistoryTreeNode::linkNewChild(HistoryTreeNodeSharedPtr childNode)
+{
+	throw(NodeFullEx("This type of node cannot contain children"));
 }
 
 /**

@@ -68,6 +68,15 @@ unsigned int HistoryTreeCoreNode::getSpecificHeaderSize(void) const
 	);
 }
 
+void HistoryTreeCoreNode::linkNewChild(HistoryTreeNodeSharedPtr childNode)
+{
+	assert (_nbChildren < _config._maxChildren);
+
+	_children[_nbChildren] = childNode->getSequenceNumber();
+	_childStart[_nbChildren] = childNode->getNodeStart();
+	_nbChildren++;
+}
+
 void HistoryTreeCoreNode::serializeSpecificHeader(uint8_t* buf) const
 {	
 	// buffer pointer backup

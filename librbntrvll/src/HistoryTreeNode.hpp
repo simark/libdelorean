@@ -72,6 +72,18 @@ public:
 	bool isDone() const {
 		return _isDone;
 	}
+	
+	virtual void linkNewChild(HistoryTreeNodeSharedPtr childNode);
+	virtual seq_number_t getChild(unsigned int index) const {
+		return -1;
+	}
+	virtual timestamp_t getChildStart(int index) const {
+		return -1;
+	}
+	virtual unsigned int getNbChildren() const {
+		return 0;
+	}
+	
 	static const unsigned int COMMON_HEADER_SIZE;
 
 protected:

@@ -17,11 +17,12 @@
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "HistoryTree.hpp"
+#include "HistoryTreeCoreNode.hpp"
 #include "ex/TimeRangeEx.hpp"
 
 #include <assert.h>
 
-#if 0
+#if 1
 /**
  * Create a new HistoryTree from scratch, using a HistoryTreeConfig object
  * for configuration
@@ -37,16 +38,17 @@ HistoryTree::HistoryTree(HistoryTreeConfig config)
 	
 	_treeEnd = _config._treeStart;
 	_nodeCount = 0;
-	_latestBranch = std::vector<HistoryTreeNode>();
+	_latestBranch = std::vector<HistoryTreeNodeSharedPtr>();
 	
 	/* Prepare the IO object */
 	_treeIO = HistoryTreeIO(this);
 	
 	/* Add the first node to the tree */
-	HistoryTreeNode firstNode = initNewCoreNode(-1, _config._treeStart);
+	HistoryTreeNodeSharedPtr firstNode = initNewCoreNode(-1, _config._treeStart);
 	_latestBranch.push_back(firstNode);	
 }
 
+#if 0
 /**
  * Create a new HistoryTree from scratch, using parameters needed to
  * construct a HistoryTreeConfig object
@@ -71,9 +73,10 @@ HistoryTree::HistoryTree(std::string newFile, int blockSize, int maxChildren, ti
 	_treeIO = HistoryTreeIO(this);
 	
 	/* Add the first node to the tree */
-	HistoryTreeNode firstNode = initNewCoreNode(-1, _config._treeStart);
+	HistoryTreeNodeSharedPtr firstNode = initNewCoreNode(-1, _config._treeStart);
 	_latestBranch.push_back(firstNode);	
 }
+#endif
 
 /**
  * "Reader" constructor : instantiate a HistoryTree from an existing tree file on
@@ -111,9 +114,9 @@ void HistoryTree::closeTree(timestamp_t timestamp)
  * 
  * @param interval
  */
-void HistoryTree::insertInterval(const Interval& interval)
+void HistoryTree::insertInterval(IntervalSharedPtr interval)
 {
-	if ( interval.getStart() < _config._treeStart ) {
+	if ( interval->getStart() < _config._treeStart ) {
 		throw TimeRangeEx("Interval start time below IntervalTree start time");
 	}
 	
@@ -129,26 +132,26 @@ void HistoryTree::insertInterval(const Interval& interval)
  * @param t
  * @return The child node intersecting t
  */
-HistoryTreeNode HistoryTree::selectNextChild(const HistoryTreeNode& currentNode, timestamp_t timestamp) const
+HistoryTreeNodeSharedPtr HistoryTree::selectNextChild(HistoryTreeNodeSharedPtr currentNode, timestamp_t timestamp) const
 {
-	assert ( currentNode.getNbChildren() > 0 );
-	int potentialNextSeqNb = currentNode.getSequenceNumber();
+	assert ( currentNode->getNbChildren() > 0 );
+	int potentialNextSeqNb = currentNode->getSequenceNumber();
 	
-	for ( int i = 0; i < currentNode.getNbChildren(); i++ ) {
-		if ( timestamp >= currentNode.getChildStart(i) ) {
-			potentialNextSeqNb = currentNode.getChild(i);
+	for ( unsigned int i = 0; i < currentNode->getNbChildren(); i++ ) {
+		if ( timestamp >= currentNode->getChildStart(i) ) {
+			potentialNextSeqNb = currentNode->getChild(i);
 		} else {
 			break;
 		}
 	}
 	/* Once we exit this loop, we should have found a children to follow.
 	 * If we didn't, there's a problem. */
-	assert ( potentialNextSeqNb != currentNode.getSequenceNumber() );
+	assert ( potentialNextSeqNb != currentNode->getSequenceNumber() );
 	
 	/* Since this code path is quite performance-critical, avoid iterating
 	 * through the whole latestBranch array if we know for sure the next
 	 * node has to be on disk */
-	if ( currentNode.isDone() ) {
+	if ( currentNode->isDone() ) {
 		return _treeIO.readNodeFromDisk(potentialNextSeqNb);
 	} else {
 		return _treeIO.readNode(potentialNextSeqNb);
@@ -160,7 +163,7 @@ HistoryTreeNode HistoryTree::selectNextChild(const HistoryTreeNode& currentNode,
  * The nodes will use this offset to know where they should be in the file.
  * This should always be a multiple of 4K.
  */
-static int getTreeHeaderSize() {
+static unsigned int getTreeHeaderSize() {
 	return 4096;
 }
 
@@ -173,20 +176,20 @@ static int getTreeHeaderSize() {
  *            The index *in the latestBranch* where we are trying the
  *            insertion
  */
-void HistoryTree::tryInsertAtNode(const Interval& interval, int indexOfNode)
+void HistoryTree::tryInsertAtNode(IntervalSharedPtr interval, int indexOfNode)
 {
-	HistoryTreeNode& targetNode(_latestBranch[indexOfNode]);
+	HistoryTreeNodeSharedPtr targetNode(_latestBranch[indexOfNode]);
 	
-	/* Verify if there is enough room in this node to store this interval */
-	if ( interval.getTotalSize() > targetNode.getFreeSpace() ) {
-		/* Nope, not enough room. Insert in a new sibling instead. */
+	//Verify if there is enough room in this node to store this interval
+	if ( interval->getTotalSize() > targetNode->getFreeSpace() ) {
+		//Nope, not enough room. Insert in a new sibling instead.
 		addSiblingNode(indexOfNode);
 		tryInsertAtNode(interval, _latestBranch.size()-1);
 		return;
 	}
 	
-	/* Make sure the interval time range fits this node */
-	if ( interval.getStart() < targetNode.getNodeStart() ) {
+	//Make sure the interval time range fits this node
+	if ( interval->getStart() < targetNode->getNodeStart() ) {
 		/* No, this interval starts before the startTime of this node.
 		 * We need to check recursively in parents if it can fit. */
 		assert ( indexOfNode >= 1 );
@@ -194,12 +197,12 @@ void HistoryTree::tryInsertAtNode(const Interval& interval, int indexOfNode)
 		return;
 	}
 	
-	/* Ok, there is room, and the interval fits in this time slot. Let's add it. */
-	targetNode.addInterval(interval);
+	// Ok, there is room, and the interval fits in this time slot. Let's add it.
+	targetNode->addInterval(interval);
 	
-	/* Update treeEnd if needed */
-	if ( interval.getEnd() > _treeEnd ) {
-		_treeEnd = interval.getEnd();
+	// Update treeEnd if needed
+	if ( interval->getEnd() > _treeEnd ) {
+		_treeEnd = interval->getEnd();
 	}
 	return;
 }
@@ -214,7 +217,7 @@ void HistoryTree::tryInsertAtNode(const Interval& interval, int indexOfNode)
 void HistoryTree::addSiblingNode(unsigned int indexOfNode)
 {
 	unsigned int i;
-	HistoryTreeNode newNode, prevNode;
+	HistoryTreeNodeSharedPtr newNode, prevNode;
 	timestamp_t splitTime = _treeEnd;
 	
 	assert ( indexOfNode < _latestBranch.size() );
@@ -226,7 +229,7 @@ void HistoryTree::addSiblingNode(unsigned int indexOfNode)
 	}
 	
 	/* Check if we can indeed add a child to the target parent */
-	if ( _latestBranch[indexOfNode-1].getNbChildren() == _config._maxChildren ) {
+	if ( _latestBranch[indexOfNode-1]->getNbChildren() == _config._maxChildren ) {
 		/* If not, add a branch starting one level higher instead */
 		addSiblingNode(indexOfNode-1);
 		return;
@@ -234,12 +237,12 @@ void HistoryTree::addSiblingNode(unsigned int indexOfNode)
 	
 	/* Split off the new branch from the old one */
 	for ( i=indexOfNode ; i < _latestBranch.size(); i++ ) {
-		_latestBranch[i].closeThisNode(splitTime);
+		_latestBranch[i]->closeThisNode(splitTime);
 		_treeIO.writeNode(_latestBranch[i]);
 		
 		prevNode = _latestBranch[(i-1)];
-		newNode = initNewCoreNode(prevNode.getSequenceNumber(), splitTime + 1);
-		prevNode.linkNewChild(newNode);
+		newNode = initNewCoreNode(prevNode->getSequenceNumber(), splitTime + 1);
+		prevNode->linkNewChild(newNode);
 		
 		_latestBranch[i] = newNode;
 	}
@@ -255,29 +258,29 @@ void HistoryTree::addNewRootNode()
 	unsigned int i, depth;
 	timestamp_t splitTime = _treeEnd;
 	
-	HistoryTreeNode& oldRootNode(_latestBranch[0]);
-	HistoryTreeNode newRootNode = initNewCoreNode(-1, _config._treeStart);
+	HistoryTreeNodeSharedPtr oldRootNode(_latestBranch[0]);
+	HistoryTreeNodeSharedPtr newRootNode = initNewCoreNode(-1, _config._treeStart);
 	
-	/* Tell the old root node that it isn't root anymore */
-	oldRootNode.setParentSequenceNumber(newRootNode.getSequenceNumber());
+	// Tell the old root node that it isn't root anymore
+	oldRootNode->setParentSequenceNumber(newRootNode->getSequenceNumber());
 	
-	/* Close off the whole current latestBranch */
+	// Close off the whole current latestBranch
 	for ( i=0; i < _latestBranch.size(); i++ ) {
-		_latestBranch[i].closeThisNode(splitTime);
+		_latestBranch[i]->closeThisNode(splitTime);
 		_treeIO.writeNode(_latestBranch[i]);
 	}
 	
-	/* Link the new root to its first child (the previous root node) */
-	newRootNode.linkNewChild(oldRootNode);
+	// Link the new root to its first child (the previous root node)
+	newRootNode->linkNewChild(oldRootNode);
 	
-	/* Rebuild a new latestBranch */
+	// Rebuild a new latestBranch
 	depth = _latestBranch.size();
-	_latestBranch = std::vector<HistoryTreeNode>();
+	_latestBranch = std::vector<HistoryTreeNodeSharedPtr>();
 	_latestBranch.push_back(newRootNode);
 	for ( i=1; i < depth+1; i++ ) {
-		HistoryTreeNode& prevNode(_latestBranch[i-1]);
-		HistoryTreeNode newNode = initNewCoreNode(prevNode.getParentSequenceNumber(), splitTime + 1);
-		prevNode.linkNewChild(newNode);
+		HistoryTreeNodeSharedPtr prevNode(_latestBranch[i-1]);
+		HistoryTreeNodeSharedPtr newNode = initNewCoreNode(prevNode->getParentSequenceNumber(), splitTime + 1);
+		prevNode->linkNewChild(newNode);
 		_latestBranch.push_back(newNode);
 	}
 }
@@ -291,9 +294,10 @@ void HistoryTree::addNewRootNode()
  *            Start time of the new node
  * @return The newly created node
  */
-HistoryTreeNode HistoryTree::initNewCoreNode(int parentSeqNumber, timestamp_t startTime)
+HistoryTreeNodeSharedPtr HistoryTree::initNewCoreNode(int parentSeqNumber, timestamp_t startTime)
 {
-	HistoryTreeNode newNode(*this, _nodeCount, parentSeqNumber, startTime);
+	//FIXME in the future, we will have to check if this is a core node or a leaf node
+	HistoryTreeNodeSharedPtr newNode(new HistoryTreeCoreNode(_config, _nodeCount, parentSeqNumber, startTime));
 	_nodeCount++;
 	
 	/* Update the treeEnd if needed */

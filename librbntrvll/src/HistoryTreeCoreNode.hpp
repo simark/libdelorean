@@ -40,7 +40,7 @@ public:
 	~HistoryTreeCoreNode();
 	void serializeSpecificHeader(uint8_t* buf) const;
 	unsigned int getSpecificHeaderSize(void) const;
-	void linkNewChild(const HistoryTreeNode& childNode);
+	void linkNewChild(HistoryTreeNodeSharedPtr childNode);
 	seq_number_t getChild(unsigned int index) const {
 		return _children[index];
 	}

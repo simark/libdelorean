@@ -16,27 +16,4 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _HISTORYTREEIO_HPP
-#define _HISTORYTREEIO_HPP
-
-#include "HistoryTreeNode.hpp"
-
-class HistoryTree;
-
-class HistoryTreeIO
-{
-public:
-	HistoryTreeIO();
-	HistoryTreeIO(HistoryTree* ownerTree);
-	HistoryTreeIO(HistoryTree* ownerTree, int curNodeCount);
-	HistoryTreeNodeSharedPtr readNode(int seqNumber) const;
-	HistoryTreeNodeSharedPtr readNodeFromMemory(int seqNumber) const;
-	HistoryTreeNodeSharedPtr readNodeFromDisk(int seqNumber) const;
-	
-	void writeNode(HistoryTreeNodeSharedPtr node);
-
-private:
-	HistoryTree* _tree;
-};
-
-#endif // _HISTORYTREEIO_HPP
+#include "NodeFullEx.hpp"

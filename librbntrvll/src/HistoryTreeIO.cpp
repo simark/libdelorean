@@ -19,7 +19,7 @@
 
 #include "HistoryTreeIO.hpp"
 
-#if 0
+#if 1
 
 /**
  * Empty constructor
@@ -62,9 +62,9 @@ HistoryTreeIO::HistoryTreeIO(HistoryTree* ownerTree, int curNodeCount)
  *            Sequence number of the node we want
  * @return The wanted node in object form
  */
-HistoryTreeNode HistoryTreeIO::readNode(int seqNumber) const
+HistoryTreeNodeSharedPtr HistoryTreeIO::readNode(int seqNumber) const
 {
-	HistoryTreeNode node;
+	HistoryTreeNodeSharedPtr node;
 	try{
 		node = readNodeFromMemory(seqNumber);
 	}catch(...){
@@ -73,7 +73,7 @@ HistoryTreeNode HistoryTreeIO::readNode(int seqNumber) const
 	return node;
 }
 
-HistoryTreeNode HistoryTreeIO::readNodeFromMemory(int seqNumber) const
+HistoryTreeNodeSharedPtr HistoryTreeIO::readNodeFromMemory(int seqNumber) const
 {
 	//FIXME implement this
 	
@@ -83,10 +83,10 @@ HistoryTreeNode HistoryTreeIO::readNodeFromMemory(int seqNumber) const
 		//}
 	//}
 	//return null;
-	return HistoryTreeNode();
+	return HistoryTreeNodeSharedPtr();
 }
 
-HistoryTreeNode HistoryTreeIO::readNodeFromDisk(int seqNumber) const
+HistoryTreeNodeSharedPtr HistoryTreeIO::readNodeFromDisk(int seqNumber) const
 {
 	//FIXME implement this
 	
@@ -99,10 +99,10 @@ HistoryTreeNode HistoryTreeIO::readNodeFromDisk(int seqNumber) const
 		//e.printStackTrace();
 		//return null;
 	//}
-	return HistoryTreeNode();
+	return HistoryTreeNodeSharedPtr();
 }
 
-void HistoryTreeIO::writeNode(HistoryTreeNode& node)
+void HistoryTreeIO::writeNode(HistoryTreeNodeSharedPtr node)
 {
 	//FIXME implement this
 	
