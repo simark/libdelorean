@@ -7,6 +7,7 @@ SRC = \
 	HistoryTreeBackend.cpp \
 	HistoryTree.cpp \
 	HistoryTreeNode.cpp \
+	HistoryTreeCoreNode.cpp \
 	HistoryTreeConfig.cpp \
 	HistoryTreeIO.cpp \
 	Interval.cpp \
@@ -26,6 +27,7 @@ H_SRC = \
 	HistoryTreeBackend.hpp \
 	HistoryTree.hpp \
 	HistoryTreeNode.hpp \
+	HistoryTreeCoreNode.hpp \
 	HistoryTreeConfig.hpp \
 	HistoryTreeIO.hpp \
 	Interval.hpp \
@@ -56,7 +58,7 @@ OBJ = $(SRC:.cpp=.o)
 
 # commands
 CPP = g++
-CPPFLAGS = -g -Wall
+CPPFLAGS = -g -Wall -Wno-unused-variable
 RM = rm -f
 
 # phony targets

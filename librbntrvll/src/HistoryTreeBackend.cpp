@@ -26,6 +26,8 @@
 #include <vector>
 #include <assert.h>
 
+#if 0
+
 using namespace std;
 using namespace std::tr1;
 
@@ -54,7 +56,7 @@ HistoryTreeBackend::~HistoryTreeBackend()
  * 
  * @param interval A new interval to insert
  */
-void HistoryTreeBackend::insertInterval(std::tr1::shared_ptr<Interval> interval)
+void HistoryTreeBackend::insertInterval(IntervalSharedPtr interval)
 {
 	_historyTree.insertInterval(interval);
 }
@@ -70,23 +72,24 @@ vector<shared_ptr<Interval> > HistoryTreeBackend::query(timestamp_t timestamp) c
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of TreeInterval bounds.");
 	}
-	
-	/* We start by reading the information in the root node */
+	/*
+	// We start by reading the information in the root node
 	HistoryTreeNode currentNode = _historyTree.getLatestBranch()[0];
 	vector<shared_ptr<Interval> > relevantIntervals;
 	currentNode.writeInfoFromNode(relevantIntervals, timestamp);
 	
-	/* Then we follow the branch down in the relevant children */
+	// Then we follow the branch down in the relevant children
 	while ( currentNode.getNbChildren() > 0 ) {
 		currentNode = _historyTree.selectNextChild(currentNode, timestamp);
 		currentNode.writeInfoFromNode(relevantIntervals, timestamp);
-	}
+	}*/
 	
-	/* The relevantIntervals should now be filled with everything needed */
-	return relevantIntervals;	
+	// The relevantIntervals should now be filled with everything needed
+	vector<IntervalSharedPtr> v;
+	return v;	
 }
 
-std::tr1::shared_ptr<Interval> HistoryTreeBackend::query(timestamp_t timestamp, attribute_t key) const
+IntervalSharedPtr HistoryTreeBackend::query(timestamp_t timestamp, attribute_t key) const
 {
 	return getRelevantInterval(timestamp, key);
 }
@@ -96,21 +99,24 @@ bool HistoryTreeBackend::checkValidTime(timestamp_t timestamp) const
 	return ( timestamp >= _historyTree.getTreeStart() && timestamp <= _historyTree.getTreeEnd() );
 }
 
-std::tr1::shared_ptr<Interval> HistoryTreeBackend::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
+IntervalSharedPtr HistoryTreeBackend::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
 {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of TreeInterval bounds.");
 	}
 	
-	HistoryTreeNode currentNode = _historyTree.getLatestBranch()[0];
-	shared_ptr<Interval> interval = currentNode.getRelevantInterval(timestamp, key);
+	//HistoryTreeNode currentNode = _historyTree.getLatestBranch()[0];
+	//shared_ptr<Interval> interval = currentNode.getRelevantInterval(timestamp, key);
 	
-	while ( interval == NULL && currentNode.getNbChildren() > 0 ) {
+	/*while ( interval == NULL && currentNode.getNbChildren() > 0 ) {
 		currentNode = _historyTree.selectNextChild(currentNode, timestamp);
 		interval = currentNode.getRelevantInterval(timestamp, key);
-	}
+	}*/
 	/* Since we should now have intervals at every attribute/timestamp
 	 * combination, it should NOT be null here. */
-	assert (interval != NULL);
-	return interval;
+	//assert (interval != NULL);
+	IntervalSharedPtr intr;
+	return intr;
 }
+
+#endif

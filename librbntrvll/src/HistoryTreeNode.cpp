@@ -17,50 +17,37 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "HistoryTreeNode.hpp"
-#include "HistoryTree.hpp"
-#include "IntInterval.hpp"
-#include "basic_types.h"
-
 #include <algorithm>
 #include <assert.h>
 #include <ostream>
 #include <cstring>
 
+#include "IntInterval.hpp"
+#include "HistoryTreeNode.hpp"
+#include "basic_types.h"
+#include "ex/NodeFullEx.hpp"
+
 using namespace std;
 using namespace std::tr1;
 
-bool orderIntervals (shared_ptr<Interval> i, shared_ptr<Interval> j) { return (*i<*j); }
+const unsigned int HistoryTreeNode::COMMON_HEADER_SIZE = 34;
+
+bool orderIntervals (IntervalSharedPtr i, IntervalSharedPtr j) { return (*i<*j); }
 
 HistoryTreeNode::HistoryTreeNode()
-:_nbChildren(0)
 {
 }
 
-HistoryTreeNode::HistoryTreeNode(HistoryTree& tree, int seqNumber, int parentSeqNumber, timestamp_t start)
-:_ownerTree(&tree), _nodeStart(start), _sequenceNumber(seqNumber), _parentSequenceNumber(parentSeqNumber), _nbChildren(0)
+HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config, seq_number_t seqNumber,
+seq_number_t parentSeqNumber, timestamp_t start)
+: _config(config), _nodeStart(start), _sequenceNumber(seqNumber), _parentSequenceNumber(parentSeqNumber)
 {
-	_variableSectionOffset = _ownerTree->getConfig()._blockSize;
+	_variableSectionOffset =config._blockSize;
 	_isDone = false;
-	_intervals = std::vector<shared_ptr<Interval> >();
 }
 
 HistoryTreeNode::~HistoryTreeNode()
 {
-}
-
-/**
- * Reader factory constructor. Build a Node object (of the right type)
- * by reading a block in the file.
- *  
- * @param tree Reference to the HT which will own this node
- * @param fc FileChannel to the history file, ALREADY SEEKED at the start of the node.
- * @throw IOException 
- */
-HistoryTreeNode HistoryTreeNode::readNode(const HistoryTree& tree)
-{
-	//FIXME Do the complex parsing and IO here
-	return HistoryTreeNode();
 }
 
 /**
@@ -93,16 +80,16 @@ void HistoryTreeNode::writeInfoFromNode(vector<shared_ptr<Interval> >& intervals
  * Add an interval to this node
  * @param newInterval
  */
-void HistoryTreeNode::addInterval(std::tr1::shared_ptr<Interval> newInterval)
+void HistoryTreeNode::addInterval(IntervalSharedPtr newInterval)
 {
-	/* Just in case, but should be checked before even calling this function */
-	assert( newInterval->getTotalSize() <= getFreeSpace() );
+	// Just in case, but should be checked before even calling this function
+	assert(newInterval->getTotalSize() <= getFreeSpace());
 	
-	/* We need to clone the interval, to guarantee ownership */
-	_intervals.push_back( newInterval );
+	// We need to clone the interval, to guarantee ownership
+	_intervals.push_back(newInterval);
 	
-	/* Update the in-node offset "pointer" */
-	_variableSectionOffset -= ( newInterval->getVariableValueSize() );	
+	// Update the in-node offset "pointer"
+	_variableSectionOffset -= (newInterval->getVariableValueSize());
 }
 
 /**
@@ -126,7 +113,7 @@ void HistoryTreeNode::closeThisNode(timestamp_t endtime)
 		 * This speeds up lookups a bit */
 		 /* Lambda functions will not compile for some reason, using a normal function instead*/
 		std::sort(_intervals.begin(), _intervals.end(), 		
-		//[](std::tr1::shared_ptr<Interval> a, std::tr1::shared_ptr<Interval> b) -> bool { return *a < *b; });
+		//[](IntervalSharedPtr a, IntervalSharedPtr b) -> bool { return *a < *b; });
 		orderIntervals);
 		
 		/* Make sure there are no intervals in this node with their
@@ -141,20 +128,6 @@ void HistoryTreeNode::closeThisNode(timestamp_t endtime)
 }
 
 /**
- * Tell this node that it has a new child (Congrats!)
- * 
- * @param childNode The SHTNode object of the new child
- */
-void HistoryTreeNode::linkNewChild(const HistoryTreeNode& childNode)
-{
-	assert( _nbChildren < _ownerTree->getConfig()._maxChildren );
-	
-	_children[_nbChildren] = childNode.getSequenceNumber();
-	_childStart[_nbChildren] = childNode.getNodeStart();
-	_nbChildren++;	
-}
-
-/**
  * Get a single Interval from the information in this node
  * If the key/timestamp pair cannot be found, we return a null pointer.
  * 
@@ -163,7 +136,7 @@ void HistoryTreeNode::linkNewChild(const HistoryTreeNode& childNode)
  * @return The Interval containing the information we want, or null if it wasn't found
  * @throw TimeRangeEx
  */
-std::tr1::shared_ptr<Interval> HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
+IntervalSharedPtr HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
 {
 	assert ( _isDone );
 	int startIndex;
@@ -197,14 +170,14 @@ int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
 	//FIXME test this thoroughly
 	
 	// This should prevent the rare case when timestamp = 0, and timestamp-1 could behave erratically
-	if(timestamp == _nodeStart) { return 0;}
+	if (timestamp == _nodeStart) { return 0; }
 	
 	shared_ptr<Interval> dummyInterval(new IntInterval(0, timestamp-1, 0, 0));
 	vector<shared_ptr<Interval> >::const_iterator it;
 	
 	
 	it = lower_bound(_intervals.begin(), _intervals.end(), dummyInterval, 
-	//[](std::tr1::shared_ptr<Interval> a, std::tr1::shared_ptr<Interval> b) -> bool { return *a < *b; });
+	//[](IntervalSharedPtr a, IntervalSharedPtr b) -> bool { return *a < *b; });
 	orderIntervals);
 	
 	return it - _intervals.begin();
@@ -214,29 +187,19 @@ int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
  * Returns the free space in the node, which is simply put,
  * the stringSectionOffset - dataSectionOffset
  */
-unsigned int HistoryTreeNode::getFreeSpace()
+unsigned int HistoryTreeNode::getFreeSpace() const
 {
 	return _variableSectionOffset - getDataSectionEndOffset();
 }
 
-int HistoryTreeNode::getTotalHeaderSize() const
+unsigned int HistoryTreeNode::getTotalHeaderSize() const
 {
-	int headerSize = 0;
+	return HistoryTreeNode::COMMON_HEADER_SIZE + this->getSpecificHeaderSize();
+}
 
-#if 0
-	// FIXME: not so sure about describing the whole header here
-	// FIXME: this only applies to core nodes
-	headerSize +=	  4	/* 1x int (extension node) */
-			+ 4	/* 1x int (nbChildren) */
-			+ 4 * _ownerTree->getConfig()._maxChildren	/* MAX_NB * int ('children' table) */
-			+ 8 * _ownerTree->getConfig()._maxChildren	/* MAX_NB * Timevalue ('childStart' table) */
-			+ 1 	/* byte (type) */
-			+ 16	/* 2x long (start time, end time) */
-			+ 16	/* 4x int (seq number, parent seq number, intervalcount, strings section pos.) */
-			+ 1;	/* byte (done or not) */
-#endif
-
-	return 34;
+void HistoryTreeNode::linkNewChild(HistoryTreeNodeSharedPtr childNode)
+{
+	throw(NodeFullEx("This type of node cannot contain children"));
 }
 
 /**
@@ -247,10 +210,11 @@ int HistoryTreeNode::getDataSectionEndOffset() const
 	return getTotalHeaderSize() + Interval::getHeaderSize() * _intervals.size();
 }
 
-void HistoryTreeNode::serialize(ostream& os) {
+void HistoryTreeNode::serialize(ostream& os)
+{
 	// allocate some byte buffer
 	// TODO: private buffer to avoid new/delete for each block write?
-	unsigned int bufsz = _ownerTree->getConfig()._blockSize;
+	const unsigned int bufsz = this->_config._blockSize;
 	uint8_t* buf = new uint8_t [bufsz];
 	
 	// serialize to buffer
@@ -263,7 +227,8 @@ void HistoryTreeNode::serialize(ostream& os) {
 	delete [] buf;
 }
 
-void HistoryTreeNode::serialize(uint8_t* buf) {
+void HistoryTreeNode::serialize(uint8_t* buf)
+{
 	// pointer backup
 	uint8_t* bkbuf = buf;
 	
@@ -273,8 +238,8 @@ void HistoryTreeNode::serialize(uint8_t* buf) {
 	uint8_t isDone = this->_isDone ? 1 : 0;
 	
 	// write block common header
-	memcpy(buf, &this->_nodeType, sizeof(uint8_t));
-	buf += sizeof(uint8_t);
+	memcpy(buf, &this->_type, sizeof(node_type_t));
+	buf += sizeof(node_type_t);
 	memcpy(buf, &this->_nodeStart, sizeof(timestamp_t));
 	buf += sizeof(timestamp_t);
 	memcpy(buf, &this->_nodeEnd, sizeof(timestamp_t));
@@ -289,20 +254,20 @@ void HistoryTreeNode::serialize(uint8_t* buf) {
 	buf += sizeof(int32_t);
 	memcpy(buf, &isDone, sizeof(uint8_t));
 	buf += sizeof(uint8_t);
-	
+
 	// write node's specific header
-	unsigned int sheadsz = this->writeHeader(buf);
-	buf += sheadsz;
-	
+	this->serializeSpecificHeader(buf);
+	buf += this->getSpecificHeaderSize();
+
 	// write intervals (OO fashion)
 	vector< shared_ptr<Interval> >::iterator it;
-	uint8_t* var_addr = bkbuf + _ownerTree->getConfig()._blockSize;
-	for (it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {	
+	uint8_t* var_addr = bkbuf + this->_config._blockSize;
+	for (it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {
 		shared_ptr<Interval> interval = *it;
 		// get interval variable value size
 		unsigned int var_size = interval->getVariableValueSize();
 		var_addr -= var_size;
-		unsigned int offset_ptr = ((unsigned int) var_addr - (unsigned int) bkbuf);
+		unsigned int offset_ptr = (unsigned int) (var_addr - bkbuf);
 		
 		// serialize interval
 		interval->serialize(var_addr, buf);
