@@ -66,7 +66,7 @@ void HistoryTreeBackend::finish(timestamp_t timestamp)
 	_historyTree.closeTree(timestamp);
 }
 	
-vector<shared_ptr<Interval> > HistoryTreeBackend::query(timestamp_t timestamp) const
+vector<IntervalSharedPtr> HistoryTreeBackend::query(timestamp_t timestamp) const
 {
 	
 	if ( !checkValidTime(timestamp) ) {
@@ -75,7 +75,7 @@ vector<shared_ptr<Interval> > HistoryTreeBackend::query(timestamp_t timestamp) c
 	/*
 	// We start by reading the information in the root node
 	HistoryTreeNode currentNode = _historyTree.getLatestBranch()[0];
-	vector<shared_ptr<Interval> > relevantIntervals;
+	vector<IntervalSharedPtr> relevantIntervals;
 	currentNode.writeInfoFromNode(relevantIntervals, timestamp);
 	
 	// Then we follow the branch down in the relevant children
@@ -106,7 +106,7 @@ std::tr1::shared_ptr<Interval> HistoryTreeBackend::getRelevantInterval(timestamp
 	}
 	
 	//HistoryTreeNode currentNode = _historyTree.getLatestBranch()[0];
-	//shared_ptr<Interval> interval = currentNode.getRelevantInterval(timestamp, key);
+	//IntervalSharedPtr interval = currentNode.getRelevantInterval(timestamp, key);
 	
 	/*while ( interval == NULL && currentNode.getNbChildren() > 0 ) {
 		currentNode = _historyTree.selectNextChild(currentNode, timestamp);

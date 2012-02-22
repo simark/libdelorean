@@ -58,7 +58,7 @@ HistoryTreeNode::~HistoryTreeNode()
  * @param t The timestamp for which the query is for. Only return intervals that intersect t.
  * @throw TimeRangeException 
  */
-void HistoryTreeNode::writeInfoFromNode(vector<shared_ptr<Interval> >& intervals, timestamp_t timestamp) const
+void HistoryTreeNode::writeInfoFromNode(vector<IntervalSharedPtr>& intervals, timestamp_t timestamp) const
 {
 	int startIndex;
 
@@ -140,7 +140,7 @@ std::tr1::shared_ptr<Interval> HistoryTreeNode::getRelevantInterval(timestamp_t 
 	assert ( _isDone );
 	int startIndex;
 	
-	if ( _intervals.size() == 0 ) { return shared_ptr<Interval>(); }
+	if ( _intervals.size() == 0 ) { return IntervalSharedPtr(); }
 	
 	startIndex = getStartIndexFor(timestamp);
 	
@@ -152,7 +152,7 @@ std::tr1::shared_ptr<Interval> HistoryTreeNode::getRelevantInterval(timestamp_t 
 		}
 	}
 	/* We didn't find the relevant information in this node */
-	return shared_ptr<Interval>();
+	return IntervalSharedPtr();
 }
 
 /**
@@ -171,8 +171,8 @@ int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
 	// This should prevent the rare case when timestamp = 0, and timestamp-1 could behave erratically
 	if (timestamp == _nodeStart) { return 0; }
 	
-	shared_ptr<Interval> dummyInterval(new IntInterval(0, timestamp-1, 0, 0));
-	vector<shared_ptr<Interval> >::const_iterator it;
+	IntervalSharedPtr dummyInterval(new IntInterval(0, timestamp-1, 0, 0));
+	vector<IntervalSharedPtr>::const_iterator it;
 	
 	
 	it = lower_bound(_intervals.begin(), _intervals.end(), dummyInterval, 
@@ -254,10 +254,10 @@ void HistoryTreeNode::serialize(uint8_t* buf)
 	buf += this->getSpecificHeaderSize();
 
 	// write intervals (OO fashion)
-	vector< shared_ptr<Interval> >::iterator it;
+	vector<IntervalSharedPtr>::iterator it;
 	uint8_t* var_addr = bkbuf + this->_config._blockSize;
 	for (it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {
-		shared_ptr<Interval> interval = *it;
+		IntervalSharedPtr interval = *it;
 		// get interval variable value size
 		unsigned int var_size = interval->getVariableValueSize();
 		var_addr -= var_size;
