@@ -8,7 +8,11 @@
 #include <IntInterval.hpp>
 #include <IntervalCreator.hpp>
 #include <StringInterval.hpp>
-#include <HistoryTreeNode.hpp>
+#define protected public
+#define private public
+#include <HistoryTreeCoreNode.hpp>
+#undef private
+#undef protected
 #include <HistoryTree.hpp>
 #include <HistoryTreeConfig.hpp>
 
@@ -86,11 +90,8 @@ static void hexDump(unsigned char* h, unsigned int n) {
 	fflush(stdout);
 }
 
-static void testNodeDump(void) {
-	printTestHeader("testNodeDump");
-		
-	IntInterval int_interval(2, 18, 7, 65);
-	StringInterval str_interval(5, 25, 6, "allo vous!");
+static void testNode(void) {
+	printTestHeader("testNode");
 	
 	HistoryTreeConfig config;
 	config._stateFile = "/tmp/lol";
@@ -100,7 +101,63 @@ static void testNodeDump(void) {
 	
 	HistoryTree tree(config);
 	
-	HistoryTreeNode node(tree, 34, 14, 1);
+	HistoryTreeCoreNode node(config, 34, 14, 1);
+	
+	for(unsigned int i = 0; i < 10; i++){
+		IntervalSharedPtr interval(new IntInterval(1, 20-i, i, i));
+		node.addInterval(interval);
+	}
+	node.closeThisNode(20);
+	
+	bool sorted = true;
+	
+	for(unsigned int i = 0; i < 9; i++){
+		if( *(node._intervals[i]) <= *(node._intervals[i+1])){
+			//bon ordre
+		}else{
+			//mauvais ordre
+			sorted = false;
+		}	
+	}
+	
+	if (sorted){
+		printf("Intervals successfully sorted\n");
+	}else{
+		printf("Intervals not sorted...\n");
+		return;
+	}
+	
+	int firstIndex = node.getStartIndexFor(15);
+	
+	printf("First interval that can contain timestamp 15:\n");
+	printf("[%i,%i]\n",node._intervals[firstIndex]->getStart(), 
+					 node._intervals[firstIndex]->getEnd());
+	
+	if (firstIndex > 0){
+		int previousEntry = firstIndex-1;
+		printf("Previous interval that cannot contain this timestamp:\n");
+		printf("[%i,%i]\n",node._intervals[previousEntry]->getStart(), 
+						node._intervals[previousEntry]->getEnd());
+	}else{
+		printf("There are no previous intervals\n");
+	}
+}
+
+static void testNodeDump(void) {
+	printTestHeader("testNodeDump");
+		
+	IntervalSharedPtr int_interval(new IntInterval(2, 18, 7, 65));
+	IntervalSharedPtr str_interval(new StringInterval(5, 25, 6, "allo vous!"));
+	
+	HistoryTreeConfig config;
+	config._stateFile = "/tmp/lol";
+	config._blockSize = 4096;
+	config._maxChildren = 10;
+	config._treeStart = 0;
+	
+	HistoryTree tree(config);
+	
+	HistoryTreeCoreNode node(config, 34, 14, 1);
 	node.addInterval(str_interval);
 	node.addInterval(int_interval);
 	node.closeThisNode(100);
@@ -116,6 +173,7 @@ int main(void) {
 	testInterval();
 	testIntervalCreator();
 	testStringInterval();
+	testNode();
 	testNodeDump();
 	
 	return 0;

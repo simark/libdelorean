@@ -166,15 +166,9 @@ IntervalSharedPtr HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, at
  * @return the index of the first interval in _intervals that could hold this timestamp
  */
 int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
-{
-	//FIXME test this thoroughly
-	
-	// This should prevent the rare case when timestamp = 0, and timestamp-1 could behave erratically
-	if (timestamp == _nodeStart) { return 0; }
-	
-	IntervalSharedPtr dummyInterval(new IntInterval(0, timestamp-1, 0, 0));
-	vector<IntervalSharedPtr>::const_iterator it;
-	
+{		
+	IntervalSharedPtr dummyInterval(new IntInterval(0, timestamp, 0, 0));
+	vector<IntervalSharedPtr>::const_iterator it;	
 	
 	it = lower_bound(_intervals.begin(), _intervals.end(), dummyInterval, 
 	//[](IntervalSharedPtr a, IntervalSharedPtr b) -> bool { return *a < *b; });
