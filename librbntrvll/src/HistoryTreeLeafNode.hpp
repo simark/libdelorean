@@ -36,8 +36,7 @@ typedef std::tr1::shared_ptr<HistoryTreeLeafNode> HistoryTreeLeafNodeSharedPtr;
 class HistoryTreeLeafNode : public HistoryTreeNode 
 {
 public:
-	HistoryTreeLeafNode() { }
-	HistoryTreeLeafNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start) { }
+	HistoryTreeLeafNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
 	~HistoryTreeLeafNode() { }
 	void serializeSpecificHeader(uint8_t* buf) const {
 		// no header here!

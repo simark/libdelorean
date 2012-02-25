@@ -36,8 +36,7 @@ typedef std::tr1::shared_ptr<HistoryTreeNode>	HistoryTreeNodeSharedPtr;
 class HistoryTreeNode
 {
 public:
-	HistoryTreeNode();
-	HistoryTreeNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
+	HistoryTreeNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start, node_type_t type);
 	virtual ~HistoryTreeNode();
 	void writeInfoFromNode(std::vector<IntervalSharedPtr>& intervals, timestamp_t timestamp) const;
 	void serialize(uint8_t* buf);

@@ -17,6 +17,8 @@
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "AbstractHistoryTree.hpp"
+
+using namespace std;
  
 const unsigned int AbstractHistoryTree::HEADER_SIZE = 4096;
 
@@ -28,9 +30,6 @@ AbstractHistoryTree::AbstractHistoryTree(HistoryTreeConfig config) :
 _config(config), _opened(false) {
 }
 
-AbstractHistoryTree::~AbstractHistoryTree() {	
-	// close if we forgot
-	if (this->_opened) {
-		this->close();
-	}
+AbstractHistoryTree::~AbstractHistoryTree() {
 }
+

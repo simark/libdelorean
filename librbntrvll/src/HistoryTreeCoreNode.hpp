@@ -37,7 +37,6 @@ typedef std::tr1::shared_ptr<HistoryTreeCoreNode> HistoryTreeCoreNodeSharedPtr;
 class HistoryTreeCoreNode : public HistoryTreeNode 
 {
 public:
-	HistoryTreeCoreNode();
 	HistoryTreeCoreNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
 	~HistoryTreeCoreNode();
 	void serializeSpecificHeader(uint8_t* buf) const;

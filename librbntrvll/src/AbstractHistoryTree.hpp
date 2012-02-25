@@ -35,9 +35,6 @@ public:
 	
 	// TODO: template method design pattern for those?
 	virtual void open(void) = 0;
-	void close(void) {
-		this->close(this->_end);
-	}
 	virtual void close(timestamp_t end) = 0;
 	virtual ~AbstractHistoryTree();
 	

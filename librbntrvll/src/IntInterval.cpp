@@ -46,6 +46,3 @@ unsigned int IntInterval::getVariableValueSize(void) const {
 	return 0;
 }
 
-Interval* IntInterval::clone(void) const {
-	return new IntInterval(*this);
-}

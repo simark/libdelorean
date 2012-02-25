@@ -36,8 +36,12 @@ public:
 	OutHistoryTree();
 	OutHistoryTree(HistoryTreeConfig config);
 	void open(void);
+	void close(void) {
+		this->close(this->_end);
+	}
 	void close(timestamp_t end);
 	void addInterval(IntervalSharedPtr interval) throw(TimeRangeEx);
+	OutHistoryTree& operator<<(IntervalSharedPtr interval) throw(TimeRangeEx);
 	~OutHistoryTree();
 
 protected:
@@ -51,6 +55,7 @@ private:
 	void closeStream(void);
 	void serializeHeader(void);
 	void serializeNode(HistoryTreeNodeSharedPtr node);
+	void incNodeCount(timestamp_t new_start);
 	HistoryTreeCoreNodeSharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
 	HistoryTreeLeafNodeSharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
 };

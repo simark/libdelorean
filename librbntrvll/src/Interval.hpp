@@ -41,7 +41,6 @@ public:
 	void serialize(uint8_t* var_ptr, uint8_t* head_ptr);
 	virtual void unserialize(void* var_addr, void* u32_addr) = 0;
 	virtual unsigned int getVariableValueSize(void) const = 0;
-	virtual Interval* clone(void) const = 0;
 	unsigned int getTotalSize(void) const {
 		return Interval::HEADER_SIZE + this->getVariableValueSize();
 	}

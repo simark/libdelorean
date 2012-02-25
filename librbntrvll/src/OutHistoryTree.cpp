@@ -105,6 +105,15 @@ void OutHistoryTree::closeStream(void) {
 }
 
 OutHistoryTree::~OutHistoryTree() {
+	if (this->_opened) {
+		this->close();
+	}
+}
+
+OutHistoryTree& OutHistoryTree::operator<<(IntervalSharedPtr interval) throw(TimeRangeEx) {
+	this->addInterval(interval);
+	
+	return *this;
 }
 
 void OutHistoryTree::addInterval(IntervalSharedPtr interval) throw(TimeRangeEx) {
@@ -118,11 +127,16 @@ void OutHistoryTree::tryInsertAtNode(IntervalSharedPtr interval, unsigned int in
 	// target node
 	HistoryTreeNodeSharedPtr target_node = this->_latest_branch[index];
 	
+	/*cout << "trying " << *interval << " (" << interval->getTotalSize() << ")  fs " <<
+		target_node->getFreeSpace() << "  seq " << target_node->getSequenceNumber() << endl;*/
+	
 	// is there enough room in prospective target node?
 	if (interval->getTotalSize() > target_node->getFreeSpace()) {
 		// nope: add to a new sibling instead
 		this->addSiblingNode(index);
 		this->tryInsertAtNode(interval, this->_latest_branch.size() - 1);
+		
+		return;
 	}
 	
 	// make sure the interval time range fits this node
@@ -148,7 +162,7 @@ void OutHistoryTree::addSiblingNode(unsigned int index) {
 	HistoryTreeCoreNodeSharedPtr prev_node;
 	timestamp_t split_time = this->_end;
 	
-	// make sure everything required index is within the latest branch
+	// make sure required index is within the latest branch
 	assert(index < this->_latest_branch.size());
 	
 	// do we need a new root node?
@@ -164,6 +178,7 @@ void OutHistoryTree::addSiblingNode(unsigned int index) {
 	if (parent->getNbChildren() == this->_config._maxChildren) {
 		// we cannot: then, add a sibling one level higher in latest branch
 		this->addSiblingNode(index - 1);
+		
 		return;
 	}
 
@@ -251,6 +266,14 @@ void OutHistoryTree::serializeHeader(void) {
 	f.write((char*) &major, sizeof(int32_t));
 	f.write((char*) &minor, sizeof(int32_t));
 	
+	// block size
+	int32_t bs = (int32_t) this->_config._blockSize;
+	f.write((char*) &bs, sizeof(int32_t));
+	
+	// maximum children/node
+	int32_t mc = (int32_t) this->_config._maxChildren;
+	f.write((char*) &mc, sizeof(int32_t));
+	
 	// node count
 	int32_t node_count = (int32_t) this->_node_count;
 	f.write((char*) &node_count, sizeof(int32_t));
@@ -266,4 +289,34 @@ void OutHistoryTree::serializeNode(HistoryTreeNodeSharedPtr node) {
 	
 	// serialize node as is
 	node->serialize(this->_stream);
+}
+
+void OutHistoryTree::incNodeCount(timestamp_t new_start) {
+	// increment our node count since we now have one more
+	++this->_node_count;
+	
+	// update tree's end time if needed
+	if (new_start >= this->_end) {
+		this->_end = new_start + 1;
+	}
+}
+
+HistoryTreeCoreNodeSharedPtr OutHistoryTree::initNewCoreNode(seq_number_t parent_seq, timestamp_t start) {
+	// allocate new core node
+	HistoryTreeCoreNodeSharedPtr n(new HistoryTreeCoreNode(this->_config, this->_node_count, parent_seq, start));
+	
+	// new node count
+	this->incNodeCount(start);
+	
+	return n;
+}
+
+HistoryTreeLeafNodeSharedPtr OutHistoryTree::initNewLeafNode(seq_number_t parent_seq, timestamp_t start) {
+	// allocate new leaf node
+	HistoryTreeLeafNodeSharedPtr n(new HistoryTreeLeafNode(this->_config, this->_node_count, parent_seq, start));
+	
+	// new node count
+	this->incNodeCount(start);
+	
+	return n;
 }

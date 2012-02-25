@@ -24,8 +24,14 @@
 #include "HistoryTreeLeafNode.hpp"
 #include "HistoryTreeNode.hpp"
 #include "basic_types.h"
+#include "fixed_config.h"
 
 using namespace std;
 using namespace std::tr1;
 
 const unsigned int HistoryTreeLeafNode::HEADER_SIZE = 0;
+
+HistoryTreeLeafNode::HistoryTreeLeafNode(HistoryTreeConfig config, seq_number_t seqNumber,
+seq_number_t parentSeqNumber, timestamp_t start)
+: HistoryTreeNode(config, seqNumber, parentSeqNumber, start, NT_LEAF) {
+}

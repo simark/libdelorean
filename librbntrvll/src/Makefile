@@ -4,6 +4,7 @@
 
 # files
 SRC = \
+	AbstractHistoryTree.cpp \
 	OutHistoryTree.cpp \
 	HistoryTreeNode.cpp \
 	HistoryTreeCoreNode.cpp \

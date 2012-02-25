@@ -33,7 +33,11 @@ public:
 	std::string getStringValue(void) const;
 	void unserialize(void* var_addr, void* u32_addr);
 	unsigned int getVariableValueSize(void) const;
-	Interval* clone(void) const;
+	IntInterval* setValue(int32_t value) {
+		this->_value = value;
+		
+		return this;
+	}
 
 protected:
 	void serializeValues(void* var_addr, void* u32_addr) const;

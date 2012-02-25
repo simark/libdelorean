@@ -25,18 +25,14 @@
 #include "HistoryTreeCoreNode.hpp"
 #include "HistoryTreeNode.hpp"
 #include "basic_types.h"
+#include "fixed_config.h"
 
 using namespace std;
 using namespace std::tr1;
 
-HistoryTreeCoreNode::HistoryTreeCoreNode()
-: _nbChildren(0) {
-	this->initChildren();
-}
-
 HistoryTreeCoreNode::HistoryTreeCoreNode(HistoryTreeConfig config, seq_number_t seqNumber,
 seq_number_t parentSeqNumber, timestamp_t start)
-: HistoryTreeNode(config, seqNumber, parentSeqNumber, start), _nbChildren(0) {
+: HistoryTreeNode(config, seqNumber, parentSeqNumber, start, NT_CORE), _nbChildren(0) {
 	this->initChildren();
 }
 

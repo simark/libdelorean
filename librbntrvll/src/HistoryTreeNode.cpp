@@ -34,15 +34,11 @@ const unsigned int HistoryTreeNode::COMMON_HEADER_SIZE = 34;
 
 bool orderIntervals (IntervalSharedPtr i, IntervalSharedPtr j) { return (*i<*j); }
 
-HistoryTreeNode::HistoryTreeNode()
-{
-}
-
 HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config, seq_number_t seqNumber,
-seq_number_t parentSeqNumber, timestamp_t start)
-: _config(config), _nodeStart(start), _sequenceNumber(seqNumber), _parentSequenceNumber(parentSeqNumber)
+seq_number_t parentSeqNumber, timestamp_t start, node_type_t type)
+: _config(config), _nodeStart(start), _sequenceNumber(seqNumber), _parentSequenceNumber(parentSeqNumber), _type(type)
 {
-	_variableSectionOffset =config._blockSize;
+	_variableSectionOffset = config._blockSize;
 	_isDone = false;
 }
 
