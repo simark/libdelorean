@@ -22,7 +22,6 @@
 
 #include <assert.h>
 
-#if 1
 /**
  * Create a new HistoryTree from scratch, using a HistoryTreeConfig object
  * for configuration

@@ -99,7 +99,7 @@ void HistoryTreeNode::addInterval(IntervalSharedPtr newInterval)
  * @param endtime The nodeEnd time that the node will have
  * @throw TimeRangeException 
  */
-void HistoryTreeNode::closeThisNode(timestamp_t endtime)
+void HistoryTreeNode::close(timestamp_t endtime)
 {
 	assert ( endtime >= _nodeStart );
 //	/* This also breaks often too */
@@ -189,11 +189,6 @@ unsigned int HistoryTreeNode::getFreeSpace() const
 unsigned int HistoryTreeNode::getTotalHeaderSize() const
 {
 	return HistoryTreeNode::COMMON_HEADER_SIZE + this->getSpecificHeaderSize();
-}
-
-void HistoryTreeNode::linkNewChild(HistoryTreeNodeSharedPtr childNode)
-{
-	throw(NodeFullEx("This type of node cannot contain children"));
 }
 
 /**

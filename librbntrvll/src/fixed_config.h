@@ -37,5 +37,7 @@
  * History file magic number.
  */
 #define HF_MAGIC_NUMBER		0x05ffa900
+#define HF_MAJOR		3
+#define HF_MINOR		0
 
 #endif /* _FIXED_CONFIG_H */

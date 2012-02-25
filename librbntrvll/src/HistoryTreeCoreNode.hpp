@@ -23,14 +23,16 @@
 #include <stdint.h>
 #include <ostream>
 #include <vector>
+#include <tr1/memory>
 
 #include "HistoryTreeConfig.hpp"
 #include "Interval.hpp"
 #include "HistoryTreeNode.hpp"
 #include "basic_types.h"
 
-using namespace std;
-using namespace std::tr1;
+class HistoryTreeCoreNode;
+
+typedef std::tr1::shared_ptr<HistoryTreeCoreNode> HistoryTreeCoreNodeSharedPtr;
 
 class HistoryTreeCoreNode : public HistoryTreeNode 
 {

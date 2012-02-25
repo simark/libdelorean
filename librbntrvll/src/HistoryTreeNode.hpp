@@ -45,15 +45,15 @@ public:
 	virtual void serializeSpecificHeader(uint8_t* buf) const = 0;
 	virtual unsigned int getSpecificHeaderSize(void) const = 0;
 	void addInterval(IntervalSharedPtr);
-	void closeThisNode(timestamp_t endtime);
+	void close(timestamp_t endtime);
 	IntervalSharedPtr getRelevantInterval(timestamp_t timestamp, attribute_t key) const;
 	int getStartIndexFor(timestamp_t timestamp) const;
 	unsigned int getFreeSpace() const;
 	unsigned int getTotalHeaderSize() const;
-	timestamp_t getNodeStart() const {
+	timestamp_t getStart() const {
 		return _nodeStart;
 	}
-	timestamp_t getNodeEnd() const {
+	timestamp_t getEnd() const {
 		if (_isDone) {
 			return _nodeEnd;
 		} else {
@@ -71,17 +71,6 @@ public:
 	}
 	bool isDone() const {
 		return _isDone;
-	}
-	
-	virtual void linkNewChild(HistoryTreeNodeSharedPtr childNode);
-	virtual seq_number_t getChild(unsigned int index) const {
-		return -1;
-	}
-	virtual timestamp_t getChildStart(int index) const {
-		return -1;
-	}
-	virtual unsigned int getNbChildren() const {
-		return 0;
 	}
 	
 	static const unsigned int COMMON_HEADER_SIZE;

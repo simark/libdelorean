@@ -16,21 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "AbstractHistoryTree.hpp"
- 
-const unsigned int AbstractHistoryTree::HEADER_SIZE = 4096;
+#include <algorithm>
+#include <cassert>
+#include <ostream>
+#include <cstring>
 
-AbstractHistoryTree::AbstractHistoryTree()
-: _opened(false) {
-}
+#include "HistoryTreeLeafNode.hpp"
+#include "HistoryTreeNode.hpp"
+#include "basic_types.h"
 
-AbstractHistoryTree::AbstractHistoryTree(HistoryTreeConfig config) :
-_config(config), _opened(false) {
-}
+using namespace std;
+using namespace std::tr1;
 
-AbstractHistoryTree::~AbstractHistoryTree() {	
-	// close if we forgot
-	if (this->_opened) {
-		this->close();
-	}
-}
+const unsigned int HistoryTreeLeafNode::HEADER_SIZE = 0;

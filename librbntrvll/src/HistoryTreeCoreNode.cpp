@@ -73,7 +73,7 @@ void HistoryTreeCoreNode::linkNewChild(HistoryTreeNodeSharedPtr childNode)
 	assert (_nbChildren < _config._maxChildren);
 
 	_children[_nbChildren] = childNode->getSequenceNumber();
-	_childStart[_nbChildren] = childNode->getNodeStart();
+	_childStart[_nbChildren] = childNode->getStart();
 	_nbChildren++;
 }
 

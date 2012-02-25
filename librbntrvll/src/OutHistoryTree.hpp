@@ -24,7 +24,11 @@
 #include "AbstractHistoryTree.hpp"
 #include "HistoryTreeConfig.hpp"
 #include "Interval.hpp"
+#include "HistoryTreeNode.hpp"
+#include "HistoryTreeCoreNode.hpp"
+#include "HistoryTreeLeafNode.hpp"
 #include "ex/TimeRangeEx.hpp"
+#include "basic_types.h"
 
 class OutHistoryTree : virtual public AbstractHistoryTree
 {
@@ -32,12 +36,12 @@ public:
 	OutHistoryTree();
 	OutHistoryTree(HistoryTreeConfig config);
 	void open(void);
-	void close(void);
+	void close(timestamp_t end);
 	void addInterval(IntervalSharedPtr interval) throw(TimeRangeEx);
 	~OutHistoryTree();
 
 protected:
-		
+	
 
 private:
 	void tryInsertAtNode(IntervalSharedPtr interval, unsigned int index);
@@ -45,6 +49,10 @@ private:
 	void addNewRootNode(void);
 	void openStream(void);
 	void closeStream(void);
+	void serializeHeader(void);
+	void serializeNode(HistoryTreeNodeSharedPtr node);
+	HistoryTreeCoreNodeSharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
+	HistoryTreeLeafNodeSharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
 };
 
 #endif // _OUTHISTORYTREE_HPP

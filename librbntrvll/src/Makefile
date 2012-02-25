@@ -5,10 +5,9 @@
 # files
 SRC = \
 	OutHistoryTree.cpp \
-	HistoryTreeBackend.cpp \
-	HistoryTree.cpp \
 	HistoryTreeNode.cpp \
 	HistoryTreeCoreNode.cpp \
+	HistoryTreeLeafNode.cpp \
 	HistoryTreeConfig.cpp \
 	HistoryTreeIO.cpp \
 	Interval.cpp \
@@ -32,6 +31,7 @@ H_SRC = \
 	HistoryTree.hpp \
 	HistoryTreeNode.hpp \
 	HistoryTreeCoreNode.hpp \
+	HistoryTreeLeafNode.hpp \
 	HistoryTreeConfig.hpp \
 	HistoryTreeIO.hpp \
 	Interval.hpp \

@@ -49,10 +49,10 @@ public:
 	}
 
 	/**
-	 * Default constructor, creates an invalid configuration
+	 * Default constructor
 	 */	
 	HistoryTreeConfig()
-	:_stateFile("/dev/urandom"), _blockSize(0), _maxChildren(0), _treeStart(0)
+	:_stateFile("/dev/urandom"), _blockSize(4096), _maxChildren(50), _treeStart(0)
 	{
 	}
 };

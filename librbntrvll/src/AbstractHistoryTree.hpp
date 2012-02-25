@@ -25,6 +25,7 @@
 #include "HistoryTreeConfig.hpp"
 #include "HistoryTreeNode.hpp"
 #include "Interval.hpp"
+#include "basic_types.h"
 
 class AbstractHistoryTree
 {
@@ -34,8 +35,11 @@ public:
 	
 	// TODO: template method design pattern for those?
 	virtual void open(void) = 0;
-	virtual void close(void) = 0;
-	virtual ~AbstractHistoryTree() { }
+	void close(void) {
+		this->close(this->_end);
+	}
+	virtual void close(timestamp_t end) = 0;
+	virtual ~AbstractHistoryTree();
 	
 	void setConfig(HistoryTreeConfig config) {
 		this->_config = config;
@@ -45,6 +49,9 @@ public:
 	}
 
 protected:
+	unsigned int filePosFromSeq(seq_number_t seq) {
+		return this->getHeaderSize() + seq * this->_config._blockSize;
+	}
 	unsigned int getHeaderSize(void) const {
 		return AbstractHistoryTree::HEADER_SIZE;
 	}
