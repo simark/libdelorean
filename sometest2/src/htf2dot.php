@@ -13,7 +13,14 @@
 		echo "  <htf>  history tree file (input)\n";
 		echo "  <dot>  dot file (output)\n";
 	}
-	function read_node($block_data) {		
+	function read_node($block_data, $max_children) {
+		$types = array(
+			0 => "int32",
+			1 => "str",
+			2 => "uint32",
+			3 => "float"
+		);
+		
 		// get infos. (common header)
 		$chead = array();
 		$h = unpack("C", substr($block_data, 0));
@@ -54,7 +61,7 @@
 		}
 		
 		// print infos.
-		printf("\ttype: %s\n", $chead['type']);
+		/*printf("\ttype: %s\n", $chead['type']);
 		printf("\trange: [%d, %d]\n", $chead['start'], $chead['end']);
 		printf("\tseq. number: %d\n", $chead['seq_number']);
 		printf("\tparent seq. number: %d\n", $chead['parent_seq_number']);
@@ -64,6 +71,50 @@
 		if ($chead['type'] == 'core') {
 			printf("\textended?: %s\n", $shead['extended'] ? 'yes' : 'no');
 			printf("\tchildren count: %d\n", $shead['children_count']);
+		}*/
+		$ex = "";
+		if ($chead['type'] == 'core') {
+			$cc = $shead['children_count'];
+			$ex = ", $cc children";
+		}
+		printf("# {%d} from {%d} [%d, %d], %d intervals%s\n", $chead['seq_number'], $chead['parent_seq_number'],
+			$chead['start'], $chead['end'], $chead['interval_count'], $ex);
+		
+		// print children list
+		if ($chead['type'] == 'core') {
+			for ($i = 0; $i < $shead['children_count']; ++$i) {
+				$off_seq = 42 + $i * 4;
+				$off_start = 42 + ($max_children * 4) + ($i * 8);
+				$h = unpack("V", substr($block_data, $off_seq));
+				$seq = $h[1];
+				$h = unpack("V", substr($block_data, $off_start));
+				$start = $h[1];
+				printf("  + {%d} [%d]\n", $seq, $start);
+			}
+		}
+		
+		// print intervals
+		for ($i = 0; $i < $chead['interval_count']; ++$i) {
+			if ($chead['type'] == 'core') {
+				$off_head = 42 + ($max_children * 12) + $i * 25;
+			} else {
+				$off_head = 34 + $i * 25;
+			}
+			$h = unpack("V", substr($block_data, $off_head + 0));
+			$start = $h[1];
+			$h = unpack("V", substr($block_data, $off_head + 8));
+			$end = $h[1];
+			$h = unpack("V", substr($block_data, $off_head + 16));
+			$attr = $h[1];
+			$h = unpack("C", substr($block_data, $off_head + 20));
+			$type = $h[1];
+			$h = unpack("V", substr($block_data, $off_head + 21));
+			$value = $h[1];
+			$td = $type;
+			if (array_key_exists($type, $types)) {
+				$td = $types[$type];
+			}
+			printf("  @ %d (%s) [%d, %d] : %d\n", $attr, $td, $start, $end, $value);
 		}
 		
 		// build infos.
@@ -82,7 +133,6 @@
 		fclose($fh);
 		
 		// get tree header infos.
-		echo "> reading tree header...\n";
 		$thead = substr($htf, 0, 4096);
 		$h = unpack("V", $thead);
 		$magic = $h[1];
@@ -98,22 +148,22 @@
 		$node_count = $h[1];
 		$h = unpack("V", substr($thead, 24));
 		$root_seq = $h[1];
-		printf("\tmagic number: %08x\n", $magic);
-		echo "\tmajor: $major\n";
-		echo "\tminor: $minor\n";
-		echo "\tblock size: $block_size\n";
-		echo "\tmax. children: $max_children\n";
-		echo "\tnode count: $node_count\n";
-		echo "\troot seq. number: $root_seq\n";
+		printf("> magic number: %08x\n", $magic);
+		echo "> major: $major\n";
+		echo "> minor: $minor\n";
+		echo "> block size: $block_size\n";
+		echo "> max. children: $max_children\n";
+		echo "> node count: $node_count\n";
+		echo "> root seq. number: $root_seq\n";
+		echo "\n";
 		
 		// read nodes
-		for ($i = 0; $i < $node_count; ++$i) {
-			echo "> reading node $i...\n";
-		
+		for ($i = 0; $i < $node_count; ++$i) {		
 			// get node infos.
 			$offset = 4096 + $i * $block_size;
 			$block_data = substr($htf, $offset, $block_size);
-			$ni = read_node($block_data);
+			$ni = read_node($block_data, $max_children);
+			echo "\n";
 			
 			// add to dot
 			if ($ni['common']['parent_seq_number'] == -1) {
@@ -126,10 +176,8 @@
 		}
 		
 		// finish/write output
-		echo "> writing dot output...\n";
 		$dot .= "\n}\n";
 		file_put_contents($dot_path, $dot);
-		echo "> done.\n";
 	}
 	
 	if ($argc != 3) {
