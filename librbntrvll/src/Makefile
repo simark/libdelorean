@@ -4,6 +4,7 @@
 
 # files
 SRC = \
+	OutHistoryTree.cpp \
 	HistoryTreeBackend.cpp \
 	HistoryTree.cpp \
 	HistoryTreeNode.cpp \
@@ -25,6 +26,8 @@ SRC = \
 	ex/TimeRangeEx.cpp \
 	ex/NodeFullEx.cpp
 H_SRC = \
+	AbstractHistoryTree.hpp \
+	OutHistoryTree.hpp \
 	HistoryTreeBackend.hpp \
 	HistoryTree.hpp \
 	HistoryTreeNode.hpp \
