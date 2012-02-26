@@ -23,24 +23,34 @@
 #include <stdint.h>
 #include <ostream>
 #include <vector>
+#include <string>
 
+#include "IPrintable.hpp"
 #include "Interval.hpp"
+#include "IntervalCreator.hpp"
 #include "HistoryTreeConfig.hpp"
 #include "basic_types.h"
 
 class HistoryTreeNode;
-class HistoryTree;
+class InHistoryTree;
 
 typedef std::tr1::shared_ptr<HistoryTreeNode>	HistoryTreeNodeSharedPtr;
 
-class HistoryTreeNode
+class HistoryTreeNode : public IPrintable
 {
+	friend std::ostream& operator<<(std::ostream& out, const HistoryTreeNode& node);
+	
 public:
+	HistoryTreeNode(HistoryTreeConfig config);
 	HistoryTreeNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start, node_type_t type);
 	virtual ~HistoryTreeNode();
+	std::string toString(void) const;
+	virtual std::string getInfos(void) const = 0;
 	void writeInfoFromNode(std::vector<IntervalSharedPtr>& intervals, timestamp_t timestamp) const;
 	void serialize(uint8_t* buf);
 	void serialize(std::ostream& os);
+	void unserialize(std::istream& is, IntervalCreator& ic);
+	virtual void unserializeSpecificHeader(std::istream& is) = 0;
 	virtual void serializeSpecificHeader(uint8_t* buf) const = 0;
 	virtual unsigned int getSpecificHeaderSize(void) const = 0;
 	void addInterval(IntervalSharedPtr);

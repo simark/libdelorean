@@ -43,6 +43,10 @@ IntervalCreator::IntervalCreator(void) {
 	this->registerIntervalType(SIT_FLOAT32, new FloatIntervalFactory());
 }
 
+IntervalCreator::~IntervalCreator(void) {
+	this->unregisterAll();
+}
+
 void IntervalCreator::unregisterIntervalType(interval_type_t type) {
 	if (this->_factories[type] != NULL) {
 		delete this->_factories[type];

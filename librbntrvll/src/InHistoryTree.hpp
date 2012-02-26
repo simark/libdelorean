@@ -16,31 +16,47 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _UINTINTERVAL_HPP
-#define _UINTINTERVAL_HPP
+#ifndef _INHISTORYTREE_HPP
+#define _INHISTORYTREE_HPP
 
-#include <stdint.h>
+#include <vector>
+#include <fstream>
 
+#include "AbstractHistoryTree.hpp"
+#include "HistoryTreeConfig.hpp"
 #include "Interval.hpp"
+#include "HistoryTreeNode.hpp"
+#include "HistoryTreeCoreNode.hpp"
+#include "HistoryTreeLeafNode.hpp"
+#include "IntervalCreator.hpp"
+#include "ex/TimeRangeEx.hpp"
 #include "basic_types.h"
-#include "fixed_config.h"
 
-class UIntInterval : public Interval
+class InHistoryTree : virtual public AbstractHistoryTree
 {
 public:
-	UIntInterval(void) : Interval(SIT_UINT32) { }
-	UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value);
-	~UIntInterval() { }
-	std::string getStringValue(void) const;
-	unsigned int getVariableValueSize(void) const;
-	Interval* clone(void) const;
+	InHistoryTree();
+	InHistoryTree(HistoryTreeConfig config);
+	void open(void);
+	void close(void) {
+		this->close(-1);
+	}
+	void close(timestamp_t end);
+	IntervalCreator& getIC(void) {
+		return _ic;
+	}
+	void test(void);
+	~InHistoryTree();
 
 protected:
-	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
-	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
+	
 
 private:
-	uint32_t _value;
+	void unserializeHeader(void);
+	HistoryTreeNodeSharedPtr createNodeFromStream();
+	HistoryTreeNodeSharedPtr createNodeFromSeq(seq_number_t seq);
+	seq_number_t _root_seq;
+	IntervalCreator _ic;
 };
 
-#endif // _UINTINTERVAL_HPP
+#endif // _INHISTORYTREE_HPP

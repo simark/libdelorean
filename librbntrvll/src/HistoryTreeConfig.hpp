@@ -32,6 +32,9 @@ public:
 	unsigned int _maxChildren;
 	timestamp_t _treeStart;
 	
+	HistoryTreeConfig(std::string file) : _stateFile(file) {		
+	}
+	
 	HistoryTreeConfig(std::string newStateFile, int blockSize, int maxChildren,
 			timestamp_t startTime) 
 	:_stateFile(newStateFile), _blockSize(blockSize), _maxChildren(maxChildren), _treeStart(startTime)

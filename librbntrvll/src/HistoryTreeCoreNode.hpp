@@ -27,6 +27,7 @@
 
 #include "HistoryTreeConfig.hpp"
 #include "Interval.hpp"
+#include "IntervalCreator.hpp"
 #include "HistoryTreeNode.hpp"
 #include "basic_types.h"
 
@@ -37,9 +38,12 @@ typedef std::tr1::shared_ptr<HistoryTreeCoreNode> HistoryTreeCoreNodeSharedPtr;
 class HistoryTreeCoreNode : public HistoryTreeNode 
 {
 public:
+	HistoryTreeCoreNode(HistoryTreeConfig config);
 	HistoryTreeCoreNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
 	~HistoryTreeCoreNode();
+	std::string getInfos(void) const;
 	void serializeSpecificHeader(uint8_t* buf) const;
+	void unserializeSpecificHeader(std::istream& is);
 	unsigned int getSpecificHeaderSize(void) const;
 	void linkNewChild(HistoryTreeNodeSharedPtr childNode);
 	seq_number_t getChild(unsigned int index) const {

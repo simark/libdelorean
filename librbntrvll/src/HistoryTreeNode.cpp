@@ -21,8 +21,10 @@
 #include <assert.h>
 #include <ostream>
 #include <cstring>
+#include <sstream>
 
 #include "IntInterval.hpp"
+#include "IntervalCreator.hpp"
 #include "HistoryTreeNode.hpp"
 #include "basic_types.h"
 #include "ex/NodeFullEx.hpp"
@@ -44,6 +46,10 @@ seq_number_t parentSeqNumber, timestamp_t start, node_type_t type)
 
 HistoryTreeNode::~HistoryTreeNode()
 {
+}
+
+HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config)
+: _config(config) {
 }
 
 /**
@@ -263,4 +269,81 @@ void HistoryTreeNode::serialize(uint8_t* buf)
 		}
 		buf += interval->getHeaderSize();
 	}
+}
+
+void HistoryTreeNode::unserialize(std::istream& is, IntervalCreator& ic) {
+	// remember initial position within stream
+	unsigned int init_pos = is.tellg();
+	
+	// skip type
+	is.seekg(sizeof(uint8_t), ios::cur);
+	
+	// time stamps
+	is.read((char*) &this->_nodeStart, sizeof(timestamp_t));
+	is.read((char*) &this->_nodeEnd, sizeof(timestamp_t));
+	
+	// sequence numbers
+	is.read((char*) &this->_sequenceNumber, sizeof(seq_number_t));
+	is.read((char*) &this->_parentSequenceNumber, sizeof(seq_number_t));
+	
+	// interval count
+	int32_t interval_count;
+	is.read((char*) &interval_count, sizeof(int32_t));
+	
+	// skip var. data offset and done (will be deduced when parsing intervals)
+	is.seekg(sizeof(int32_t) + sizeof(uint8_t), ios::cur);
+	this->_isDone = true;
+	
+	// at specific header now
+	this->unserializeSpecificHeader(is);
+	
+	// unserialize intervals
+	unsigned int len = this->_config._blockSize - this->getTotalHeaderSize();
+	uint8_t* const buf = new uint8_t [len];
+	is.seekg(init_pos + this->getTotalHeaderSize(), ios::beg);
+	is.read((char*) buf, len);
+	this->_variableSectionOffset = this->_config._blockSize;
+	uint8_t* datPtr = buf;
+	uint8_t* varPtr = buf + len;
+	for (int i = 0; i < interval_count; ++i) {
+		// get the appropriate interval from the creator
+		interval_type_t type = datPtr[20]; // TODO: make this prettier
+		IntervalSharedPtr interval = ic.createIntervalFromType(type);
+		
+		// unserialize it
+		unsigned int var_len = interval->unserialize(varPtr, datPtr);
+		assert(var_len == interval->getVariableValueSize());
+		
+		// keep it...
+		this->_intervals.push_back(interval);
+		
+		// new buffer offsets
+		datPtr += Interval::getHeaderSize();
+		varPtr -= var_len;
+		this->_variableSectionOffset -= var_len;
+	}
+	
+	// clean
+	delete [] buf;
+}
+
+std::string HistoryTreeNode::toString(void) const {
+	ostringstream oss;
+	oss << "# {" << this->_sequenceNumber << "} from {" << this->_parentSequenceNumber << "} " <<
+		"[" << this->_nodeStart << ", " << this->_nodeEnd << "], " << this->_intervals.size() <<
+		" intervals" << this->getInfos();
+	
+	// intervals
+	oss << endl;
+	for (unsigned int i = 0; i < this->_intervals.size(); ++i) {
+		oss << "  " << *this->_intervals[i] << endl;
+	}
+
+	return oss.str();
+}
+
+std::ostream& operator<<(std::ostream& out, const HistoryTreeNode& node) {
+	out << node.toString();
+	
+	return out;
 }

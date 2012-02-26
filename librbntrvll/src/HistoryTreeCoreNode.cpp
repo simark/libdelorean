@@ -21,7 +21,9 @@
 #include <cassert>
 #include <ostream>
 #include <cstring>
+#include <sstream>
 
+#include "HistoryTreeConfig.hpp"
 #include "HistoryTreeCoreNode.hpp"
 #include "HistoryTreeNode.hpp"
 #include "basic_types.h"
@@ -36,6 +38,11 @@ seq_number_t parentSeqNumber, timestamp_t start)
 	this->initChildren();
 }
 
+HistoryTreeCoreNode::HistoryTreeCoreNode(HistoryTreeConfig config)
+: HistoryTreeNode(config) {
+	this->initChildren();
+}
+
 HistoryTreeCoreNode::~HistoryTreeCoreNode() {
 	this->finiChildren();
 }
@@ -47,7 +54,7 @@ void HistoryTreeCoreNode::initChildren(void) {
 }
 
 void HistoryTreeCoreNode::finiChildren(void) {	
-	// frees children data
+	// free children data
 	delete [] this->_children;
 	delete [] this->_childStart;
 }
@@ -95,4 +102,28 @@ void HistoryTreeCoreNode::serializeSpecificHeader(uint8_t* buf) const
 	
 	// children start time stamps
 	memcpy(buf, this->_childStart, sizeof(timestamp_t) * mc);
+}
+
+void HistoryTreeCoreNode::unserializeSpecificHeader(std::istream& is) {
+	// extended? we don't care
+	is.seekg(sizeof(int32_t), ios::cur);
+	
+	// children count
+	is.read((char*) &this->_nbChildren, sizeof(int32_t));
+	
+	// get children
+	is.read((char*) this->_children, sizeof(seq_number_t) * this->_config._maxChildren);
+	is.read((char*) this->_childStart, sizeof(timestamp_t) * this->_config._maxChildren);
+}
+
+std::string HistoryTreeCoreNode::getInfos(void) const {
+	ostringstream oss;
+	
+	oss << ", " << this->_nbChildren << " children";
+	for (unsigned int i = 0; i < this->_nbChildren; ++i) {
+		oss << endl << "  + {" << this->_children[i] << "} " <<
+			"[" << this->_childStart[i] << "]";
+	}
+	
+	return oss.str();
 }

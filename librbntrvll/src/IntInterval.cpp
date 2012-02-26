@@ -34,12 +34,14 @@ std::string IntInterval::getStringValue(void) const
 	return oss.str();
 }
 
-void IntInterval::serializeValues(void* var_addr, void* u32_addr) const {
+void IntInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
 	*((int32_t*) u32_addr) = this->_value;
 }
 
-void IntInterval::unserialize(void* var_addr, void* u32_addr) {
+unsigned int IntInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
 	this->_value = *((int32_t*) u32_addr);
+	
+	return 0;
 }
 
 unsigned int IntInterval::getVariableValueSize(void) const {

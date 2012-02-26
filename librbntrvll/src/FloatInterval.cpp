@@ -33,12 +33,14 @@ std::string FloatInterval::getStringValue(void) const
 	return oss.str();
 }
 
-void FloatInterval::serializeValues(void* var_addr, void* u32_addr) const {
+void FloatInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
 	*((float*) u32_addr) = this->_value;
 }
 
-void FloatInterval::unserialize(void* var_addr, void* u32_addr) {
+unsigned int FloatInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
 	this->_value = *((float*) u32_addr);
+	
+	return 0;
 }
 
 unsigned int FloatInterval::getVariableValueSize(void) const {

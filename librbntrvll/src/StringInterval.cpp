@@ -39,7 +39,7 @@ std::string StringInterval::getStringValue(void) const
 	return _value;
 }
 
-void StringInterval::serializeValues(void* var_addr, void* u32_addr) const {
+void StringInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
 	// copy string length (enables faster reads than ASCIIZ)
 	uint32_t sz = _value.size();
 	memcpy(var_addr, &sz, sizeof(sz));
@@ -48,13 +48,15 @@ void StringInterval::serializeValues(void* var_addr, void* u32_addr) const {
 	memcpy((unsigned char*) var_addr + sizeof(sz), _value.c_str(), _value.size());
 }
 
-void StringInterval::unserialize(void* var_addr, void* u32_addr) {
+unsigned int StringInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
 	// read string length
 	uint32_t sz;
 	memcpy(&sz, var_addr, sizeof(sz));
 	
 	// read string
 	_value.assign((char*) var_addr + sizeof(sz), sz);
+	
+	return sizeof(sz) + sz;
 }
 
 unsigned int StringInterval::getVariableValueSize(void) const {

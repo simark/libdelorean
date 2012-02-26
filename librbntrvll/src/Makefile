@@ -6,6 +6,7 @@
 SRC = \
 	AbstractHistoryTree.cpp \
 	OutHistoryTree.cpp \
+	InHistoryTree.cpp \
 	HistoryTreeNode.cpp \
 	HistoryTreeCoreNode.cpp \
 	HistoryTreeLeafNode.cpp \
@@ -28,6 +29,7 @@ SRC = \
 H_SRC = \
 	AbstractHistoryTree.hpp \
 	OutHistoryTree.hpp \
+	InHistoryTree.hpp \
 	HistoryTreeBackend.hpp \
 	HistoryTree.hpp \
 	HistoryTreeNode.hpp \

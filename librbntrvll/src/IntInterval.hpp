@@ -31,7 +31,6 @@ public:
 	IntInterval(void) : Interval(SIT_INT32) { }
 	IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value);
 	std::string getStringValue(void) const;
-	void unserialize(void* var_addr, void* u32_addr);
 	unsigned int getVariableValueSize(void) const;
 	IntInterval* setValue(int32_t value) {
 		this->_value = value;
@@ -40,7 +39,8 @@ public:
 	}
 
 protected:
-	void serializeValues(void* var_addr, void* u32_addr) const;
+	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
+	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
 
 private:
 	int32_t _value;

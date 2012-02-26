@@ -29,6 +29,7 @@ class IntervalCreator
 {
 public:
 	IntervalCreator(void);
+	~IntervalCreator(void);
 	void registerIntervalType(interval_type_t type, IIntervalFactory* factory) throw(ExistingIntervalTypeEx);
 	void unregisterIntervalType(interval_type_t type);
 	void unregisterAll(void);

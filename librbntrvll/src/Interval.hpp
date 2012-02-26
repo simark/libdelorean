@@ -33,13 +33,15 @@ typedef std::tr1::shared_ptr<Interval> IntervalSharedPtr;
 
 class Interval : public IPrintable
 {
+	friend std::ostream& operator<<(std::ostream& out, const Interval& intr);
+	
 public:
 	Interval(interval_type_t type) : _type(type) { }
 	Interval(timestamp_t start, timestamp_t end, attribute_t attribute, interval_type_t type);
 	virtual ~Interval() { }
 	virtual std::string getStringValue(void) const = 0;
 	void serialize(uint8_t* var_ptr, uint8_t* head_ptr);
-	virtual void unserialize(void* var_addr, void* u32_addr) = 0;
+	unsigned int unserialize(uint8_t* var_ptr, uint8_t* head_ptr);
 	virtual unsigned int getVariableValueSize(void) const = 0;
 	unsigned int getTotalSize(void) const {
 		return Interval::HEADER_SIZE + this->getVariableValueSize();
@@ -91,8 +93,8 @@ public:
 	bool operator>=(const Interval& other);
 	
 protected:
-	friend std::ostream& operator<<(std::ostream& out, const Interval& intr);
-	virtual void serializeValues(void* var_addr, void* u32_addr) const = 0;
+	virtual void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const = 0;
+	virtual unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) = 0;
 	static const unsigned int HEADER_SIZE;
 
 private:
@@ -100,10 +102,10 @@ private:
 	timestamp_t _start;
 	timestamp_t _end;
 	
-	// this is a unique integer ID for this interval
+	// integer ID for this interval
 	attribute_t _attribute;
 	
-	// type ID
+	// type identifier
 	interval_type_t _type;
 };
 

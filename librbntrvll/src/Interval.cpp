@@ -21,6 +21,7 @@
 #include <iomanip>
 #include <iostream>
 #include <cstring>
+#include <map>
 
 #include "basic_types.h"
 #include "Interval.hpp"
@@ -41,11 +42,25 @@ Interval::Interval(timestamp_t start, timestamp_t end, attribute_t attribute, in
 }
 
 std::string Interval::toString(void) const
-{	
+{
+	map<uint8_t, string> types;
+	types.insert(make_pair(SIT_INT32, "int32"));
+	types.insert(make_pair(SIT_UINT32, "uint32"));
+	types.insert(make_pair(SIT_FLOAT32, "float"));
+	types.insert(make_pair(SIT_STRING, "str"));
+	
+	ostringstream type_name;
+	if (types.find(this->_type) == types.end()) {
+		type_name << (unsigned int) this->_type;
+	} else {
+		type_name << types[this->_type];
+	}
+	
 	ostringstream oss;
-	oss << "[" << this->_start << " to " << this->_end << "] " <<
-		"[key = " << std::setw(5) << this->_attribute << "] " <<
-		"[value = " << this->getStringValue() << "]";
+	oss << "@ " << this->_attribute << " (" << type_name.str() << ") " <<
+		"[" << this->_start << ", " << this->_end << "] : " <<
+		this->getStringValue();
+		
 	return oss.str();
 }
 
@@ -73,6 +88,21 @@ void Interval::serialize(uint8_t* var_ptr, uint8_t* head_ptr) {
 	
 	// serialize values
 	this->serializeValues(var_ptr, head_ptr);
+}
+
+unsigned int Interval::unserialize(uint8_t* var_ptr, uint8_t* head_ptr) {
+	// unserialize header
+	memcpy(&this->_start, head_ptr, sizeof(timestamp_t));
+	head_ptr += sizeof(timestamp_t);
+	memcpy(&this->_end, head_ptr, sizeof(timestamp_t));
+	head_ptr += sizeof(timestamp_t);
+	memcpy(&this->_attribute, head_ptr, sizeof(attribute_t));
+	head_ptr += sizeof(attribute_t);
+	memcpy(&this->_type, head_ptr, sizeof(interval_type_t));
+	head_ptr += sizeof(interval_type_t);
+	
+	// unserialize values
+	return this->unserializeValues(var_ptr, head_ptr);
 }
 
 bool Interval::operator==(const Interval& other)

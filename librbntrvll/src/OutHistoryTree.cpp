@@ -61,6 +61,7 @@ void OutHistoryTree::open(void) {
 	// update internal status
 	this->_opened = true;
 }
+
 void OutHistoryTree::close(timestamp_t end) {
 	// is this history tree at least opened?
 	if (!this->_opened) {

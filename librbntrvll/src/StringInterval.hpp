@@ -32,12 +32,12 @@ public:
 	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, std::string value);
 	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, const char* value);
 	std::string getStringValue(void) const;
-	void unserialize(void* var_addr, void* u32_addr);
 	unsigned int getVariableValueSize(void) const;
 	Interval* clone(void) const;
 
 protected:
-	void serializeValues(void* var_addr, void* u32_addr) const;
+	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
+	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
 	
 private:
 	std::string _value;
