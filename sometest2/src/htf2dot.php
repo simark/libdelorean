@@ -25,17 +25,17 @@
 		$chead = array();
 		$h = unpack("C", substr($block_data, 0));
 		$chead['type'] = $h[1];
-		$h = unpack("V", substr($block_data, 1));
+		$h = unpack("l", substr($block_data, 1));
 		$chead['start'] = $h[1];
-		$h = unpack("V", substr($block_data, 9));
+		$h = unpack("l", substr($block_data, 9));
 		$chead['end'] = $h[1];
-		$h = unpack("V", substr($block_data, 17));
+		$h = unpack("l", substr($block_data, 17));
 		$chead['seq_number'] = $h[1];
-		$h = unpack("V", substr($block_data, 21));
+		$h = unpack("l", substr($block_data, 21));
 		$chead['parent_seq_number'] = $h[1];
-		$h = unpack("V", substr($block_data, 25));
+		$h = unpack("l", substr($block_data, 25));
 		$chead['interval_count'] = $h[1];
-		$h = unpack("V", substr($block_data, 29));
+		$h = unpack("l", substr($block_data, 29));
 		$chead['var_data_offset'] = $h[1];
 		$h = unpack("C", substr($block_data, 33));
 		$chead['done'] = $h[1];
@@ -45,9 +45,9 @@
 		switch ($chead['type']) {
 			case 1:
 			$chead['type'] = 'core';
-			$h = unpack("V", substr($block_data, 34));
+			$h = unpack("l", substr($block_data, 34));
 			$shead['extended'] = $h[1];
-			$h = unpack("V", substr($block_data, 38));
+			$h = unpack("l", substr($block_data, 38));
 			$shead['children_count'] = $h[1];
 			break;
 			
@@ -85,9 +85,9 @@
 			for ($i = 0; $i < $shead['children_count']; ++$i) {
 				$off_seq = 42 + $i * 4;
 				$off_start = 42 + ($max_children * 4) + ($i * 8);
-				$h = unpack("V", substr($block_data, $off_seq));
+				$h = unpack("l", substr($block_data, $off_seq));
 				$seq = $h[1];
-				$h = unpack("V", substr($block_data, $off_start));
+				$h = unpack("l", substr($block_data, $off_start));
 				$start = $h[1];
 				printf("  + {%d} [%d]\n", $seq, $start);
 			}
@@ -100,15 +100,15 @@
 			} else {
 				$off_head = 34 + $i * 25;
 			}
-			$h = unpack("V", substr($block_data, $off_head + 0));
+			$h = unpack("l", substr($block_data, $off_head + 0));
 			$start = $h[1];
-			$h = unpack("V", substr($block_data, $off_head + 8));
+			$h = unpack("l", substr($block_data, $off_head + 8));
 			$end = $h[1];
-			$h = unpack("V", substr($block_data, $off_head + 16));
+			$h = unpack("l", substr($block_data, $off_head + 16));
 			$attr = $h[1];
 			$h = unpack("C", substr($block_data, $off_head + 20));
 			$type = $h[1];
-			$h = unpack("V", substr($block_data, $off_head + 21));
+			$h = unpack("l", substr($block_data, $off_head + 21));
 			$value = $h[1];
 			$td = $type;
 			if (array_key_exists($type, $types)) {
@@ -134,19 +134,19 @@
 		
 		// get tree header infos.
 		$thead = substr($htf, 0, 4096);
-		$h = unpack("V", $thead);
+		$h = unpack("l", $thead);
 		$magic = $h[1];
-		$h = unpack("V", substr($thead, 4));
+		$h = unpack("l", substr($thead, 4));
 		$major = $h[1];
-		$h = unpack("V", substr($thead, 8));
+		$h = unpack("l", substr($thead, 8));
 		$minor = $h[1];
-		$h = unpack("V", substr($thead, 12));
+		$h = unpack("l", substr($thead, 12));
 		$block_size = $h[1];
-		$h = unpack("V", substr($thead, 16));
+		$h = unpack("l", substr($thead, 16));
 		$max_children = $h[1];
-		$h = unpack("V", substr($thead, 20));
+		$h = unpack("l", substr($thead, 20));
 		$node_count = $h[1];
-		$h = unpack("V", substr($thead, 24));
+		$h = unpack("l", substr($thead, 24));
 		$root_seq = $h[1];
 		printf("> magic number: %08x\n", $magic);
 		echo "> major: $major\n";
