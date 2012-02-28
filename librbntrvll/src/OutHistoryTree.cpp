@@ -27,6 +27,7 @@
 #include "HistoryTreeConfig.hpp"
 #include "HistoryTreeCoreNode.hpp"
 #include "HistoryTreeLeafNode.hpp"
+#include "ex/IOEx.hpp"
 #include "fixed_config.h"
  
 using namespace std;
@@ -43,7 +44,7 @@ OutHistoryTree::OutHistoryTree(HistoryTreeConfig config)
 void OutHistoryTree::open(void) {
 	// is this history tree already opened?
 	if (this->_opened) {
-		// TODO: throw something baaad (already opened)
+		throw IOEx("This tree is already opened");
 	}
 	
 	// do init. stuff...
@@ -65,7 +66,7 @@ void OutHistoryTree::open(void) {
 void OutHistoryTree::close(timestamp_t end) {
 	// is this history tree at least opened?
 	if (!this->_opened) {
-		// TODO: throw something baaad (tree must be opened if it is to be closed)
+		throw IOEx("This tree was not open");
 	}
 	
 	// proper end time
@@ -91,11 +92,11 @@ void OutHistoryTree::close(timestamp_t end) {
 
 void OutHistoryTree::openStream(void) {
 	if (this->_stream.is_open()) {
-		// TODO: throw something baaad (file already opened)
+		throw IOEx("The stream is already open");
 	}
 	this->_stream.open(this->_config._stateFile.c_str(), fstream::out | fstream::binary);
 	if (!this->_stream) {
-		// TODO: throw something baaad (invalid/inexisting file)
+		throw IOEx("Unable to open file");
 	}
 }
 

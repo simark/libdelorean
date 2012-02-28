@@ -27,6 +27,7 @@
 #include "HistoryTreeConfig.hpp"
 #include "HistoryTreeCoreNode.hpp"
 #include "HistoryTreeLeafNode.hpp"
+#include "ex/IOEx.hpp"
 #include "fixed_config.h"
 
 using namespace std;
@@ -43,7 +44,7 @@ InHistoryTree::InHistoryTree(HistoryTreeConfig config)
 void InHistoryTree::open(void) {
 	// is this history tree already opened?
 	if (this->_opened) {
-		// TODO: throw something baaad (already opened)
+		throw IOEx("This tree is already opened");
 	}
 	
 	// open stream
@@ -51,7 +52,7 @@ void InHistoryTree::open(void) {
 	
 	// check for open errors
 	if (!this->_stream) {
-		// TODO: throw something baaad (I/O error)
+		throw IOEx("Unable to open file");
 	}
 	
 	// unserialize tree header
@@ -70,7 +71,7 @@ void InHistoryTree::unserializeHeader(void) {
 	int32_t mn;
 	f.read((char*) &mn, sizeof(int32_t));
 	if (mn != HF_MAGIC_NUMBER) {
-		// TODO: throw something baaad (invalid history tree file)
+		throw IOEx("Invalid file : incorrect format");
 	}
 	
 	// file version
@@ -78,7 +79,7 @@ void InHistoryTree::unserializeHeader(void) {
 	f.read((char*) &major, sizeof(int32_t));
 	f.read((char*) &minor, sizeof(int32_t));
 	if (major != HF_MAJOR || minor != HF_MINOR) {
-		// TODO: throw something baaad (unsupported file version)
+		throw IOEx("Invalid file : unsupported version");
 	}
 	
 	// block size
@@ -97,7 +98,7 @@ void InHistoryTree::unserializeHeader(void) {
 void InHistoryTree::close(timestamp_t end) {	
 	// is this history tree at least opened?
 	if (!this->_opened) {
-		// TODO: throw something baaad (tree must be opened if it is to be closed)
+		throw IOEx("This tree was not open");
 	}
 	
 	// close stream

@@ -295,8 +295,12 @@ void HistoryTree::addNewRootNode()
  */
 HistoryTreeNodeSharedPtr HistoryTree::initNewCoreNode(int parentSeqNumber, timestamp_t startTime)
 {
-	//FIXME in the future, we will have to check if this is a core node or a leaf node
-	HistoryTreeNodeSharedPtr newNode(new HistoryTreeCoreNode(_config, _nodeCount, parentSeqNumber, startTime));
+	HistoryTreeNodeSharedPtr newNode;
+	if(nodeCount == 0){
+		newNode = new HistoryTreeLeafNode(_config, _nodeCount, parentSeqNumber, startTime);
+	}else{
+		newNode = new HistoryTreeCoreNode(_config, _nodeCount, parentSeqNumber, startTime);		
+	}
 	_nodeCount++;
 	
 	/* Update the treeEnd if needed */

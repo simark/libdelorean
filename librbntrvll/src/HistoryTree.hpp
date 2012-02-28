@@ -38,12 +38,12 @@ public:
 	HistoryTreeNodeSharedPtr selectNextChild(HistoryTreeNodeSharedPtr currentNode, timestamp_t timestamp) const;
 	
 	// FIXME: this is a temporary implementation so that we may link with the lib.
-	static unsigned int getTreeHeaderSize() { return 0; }
+	static unsigned int getTreeHeaderSize();
 	
 	const HistoryTreeIO& getTreeIO() const { return _treeIO; };
 
 	//FIXME const?
-	std::vector<HistoryTreeNodeSharedPtr> getLatestBranch() const
+	const std::vector<HistoryTreeNodeSharedPtr>& getLatestBranch() const
 	{
 		return _latestBranch;
 	}

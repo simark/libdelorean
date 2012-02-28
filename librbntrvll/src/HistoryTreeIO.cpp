@@ -18,6 +18,7 @@
  */
 
 #include "HistoryTreeIO.hpp"
+#include "HistoryTree.hpp"
 
 #if 1
 
@@ -65,24 +66,25 @@ HistoryTreeIO::HistoryTreeIO(HistoryTree* ownerTree, int curNodeCount)
 HistoryTreeNodeSharedPtr HistoryTreeIO::readNode(int seqNumber) const
 {
 	HistoryTreeNodeSharedPtr node;
-	try{
-		node = readNodeFromMemory(seqNumber);
-	}catch(...){
+	
+	node = readNodeFromMemory(seqNumber);
+	if (node)
+		return node;
+	else
 		return readNodeFromDisk(seqNumber);
-	}
-	return node;
 }
 
 HistoryTreeNodeSharedPtr HistoryTreeIO::readNodeFromMemory(int seqNumber) const
 {
-	//FIXME implement this
+	//FIXME test this
+	const std::vector<HistoryTreeNodeSharedPtr>& latestBranch(_tree->getLatestBranch());
+	std::vector<HistoryTreeNodeSharedPtr>::const_iterator it;
 	
-	//for (HTNode node : tree.latestBranch) {
-		//if (node.getSequenceNumber() == seqNumber) {
-			//return node;
-		//}
-	//}
-	//return null;
+	for (it = latestBranch.begin(); it != latestBranch.end(); it++) {
+		if ((*it)->getSequenceNumber() == seqNumber) {
+			return *it;
+		}
+	}
 	return HistoryTreeNodeSharedPtr();
 }
 
