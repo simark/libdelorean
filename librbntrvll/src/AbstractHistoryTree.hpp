@@ -43,9 +43,21 @@ public:
 	}
 	HistoryTreeConfig getConfig(void) const {		
 		return this->_config;
+	}	
+	timestamp_t getStart() const {
+		return _config._treeStart;
+	}
+	
+	timestamp_t getEnd() const {
+		return _end;
+	}
+	
+	timestamp_t getNodeCount() const {
+		return _node_count;
 	}
 
 protected:
+	bool checkValidTime(timestamp_t timestamp) const;
 	unsigned int filePosFromSeq(seq_number_t seq) {
 		return this->getHeaderSize() + seq * this->_config._blockSize;
 	}
@@ -58,7 +70,7 @@ protected:
 	timestamp_t _end;
 	unsigned int _node_count;
 	std::vector<HistoryTreeNodeSharedPtr> _latest_branch;
-	std::fstream _stream;
+	mutable std::fstream _stream;
 };
 
 #endif // _ABSTRACTHISTORYTREE_HPP

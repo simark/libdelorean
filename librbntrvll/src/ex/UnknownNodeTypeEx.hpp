@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -16,25 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "AbstractHistoryTree.hpp"
+#ifndef _UNKNOWNNODETYPEEX_HPP
+#define _UNKNOWNNODETYPEEX_HPP
 
-using namespace std;
- 
-const unsigned int AbstractHistoryTree::HEADER_SIZE = 4096;
+#include <string>
+#include <stdexcept>
 
-AbstractHistoryTree::AbstractHistoryTree()
-: _opened(false) {
-}
+#include "../basic_types.h"
 
-AbstractHistoryTree::AbstractHistoryTree(HistoryTreeConfig config) :
-_config(config), _opened(false) {
-}
+class UnknownNodeTypeEx : public std::runtime_error
+{
+private:
+	static std::string getMsg(node_type_t type);
+public:
+	UnknownNodeTypeEx(const std::string& msg) : runtime_error(msg) { }
+	UnknownNodeTypeEx(interval_type_t type) : runtime_error(getMsg(type)) { }
+};
 
-AbstractHistoryTree::~AbstractHistoryTree() {
-}
+
+#endif // _UNKNOWNNODETYPEEX_HPP
 
 
-bool AbstractHistoryTree::checkValidTime(timestamp_t timestamp) const
-{	
-	return ( timestamp >= _config._treeStart && timestamp <= _end );
-}

@@ -46,6 +46,7 @@ public:
 	void unserializeSpecificHeader(std::istream& is);
 	unsigned int getSpecificHeaderSize(void) const;
 	void linkNewChild(HistoryTreeNodeSharedPtr childNode);
+	seq_number_t getChildAtTimestamp(timestamp_t timestamp) const;
 	seq_number_t getChild(unsigned int index) const {
 		return _children[index];
 	}

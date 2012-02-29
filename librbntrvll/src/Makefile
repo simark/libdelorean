@@ -23,6 +23,7 @@ SRC = \
 	FloatIntervalFactory.cpp \
 	IntervalCreator.cpp \
 	ex/UnknownIntervalTypeEx.cpp \
+	ex/UnknownNodeTypeEx.cpp \
 	ex/ExistingIntervalTypeEx.cpp \
 	ex/TimeRangeEx.cpp \
 	ex/NodeFullEx.cpp \
@@ -51,6 +52,7 @@ H_SRC = \
 	IIntervalFactory.hpp \
 	IntervalCreator.hpp \
 	ex/UnknownIntervalTypeEx.hpp \
+	ex/UnknownNodeTypeEx.hpp \
 	ex/ExistingIntervalTypeEx.hpp \
 	ex/TimeRangeEx.hpp \
 	ex/NodeFullEx.hpp \

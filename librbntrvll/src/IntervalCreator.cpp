@@ -69,7 +69,7 @@ void IntervalCreator::unregisterAll(void) {
 	}
 }
 
-IntervalSharedPtr IntervalCreator::createIntervalFromType(interval_type_t type) throw(UnknownIntervalTypeEx) {
+IntervalSharedPtr IntervalCreator::createIntervalFromType(interval_type_t type) const throw(UnknownIntervalTypeEx) {
 	if (this->_factories[type] == NULL) {
 		throw UnknownIntervalTypeEx(type);
 	}

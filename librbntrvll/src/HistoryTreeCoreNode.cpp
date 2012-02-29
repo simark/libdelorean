@@ -80,6 +80,27 @@ void HistoryTreeCoreNode::linkNewChild(HistoryTreeNodeSharedPtr childNode)
 	_nbChildren++;
 }
 
+/**
+ * Returns the child's sequence number for a given timestamp
+ * Only one child can possibly hold this timestamp (no overlapping)
+ * 
+ * @param timestamp
+ * @return child sequence number or node's sequence number if no valid child
+ */
+seq_number_t HistoryTreeCoreNode::getChildAtTimestamp(timestamp_t timestamp) const
+{
+	seq_number_t potentialNextSeqNb = getSequenceNumber();
+	
+	for ( unsigned int i = 0; i < getNbChildren(); i++ ) {
+		if ( timestamp >= getChildStart(i) ) {
+			potentialNextSeqNb = getChild(i);
+		} else {
+			break;
+		}
+	}
+	return potentialNextSeqNb;
+}
+
 void HistoryTreeCoreNode::serializeSpecificHeader(uint8_t* buf) const
 {	
 	// buffer pointer backup

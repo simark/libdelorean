@@ -49,7 +49,7 @@ public:
 	void writeInfoFromNode(std::vector<IntervalSharedPtr>& intervals, timestamp_t timestamp) const;
 	void serialize(uint8_t* buf);
 	void serialize(std::ostream& os);
-	void unserialize(std::istream& is, IntervalCreator& ic);
+	void unserialize(std::istream& is, const IntervalCreator& ic);
 	virtual void unserializeSpecificHeader(std::istream& is) = 0;
 	virtual void serializeSpecificHeader(uint8_t* buf) const = 0;
 	virtual unsigned int getSpecificHeaderSize(void) const = 0;

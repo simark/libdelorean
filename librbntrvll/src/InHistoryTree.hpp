@@ -45,6 +45,9 @@ public:
 	IntervalCreator& getIC(void) {
 		return _ic;
 	}
+	HistoryTreeNodeSharedPtr selectNextChild(HistoryTreeCoreNodeSharedPtr currentNode, timestamp_t timestamp) const;
+	std::vector< IntervalSharedPtr > query(timestamp_t timestamp) const;
+	IntervalSharedPtr query(timestamp_t timestamp, attribute_t key) const;
 	void test(void);
 	~InHistoryTree();
 
@@ -53,8 +56,9 @@ protected:
 
 private:
 	void unserializeHeader(void);
-	HistoryTreeNodeSharedPtr createNodeFromStream();
-	HistoryTreeNodeSharedPtr createNodeFromSeq(seq_number_t seq);
+	HistoryTreeNodeSharedPtr createNodeFromStream() const;
+	HistoryTreeNodeSharedPtr createNodeFromSeq(seq_number_t seq) const;
+	HistoryTreeNodeSharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
 	seq_number_t _root_seq;
 	IntervalCreator _ic;
 };

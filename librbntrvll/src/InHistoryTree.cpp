@@ -28,6 +28,7 @@
 #include "HistoryTreeCoreNode.hpp"
 #include "HistoryTreeLeafNode.hpp"
 #include "ex/IOEx.hpp"
+#include "ex/UnknownNodeTypeEx.hpp"
 #include "fixed_config.h"
 
 using namespace std;
@@ -114,7 +115,61 @@ InHistoryTree::~InHistoryTree() {
 	}
 }
 
-HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromStream() {
+/**
+ * Inner method to select the next child of the current node intersecting
+ * the given timestamp. Useful for moving down the tree following one
+ * branch.
+ * 
+ * @param currentNode
+ * @param t
+ * @return The child node intersecting t
+ */
+HistoryTreeNodeSharedPtr InHistoryTree::selectNextChild(HistoryTreeCoreNodeSharedPtr currentNode, timestamp_t timestamp) const
+{
+	assert ( currentNode->getNbChildren() > 0 );
+	int potentialNextSeqNb = currentNode->getChildAtTimestamp(timestamp);
+	
+	/* Once we exit this loop, we should have found a children to follow.
+	 * If we didn't, there's a problem. */
+	assert ( potentialNextSeqNb != currentNode->getSequenceNumber() );
+	
+	/* Since this code path is quite performance-critical, avoid iterating
+	 * through the whole latestBranch array if we know for sure the next
+	 * node has to be on disk */
+	if ( currentNode->isDone() ) {
+		return createNodeFromSeq(potentialNextSeqNb);
+	} else {
+		return fetchNodeFromLatestBranch(potentialNextSeqNb);
+	}
+}
+
+vector<IntervalSharedPtr> InHistoryTree::query(timestamp_t timestamp) const
+{
+	
+	if ( !checkValidTime(timestamp) ) {
+		throw TimeRangeEx("Query timestamp outside of bounds");
+	}
+	
+	// We start by reading the information in the root node
+	HistoryTreeNodeSharedPtr currentNode = _latest_branch[0];
+	vector<IntervalSharedPtr> relevantIntervals;
+	currentNode->writeInfoFromNode(relevantIntervals, timestamp);
+	
+	HistoryTreeCoreNodeSharedPtr coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(currentNode);
+	
+	// Then we follow the branch down in the relevant children
+	// Stop at leaf nodes or if a core node has no children (core nodes should always have at least 1 child)
+	while ( coreNode!=0 && coreNode->getNbChildren() > 0 ) {
+		currentNode = selectNextChild(coreNode, timestamp);
+		currentNode->writeInfoFromNode(relevantIntervals, timestamp);
+		coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(currentNode);
+	}
+	
+	// The relevantIntervals should now be filled with everything needed
+	return relevantIntervals;	
+}
+
+HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromStream() const {
 	fstream& f = this->_stream;
 	unsigned int init_pos = f.tellg();
 	
@@ -136,7 +191,7 @@ HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromStream() {
 		break;
 		
 		default:
-		// throw something (unknown node type)
+		throw(UnknownNodeTypeEx(nt));
 		break;
 	}
 	
@@ -147,7 +202,7 @@ HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromStream() {
 	return n;
 }
 
-HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromSeq(seq_number_t seq) {
+HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromSeq(seq_number_t seq) const {
 	// make sure everything is okay
 	assert((unsigned int) seq < this->_node_count);
 	
@@ -159,6 +214,18 @@ HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromSeq(seq_number_t seq) {
 	
 	// get the node
 	return this->createNodeFromStream();
+}
+
+HistoryTreeNodeSharedPtr InHistoryTree::fetchNodeFromLatestBranch(seq_number_t seq) const {
+
+	std::vector<HistoryTreeNodeSharedPtr>::const_iterator it;
+	
+	for (it = _latest_branch.begin(); it != _latest_branch.end(); it++) {
+		if ((*it)->getSequenceNumber() == seq) {
+			return *it;
+		}
+	}
+	return HistoryTreeNodeSharedPtr();
 }
 
 void InHistoryTree::test(void) {

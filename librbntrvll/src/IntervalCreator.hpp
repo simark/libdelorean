@@ -33,7 +33,7 @@ public:
 	void registerIntervalType(interval_type_t type, IIntervalFactory* factory) throw(ExistingIntervalTypeEx);
 	void unregisterIntervalType(interval_type_t type);
 	void unregisterAll(void);
-	IntervalSharedPtr createIntervalFromType(interval_type_t type) throw(UnknownIntervalTypeEx);
+	IntervalSharedPtr createIntervalFromType(interval_type_t type) const throw(UnknownIntervalTypeEx);
 
 private:
 	IIntervalFactory* _factories [256];

@@ -271,7 +271,7 @@ void HistoryTreeNode::serialize(uint8_t* buf)
 	}
 }
 
-void HistoryTreeNode::unserialize(std::istream& is, IntervalCreator& ic) {
+void HistoryTreeNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 	// remember initial position within stream
 	unsigned int init_pos = is.tellg();
 	
