@@ -87,7 +87,7 @@ void HistoryTreeNode::addInterval(IntervalSharedPtr newInterval)
 	// Just in case, but should be checked before even calling this function
 	assert(newInterval->getTotalSize() <= getFreeSpace());
 	
-	// We need to clone the interval, to guarantee ownership
+	// FIXME : We need to clone the interval, to guarantee ownership
 	_intervals.push_back(newInterval);
 	
 	// Update the in-node offset "pointer"

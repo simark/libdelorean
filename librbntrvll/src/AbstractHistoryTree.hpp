@@ -58,6 +58,7 @@ public:
 
 protected:
 	bool checkValidTime(timestamp_t timestamp) const;
+	bool nodeHasChildren(ConstHistoryTreeNodeSharedPtr node) const;
 	unsigned int filePosFromSeq(seq_number_t seq) {
 		return this->getHeaderSize() + seq * this->_config._blockSize;
 	}

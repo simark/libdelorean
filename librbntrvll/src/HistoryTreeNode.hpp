@@ -35,6 +35,7 @@ class HistoryTreeNode;
 class InHistoryTree;
 
 typedef std::tr1::shared_ptr<HistoryTreeNode>	HistoryTreeNodeSharedPtr;
+typedef std::tr1::shared_ptr<const HistoryTreeNode>	ConstHistoryTreeNodeSharedPtr;
 
 class HistoryTreeNode : public IPrintable
 {

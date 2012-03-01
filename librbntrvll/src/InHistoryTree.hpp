@@ -52,7 +52,7 @@ public:
 	~InHistoryTree();
 
 protected:
-	
+	void buildLatestBranch(void);
 
 private:
 	void unserializeHeader(void);

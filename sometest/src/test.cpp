@@ -172,12 +172,24 @@ static void testNodeDump(void) {
 	hexDump(buf, 4096);
 }
 
+static void testIntervalCopy(void) {
+	printTestHeader("testIntervalCopy");
+	
+	IntervalSharedPtr int_interval1(new IntInterval(1,2,1,1));
+	IntervalSharedPtr int_interval2(new IntInterval(3,4,2,2));
+	
+	*int_interval2 = *int_interval1;
+	
+	cout << *int_interval1 << endl << *int_interval2 << endl << endl;
+}
+
 int main(void) {
 	testInterval();
 	testIntervalCreator();
 	testStringInterval();
 	testNode();
 	testNodeDump();
+	testIntervalCopy();
 	
 	return 0;
 }

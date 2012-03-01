@@ -17,8 +17,10 @@
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "AbstractHistoryTree.hpp"
+#include "HistoryTreeCoreNode.hpp"
 
 using namespace std;
+using namespace std::tr1;
  
 const unsigned int AbstractHistoryTree::HEADER_SIZE = 4096;
 
@@ -34,7 +36,11 @@ AbstractHistoryTree::~AbstractHistoryTree() {
 }
 
 
-bool AbstractHistoryTree::checkValidTime(timestamp_t timestamp) const
-{	
+bool AbstractHistoryTree::checkValidTime(timestamp_t timestamp) const {	
 	return ( timestamp >= _config._treeStart && timestamp <= _end );
+}
+
+bool AbstractHistoryTree::nodeHasChildren(ConstHistoryTreeNodeSharedPtr node) const {
+	ConstHistoryTreeCoreNodeSharedPtr coreNode = dynamic_pointer_cast<const HistoryTreeCoreNode>(node);
+	return(coreNode && coreNode->getNbChildren());
 }

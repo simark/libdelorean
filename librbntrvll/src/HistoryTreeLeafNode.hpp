@@ -33,6 +33,7 @@
 class HistoryTreeLeafNode;
 
 typedef std::tr1::shared_ptr<HistoryTreeLeafNode> HistoryTreeLeafNodeSharedPtr;
+typedef std::tr1::shared_ptr<const HistoryTreeLeafNode>	ConstHistoryTreeLeafNodeSharedPtr;
 
 class HistoryTreeLeafNode : public HistoryTreeNode 
 {

@@ -59,8 +59,42 @@ void InHistoryTree::open(void) {
 	// unserialize tree header
 	this->unserializeHeader();
 	
+	// store latest branch in memory
+	this->buildLatestBranch();
+	
+	// The user could not possibly know the start and end times of the tree
+	// Set it to the correct value using the root node
+	_config._treeStart = _latest_branch[0]->getStart();
+	_end = _latest_branch[0]->getEnd();
+	
 	// update internal status
 	this->_opened = true;
+}
+
+/**
+ * From an existing tree on the disk, rebuild the latest branch.
+ * 
+ */ 
+void InHistoryTree::buildLatestBranch(void) {
+	assert(this->_node_count > 0);
+	fstream& f = this->_stream;
+	
+	this->_latest_branch.clear();
+	
+	//Read root
+	HistoryTreeNodeSharedPtr node = createNodeFromSeq(this->_root_seq);
+	HistoryTreeCoreNodeSharedPtr coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(node);
+	_latest_branch.push_back(node);
+	
+	//Follow the latest branch down
+	while(coreNode != NULL && coreNode->getNbChildren() > 0) {
+		unsigned int nbChildren = coreNode->getNbChildren();
+		seq_number_t nextSeq = coreNode->getChild(nbChildren-1);
+		node = createNodeFromSeq(nextSeq);
+		this->_latest_branch.push_back(node);
+		coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(node);
+	}
+	return;
 }
 
 void InHistoryTree::unserializeHeader(void) {
@@ -124,8 +158,7 @@ InHistoryTree::~InHistoryTree() {
  * @param t
  * @return The child node intersecting t
  */
-HistoryTreeNodeSharedPtr InHistoryTree::selectNextChild(HistoryTreeCoreNodeSharedPtr currentNode, timestamp_t timestamp) const
-{
+HistoryTreeNodeSharedPtr InHistoryTree::selectNextChild(HistoryTreeCoreNodeSharedPtr currentNode, timestamp_t timestamp) const {
 	assert ( currentNode->getNbChildren() > 0 );
 	int potentialNextSeqNb = currentNode->getChildAtTimestamp(timestamp);
 	
@@ -143,9 +176,7 @@ HistoryTreeNodeSharedPtr InHistoryTree::selectNextChild(HistoryTreeCoreNodeShare
 	}
 }
 
-vector<IntervalSharedPtr> InHistoryTree::query(timestamp_t timestamp) const
-{
-	
+vector<IntervalSharedPtr> InHistoryTree::query(timestamp_t timestamp) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
@@ -155,18 +186,39 @@ vector<IntervalSharedPtr> InHistoryTree::query(timestamp_t timestamp) const
 	vector<IntervalSharedPtr> relevantIntervals;
 	currentNode->writeInfoFromNode(relevantIntervals, timestamp);
 	
-	HistoryTreeCoreNodeSharedPtr coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(currentNode);
 	
 	// Then we follow the branch down in the relevant children
-	// Stop at leaf nodes or if a core node has no children (core nodes should always have at least 1 child)
-	while ( coreNode!=0 && coreNode->getNbChildren() > 0 ) {
+	// Stop at leaf nodes or if a core node has no children
+	while ( nodeHasChildren(currentNode) ) {
+		HistoryTreeCoreNodeSharedPtr coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(currentNode);
 		currentNode = selectNextChild(coreNode, timestamp);
 		currentNode->writeInfoFromNode(relevantIntervals, timestamp);
-		coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(currentNode);
 	}
 	
 	// The relevantIntervals should now be filled with everything needed
 	return relevantIntervals;	
+}
+
+IntervalSharedPtr InHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
+	if ( !checkValidTime(timestamp) ) {
+		throw TimeRangeEx("Query timestamp outside of bounds");
+	}
+	
+	HistoryTreeNodeSharedPtr currentNode = _latest_branch[0];
+	IntervalSharedPtr interval = currentNode->getRelevantInterval(timestamp, key);
+	
+	// Follow the branch down until we find the required interval or there are no children left
+	// Stop at leaf nodes or if a core node has no children
+	while ( interval == NULL && nodeHasChildren(currentNode) ) {
+		HistoryTreeCoreNodeSharedPtr coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(currentNode);
+		currentNode = selectNextChild(coreNode, timestamp);
+		interval = currentNode->getRelevantInterval(timestamp, key);
+	}
+	/* Since we should now have intervals at every attribute/timestamp
+	 * combination, it should NOT be null here. */
+	assert (interval != NULL);
+	
+	return interval;
 }
 
 HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromStream() const {
