@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -16,29 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _FIXED_CONFIG_H
-#define _FIXED_CONFIG_H
+#ifndef _NULLINTERVAL_HPP
+#define _NULLINTERVAL_HPP
 
-/**
- * Simple interval types.
- */
-#define SIT_INT32	0
-#define SIT_STRING	1
-#define SIT_UINT32	2
-#define SIT_FLOAT32	3
-#define SIT_NULL	4
+#include <stdint.h>
 
-/**
- * Node types.
- */
-#define NT_CORE		1
-#define NT_LEAF		2
+#include "fixed_config.h"
+#include "Interval.hpp"
 
-/**
- * History file magic number.
- */
-#define HF_MAGIC_NUMBER		0x05ffa900
-#define HF_MAJOR		3
-#define HF_MINOR		0
+class NullInterval : public Interval
+{
+public:
+	NullInterval(void) : Interval(SIT_NULL) { }
+	NullInterval(timestamp_t start, timestamp_t end, attribute_t attribute);
 
-#endif /* _FIXED_CONFIG_H */
+	std::string getStringValue(void) const;
+	unsigned int getVariableValueSize(void) const;
+	
+protected:
+	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
+	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
+};
+
+#endif // _NULLINTERVAL_HPP
