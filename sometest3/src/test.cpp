@@ -84,8 +84,46 @@ static void testInOutHT(void) {
 	HistoryTree* ht = new HistoryTree(config);
 	ht->open();
 	
-	ht->addInterval(IntervalSharedPtr(new IntInterval(10, 15, 0, 12)));
+	cout << "BEFORE:\n";
+	ht->test();
 	
+	// leaf (seq 0)
+	ht->addInterval(IntervalSharedPtr(new IntInterval(2, 7, 0, 32)));
+	ht->addInterval(IntervalSharedPtr(new IntInterval(5, 11, 1, 33)));
+	ht->addInterval(IntervalSharedPtr(new IntInterval(3, 25, 2, 34)));
+	
+	// leaf (seq 2)
+	ht->addInterval(IntervalSharedPtr(new IntInterval(28, 35, 3, 35)));
+	ht->addInterval(IntervalSharedPtr(new IntInterval(32, 45, 4, 36)));
+	
+	// core (seq 1)
+	ht->addInterval(IntervalSharedPtr(new IntInterval(16, 50, 5, 37)));
+	
+	// leaf (seq 2)
+	ht->addInterval(IntervalSharedPtr(new IntInterval(26, 52, 6, 38)));
+	
+	// leaf (seq 3)
+	ht->addInterval(IntervalSharedPtr(new IntInterval(65, 70, 7, 39)));
+	ht->addInterval(IntervalSharedPtr(new IntInterval(56, 74, 8, 40)));
+	
+	// core (seq 4)
+	ht->addInterval(IntervalSharedPtr(new IntInterval(35, 76, 9, 40)));
+	
+	// leaf (seq 6)
+	ht->addInterval(IntervalSharedPtr(new IntInterval(80, 85, 10, 41)));
+	ht->addInterval(IntervalSharedPtr(new IntInterval(76, 88, 11, 42)));
+	ht->addInterval(IntervalSharedPtr(new IntInterval(90, 10, 12, 43)));
+	
+	// leaf (seq 7)
+	ht->addInterval(IntervalSharedPtr(new IntInterval(105, 110, 13, 44)));
+	
+	// core (seq 5)
+	ht->addInterval(IntervalSharedPtr(new IntInterval(77, 120, 14, 45)));
+	
+	// leaf (seq 7)
+	ht->addInterval(IntervalSharedPtr(new IntInterval(102, 137, 15, 46)));
+	
+	cout << "AFTER:\n";
 	ht->test();
 	
 	// close tree
@@ -94,8 +132,8 @@ static void testInOutHT(void) {
 }
 
 int main(void) {
-	testInHT();
-	testQuery();
+	//testInHT();
+	//testQuery();
 	testInOutHT();
 	
 	return 0;

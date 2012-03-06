@@ -73,6 +73,8 @@ void HistoryTree::open(void)
 		// unserialize tree header
 		this->unserializeHeader();
 	}catch(IOEx& ex){
+		
+		this->_stream.clear();
 		//Unable to read header, open it as an empty tree
 		initEmptyTree();
 		
@@ -81,6 +83,9 @@ void HistoryTree::open(void)
 		return;
 	}
 	//We read the header correctly, init the tree
+	cout << "start : " << getStart() << endl;
+	cout << "end : " << getEnd() << endl;
+	cout << "node count : " << getNodeCount() << endl;
 	
 	// store latest branch in memory
 	this->buildLatestBranch();

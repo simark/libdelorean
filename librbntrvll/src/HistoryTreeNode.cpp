@@ -278,7 +278,7 @@ void HistoryTreeNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 	unsigned int init_pos = is.tellg();
 	
 	// skip type
-	is.seekg(sizeof(uint8_t), ios::cur);
+	is.read((char*) &this->_type, sizeof(node_type_t));
 	
 	// time stamps
 	is.read((char*) &this->_nodeStart, sizeof(timestamp_t));
