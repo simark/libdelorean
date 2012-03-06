@@ -25,6 +25,7 @@
 #include "UIntIntervalFactory.hpp"
 #include "StringIntervalFactory.hpp"
 #include "FloatIntervalFactory.hpp"
+#include "NullIntervalFactory.hpp"
 #include "fixed_config.h"
 #include "basic_types.h"
 #include "ex/UnknownIntervalTypeEx.hpp"
@@ -41,6 +42,7 @@ IntervalCreator::IntervalCreator(void) {
 	this->registerIntervalType(SIT_UINT32, new UIntIntervalFactory());
 	this->registerIntervalType(SIT_STRING, new StringIntervalFactory());
 	this->registerIntervalType(SIT_FLOAT32, new FloatIntervalFactory());
+	this->registerIntervalType(SIT_NULL, new NullIntervalFactory());
 }
 
 IntervalCreator::~IntervalCreator(void) {

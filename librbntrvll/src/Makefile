@@ -17,6 +17,8 @@ SRC = \
 	StringIntervalFactory.cpp \
 	UIntInterval.cpp \
 	UIntIntervalFactory.cpp \
+	NullInterval.cpp \
+	NullIntervalFactory.cpp \
 	IntInterval.cpp \
 	IntIntervalFactory.cpp \
 	FloatInterval.cpp \
@@ -44,6 +46,8 @@ H_SRC = \
 	StringIntervalFactory.hpp \
 	UIntInterval.hpp \
 	UIntIntervalFactory.hpp \
+	NullInterval.hpp \
+	NullIntervalFactory.hpp \
 	IntInterval.hpp \
 	IntIntervalFactory.hpp \
 	FloatInterval.hpp \

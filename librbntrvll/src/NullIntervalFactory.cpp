@@ -16,29 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _FIXED_CONFIG_H
-#define _FIXED_CONFIG_H
+#include "Interval.hpp"
+#include "NullInterval.hpp"
+#include "NullIntervalFactory.hpp"
 
-/**
- * Simple interval types.
- */
-#define SIT_INT32	0
-#define SIT_STRING	1
-#define SIT_UINT32	2
-#define SIT_FLOAT32	3
-#define SIT_NULL	4
-
-/**
- * Node types.
- */
-#define NT_CORE		1
-#define NT_LEAF		2
-
-/**
- * History file magic number.
- */
-#define HF_MAGIC_NUMBER		0x05ffa900
-#define HF_MAJOR		3
-#define HF_MINOR		0
-
-#endif /* _FIXED_CONFIG_H */
+IntervalSharedPtr NullIntervalFactory::create(void) const {
+	return IntervalSharedPtr(new NullInterval());
+}
