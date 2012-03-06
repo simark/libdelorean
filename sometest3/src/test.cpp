@@ -21,6 +21,29 @@ static void printTestHeader(string what) {
 	cout << endl << "### " << what << endl;
 }
 
+static void testQuery(void) {
+	printTestHeader("testQuery");
+	
+	// some config
+	HistoryTreeConfig config("./out.ht");
+	
+	// input history tree
+	InHistoryTree* iht = new InHistoryTree(config);
+	iht->open();
+	
+	vector<IntervalSharedPtr> intervals;
+	intervals = iht->query(20);
+	for(vector<IntervalSharedPtr>::iterator it = intervals.begin(); it != intervals.end(); it++)
+	{
+		if(*it != 0)
+			cout << **it << endl;
+	}
+	
+	// close tree
+	iht->close();
+	delete iht;
+}
+
 static void testInHT(void) {
 	printTestHeader("testInHT");
 	
@@ -40,6 +63,7 @@ static void testInHT(void) {
 
 int main(void) {
 	testInHT();
+	testQuery();
 	
 	return 0;
 }

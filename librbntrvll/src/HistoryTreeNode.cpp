@@ -72,6 +72,8 @@ void HistoryTreeNode::writeInfoFromNode(vector<IntervalSharedPtr>& intervals, ti
 		/* Now we only have to compare the Start times, since we know
 		 * the End times necessarily fit */
 		if ( _intervals[i]->getStart() <= timestamp ) {
+			if (intervals.size() < _intervals[i]->getAttribute()+1) 
+				intervals.resize(_intervals[i]->getAttribute()+1);
 			intervals[_intervals[i]->getAttribute()] = _intervals[i];
 		}
 	}
