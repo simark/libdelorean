@@ -45,11 +45,9 @@ public:
 	~OutHistoryTree();
 
 protected:
-	
-
-private:
 	void tryInsertAtNode(IntervalSharedPtr interval, unsigned int index);
 	void addSiblingNode(unsigned int index);
+	void initEmptyTree(void);
 	void addNewRootNode(void);
 	void openStream(void);
 	void closeStream(void);
@@ -57,7 +55,10 @@ private:
 	void serializeNode(HistoryTreeNodeSharedPtr node);
 	void incNodeCount(timestamp_t new_start);
 	HistoryTreeCoreNodeSharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
-	HistoryTreeLeafNodeSharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
+	HistoryTreeLeafNodeSharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);	
+
+private:
+
 };
 
 #endif // _OUTHISTORYTREE_HPP

@@ -19,70 +19,25 @@
 #ifndef _HISTORYTREE_HPP
 #define _HISTORYTREE_HPP
 
+#include <fstream>
+
+#include "InHistoryTree.hpp"
+#include "OutHistoryTree.hpp"
 #include "HistoryTreeNode.hpp"
 #include "HistoryTreeConfig.hpp"
 #include "Interval.hpp"
 #include "HistoryTreeIO.hpp"
 
-class HistoryTree
+class HistoryTree : public InHistoryTree, public OutHistoryTree
 {
 public:
 	HistoryTree(HistoryTreeConfig config);
-	HistoryTree(std::string existingFile);
 	virtual ~HistoryTree();
 	
-	void closeTree(timestamp_t timestamp);
-	
-	void insertInterval(IntervalSharedPtr interval);
-	
-	HistoryTreeNodeSharedPtr selectNextChild(HistoryTreeNodeSharedPtr currentNode, timestamp_t timestamp) const;
-	
-	// FIXME: this is a temporary implementation so that we may link with the lib.
-	static unsigned int getTreeHeaderSize();
-	
-	const HistoryTreeIO& getTreeIO() const { return _treeIO; };
-
-	//FIXME const?
-	const std::vector<HistoryTreeNodeSharedPtr>& getLatestBranch() const
-	{
-		return _latestBranch;
-	}
-	
-	const HistoryTreeConfig& getConfig() const
-	{
-		return _config;
-	}
-	
-	timestamp_t getTreeStart() const
-	{
-		return _config._treeStart;
-	}
-	
-	timestamp_t getTreeEnd() const
-	{
-		return _treeEnd;
-	}
-	
-	timestamp_t getNodeCount() const
-	{
-		return _nodeCount;
-	}
+	void open(void);
+	void close(timestamp_t end);
+	void close();
 private:
-	HistoryTreeConfig _config;
-	HistoryTreeIO _treeIO;
-	
-	timestamp_t _treeEnd;	/* Latest timestamp found in the tree (at any given moment) */
-	int _nodeCount;		/* How many nodes exist in this tree, total */
-	
-	std::vector<HistoryTreeNodeSharedPtr> _latestBranch;
-	
-	void tryInsertAtNode(IntervalSharedPtr, int indexOfNode);
-	
-	void addSiblingNode(unsigned int indexOfNode);
-	
-	void addNewRootNode();
-	
-	HistoryTreeNodeSharedPtr initNewCoreNode(int parentSeqNumber, timestamp_t startTime);
 };
 
 #endif // _HISTORYTREE_HPP

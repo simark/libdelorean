@@ -53,9 +53,9 @@ public:
 
 protected:
 	void buildLatestBranch(void);
+	void unserializeHeader(void);
 
 private:
-	void unserializeHeader(void);
 	HistoryTreeNodeSharedPtr createNodeFromStream() const;
 	HistoryTreeNodeSharedPtr createNodeFromSeq(seq_number_t seq) const;
 	HistoryTreeNodeSharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;

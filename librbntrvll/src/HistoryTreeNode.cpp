@@ -23,7 +23,7 @@
 #include <cstring>
 #include <sstream>
 
-#include "IntInterval.hpp"
+#include "NullInterval.hpp"
 #include "IntervalCreator.hpp"
 #include "HistoryTreeNode.hpp"
 #include "basic_types.h"
@@ -72,7 +72,7 @@ void HistoryTreeNode::writeInfoFromNode(vector<IntervalSharedPtr>& intervals, ti
 		/* Now we only have to compare the Start times, since we know
 		 * the End times necessarily fit */
 		if ( _intervals[i]->getStart() <= timestamp ) {
-			if (intervals.size() < _intervals[i]->getAttribute()+1) 
+			if ((int) intervals.size() < _intervals[i]->getAttribute()+1) 
 				intervals.resize(_intervals[i]->getAttribute()+1);
 			intervals[_intervals[i]->getAttribute()] = _intervals[i];
 		}
@@ -171,7 +171,7 @@ IntervalSharedPtr HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, at
  */
 int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
 {		
-	IntervalSharedPtr dummyInterval(new IntInterval(0, timestamp, 0, 0));
+	IntervalSharedPtr dummyInterval(new NullInterval(0, timestamp, 0));
 	vector<IntervalSharedPtr>::const_iterator it;	
 	
 	it = lower_bound(_intervals.begin(), _intervals.end(), dummyInterval, 
@@ -331,8 +331,14 @@ void HistoryTreeNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 
 std::string HistoryTreeNode::toString(void) const {
 	ostringstream oss;
+	stringstream endTime;
+	if(_isDone){
+		endTime << _nodeEnd;
+	}else{
+		endTime << "...";
+	}
 	oss << "# {" << this->_sequenceNumber << "} from {" << this->_parentSequenceNumber << "} " <<
-		"[" << this->_nodeStart << ", " << this->_nodeEnd << "], " << this->_intervals.size() <<
+		"[" << this->_nodeStart << ", " << endTime.str() << "], " << this->_intervals.size() <<
 		" intervals" << this->getInfos();
 	
 	// intervals

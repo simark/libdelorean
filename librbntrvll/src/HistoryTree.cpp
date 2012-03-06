@@ -19,80 +19,79 @@
 #include "HistoryTree.hpp"
 #include "HistoryTreeCoreNode.hpp"
 #include "ex/TimeRangeEx.hpp"
+#include "ex/IOEx.hpp"
 
 #include <assert.h>
 
+using namespace std;
+
 /**
- * Create a new HistoryTree from scratch, using a HistoryTreeConfig object
- * for configuration
+ * Create a new HistoryTree using a configuration
  * 
  * @param config
  */
 HistoryTree::HistoryTree(HistoryTreeConfig config)
-:_config(config)
+:AbstractHistoryTree(config), InHistoryTree(config), OutHistoryTree(config)
 {
-	/* Simple assertion to make sure we have enough place
-	 * in the 0th block for the tree configuration */
-	assert( _config._blockSize >= getTreeHeaderSize() );
-	
-	_treeEnd = _config._treeStart;
-	_nodeCount = 0;
-	_latestBranch = std::vector<HistoryTreeNodeSharedPtr>();
-	
-	/* Prepare the IO object */
-	_treeIO = HistoryTreeIO(this);
-	
-	/* Add the first node to the tree */
-	HistoryTreeNodeSharedPtr firstNode = initNewCoreNode(-1, _config._treeStart);
-	_latestBranch.push_back(firstNode);	
-}
-
-#if 0
-/**
- * Create a new HistoryTree from scratch, using parameters needed to
- * construct a HistoryTreeConfig object
- * 
- * @param newFile
- * @param blockSize
- * @param maxChildren
- * @param startTime
- */
-HistoryTree::HistoryTree(std::string newFile, int blockSize, int maxChildren, timestamp_t startTime)
-:_config(newFile, blockSize, maxChildren, startTime)
-{
-	/* Simple assertion to make sure we have enough place
-	 * in the 0th block for the tree configuration */
-	assert( _config._blockSize >= getTreeHeaderSize() );
-	
-	_treeEnd = _config._treeStart;
-	_nodeCount = 0;
-	_latestBranch = std::vector<HistoryTreeNode>();
-	
-	/* Prepare the IO object */
-	_treeIO = HistoryTreeIO(this);
-	
-	/* Add the first node to the tree */
-	HistoryTreeNodeSharedPtr firstNode = initNewCoreNode(-1, _config._treeStart);
-	_latestBranch.push_back(firstNode);	
-}
-#endif
-
-/**
- * "Reader" constructor : instantiate a HistoryTree from an existing tree file on
- * disk
- * 
- * @param existingFile
- *            Path/filename of the history-file we are to open
- */
-HistoryTree::HistoryTree(std::string existingFile)
-{
-	//FIXME put magic I/O sequence here
-	
-	_treeIO = HistoryTreeIO(this);
 }
 
 HistoryTree::~HistoryTree()
 {
+}
+
+/**
+ * Open a tree from the disk
+ * @throws TimeRangeException 
+ * 
+ */
+void HistoryTree::open(void)
+{
+	// is this history tree already opened?
+	if (this->_opened) {
+		throw IOEx("This tree is already opened");
+	}
+	
+	// open stream
+	this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary);
+	
+	// check for open errors
+	if (!this->_stream) {
+		//The file did not exist, create a new file
+		this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary | fstream::trunc);
+		
+		if (!this->_stream) {
+			throw IOEx("Unable to open file");
+		}
+		initEmptyTree();
+	
+		// update internal status
+		this->_opened = true;
+		return;
+	}
+	
+	try{
+		// unserialize tree header
+		this->unserializeHeader();
+	}catch(IOEx& ex){
+		//Unable to read header, open it as an empty tree
+		initEmptyTree();
+		
+		// update internal status
+		this->_opened = true;
+		return;
+	}
+	//We read the header correctly, init the tree
+	
+	// store latest branch in memory
+	this->buildLatestBranch();
+	
+	// The user could not possibly know the start and end times of the tree
+	// Set it to the correct value using the root node
+	_config._treeStart = _latest_branch[0]->getStart();
+	_end = _latest_branch[0]->getEnd();
+	
+	// update internal status
+	this->_opened = true;
 }
 
 /**
@@ -103,210 +102,35 @@ HistoryTree::~HistoryTree()
  * @throws TimeRangeException 
  * 
  */
-void HistoryTree::closeTree(timestamp_t timestamp)
+void HistoryTree::close(timestamp_t end)
 {
-	//FIXME do the complex work here
+	// is this history tree at least opened?
+	if (!this->_opened) {
+		throw IOEx("This tree was not open");
+	}
+	
+	// proper end time
+	if (end < this->_end) {
+		end = this->_end;
+	}
+	
+	// close the latest branch
+	for (unsigned int i = 0; i < this->_latest_branch.size(); ++i) {
+		this->_latest_branch[i]->close(this->_end);
+		this->serializeNode(this->_latest_branch[i]);
+	}
+	
+	// write tree header
+	this->serializeHeader();
+	
+	// close stream
+	this->closeStream();
+	
+	// update internal status
+	this->_opened = false;
 }
 
-/**
- * Insert an interval in the tree
- * 
- * @param interval
- */
-void HistoryTree::insertInterval(IntervalSharedPtr interval)
+void HistoryTree::close(void)
 {
-	if ( interval->getStart() < _config._treeStart ) {
-		throw TimeRangeEx("Interval start time below IntervalTree start time");
-	}
-	
-	tryInsertAtNode(interval, _latestBranch.size()-1);
+	close(getEnd());
 }
-
-/**
- * Inner method to select the next child of the current node intersecting
- * the given timestamp. Useful for moving down the tree following one
- * branch.
- * 
- * @param currentNode
- * @param t
- * @return The child node intersecting t
- */
-HistoryTreeNodeSharedPtr HistoryTree::selectNextChild(HistoryTreeNodeSharedPtr currentNode, timestamp_t timestamp) const
-{
-	assert ( currentNode->getNbChildren() > 0 );
-	int potentialNextSeqNb = currentNode->getSequenceNumber();
-	
-	for ( unsigned int i = 0; i < currentNode->getNbChildren(); i++ ) {
-		if ( timestamp >= currentNode->getChildStart(i) ) {
-			potentialNextSeqNb = currentNode->getChild(i);
-		} else {
-			break;
-		}
-	}
-	/* Once we exit this loop, we should have found a children to follow.
-	 * If we didn't, there's a problem. */
-	assert ( potentialNextSeqNb != currentNode->getSequenceNumber() );
-	
-	/* Since this code path is quite performance-critical, avoid iterating
-	 * through the whole latestBranch array if we know for sure the next
-	 * node has to be on disk */
-	if ( currentNode->isDone() ) {
-		return _treeIO.readNodeFromDisk(potentialNextSeqNb);
-	} else {
-		return _treeIO.readNode(potentialNextSeqNb);
-	}
-}
-
-/**
- * Helper function to get the size of the "tree header" in the tree-file
- * The nodes will use this offset to know where they should be in the file.
- * This should always be a multiple of 4K.
- */
-static unsigned int getTreeHeaderSize() {
-	return 4096;
-}
-
-/**
- * Inner method to find in which node we should add the interval.
- * 
- * @param interval
- *            The interval to add to the tree
- * @param indexOfNode
- *            The index *in the latestBranch* where we are trying the
- *            insertion
- */
-void HistoryTree::tryInsertAtNode(IntervalSharedPtr interval, int indexOfNode)
-{
-	HistoryTreeNodeSharedPtr targetNode(_latestBranch[indexOfNode]);
-	
-	//Verify if there is enough room in this node to store this interval
-	if ( interval->getTotalSize() > targetNode->getFreeSpace() ) {
-		//Nope, not enough room. Insert in a new sibling instead.
-		addSiblingNode(indexOfNode);
-		tryInsertAtNode(interval, _latestBranch.size()-1);
-		return;
-	}
-	
-	//Make sure the interval time range fits this node
-	if ( interval->getStart() < targetNode->getNodeStart() ) {
-		/* No, this interval starts before the startTime of this node.
-		 * We need to check recursively in parents if it can fit. */
-		assert ( indexOfNode >= 1 );
-		tryInsertAtNode( interval, indexOfNode-1 );
-		return;
-	}
-	
-	// Ok, there is room, and the interval fits in this time slot. Let's add it.
-	targetNode->addInterval(interval);
-	
-	// Update treeEnd if needed
-	if ( interval->getEnd() > _treeEnd ) {
-		_treeEnd = interval->getEnd();
-	}
-	return;
-}
-
-/**
- * Method to add a sibling to any node in the latest branch. This will add
- * children back down to the leaf level, if needed.
- * 
- * @param indexOfNode
- *            The index in latestBranch where we start adding
- */
-void HistoryTree::addSiblingNode(unsigned int indexOfNode)
-{
-	unsigned int i;
-	HistoryTreeNodeSharedPtr newNode, prevNode;
-	timestamp_t splitTime = _treeEnd;
-	
-	assert ( indexOfNode < _latestBranch.size() );
-	
-	/* Check if we need to add a new root node */
-	if ( indexOfNode == 0 ) {
-		addNewRootNode();
-		return;
-	}
-	
-	/* Check if we can indeed add a child to the target parent */
-	if ( _latestBranch[indexOfNode-1]->getNbChildren() == _config._maxChildren ) {
-		/* If not, add a branch starting one level higher instead */
-		addSiblingNode(indexOfNode-1);
-		return;
-	}
-	
-	/* Split off the new branch from the old one */
-	for ( i=indexOfNode ; i < _latestBranch.size(); i++ ) {
-		_latestBranch[i]->closeThisNode(splitTime);
-		_treeIO.writeNode(_latestBranch[i]);
-		
-		prevNode = _latestBranch[(i-1)];
-		newNode = initNewCoreNode(prevNode->getSequenceNumber(), splitTime + 1);
-		prevNode->linkNewChild(newNode);
-		
-		_latestBranch[i] = newNode;
-	}
-	return;
-}
-
-/**
- * Similar to the previous method, except here we rebuild a completely new
- * latestBranch
- */
-void HistoryTree::addNewRootNode()
-{
-	unsigned int i, depth;
-	timestamp_t splitTime = _treeEnd;
-	
-	HistoryTreeNodeSharedPtr oldRootNode(_latestBranch[0]);
-	HistoryTreeNodeSharedPtr newRootNode = initNewCoreNode(-1, _config._treeStart);
-	
-	// Tell the old root node that it isn't root anymore
-	oldRootNode->setParentSequenceNumber(newRootNode->getSequenceNumber());
-	
-	// Close off the whole current latestBranch
-	for ( i=0; i < _latestBranch.size(); i++ ) {
-		_latestBranch[i]->closeThisNode(splitTime);
-		_treeIO.writeNode(_latestBranch[i]);
-	}
-	
-	// Link the new root to its first child (the previous root node)
-	newRootNode->linkNewChild(oldRootNode);
-	
-	// Rebuild a new latestBranch
-	depth = _latestBranch.size();
-	_latestBranch = std::vector<HistoryTreeNodeSharedPtr>();
-	_latestBranch.push_back(newRootNode);
-	for ( i=1; i < depth+1; i++ ) {
-		HistoryTreeNodeSharedPtr prevNode(_latestBranch[i-1]);
-		HistoryTreeNodeSharedPtr newNode = initNewCoreNode(prevNode->getParentSequenceNumber(), splitTime + 1);
-		prevNode->linkNewChild(newNode);
-		_latestBranch.push_back(newNode);
-	}
-}
-
-/**
- * Add a new empty node to the tree.
- * 
- * @param parentSeqNumber
- *            Sequence number of this node's parent
- * @param startTime
- *            Start time of the new node
- * @return The newly created node
- */
-HistoryTreeNodeSharedPtr HistoryTree::initNewCoreNode(int parentSeqNumber, timestamp_t startTime)
-{
-	HistoryTreeNodeSharedPtr newNode;
-	if(nodeCount == 0){
-		newNode = new HistoryTreeLeafNode(_config, _nodeCount, parentSeqNumber, startTime);
-	}else{
-		newNode = new HistoryTreeCoreNode(_config, _nodeCount, parentSeqNumber, startTime);		
-	}
-	_nodeCount++;
-	
-	/* Update the treeEnd if needed */
-	if ( startTime >= _treeEnd ) {
-		_treeEnd = startTime + 1;
-	}
-	return newNode;	
-}
-#endif

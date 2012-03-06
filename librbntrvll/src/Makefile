@@ -7,11 +7,11 @@ SRC = \
 	AbstractHistoryTree.cpp \
 	OutHistoryTree.cpp \
 	InHistoryTree.cpp \
+	HistoryTree.cpp \
 	HistoryTreeNode.cpp \
 	HistoryTreeCoreNode.cpp \
 	HistoryTreeLeafNode.cpp \
 	HistoryTreeConfig.cpp \
-	HistoryTreeIO.cpp \
 	Interval.cpp \
 	StringInterval.cpp \
 	StringIntervalFactory.cpp \
@@ -40,7 +40,6 @@ H_SRC = \
 	HistoryTreeCoreNode.hpp \
 	HistoryTreeLeafNode.hpp \
 	HistoryTreeConfig.hpp \
-	HistoryTreeIO.hpp \
 	Interval.hpp \
 	StringInterval.hpp \
 	StringIntervalFactory.hpp \

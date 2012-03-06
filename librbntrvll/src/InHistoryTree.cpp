@@ -282,7 +282,10 @@ HistoryTreeNodeSharedPtr InHistoryTree::fetchNodeFromLatestBranch(seq_number_t s
 
 void InHistoryTree::test(void) {
 	for (unsigned int i = 0; i < this->_node_count; ++i) {
-		HistoryTreeNodeSharedPtr node(this->createNodeFromSeq(i));
+		HistoryTreeNodeSharedPtr node(fetchNodeFromLatestBranch(i));
+		//The node is not in the latest branch, it must be on disk
+		if (node == 0)
+			node = this->createNodeFromSeq(i);
 		cout << *node << endl;
 	}
 }

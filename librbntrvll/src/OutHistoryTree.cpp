@@ -46,15 +46,7 @@ void OutHistoryTree::open(void) {
 	if (this->_opened) {
 		throw IOEx("This tree is already opened");
 	}
-	
-	// do init. stuff...
-	this->_end = this->_config._treeStart;
-	this->_node_count = 0;
-	this->_latest_branch.clear();
-	
-	// add a first (*leaf*) node
-	HistoryTreeLeafNodeSharedPtr n = this->initNewLeafNode(-1, this->_config._treeStart);
-	_latest_branch.push_back(n);
+	initEmptyTree();
 	
 	// open stream
 	this->openStream();
@@ -206,6 +198,17 @@ void OutHistoryTree::addSiblingNode(unsigned int index) {
 		this->_latest_branch[i] = new_node;
 	}
 	return;
+}
+
+void OutHistoryTree::initEmptyTree(void) {
+	// do init. stuff...
+	this->_end = this->_config._treeStart;
+	this->_node_count = 0;
+	this->_latest_branch.clear();
+	
+	// add a first (*leaf*) node
+	HistoryTreeLeafNodeSharedPtr n = this->initNewLeafNode(-1, this->_config._treeStart);
+	_latest_branch.push_back(n);
 }
 
 void OutHistoryTree::addNewRootNode(void) {
