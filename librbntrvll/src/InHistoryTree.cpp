@@ -42,6 +42,13 @@ InHistoryTree::InHistoryTree(HistoryTreeConfig config)
 : AbstractHistoryTree(config) {
 }
 
+/**
+ * Opens a history tree file for reading only.
+ * The file must exist and be of the correct format.
+ * 
+ * @throw IOEx if no file, incorrect format, or already open
+ * 
+ */
 void InHistoryTree::open(void) {
 	// is this history tree already opened?
 	if (this->_opened) {
@@ -99,35 +106,45 @@ void InHistoryTree::buildLatestBranch(void) {
 
 void InHistoryTree::unserializeHeader(void) {
 	fstream& f = this->_stream;
-	// goto beginning
-	f.seekg(0);
-	
-	// verify that this is an history tree file
-	int32_t mn;
-	f.read((char*) &mn, sizeof(int32_t));
-	if (mn != HF_MAGIC_NUMBER) {
-		throw IOEx("Invalid file : incorrect format");
+	f.exceptions ( fstream::failbit | fstream::badbit );
+	try{
+		// goto beginning
+		f.seekg(0);
+		
+		// verify that this is an history tree file
+		int32_t mn;
+		f.read((char*) &mn, sizeof(int32_t));
+		if (mn != HF_MAGIC_NUMBER) {
+			f.exceptions();
+			throw IOEx("Invalid file : incorrect format");
+		}
+		
+		// file version
+		int32_t major, minor;
+		f.read((char*) &major, sizeof(int32_t));
+		f.read((char*) &minor, sizeof(int32_t));
+		if (major != HF_MAJOR || minor != HF_MINOR) {
+			f.exceptions();
+			throw IOEx("Invalid file : unsupported version");
+		}
+		
+		// block size
+		f.read((char*) &this->_config._blockSize, sizeof(int32_t));
+		
+		// max. children
+		f.read((char*) &this->_config._maxChildren, sizeof(int32_t));
+		
+		// node count
+		f.read((char*) &this->_node_count, sizeof(int32_t));
+		
+		// root sequence number
+		f.read((char*) &this->_root_seq, sizeof(int32_t));
+	}catch(fstream::failure& e) {
+		f.clear();
+		f.exceptions();
+		throw IOEx("Error while reading file header");
 	}
-	
-	// file version
-	int32_t major, minor;
-	f.read((char*) &major, sizeof(int32_t));
-	f.read((char*) &minor, sizeof(int32_t));
-	if (major != HF_MAJOR || minor != HF_MINOR) {
-		throw IOEx("Invalid file : unsupported version");
-	}
-	
-	// block size
-	f.read((char*) &this->_config._blockSize, sizeof(int32_t));
-	
-	// max. children
-	f.read((char*) &this->_config._maxChildren, sizeof(int32_t));
-	
-	// node count
-	f.read((char*) &this->_node_count, sizeof(int32_t));
-	
-	// root sequence number
-	f.read((char*) &this->_root_seq, sizeof(int32_t));
+	f.exceptions();
 }
 
 void InHistoryTree::close(timestamp_t end) {	

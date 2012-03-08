@@ -79,13 +79,14 @@ static void testInOutHT(void) {
 	printTestHeader("testInOutHT");
 	// some config
 	HistoryTreeConfig config("./inout.ht", 128, 4, 0);
+	//Clear any existing file
+	fstream tfile;
+	tfile.open("./inout.ht", ios::out | ios::trunc);
+	tfile.close();
 	
 	// input history tree
 	HistoryTree* ht = new HistoryTree(config);
 	ht->open();
-	
-	cout << "BEFORE:\n";
-	ht->test();
 	
 	// leaf (seq 0)
 	ht->addInterval(IntervalSharedPtr(new IntInterval(2, 7, 0, 32)));
@@ -106,6 +107,11 @@ static void testInOutHT(void) {
 	ht->addInterval(IntervalSharedPtr(new IntInterval(65, 70, 7, 39)));
 	ht->addInterval(IntervalSharedPtr(new IntInterval(56, 74, 8, 40)));
 	
+	//Write the tree to disk...
+	ht->close();
+	//... and reopen it
+	ht->open();
+	
 	// core (seq 4)
 	ht->addInterval(IntervalSharedPtr(new IntInterval(35, 76, 9, 40)));
 	
@@ -123,17 +129,16 @@ static void testInOutHT(void) {
 	// leaf (seq 7)
 	ht->addInterval(IntervalSharedPtr(new IntInterval(102, 137, 15, 46)));
 	
-	cout << "AFTER:\n";
 	ht->test();
 	
 	// close tree
-	ht->close(100);
+	ht->close();
 	delete ht;
 }
 
 int main(void) {
 	//testInHT();
-	//testQuery();
+	testQuery();
 	testInOutHT();
 	
 	return 0;

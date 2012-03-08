@@ -170,8 +170,9 @@ IntervalSharedPtr HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, at
  * @return the index of the first interval in _intervals that could hold this timestamp
  */
 int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
-{		
-	IntervalSharedPtr dummyInterval(new NullInterval(0, timestamp, 0));
+{
+	static IntervalSharedPtr dummyInterval(new NullInterval(0, 0, 0));
+	dummyInterval->setEnd(timestamp);
 	vector<IntervalSharedPtr>::const_iterator it;	
 	
 	it = lower_bound(_intervals.begin(), _intervals.end(), dummyInterval, 
@@ -277,7 +278,7 @@ void HistoryTreeNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 	// remember initial position within stream
 	unsigned int init_pos = is.tellg();
 	
-	// skip type
+	// type
 	is.read((char*) &this->_type, sizeof(node_type_t));
 	
 	// time stamps

@@ -41,6 +41,12 @@ OutHistoryTree::OutHistoryTree(HistoryTreeConfig config)
 : AbstractHistoryTree(config) {
 }
 
+/**
+ * Opens a history tree file for writing only.
+ * If the file already existed, it will be overwritten
+ * 
+ * @throw IOEx if file already open or general IO error
+ */ 
 void OutHistoryTree::open(void) {
 	// is this history tree already opened?
 	if (this->_opened) {

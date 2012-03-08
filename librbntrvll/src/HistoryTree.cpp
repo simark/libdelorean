@@ -41,7 +41,12 @@ HistoryTree::~HistoryTree()
 
 /**
  * Open a tree from the disk
- * @throws TimeRangeException 
+ * First, tries to open an existing file
+ * If the format is invalid, create an empty tree and overwrite the file
+ * If the format is valid, read the file and init the tree
+ * 
+ * Second, tries to create an empty tree and a new file
+ * @throw IOEx 
  * 
  */
 void HistoryTree::open(void)
@@ -74,7 +79,6 @@ void HistoryTree::open(void)
 		this->unserializeHeader();
 	}catch(IOEx& ex){
 		
-		this->_stream.clear();
 		//Unable to read header, open it as an empty tree
 		initEmptyTree();
 		
@@ -83,9 +87,6 @@ void HistoryTree::open(void)
 		return;
 	}
 	//We read the header correctly, init the tree
-	cout << "start : " << getStart() << endl;
-	cout << "end : " << getEnd() << endl;
-	cout << "node count : " << getNodeCount() << endl;
 	
 	// store latest branch in memory
 	this->buildLatestBranch();
