@@ -23,6 +23,7 @@
 #include <stdint.h>
 #include <ostream>
 #include <vector>
+#include <set>
 #include <string>
 
 #include "IPrintable.hpp"
@@ -36,6 +37,8 @@ class InHistoryTree;
 
 typedef std::tr1::shared_ptr<HistoryTreeNode>	HistoryTreeNodeSharedPtr;
 typedef std::tr1::shared_ptr<const HistoryTreeNode>	ConstHistoryTreeNodeSharedPtr;
+
+typedef std::multiset<IntervalSharedPtr, bool(*)(IntervalSharedPtr,IntervalSharedPtr)> IntervalContainer;
 
 class HistoryTreeNode : public IPrintable
 {
@@ -57,7 +60,7 @@ public:
 	void addInterval(IntervalSharedPtr);
 	void close(timestamp_t endtime);
 	IntervalSharedPtr getRelevantInterval(timestamp_t timestamp, attribute_t key) const;
-	int getStartIndexFor(timestamp_t timestamp) const;
+	IntervalContainer::const_iterator getStartIndexFor(timestamp_t timestamp) const;
 	unsigned int getFreeSpace() const;
 	unsigned int getTotalHeaderSize() const;
 	timestamp_t getStart() const {
@@ -107,7 +110,7 @@ protected:
 	node_type_t _type;
 	
 	// vector containing all the node intervals
-	std::vector<IntervalSharedPtr> _intervals;
+	IntervalContainer _intervals;
 	
 	int getDataSectionEndOffset() const;
 };

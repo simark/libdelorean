@@ -128,10 +128,11 @@ public:
 	
 	void testIntervalSearch()
 	{
-		CPPUNIT_ASSERT(leafNode->getStartIndexFor(17) == 0);
-		CPPUNIT_ASSERT(leafNode->getStartIndexFor(18) == 1);
-		CPPUNIT_ASSERT(leafNode->getStartIndexFor(19) == 2);
-		CPPUNIT_ASSERT(leafNode->getStartIndexFor(20) == 3);
+		IntervalContainer::iterator it = leafNode->_intervals.begin();
+		CPPUNIT_ASSERT(leafNode->getStartIndexFor(17) == it++);
+		CPPUNIT_ASSERT(leafNode->getStartIndexFor(18) == it++);
+		CPPUNIT_ASSERT(leafNode->getStartIndexFor(19) == it++);
+		CPPUNIT_ASSERT(leafNode->getStartIndexFor(20) == it++);
 	}
 	
 	void testCoreSerialize()
