@@ -38,6 +38,8 @@ public:
 	Interval* clone(void) const;
 	void setValue(std::string value) {_value = value;}
 	std::string getValue() const {return _value;}
+	
+	static const interval_type_t type = SIT_STRING;
 
 protected:
 	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;

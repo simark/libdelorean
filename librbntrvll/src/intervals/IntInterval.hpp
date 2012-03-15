@@ -40,6 +40,8 @@ public:
 		return this;
 	}
 	int32_t getValue() const {return _value;}
+	
+	static const interval_type_t type = SIT_INT32;
 
 protected:
 	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;

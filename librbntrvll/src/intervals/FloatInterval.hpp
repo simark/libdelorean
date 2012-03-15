@@ -36,6 +36,8 @@ public:
 	
 	void setValue(float value) {_value = value;}
 	float getValue() const {return _value;}
+	
+	static const interval_type_t type = SIT_FLOAT32;
 
 protected:
 	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
