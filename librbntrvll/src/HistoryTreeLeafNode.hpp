@@ -25,7 +25,7 @@
 #include <tr1/memory>
 
 #include "HistoryTreeConfig.hpp"
-#include "Interval.hpp"
+#include "intervals/Interval.hpp"
 #include "IntervalCreator.hpp"
 #include "HistoryTreeNode.hpp"
 #include "basic_types.h"

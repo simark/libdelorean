@@ -23,7 +23,7 @@
 #include <cstring>
 #include <map>
 
-#include "basic_types.h"
+#include "../basic_types.h"
 #include "Interval.hpp"
 #include "IntInterval.hpp"
 

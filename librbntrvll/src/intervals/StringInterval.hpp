@@ -16,23 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _UINTINTERVAL_HPP
-#define _UINTINTERVAL_HPP
+#ifndef _STRINGINTERVAL_HPP
+#define _STRINGINTERVAL_HPP
 
-#include <stdint.h>
+#include <string>
 
 #include "Interval.hpp"
-#include "basic_types.h"
-#include "fixed_config.h"
+#include "../basic_types.h"
+#include "../fixed_config.h"
 
-class UIntInterval : public Interval
+class StringInterval : public Interval
 {
 public:
-	typedef std::tr1::shared_ptr<UIntInterval> SharedPtr;
+	typedef std::tr1::shared_ptr<StringInterval> SharedPtr;
 	
-	UIntInterval(void) : Interval(SIT_UINT32) { }
-	UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value);
-	~UIntInterval() { }
+	StringInterval(void) : Interval(SIT_STRING) { }
+	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, std::string value);
+	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, const char* value);
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
 	Interval* clone(void) const;
@@ -40,9 +40,9 @@ public:
 protected:
 	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
 	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
-
+	
 private:
-	uint32_t _value;
+	std::string _value;
 };
 
-#endif // _UINTINTERVAL_HPP
+#endif // _STRINGINTERVAL_HPP

@@ -1,4 +1,5 @@
 /**
+ * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
  * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
@@ -16,28 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _HISTORYTREE_HPP
-#define _HISTORYTREE_HPP
+#ifndef _NULLINTERVAL_HPP
+#define _NULLINTERVAL_HPP
 
-#include <fstream>
+#include <stdint.h>
 
-#include "InHistoryTree.hpp"
-#include "OutHistoryTree.hpp"
-#include "HistoryTreeNode.hpp"
-#include "HistoryTreeConfig.hpp"
-#include "intervals/Interval.hpp"
-#include "HistoryTreeIO.hpp"
+#include "../fixed_config.h"
+#include "Interval.hpp"
 
-class HistoryTree : public InHistoryTree, public OutHistoryTree
+class NullInterval : public Interval
 {
 public:
-	HistoryTree(HistoryTreeConfig config);
-	virtual ~HistoryTree();
+	typedef std::tr1::shared_ptr<NullInterval> SharedPtr;
 	
-	void open(void);
-	void close(timestamp_t end);
-	void close();
-private:
+	NullInterval(void) : Interval(SIT_NULL) { }
+	NullInterval(timestamp_t start, timestamp_t end, attribute_t attribute);
+
+	std::string getStringValue(void) const;
+	unsigned int getVariableValueSize(void) const;
+	
+protected:
+	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
+	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
 };
 
-#endif // _HISTORYTREE_HPP
+#endif // _NULLINTERVAL_HPP

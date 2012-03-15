@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
- * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -17,34 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "IntInterval.hpp"
-#include "fixed_config.h"
+#include "FloatInterval.hpp"
+#include "../basic_types.h"
 
 #include <sstream>
 
-IntInterval::IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value)
-:Interval(start, end, attribute, SIT_INT32), _value(value)
+FloatInterval::FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value)
+:Interval(start, end, attribute, SIT_FLOAT32), _value(value)
 {
 }
 
-std::string IntInterval::getStringValue(void) const
+std::string FloatInterval::getStringValue(void) const
 {
 	std::ostringstream oss;
 	oss << _value;
 	return oss.str();
 }
 
-void IntInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
-	*((int32_t*) u32_addr) = this->_value;
+void FloatInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
+	*((float*) u32_addr) = this->_value;
 }
 
-unsigned int IntInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
-	this->_value = *((int32_t*) u32_addr);
+unsigned int FloatInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
+	this->_value = *((float*) u32_addr);
 	
 	return 0;
 }
 
-unsigned int IntInterval::getVariableValueSize(void) const {
+unsigned int FloatInterval::getVariableValueSize(void) const {
 	return 0;
 }
 
+Interval* FloatInterval::clone(void) const{
+	return new FloatInterval(*this);
+}

@@ -16,20 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _FLOATINTERVAL_HPP
-#define _FLOATINTERVAL_HPP
+#ifndef _UINTINTERVAL_HPP
+#define _UINTINTERVAL_HPP
 
-#include "basic_types.h"
-#include "fixed_config.h"
+#include <stdint.h>
+
 #include "Interval.hpp"
+#include "../basic_types.h"
+#include "../fixed_config.h"
 
-class FloatInterval : public Interval
+class UIntInterval : public Interval
 {
 public:
-	typedef std::tr1::shared_ptr<FloatInterval> SharedPtr;
+	typedef std::tr1::shared_ptr<UIntInterval> SharedPtr;
 	
-	FloatInterval(void) : Interval(SIT_FLOAT32) { }
-	FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value);
+	UIntInterval(void) : Interval(SIT_UINT32) { }
+	UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value);
+	~UIntInterval() { }
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
 	Interval* clone(void) const;
@@ -39,7 +42,7 @@ protected:
 	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
 
 private:
-	float _value;
+	uint32_t _value;
 };
 
-#endif // _FLOATINTERVAL_HPP
+#endif // _UINTINTERVAL_HPP

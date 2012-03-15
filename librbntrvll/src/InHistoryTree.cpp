@@ -23,7 +23,7 @@
 #include <cstdlib>
  
 #include "InHistoryTree.hpp"
-#include "Interval.hpp"
+#include "intervals/Interval.hpp"
 #include "HistoryTreeConfig.hpp"
 #include "HistoryTreeCoreNode.hpp"
 #include "HistoryTreeLeafNode.hpp"

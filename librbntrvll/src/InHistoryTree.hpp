@@ -24,7 +24,7 @@
 
 #include "AbstractHistoryTree.hpp"
 #include "HistoryTreeConfig.hpp"
-#include "Interval.hpp"
+#include "intervals/Interval.hpp"
 #include "HistoryTreeNode.hpp"
 #include "HistoryTreeCoreNode.hpp"
 #include "HistoryTreeLeafNode.hpp"

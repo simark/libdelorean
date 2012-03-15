@@ -19,8 +19,8 @@
 #include <sstream>
 
 #include "UIntInterval.hpp"
-#include "basic_types.h"
-#include "fixed_config.h"
+#include "../basic_types.h"
+#include "../fixed_config.h"
 
 UIntInterval::UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value)
 : Interval(start, end, attribute, SIT_UINT32), _value(value)

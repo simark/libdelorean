@@ -17,28 +17,32 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _NULLINTERVAL_HPP
-#define _NULLINTERVAL_HPP
+#include "NullInterval.hpp"
+#include "../fixed_config.h"
 
-#include <stdint.h>
+#include <sstream>
 
-#include "fixed_config.h"
-#include "Interval.hpp"
-
-class NullInterval : public Interval
+NullInterval::NullInterval(timestamp_t start, timestamp_t end, attribute_t attribute)
+: Interval(start, end, attribute, SIT_NULL)
 {
-public:
-	typedef std::tr1::shared_ptr<NullInterval> SharedPtr;
-	
-	NullInterval(void) : Interval(SIT_NULL) { }
-	NullInterval(timestamp_t start, timestamp_t end, attribute_t attribute);
+}
 
-	std::string getStringValue(void) const;
-	unsigned int getVariableValueSize(void) const;
-	
-protected:
-	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
-	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
-};
+std::string NullInterval::getStringValue(void) const
+{
+	return "(null)";
+}
 
-#endif // _NULLINTERVAL_HPP
+void NullInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
+	/* We don't need to write anything */
+}
+
+unsigned int NullInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
+	/* We don't need to read anything */
+	
+	return 0;
+}
+
+unsigned int NullInterval::getVariableValueSize(void) const {
+	return 0;
+}
+

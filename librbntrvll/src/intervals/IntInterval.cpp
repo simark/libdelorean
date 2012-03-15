@@ -17,35 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _INTINTERVAL_HPP
-#define _INTINTERVAL_HPP
+#include "IntInterval.hpp"
+#include "../fixed_config.h"
 
-#include <stdint.h>
+#include <sstream>
 
-#include "fixed_config.h"
-#include "Interval.hpp"
-
-class IntInterval : public Interval
+IntInterval::IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value)
+:Interval(start, end, attribute, SIT_INT32), _value(value)
 {
-public:
-	typedef std::tr1::shared_ptr<IntInterval> SharedPtr;
+}
+
+std::string IntInterval::getStringValue(void) const
+{
+	std::ostringstream oss;
+	oss << _value;
+	return oss.str();
+}
+
+void IntInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
+	*((int32_t*) u32_addr) = this->_value;
+}
+
+unsigned int IntInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
+	this->_value = *((int32_t*) u32_addr);
 	
-	IntInterval(void) : Interval(SIT_INT32) { }
-	IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value);
-	std::string getStringValue(void) const;
-	unsigned int getVariableValueSize(void) const;
-	IntInterval* setValue(int32_t value) {
-		this->_value = value;
-		
-		return this;
-	}
+	return 0;
+}
 
-protected:
-	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
-	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
+unsigned int IntInterval::getVariableValueSize(void) const {
+	return 0;
+}
 
-private:
-	int32_t _value;
-};
-
-#endif // _INTINTERVAL_HPP

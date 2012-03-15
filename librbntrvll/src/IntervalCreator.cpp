@@ -20,12 +20,12 @@
 #include <sstream>
 
 #include "IntervalCreator.hpp"
-#include "IIntervalFactory.hpp"
-#include "IntIntervalFactory.hpp"
-#include "UIntIntervalFactory.hpp"
-#include "StringIntervalFactory.hpp"
-#include "FloatIntervalFactory.hpp"
-#include "NullIntervalFactory.hpp"
+#include "intervals/IIntervalFactory.hpp"
+#include "intervals/IntIntervalFactory.hpp"
+#include "intervals/UIntIntervalFactory.hpp"
+#include "intervals/StringIntervalFactory.hpp"
+#include "intervals/FloatIntervalFactory.hpp"
+#include "intervals/NullIntervalFactory.hpp"
 #include "fixed_config.h"
 #include "basic_types.h"
 #include "ex/UnknownIntervalTypeEx.hpp"

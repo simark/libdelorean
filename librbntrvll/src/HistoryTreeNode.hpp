@@ -26,7 +26,7 @@
 #include <string>
 
 #include "IPrintable.hpp"
-#include "Interval.hpp"
+#include "intervals/Interval.hpp"
 #include "IntervalCreator.hpp"
 #include "HistoryTreeConfig.hpp"
 #include "basic_types.h"

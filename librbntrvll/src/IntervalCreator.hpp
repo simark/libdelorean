@@ -19,8 +19,8 @@
 #ifndef _INTERVALCREATOR_HPP
 #define _INTERVALCREATOR_HPP
 
-#include "Interval.hpp"
-#include "IIntervalFactory.hpp"
+#include "intervals/Interval.hpp"
+#include "intervals/IIntervalFactory.hpp"
 #include "ex/UnknownIntervalTypeEx.hpp"
 #include "ex/ExistingIntervalTypeEx.hpp"
 #include "basic_types.h"

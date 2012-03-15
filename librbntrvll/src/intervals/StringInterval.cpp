@@ -20,7 +20,7 @@
 #include <cstring>
 
 #include "StringInterval.hpp"
-#include "basic_types.h"
+#include "../basic_types.h"
 
 using namespace std;
 

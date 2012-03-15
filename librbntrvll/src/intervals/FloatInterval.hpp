@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
- * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -17,32 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "NullInterval.hpp"
-#include "fixed_config.h"
+#ifndef _FLOATINTERVAL_HPP
+#define _FLOATINTERVAL_HPP
 
-#include <sstream>
+#include "../basic_types.h"
+#include "../fixed_config.h"
+#include "Interval.hpp"
 
-NullInterval::NullInterval(timestamp_t start, timestamp_t end, attribute_t attribute)
-: Interval(start, end, attribute, SIT_NULL)
+class FloatInterval : public Interval
 {
-}
-
-std::string NullInterval::getStringValue(void) const
-{
-	return "(null)";
-}
-
-void NullInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
-	/* We don't need to write anything */
-}
-
-unsigned int NullInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
-	/* We don't need to read anything */
+public:
+	typedef std::tr1::shared_ptr<FloatInterval> SharedPtr;
 	
-	return 0;
-}
+	FloatInterval(void) : Interval(SIT_FLOAT32) { }
+	FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value);
+	std::string getStringValue(void) const;
+	unsigned int getVariableValueSize(void) const;
+	Interval* clone(void) const;
 
-unsigned int NullInterval::getVariableValueSize(void) const {
-	return 0;
-}
+protected:
+	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
+	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
 
+private:
+	float _value;
+};
+
+#endif // _FLOATINTERVAL_HPP

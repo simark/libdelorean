@@ -17,8 +17,7 @@
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "HistoryTreeBackend.hpp"
-#include "Interval.hpp"
-#include "IntInterval.hpp"
+#include "intervals/Interval.hpp"
 #include "HistoryTree.hpp"
 #include "HistoryTreeNode.hpp"
 #include "ex/TimeRangeEx.hpp"

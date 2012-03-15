@@ -24,7 +24,7 @@
 
 #include "HistoryTreeConfig.hpp"
 #include "HistoryTreeNode.hpp"
-#include "Interval.hpp"
+#include "intervals/Interval.hpp"
 #include "basic_types.h"
 
 class AbstractHistoryTree

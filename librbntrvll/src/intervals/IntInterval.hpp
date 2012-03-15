@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -16,33 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _STRINGINTERVAL_HPP
-#define _STRINGINTERVAL_HPP
+#ifndef _INTINTERVAL_HPP
+#define _INTINTERVAL_HPP
 
-#include <string>
+#include <stdint.h>
 
+#include "../fixed_config.h"
 #include "Interval.hpp"
-#include "basic_types.h"
-#include "fixed_config.h"
 
-class StringInterval : public Interval
+class IntInterval : public Interval
 {
 public:
-	typedef std::tr1::shared_ptr<StringInterval> SharedPtr;
+	typedef std::tr1::shared_ptr<IntInterval> SharedPtr;
 	
-	StringInterval(void) : Interval(SIT_STRING) { }
-	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, std::string value);
-	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, const char* value);
+	IntInterval(void) : Interval(SIT_INT32) { }
+	IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value);
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
-	Interval* clone(void) const;
+	IntInterval* setValue(int32_t value) {
+		this->_value = value;
+		
+		return this;
+	}
 
 protected:
 	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
 	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
-	
+
 private:
-	std::string _value;
+	int32_t _value;
 };
 
-#endif // _STRINGINTERVAL_HPP
+#endif // _INTINTERVAL_HPP

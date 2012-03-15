@@ -12,17 +12,17 @@ SRC = \
 	HistoryTreeCoreNode.cpp \
 	HistoryTreeLeafNode.cpp \
 	HistoryTreeConfig.cpp \
-	Interval.cpp \
-	StringInterval.cpp \
-	StringIntervalFactory.cpp \
-	UIntInterval.cpp \
-	UIntIntervalFactory.cpp \
-	NullInterval.cpp \
-	NullIntervalFactory.cpp \
-	IntInterval.cpp \
-	IntIntervalFactory.cpp \
-	FloatInterval.cpp \
-	FloatIntervalFactory.cpp \
+	intervals/Interval.cpp \
+	intervals/StringInterval.cpp \
+	intervals/StringIntervalFactory.cpp \
+	intervals/UIntInterval.cpp \
+	intervals/UIntIntervalFactory.cpp \
+	intervals/NullInterval.cpp \
+	intervals/NullIntervalFactory.cpp \
+	intervals/IntInterval.cpp \
+	intervals/IntIntervalFactory.cpp \
+	intervals/FloatInterval.cpp \
+	intervals/FloatIntervalFactory.cpp \
 	IntervalCreator.cpp \
 	ex/UnknownIntervalTypeEx.cpp \
 	ex/UnknownNodeTypeEx.cpp \
@@ -40,19 +40,19 @@ H_SRC = \
 	HistoryTreeCoreNode.hpp \
 	HistoryTreeLeafNode.hpp \
 	HistoryTreeConfig.hpp \
-	Interval.hpp \
-	StringInterval.hpp \
-	StringIntervalFactory.hpp \
-	UIntInterval.hpp \
-	UIntIntervalFactory.hpp \
-	NullInterval.hpp \
-	NullIntervalFactory.hpp \
-	IntInterval.hpp \
-	IntIntervalFactory.hpp \
-	FloatInterval.hpp \
-	FloatIntervalFactory.hpp \
+	intervals/Interval.hpp \
+	intervals/StringInterval.hpp \
+	intervals/StringIntervalFactory.hpp \
+	intervals/UIntInterval.hpp \
+	intervals/UIntIntervalFactory.hpp \
+	intervals/NullInterval.hpp \
+	intervals/NullIntervalFactory.hpp \
+	intervals/IntInterval.hpp \
+	intervals/IntIntervalFactory.hpp \
+	intervals/FloatInterval.hpp \
+	intervals/FloatIntervalFactory.hpp \
 	IPrintable.hpp \
-	IIntervalFactory.hpp \
+	intervals/IIntervalFactory.hpp \
 	IntervalCreator.hpp \
 	ex/UnknownIntervalTypeEx.hpp \
 	ex/UnknownNodeTypeEx.hpp \

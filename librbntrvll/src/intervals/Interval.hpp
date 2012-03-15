@@ -24,8 +24,8 @@
 #include <tr1/memory>
 #include <iostream>
 
-#include "basic_types.h"
-#include "IPrintable.hpp"
+#include "../basic_types.h"
+#include "../IPrintable.hpp"
 
 class Interval;
 

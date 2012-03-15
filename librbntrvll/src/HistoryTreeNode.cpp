@@ -23,7 +23,7 @@
 #include <cstring>
 #include <sstream>
 
-#include "NullInterval.hpp"
+#include "intervals/NullInterval.hpp"
 #include "IntervalCreator.hpp"
 #include "HistoryTreeNode.hpp"
 #include "basic_types.h"

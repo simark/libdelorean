@@ -24,7 +24,7 @@
 #include <stdint.h>
 
 #include "HistoryTree.hpp"
-#include "Interval.hpp"
+#include "intervals/Interval.hpp"
 
 class HistoryTreeIO;
 
