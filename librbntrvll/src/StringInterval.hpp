@@ -28,6 +28,8 @@
 class StringInterval : public Interval
 {
 public:
+	typedef std::tr1::shared_ptr<StringInterval> SharedPtr;
+	
 	StringInterval(void) : Interval(SIT_STRING) { }
 	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, std::string value);
 	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, const char* value);

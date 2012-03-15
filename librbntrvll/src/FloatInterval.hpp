@@ -26,6 +26,8 @@
 class FloatInterval : public Interval
 {
 public:
+	typedef std::tr1::shared_ptr<FloatInterval> SharedPtr;
+	
 	FloatInterval(void) : Interval(SIT_FLOAT32) { }
 	FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value);
 	std::string getStringValue(void) const;

@@ -32,10 +32,12 @@ class Interval;
 typedef std::tr1::shared_ptr<Interval> IntervalSharedPtr;
 
 class Interval : public IPrintable
-{
+{	
 	friend std::ostream& operator<<(std::ostream& out, const Interval& intr);
 	
 public:
+	typedef std::tr1::shared_ptr<Interval> SharedPtr;
+	
 	Interval(interval_type_t type) : _type(type) { }
 	Interval(timestamp_t start, timestamp_t end, attribute_t attribute, interval_type_t type);
 	virtual ~Interval() { }

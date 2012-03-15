@@ -28,6 +28,8 @@
 class UIntInterval : public Interval
 {
 public:
+	typedef std::tr1::shared_ptr<UIntInterval> SharedPtr;
+	
 	UIntInterval(void) : Interval(SIT_UINT32) { }
 	UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value);
 	~UIntInterval() { }

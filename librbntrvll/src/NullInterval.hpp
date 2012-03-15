@@ -28,6 +28,8 @@
 class NullInterval : public Interval
 {
 public:
+	typedef std::tr1::shared_ptr<NullInterval> SharedPtr;
+	
 	NullInterval(void) : Interval(SIT_NULL) { }
 	NullInterval(timestamp_t start, timestamp_t end, attribute_t attribute);
 
