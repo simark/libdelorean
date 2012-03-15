@@ -13,8 +13,8 @@
 #include <HistoryTreeCoreNode.hpp>
 #undef protected
 #undef private
-#include <IntInterval.hpp>
-#include <StringInterval.hpp>
+#include <intervals/IntInterval.hpp>
+#include <intervals/StringInterval.hpp>
 
 
 class NodeTest : public CppUnit::TestFixture

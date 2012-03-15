@@ -4,10 +4,10 @@
 #include <cstring>
 #include <cstdio>
 
-#include <IntIntervalFactory.hpp>
-#include <IntInterval.hpp>
+#include <intervals/IntIntervalFactory.hpp>
+#include <intervals/IntInterval.hpp>
 #include <IntervalCreator.hpp>
-#include <StringInterval.hpp>
+#include <intervals/StringInterval.hpp>
 #define protected public
 #define private public
 #include <HistoryTreeCoreNode.hpp>

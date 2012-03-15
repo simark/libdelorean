@@ -6,10 +6,10 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include <IntIntervalFactory.hpp>
-#include <IntInterval.hpp>
+#include <intervals/IntIntervalFactory.hpp>
+#include <intervals/IntInterval.hpp>
 #include <IntervalCreator.hpp>
-#include <StringInterval.hpp>
+#include <intervals/StringInterval.hpp>
 #include <AbstractHistoryTree.hpp>
 #include <OutHistoryTree.hpp>
 #include <HistoryTreeConfig.hpp>
