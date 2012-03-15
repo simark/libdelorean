@@ -103,12 +103,14 @@ public:
 	void testIntervalSort()
 	{
 		leafNode->close(20); //This will sort the intervals
-		std::vector<IntervalSharedPtr>::const_iterator it = leafNode->_intervals.begin();
+		IntervalContainer::const_iterator it = leafNode->_intervals.begin();
 		while(it != leafNode->_intervals.end())
 		{
-			if(it != leafNode->_intervals.end()-1)
+			IntervalContainer::const_iterator nextIt = it;
+			nextIt++;
+			if(nextIt != leafNode->_intervals.end())
 			{
-				CPPUNIT_ASSERT((*it)->getEnd() < (*(it+1))->getEnd());
+				CPPUNIT_ASSERT((*it)->getEnd() <= (*(nextIt))->getEnd());
 			}
 			it++;
 		}
