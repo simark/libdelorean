@@ -39,6 +39,7 @@ public:
 		
 		return this;
 	}
+	int32_t getValue() const {return _value;}
 
 protected:
 	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;

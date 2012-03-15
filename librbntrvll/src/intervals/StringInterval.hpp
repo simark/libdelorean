@@ -36,6 +36,8 @@ public:
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
 	Interval* clone(void) const;
+	void setValue(std::string value) {_value = value;}
+	std::string getValue() const {return _value;}
 
 protected:
 	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
