@@ -49,7 +49,7 @@ HistoryTreeNode::~HistoryTreeNode()
 }
 
 HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config)
-: _config(config) {
+: _config(config), _intervals(orderIntervals) {
 }
 
 /**
