@@ -34,7 +34,6 @@ H_SRC = \
 	AbstractHistoryTree.hpp \
 	OutHistoryTree.hpp \
 	InHistoryTree.hpp \
-	HistoryTreeBackend.hpp \
 	HistoryTree.hpp \
 	HistoryTreeNode.hpp \
 	HistoryTreeCoreNode.hpp \

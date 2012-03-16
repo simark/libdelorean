@@ -114,7 +114,8 @@ static void testNode(void) {
 	
 	bool sorted = true;
 	
-	IntervalContainer::const_iterator end = --node._intervals.end();
+	IntervalContainer::const_iterator end = node._intervals.end();
+	end--;
 	
 	for(IntervalContainer::const_iterator it = node._intervals.begin(); it != end; it++){
 		if( *(*it) <= *(*it)){
@@ -139,7 +140,8 @@ static void testNode(void) {
 					 (*firstIndex)->getEnd());
 	
 	if (firstIndex != node._intervals.begin()){
-		IntervalContainer::const_iterator previousEntry = firstIndex--;
+		IntervalContainer::const_iterator previousEntry = firstIndex;
+		previousEntry--;
 		printf("Previous interval that cannot contain this timestamp:\n");
 		printf("[%li,%li]\n",(*previousEntry)->getStart(), 
 						(*previousEntry)->getEnd());
