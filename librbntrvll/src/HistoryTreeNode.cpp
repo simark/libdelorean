@@ -38,7 +38,7 @@ bool orderIntervals (IntervalSharedPtr i, IntervalSharedPtr j) { return (*i<*j);
 
 HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config, seq_number_t seqNumber,
 seq_number_t parentSeqNumber, timestamp_t start, node_type_t type)
-: _config(config), _nodeStart(start), _sequenceNumber(seqNumber), _parentSequenceNumber(parentSeqNumber), _type(type)
+: _config(config), _nodeStart(start), _sequenceNumber(seqNumber), _parentSequenceNumber(parentSeqNumber), _type(type), _intervals(orderIntervals)
 {
 	_variableSectionOffset = config._blockSize;
 	_isDone = false;
@@ -49,7 +49,7 @@ HistoryTreeNode::~HistoryTreeNode()
 }
 
 HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config)
-: _config(config) {
+: _config(config), _intervals(orderIntervals) {
 }
 
 /**
@@ -66,15 +66,14 @@ void HistoryTreeNode::writeInfoFromNode(vector<IntervalSharedPtr>& intervals, ti
 	int startIndex;
 
 	if ( _intervals.size() == 0 ) { return; }
-	startIndex = getStartIndexFor(timestamp);
 
-	for ( unsigned int i = startIndex; i < _intervals.size(); i++ ) {
+	for (IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
 		/* Now we only have to compare the Start times, since we know
 		 * the End times necessarily fit */
-		if ( _intervals[i]->getStart() <= timestamp ) {
-			if ((int) intervals.size() < _intervals[i]->getAttribute()+1) 
-				intervals.resize(_intervals[i]->getAttribute()+1);
-			intervals[_intervals[i]->getAttribute()] = _intervals[i];
+		if ( (*it)->getStart() <= timestamp ) {
+			if ((int) intervals.size() < (*it)->getAttribute()+1) 
+				intervals.resize((*it)->getAttribute()+1);
+			intervals[(*it)->getAttribute()] = (*it);
 		}
 	}
 	return;
@@ -90,7 +89,7 @@ void HistoryTreeNode::addInterval(IntervalSharedPtr newInterval)
 	assert(newInterval->getTotalSize() <= getFreeSpace());
 	
 	// FIXME : We need to clone the interval, to guarantee ownership
-	_intervals.push_back(newInterval);
+	_intervals.insert(newInterval);
 	
 	// Update the in-node offset "pointer"
 	_variableSectionOffset -= (newInterval->getVariableValueSize());
@@ -106,25 +105,6 @@ void HistoryTreeNode::addInterval(IntervalSharedPtr newInterval)
 void HistoryTreeNode::close(timestamp_t endtime)
 {
 	assert ( endtime >= _nodeStart );
-//	/* This also breaks often too */
-//	if ( endtime.getValue() <= this.nodeStart.getValue() ) {
-//		_ownerTree->debugPrintFullTree(new PrintWriter(System.out, true), null, false);
-//		assert ( false );
-//	}
-	
-	if ( _intervals.size() > 0 ) {
-		/* Sort the intervals by ascending order of their end time.
-		 * This speeds up lookups a bit */
-		 /* Lambda functions will not compile for some reason, using a normal function instead*/
-		std::sort(_intervals.begin(), _intervals.end(), 		
-		//[](IntervalSharedPtr a, IntervalSharedPtr b) -> bool { return *a < *b; });
-		orderIntervals);
-		
-		/* Make sure there are no intervals in this node with their
-		 * EndTime > the one requested. Only need to check the last one
-		 * since they are now sorted */
-		assert ( endtime >= _intervals[_intervals.size()-1]->getEnd() );
-	}
 	
 	_isDone = true;
 	_nodeEnd = endtime;
@@ -143,16 +123,13 @@ void HistoryTreeNode::close(timestamp_t endtime)
 IntervalSharedPtr HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
 {
 	assert ( _isDone );
-	int startIndex;
-	
+		
 	if ( _intervals.size() == 0 ) { return IntervalSharedPtr(); }
 	
-	startIndex = getStartIndexFor(timestamp);
-	
-	for ( unsigned int i = startIndex; i < _intervals.size(); i++ ) {
-		if ( _intervals[i]->getAttribute() == key ) {
-			if ( _intervals[i]->getStart() <= timestamp ) {
-				return _intervals[i];
+	for ( IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
+		if ( (*it)->getAttribute() == key ) {
+			if ( (*it)->getStart() <= timestamp ) {
+				return (*it);
 			}
 		}
 	}
@@ -169,17 +146,15 @@ IntervalSharedPtr HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, at
  * @param timestamp
  * @return the index of the first interval in _intervals that could hold this timestamp
  */
-int HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
+IntervalContainer::const_iterator HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
 {
 	static IntervalSharedPtr dummyInterval(new NullInterval(0, 0, 0));
 	dummyInterval->setEnd(timestamp);
-	vector<IntervalSharedPtr>::const_iterator it;	
+	IntervalContainer::const_iterator it;	
 	
-	it = lower_bound(_intervals.begin(), _intervals.end(), dummyInterval, 
-	//[](IntervalSharedPtr a, IntervalSharedPtr b) -> bool { return *a < *b; });
-	orderIntervals);
+	it = _intervals.lower_bound(dummyInterval);
 	
-	return it - _intervals.begin();
+	return it;
 }
 
 /**
@@ -254,7 +229,7 @@ void HistoryTreeNode::serialize(uint8_t* buf)
 	buf += this->getSpecificHeaderSize();
 
 	// write intervals (OO fashion)
-	vector<IntervalSharedPtr>::iterator it;
+	IntervalContainer::iterator it;
 	uint8_t* var_addr = bkbuf + this->_config._blockSize;
 	for (it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {
 		IntervalSharedPtr interval = *it;
@@ -318,7 +293,7 @@ void HistoryTreeNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 		assert(var_len == interval->getVariableValueSize());
 		
 		// keep it...
-		this->_intervals.push_back(interval);
+		this->_intervals.insert(interval);
 		
 		// new buffer offsets
 		datPtr += Interval::getHeaderSize();
@@ -344,8 +319,8 @@ std::string HistoryTreeNode::toString(void) const {
 	
 	// intervals
 	oss << endl;
-	for (unsigned int i = 0; i < this->_intervals.size(); ++i) {
-		oss << "  " << *this->_intervals[i] << endl;
+	for (IntervalContainer::const_iterator it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {
+		oss << "  " << *(*it) << endl;
 	}
 
 	return oss.str();

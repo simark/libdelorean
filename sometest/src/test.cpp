@@ -114,8 +114,10 @@ static void testNode(void) {
 	
 	bool sorted = true;
 	
-	for(unsigned int i = 0; i < 9; i++){
-		if( *(node._intervals[i]) <= *(node._intervals[i+1])){
+	IntervalContainer::const_iterator end = --node._intervals.end();
+	
+	for(IntervalContainer::const_iterator it = node._intervals.begin(); it != end; it++){
+		if( *(*it) <= *(*it)){
 			//bon ordre
 		}else{
 			//mauvais ordre
@@ -130,17 +132,17 @@ static void testNode(void) {
 		return;
 	}
 	
-	int firstIndex = node.getStartIndexFor(15);
+	IntervalContainer::const_iterator firstIndex = node.getStartIndexFor(15);
 	
 	printf("First interval that can contain timestamp 15:\n");
-	printf("[%li,%li]\n",node._intervals[firstIndex]->getStart(), 
-					 node._intervals[firstIndex]->getEnd());
+	printf("[%li,%li]\n",(*firstIndex)->getStart(), 
+					 (*firstIndex)->getEnd());
 	
-	if (firstIndex > 0){
-		int previousEntry = firstIndex-1;
+	if (firstIndex != node._intervals.begin()){
+		IntervalContainer::const_iterator previousEntry = firstIndex--;
 		printf("Previous interval that cannot contain this timestamp:\n");
-		printf("[%li,%li]\n",node._intervals[previousEntry]->getStart(), 
-						node._intervals[previousEntry]->getEnd());
+		printf("[%li,%li]\n",(*previousEntry)->getStart(), 
+						(*previousEntry)->getEnd());
 	}else{
 		printf("There are no previous intervals\n");
 	}

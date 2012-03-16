@@ -26,6 +26,10 @@ all: $(TARGET)
 # run target
 run: $(TARGET)
 	@LD_LIBRARY_PATH=$(LIB_PATH) ./test
+	
+# run target
+rundb: $(TARGET)
+	@LD_LIBRARY_PATH=$(LIB_PATH) gdb ./test
 
 # target
 $(TARGET): $(SRC)
