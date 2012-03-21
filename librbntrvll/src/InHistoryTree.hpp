@@ -30,6 +30,7 @@
 #include "HistoryTreeLeafNode.hpp"
 #include "IntervalCreator.hpp"
 #include "ex/TimeRangeEx.hpp"
+#include "ex/InvalidFormatEx.hpp"
 #include "basic_types.h"
 
 class InHistoryTree : virtual public AbstractHistoryTree
@@ -37,7 +38,7 @@ class InHistoryTree : virtual public AbstractHistoryTree
 public:
 	InHistoryTree();
 	InHistoryTree(HistoryTreeConfig config);
-	void open(void);
+	void open();
 	void close(void) {
 		this->close(-1);
 	}

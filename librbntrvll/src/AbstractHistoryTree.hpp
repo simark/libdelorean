@@ -30,11 +30,13 @@
 class AbstractHistoryTree
 {
 public:
+	enum OpenMode { TRUNCATE, APPEND };
+
 	AbstractHistoryTree();
 	AbstractHistoryTree(HistoryTreeConfig config);
 	
 	// TODO: template method design pattern for those?
-	virtual void open(void) = 0;
+	virtual void open() = 0;
 	virtual void close(timestamp_t end) = 0;
 	virtual void close() = 0;
 	virtual ~AbstractHistoryTree();

@@ -88,6 +88,8 @@ static void testInOutHT(void) {
 	HistoryTree* ht = new HistoryTree(config);
 	ht->open();
 	
+	cout <<"hm?"<<endl;
+	
 	// leaf (seq 0)
 	ht->addInterval(IntervalSharedPtr(new IntInterval(2, 7, 0, 32)));
 	ht->addInterval(IntervalSharedPtr(new IntInterval(5, 11, 1, 33)));
@@ -110,7 +112,7 @@ static void testInOutHT(void) {
 	//Write the tree to disk...
 	ht->close();
 	//... and reopen it
-	ht->open();
+	ht->open(HistoryTree::APPEND);
 	
 	// core (seq 4)
 	ht->addInterval(IntervalSharedPtr(new IntInterval(35, 76, 9, 40)));

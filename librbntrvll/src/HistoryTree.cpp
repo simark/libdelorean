@@ -47,23 +47,53 @@ HistoryTree::~HistoryTree()
  * 
  * Second, tries to create an empty tree and a new file
  * @throw IOEx 
- * 
+ * @throw InvalidFormatEx
  */
-void HistoryTree::open(void)
+void HistoryTree::open()
 {
 	// is this history tree already opened?
 	if (this->_opened) {
 		throw IOEx("This tree is already opened");
 	}
 	
-	// open stream
-	this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary);
+	try{
+		open(APPEND);
+	}catch(InvalidFormatEx& ex){
+		throw;
+	}catch(IOEx& ex){
+		try{
+			open(TRUNCATE);
+		}catch(IOEx& ex){
+			throw;
+		}
+	}
+}
+
+/**
+ * This version of "open" is specific to the input/output history
+ * tree.
+ * It allows to specify if the contents of the file should be :
+ * - read first and kept (APPEND)
+ * - discarded (TRUNCATE)
+ * 
+ * Using the APPEND mode requires the file to already exist or else
+ * an exception will be thrown.
+ * 
+ * @param mode either APPEND (keep existing file) or TRUNCATE (replace existing file)
+ * @throw IOEx
+ */
+void HistoryTree::open(OpenMode mode)
+{	
+	// is this history tree already opened?
+	if (this->_opened) {
+		throw IOEx("This tree is already opened");
+	}
 	
-	// check for open errors
-	if (!this->_stream) {
-		//The file did not exist, create a new file
+	if(mode == TRUNCATE){
+		// open stream
 		this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary | fstream::trunc);
 		
+		// check for open errors
 		if (!this->_stream) {
 			throw IOEx("Unable to open file");
 		}
@@ -71,33 +101,42 @@ void HistoryTree::open(void)
 	
 		// update internal status
 		this->_opened = true;
-		return;
-	}
-	
-	try{
-		// unserialize tree header
-		this->unserializeHeader();
-	}catch(IOEx& ex){
 		
-		//Unable to read header, open it as an empty tree
-		initEmptyTree();
+	}else if (mode == APPEND){
+		// open stream
+		this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary);
+		
+		// check for open errors
+		if (!this->_stream) {
+			throw IOEx("Unable to open file");
+		}
+		
+		try{
+			// unserialize tree header
+			this->unserializeHeader();
+		}catch(InvalidFormatEx& ex){	
+			this->_stream.close();		
+			throw;
+		}catch(IOEx& ex){
+			this->_stream.close();
+			throw;
+		}
+		//We read the header correctly, init the tree
+		
+		// store latest branch in memory
+		this->buildLatestBranch();
+		
+		// The user could not possibly know the start and end times of the tree
+		// Set it to the correct value using the root node
+		_config._treeStart = _latest_branch[0]->getStart();
+		_end = _latest_branch[0]->getEnd();
 		
 		// update internal status
 		this->_opened = true;
-		return;
+		
+	}else{
+		assert(false);
 	}
-	//We read the header correctly, init the tree
-	
-	// store latest branch in memory
-	this->buildLatestBranch();
-	
-	// The user could not possibly know the start and end times of the tree
-	// Set it to the correct value using the root node
-	_config._treeStart = _latest_branch[0]->getStart();
-	_end = _latest_branch[0]->getEnd();
-	
-	// update internal status
-	this->_opened = true;
 }
 
 /**

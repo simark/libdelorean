@@ -35,7 +35,7 @@ class OutHistoryTree : virtual public AbstractHistoryTree
 public:
 	OutHistoryTree();
 	OutHistoryTree(HistoryTreeConfig config);
-	void open(void);
+	void open();
 	void close(void) {
 		this->close(this->_end);
 	}
@@ -43,6 +43,8 @@ public:
 	void addInterval(IntervalSharedPtr interval) throw(TimeRangeEx);
 	OutHistoryTree& operator<<(IntervalSharedPtr interval) throw(TimeRangeEx);
 	~OutHistoryTree();
+	
+	void setCustomData(const char* buffer, size_t length);
 
 protected:
 	void tryInsertAtNode(IntervalSharedPtr interval, unsigned int index);
@@ -55,7 +57,8 @@ protected:
 	void serializeNode(HistoryTreeNodeSharedPtr node);
 	void incNodeCount(timestamp_t new_start);
 	HistoryTreeCoreNodeSharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
-	HistoryTreeLeafNodeSharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);	
+	HistoryTreeLeafNodeSharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
+	void writeCustomData();
 
 private:
 

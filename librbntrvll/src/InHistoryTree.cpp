@@ -49,7 +49,7 @@ InHistoryTree::InHistoryTree(HistoryTreeConfig config)
  * @throw IOEx if no file, incorrect format, or already open
  * 
  */
-void InHistoryTree::open(void) {
+void InHistoryTree::open() {
 	// is this history tree already opened?
 	if (this->_opened) {
 		throw IOEx("This tree is already opened");
@@ -64,7 +64,15 @@ void InHistoryTree::open(void) {
 	}
 	
 	// unserialize tree header
-	this->unserializeHeader();
+	try{
+		this->unserializeHeader();
+	}catch(InvalidFormatEx& ex){
+		this->_stream.close();
+		throw;
+	}catch(IOEx& ex){
+		this->_stream.close();
+		throw;
+	}
 	
 	// store latest branch in memory
 	this->buildLatestBranch();
@@ -115,8 +123,8 @@ void InHistoryTree::unserializeHeader(void) {
 		int32_t mn;
 		f.read((char*) &mn, sizeof(int32_t));
 		if (mn != HF_MAGIC_NUMBER) {
-			f.exceptions();
-			throw IOEx("Invalid file : incorrect format");
+			f.exceptions(fstream::goodbit);
+			throw InvalidFormatEx("Wrong start bytes");
 		}
 		
 		// file version
@@ -124,8 +132,8 @@ void InHistoryTree::unserializeHeader(void) {
 		f.read((char*) &major, sizeof(int32_t));
 		f.read((char*) &minor, sizeof(int32_t));
 		if (major != HF_MAJOR || minor != HF_MINOR) {
-			f.exceptions();
-			throw IOEx("Invalid file : unsupported version");
+			f.exceptions(fstream::goodbit);
+			throw InvalidFormatEx("Unsupported version");
 		}
 		
 		// block size
@@ -141,10 +149,10 @@ void InHistoryTree::unserializeHeader(void) {
 		f.read((char*) &this->_root_seq, sizeof(int32_t));
 	}catch(fstream::failure& e) {
 		f.clear();
-		f.exceptions();
+		f.exceptions(fstream::goodbit);
 		throw IOEx("Error while reading file header");
 	}
-	f.exceptions();
+	f.exceptions(fstream::goodbit);
 }
 
 void InHistoryTree::close(timestamp_t end) {	

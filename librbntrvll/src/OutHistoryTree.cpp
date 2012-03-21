@@ -47,7 +47,7 @@ OutHistoryTree::OutHistoryTree(HistoryTreeConfig config)
  * 
  * @throw IOEx if file already open or general IO error
  */ 
-void OutHistoryTree::open(void) {
+void OutHistoryTree::open() {
 	// is this history tree already opened?
 	if (this->_opened) {
 		throw IOEx("This tree is already opened");
@@ -92,7 +92,7 @@ void OutHistoryTree::openStream(void) {
 	if (this->_stream.is_open()) {
 		throw IOEx("The stream is already open");
 	}
-	this->_stream.open(this->_config._stateFile.c_str(), fstream::out | fstream::binary);
+	this->_stream.open(this->_config._stateFile.c_str(), fstream::out | fstream::binary | fstream::trunc);
 	if (!this->_stream) {
 		throw IOEx("Unable to open file");
 	}

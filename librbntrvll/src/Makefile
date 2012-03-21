@@ -29,7 +29,8 @@ SRC = \
 	ex/ExistingIntervalTypeEx.cpp \
 	ex/TimeRangeEx.cpp \
 	ex/NodeFullEx.cpp \
-	ex/IOEx.cpp
+	ex/IOEx.cpp \
+	ex/InvalidFormatEx.cpp
 H_SRC = \
 	AbstractHistoryTree.hpp \
 	OutHistoryTree.hpp \
@@ -59,6 +60,7 @@ H_SRC = \
 	ex/TimeRangeEx.hpp \
 	ex/NodeFullEx.hpp \
 	ex/IOEx.hpp \
+	ex/InvalidFormatEx.hpp \
 	fixed_config.h \
 	basic_types.h
 	

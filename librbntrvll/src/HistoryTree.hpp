@@ -33,7 +33,8 @@ public:
 	HistoryTree(HistoryTreeConfig config);
 	virtual ~HistoryTree();
 	
-	void open(void);
+	void open();
+	void open(OpenMode mode);
 	void close(timestamp_t end);
 	void close();
 private:
