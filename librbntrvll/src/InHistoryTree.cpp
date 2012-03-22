@@ -23,10 +23,10 @@
 #include <cstdlib>
  
 #include "InHistoryTree.hpp"
-#include "intervals/Interval.hpp"
+#include "intervals/AbstractInterval.hpp"
 #include "HistoryTreeConfig.hpp"
-#include "HistoryTreeCoreNode.hpp"
-#include "HistoryTreeLeafNode.hpp"
+#include "CoreNode.hpp"
+#include "LeafNode.hpp"
 #include "ex/IOEx.hpp"
 #include "ex/UnknownNodeTypeEx.hpp"
 #include "fixed_config.h"
@@ -97,8 +97,8 @@ void InHistoryTree::buildLatestBranch(void) {
 	this->_latest_branch.clear();
 	
 	//Read root
-	HistoryTreeNodeSharedPtr node = createNodeFromSeq(this->_root_seq);
-	HistoryTreeCoreNodeSharedPtr coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(node);
+	AbstractNode::SharedPtr node = createNodeFromSeq(this->_root_seq);
+	CoreNode::SharedPtr coreNode = dynamic_pointer_cast<CoreNode>(node);
 	_latest_branch.push_back(node);
 	
 	//Follow the latest branch down
@@ -107,7 +107,7 @@ void InHistoryTree::buildLatestBranch(void) {
 		seq_number_t nextSeq = coreNode->getChild(nbChildren-1);
 		node = createNodeFromSeq(nextSeq);
 		this->_latest_branch.push_back(node);
-		coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(node);
+		coreNode = dynamic_pointer_cast<CoreNode>(node);
 	}
 	return;
 }
@@ -183,7 +183,7 @@ InHistoryTree::~InHistoryTree() {
  * @param t
  * @return The child node intersecting t
  */
-HistoryTreeNodeSharedPtr InHistoryTree::selectNextChild(HistoryTreeCoreNodeSharedPtr currentNode, timestamp_t timestamp) const {
+AbstractNode::SharedPtr InHistoryTree::selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const {
 	assert ( currentNode->getNbChildren() > 0 );
 	int potentialNextSeqNb = currentNode->getChildAtTimestamp(timestamp);
 	
@@ -201,21 +201,21 @@ HistoryTreeNodeSharedPtr InHistoryTree::selectNextChild(HistoryTreeCoreNodeShare
 	}
 }
 
-vector<IntervalSharedPtr> InHistoryTree::query(timestamp_t timestamp) const {
+vector<AbstractInterval::SharedPtr> InHistoryTree::query(timestamp_t timestamp) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
 	
 	// We start by reading the information in the root node
-	HistoryTreeNodeSharedPtr currentNode = _latest_branch[0];
-	vector<IntervalSharedPtr> relevantIntervals;
+	AbstractNode::SharedPtr currentNode = _latest_branch[0];
+	vector<AbstractInterval::SharedPtr> relevantIntervals;
 	currentNode->writeInfoFromNode(relevantIntervals, timestamp);
 	
 	
 	// Then we follow the branch down in the relevant children
 	// Stop at leaf nodes or if a core node has no children
 	while ( nodeHasChildren(currentNode) ) {
-		HistoryTreeCoreNodeSharedPtr coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(currentNode);
+		CoreNode::SharedPtr coreNode = dynamic_pointer_cast<CoreNode>(currentNode);
 		currentNode = selectNextChild(coreNode, timestamp);
 		currentNode->writeInfoFromNode(relevantIntervals, timestamp);
 	}
@@ -224,18 +224,18 @@ vector<IntervalSharedPtr> InHistoryTree::query(timestamp_t timestamp) const {
 	return relevantIntervals;	
 }
 
-IntervalSharedPtr InHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
+AbstractInterval::SharedPtr InHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
 	
-	HistoryTreeNodeSharedPtr currentNode = _latest_branch[0];
-	IntervalSharedPtr interval = currentNode->getRelevantInterval(timestamp, key);
+	AbstractNode::SharedPtr currentNode = _latest_branch[0];
+	AbstractInterval::SharedPtr interval = currentNode->getRelevantInterval(timestamp, key);
 	
 	// Follow the branch down until we find the required interval or there are no children left
 	// Stop at leaf nodes or if a core node has no children
 	while ( interval == NULL && nodeHasChildren(currentNode) ) {
-		HistoryTreeCoreNodeSharedPtr coreNode = dynamic_pointer_cast<HistoryTreeCoreNode>(currentNode);
+		CoreNode::SharedPtr coreNode = dynamic_pointer_cast<CoreNode>(currentNode);
 		currentNode = selectNextChild(coreNode, timestamp);
 		interval = currentNode->getRelevantInterval(timestamp, key);
 	}
@@ -246,12 +246,12 @@ IntervalSharedPtr InHistoryTree::query(timestamp_t timestamp, attribute_t key) c
 	return interval;
 }
 
-HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromStream() const {
+AbstractNode::SharedPtr InHistoryTree::createNodeFromStream() const {
 	fstream& f = this->_stream;
 	unsigned int init_pos = f.tellg();
 	
 	// node to return
-	HistoryTreeNodeSharedPtr n;
+	AbstractNode::SharedPtr n;
 	
 	// type
 	node_type_t nt;
@@ -260,11 +260,11 @@ HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromStream() const {
 	// create node according to type
 	switch (nt) {
 		case NT_CORE:
-		n.reset(new HistoryTreeCoreNode(this->_config));
+		n.reset(new CoreNode(this->_config));
 		break;
 		
 		case NT_LEAF:
-		n.reset(new HistoryTreeLeafNode(this->_config));
+		n.reset(new LeafNode(this->_config));
 		break;
 		
 		default:
@@ -279,7 +279,7 @@ HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromStream() const {
 	return n;
 }
 
-HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromSeq(seq_number_t seq) const {
+AbstractNode::SharedPtr InHistoryTree::createNodeFromSeq(seq_number_t seq) const {
 	// make sure everything is okay
 	assert((unsigned int) seq < this->_node_count);
 	
@@ -293,21 +293,21 @@ HistoryTreeNodeSharedPtr InHistoryTree::createNodeFromSeq(seq_number_t seq) cons
 	return this->createNodeFromStream();
 }
 
-HistoryTreeNodeSharedPtr InHistoryTree::fetchNodeFromLatestBranch(seq_number_t seq) const {
+AbstractNode::SharedPtr InHistoryTree::fetchNodeFromLatestBranch(seq_number_t seq) const {
 
-	std::vector<HistoryTreeNodeSharedPtr>::const_iterator it;
+	std::vector<AbstractNode::SharedPtr>::const_iterator it;
 	
 	for (it = _latest_branch.begin(); it != _latest_branch.end(); it++) {
 		if ((*it)->getSequenceNumber() == seq) {
 			return *it;
 		}
 	}
-	return HistoryTreeNodeSharedPtr();
+	return AbstractNode::SharedPtr();
 }
 
 void InHistoryTree::test(void) {
 	for (unsigned int i = 0; i < this->_node_count; ++i) {
-		HistoryTreeNodeSharedPtr node(fetchNodeFromLatestBranch(i));
+		AbstractNode::SharedPtr node(fetchNodeFromLatestBranch(i));
 		//The node is not in the latest branch, it must be on disk
 		if (node == 0)
 			node = this->createNodeFromSeq(i);

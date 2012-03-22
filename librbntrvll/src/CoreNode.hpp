@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _HISTORYTREECORENODE_HPP
-#define _HISTORYTREECORENODE_HPP
+#ifndef _CORENODE_HPP
+#define _CORENODE_HPP
 
 #include <stdint.h>
 #include <ostream>
@@ -26,27 +26,25 @@
 #include <tr1/memory>
 
 #include "HistoryTreeConfig.hpp"
-#include "intervals/Interval.hpp"
+#include "intervals/AbstractInterval.hpp"
 #include "IntervalCreator.hpp"
-#include "HistoryTreeNode.hpp"
+#include "AbstractNode.hpp"
 #include "basic_types.h"
 
-class HistoryTreeCoreNode;
-
-typedef std::tr1::shared_ptr<HistoryTreeCoreNode> HistoryTreeCoreNodeSharedPtr;
-typedef std::tr1::shared_ptr<const HistoryTreeCoreNode>	ConstHistoryTreeCoreNodeSharedPtr;
-
-class HistoryTreeCoreNode : public HistoryTreeNode 
+class CoreNode : public AbstractNode 
 {
 public:
-	HistoryTreeCoreNode(HistoryTreeConfig config);
-	HistoryTreeCoreNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
-	~HistoryTreeCoreNode();
+	typedef std::tr1::shared_ptr<CoreNode> SharedPtr;
+	typedef std::tr1::shared_ptr<const CoreNode> ConstSharedPtr;
+
+	CoreNode(HistoryTreeConfig config);
+	CoreNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
+	~CoreNode();
 	std::string getInfos(void) const;
 	void serializeSpecificHeader(uint8_t* buf) const;
 	void unserializeSpecificHeader(std::istream& is);
 	unsigned int getSpecificHeaderSize(void) const;
-	void linkNewChild(HistoryTreeNodeSharedPtr childNode);
+	void linkNewChild(AbstractNode::SharedPtr childNode);
 	seq_number_t getChildAtTimestamp(timestamp_t timestamp) const;
 	seq_number_t getChild(unsigned int index) const {
 		return _children[index];
@@ -73,4 +71,4 @@ private:
 	timestamp_t* _childStart;
 };
 
-#endif // _HISTORYTREECORENODE_HPP
+#endif // _CORENODE_HPP

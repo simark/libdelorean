@@ -23,9 +23,7 @@
 
 #include "InHistoryTree.hpp"
 #include "OutHistoryTree.hpp"
-#include "HistoryTreeNode.hpp"
 #include "HistoryTreeConfig.hpp"
-#include "intervals/Interval.hpp"
 
 class HistoryTree : public InHistoryTree, public OutHistoryTree
 {

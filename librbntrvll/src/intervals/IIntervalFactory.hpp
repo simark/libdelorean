@@ -21,12 +21,12 @@
 
 #include <tr1/memory>
 
-#include "Interval.hpp"
+#include "AbstractInterval.hpp"
 
 class IIntervalFactory
 {
 public:
-	virtual IntervalSharedPtr create(void) const = 0;
+	virtual AbstractInterval::SharedPtr create(void) const = 0;
 	virtual ~IIntervalFactory(void) { }
 };
 

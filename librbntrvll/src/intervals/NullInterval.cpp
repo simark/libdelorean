@@ -23,7 +23,7 @@
 #include <sstream>
 
 NullInterval::NullInterval(timestamp_t start, timestamp_t end, attribute_t attribute)
-: Interval(start, end, attribute, SIT_NULL)
+: AbstractInterval(start, end, attribute, SIT_NULL)
 {
 }
 

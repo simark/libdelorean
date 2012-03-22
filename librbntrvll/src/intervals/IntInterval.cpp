@@ -23,7 +23,7 @@
 #include <sstream>
 
 IntInterval::IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value)
-:Interval(start, end, attribute, SIT_INT32), _value(value)
+:AbstractInterval(start, end, attribute, SIT_INT32), _value(value)
 {
 }
 

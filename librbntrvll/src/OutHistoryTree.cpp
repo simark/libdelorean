@@ -23,10 +23,10 @@
 #include <cstdlib>
  
 #include "OutHistoryTree.hpp"
-#include "intervals/Interval.hpp"
+#include "intervals/AbstractInterval.hpp"
 #include "HistoryTreeConfig.hpp"
-#include "HistoryTreeCoreNode.hpp"
-#include "HistoryTreeLeafNode.hpp"
+#include "CoreNode.hpp"
+#include "LeafNode.hpp"
 #include "ex/IOEx.hpp"
 #include "fixed_config.h"
  
@@ -110,22 +110,22 @@ OutHistoryTree::~OutHistoryTree() {
 	}
 }
 
-OutHistoryTree& OutHistoryTree::operator<<(IntervalSharedPtr interval) throw(TimeRangeEx) {
+OutHistoryTree& OutHistoryTree::operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
 	this->addInterval(interval);
 	
 	return *this;
 }
 
-void OutHistoryTree::addInterval(IntervalSharedPtr interval) throw(TimeRangeEx) {
+void OutHistoryTree::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
 	if (interval->getStart() < this->_config._treeStart) {
 		throw TimeRangeEx("interval start time below tree start time");
 	}
 	this->tryInsertAtNode(interval, this->_latest_branch.size() - 1);
 }
 
-void OutHistoryTree::tryInsertAtNode(IntervalSharedPtr interval, unsigned int index) {
+void OutHistoryTree::tryInsertAtNode(AbstractInterval::SharedPtr interval, unsigned int index) {
 	// target node
-	HistoryTreeNodeSharedPtr target_node = this->_latest_branch[index];
+	AbstractNode::SharedPtr target_node = this->_latest_branch[index];
 	
 	/*cout << "trying " << *interval << " (" << interval->getTotalSize() << ")  fs " <<
 		target_node->getFreeSpace() << "  seq " << target_node->getSequenceNumber() << endl;*/
@@ -158,8 +158,8 @@ void OutHistoryTree::tryInsertAtNode(IntervalSharedPtr interval, unsigned int in
 }
 
 void OutHistoryTree::addSiblingNode(unsigned int index) {
-	HistoryTreeNodeSharedPtr new_node;
-	HistoryTreeCoreNodeSharedPtr prev_node;
+	AbstractNode::SharedPtr new_node;
+	CoreNode::SharedPtr prev_node;
 	timestamp_t split_time = this->_end;
 	
 	// make sure required index is within the latest branch
@@ -173,7 +173,7 @@ void OutHistoryTree::addSiblingNode(unsigned int index) {
 	}
 	
 	// check if we can indeed add a child to the target parent (should be a core node...)
-	HistoryTreeCoreNodeSharedPtr parent = dynamic_pointer_cast<HistoryTreeCoreNode>(this->_latest_branch[index - 1]);
+	CoreNode::SharedPtr parent = dynamic_pointer_cast<CoreNode>(this->_latest_branch[index - 1]);
 	assert(parent.get() != NULL);
 	if (parent->getNbChildren() == this->_config._maxChildren) {
 		// we cannot: then, add a sibling one level higher in latest branch
@@ -188,7 +188,7 @@ void OutHistoryTree::addSiblingNode(unsigned int index) {
 		this->serializeNode(this->_latest_branch[i]);
 		
 		// get parent node
-		prev_node = dynamic_pointer_cast<HistoryTreeCoreNode>(this->_latest_branch[i - 1]);
+		prev_node = dynamic_pointer_cast<CoreNode>(this->_latest_branch[i - 1]);
 		assert(prev_node.get() != NULL);
 		
 		// is this a leaf node or a core node?
@@ -213,19 +213,19 @@ void OutHistoryTree::initEmptyTree(void) {
 	this->_latest_branch.clear();
 	
 	// add a first (*leaf*) node
-	HistoryTreeLeafNodeSharedPtr n = this->initNewLeafNode(-1, this->_config._treeStart);
+	LeafNode::SharedPtr n = this->initNewLeafNode(-1, this->_config._treeStart);
 	_latest_branch.push_back(n);
 }
 
 void OutHistoryTree::addNewRootNode(void) {
 	unsigned int i, depth;
-	HistoryTreeNodeSharedPtr new_node;
-	HistoryTreeCoreNodeSharedPtr prev_node;
+	AbstractNode::SharedPtr new_node;
+	CoreNode::SharedPtr prev_node;
 	timestamp_t split_time = this->_end;
 	
 	// configure old/new root nodes
-	HistoryTreeNodeSharedPtr old_root(this->_latest_branch[0]);
-	HistoryTreeCoreNodeSharedPtr new_root = initNewCoreNode(-1, this->_config._treeStart);
+	AbstractNode::SharedPtr old_root(this->_latest_branch[0]);
+	CoreNode::SharedPtr new_root = initNewCoreNode(-1, this->_config._treeStart);
 	
 	// tell the old root node that it isn't root anymore :(
 	old_root->setParentSequenceNumber(new_root->getSequenceNumber());
@@ -245,7 +245,7 @@ void OutHistoryTree::addNewRootNode(void) {
 	_latest_branch.push_back(new_root);
 	for (i = 1; i < depth + 1; ++i) {
 		// get parent node
-		prev_node = dynamic_pointer_cast<HistoryTreeCoreNode>(this->_latest_branch[i - 1]);
+		prev_node = dynamic_pointer_cast<CoreNode>(this->_latest_branch[i - 1]);
 		
 		// is this a leaf node or a core node?
 		if (i == depth) {
@@ -294,7 +294,7 @@ void OutHistoryTree::serializeHeader(void) {
 	f.write((char*) &root_seq, sizeof(seq_number_t));
 }
 
-void OutHistoryTree::serializeNode(HistoryTreeNodeSharedPtr node) {
+void OutHistoryTree::serializeNode(AbstractNode::SharedPtr node) {
 	// seek to correct position
 	this->_stream.seekp(this->filePosFromSeq(node->getSequenceNumber()));
 	
@@ -312,9 +312,9 @@ void OutHistoryTree::incNodeCount(timestamp_t new_start) {
 	}
 }
 
-HistoryTreeCoreNodeSharedPtr OutHistoryTree::initNewCoreNode(seq_number_t parent_seq, timestamp_t start) {
+CoreNode::SharedPtr OutHistoryTree::initNewCoreNode(seq_number_t parent_seq, timestamp_t start) {
 	// allocate new core node
-	HistoryTreeCoreNodeSharedPtr n(new HistoryTreeCoreNode(this->_config, this->_node_count, parent_seq, start));
+	CoreNode::SharedPtr n(new CoreNode(this->_config, this->_node_count, parent_seq, start));
 	
 	// new node count
 	this->incNodeCount(start);
@@ -322,9 +322,9 @@ HistoryTreeCoreNodeSharedPtr OutHistoryTree::initNewCoreNode(seq_number_t parent
 	return n;
 }
 
-HistoryTreeLeafNodeSharedPtr OutHistoryTree::initNewLeafNode(seq_number_t parent_seq, timestamp_t start) {
+LeafNode::SharedPtr OutHistoryTree::initNewLeafNode(seq_number_t parent_seq, timestamp_t start) {
 	// allocate new leaf node
-	HistoryTreeLeafNodeSharedPtr n(new HistoryTreeLeafNode(this->_config, this->_node_count, parent_seq, start));
+	LeafNode::SharedPtr n(new LeafNode(this->_config, this->_node_count, parent_seq, start));
 	
 	// new node count
 	this->incNodeCount(start);

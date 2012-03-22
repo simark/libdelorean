@@ -19,13 +19,13 @@
 #ifndef _NULL_INTERVALFACTORY_HPP
 #define _NULL_INTERVALFACTORY_HPP
 
-#include "Interval.hpp"
+#include "AbstractInterval.hpp"
 #include "IIntervalFactory.hpp"
 
 class NullIntervalFactory : public IIntervalFactory
 {
 public:
-	IntervalSharedPtr create(void) const;
+	AbstractInterval::SharedPtr create(void) const;
 	~NullIntervalFactory(void) { }
 };
 

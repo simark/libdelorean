@@ -22,7 +22,7 @@
 #include <sstream>
 
 FloatInterval::FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value)
-:Interval(start, end, attribute, SIT_FLOAT32), _value(value)
+:AbstractInterval(start, end, attribute, SIT_FLOAT32), _value(value)
 {
 }
 
@@ -47,6 +47,6 @@ unsigned int FloatInterval::getVariableValueSize(void) const {
 	return 0;
 }
 
-Interval* FloatInterval::clone(void) const{
+AbstractInterval* FloatInterval::clone(void) const{
 	return new FloatInterval(*this);
 }

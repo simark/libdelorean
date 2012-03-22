@@ -23,7 +23,7 @@
 #include "../fixed_config.h"
 
 UIntInterval::UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value)
-: Interval(start, end, attribute, SIT_UINT32), _value(value)
+: AbstractInterval(start, end, attribute, SIT_UINT32), _value(value)
 {
 }
 
@@ -48,6 +48,6 @@ unsigned int UIntInterval::getVariableValueSize(void) const {
 	return 0;
 }
 
-Interval* UIntInterval::clone(void) const{
+AbstractInterval* UIntInterval::clone(void) const{
 	return new UIntInterval(*this);
 }

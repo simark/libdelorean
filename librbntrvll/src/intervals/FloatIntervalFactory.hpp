@@ -19,13 +19,13 @@
 #ifndef _FLOATINTERVALFACTORY_HPP
 #define _FLOATINTERVALFACTORY_HPP
 
-#include "Interval.hpp"
+#include "AbstractInterval.hpp"
 #include "IIntervalFactory.hpp"
 
 class FloatIntervalFactory : public IIntervalFactory
 {
 public:
-	IntervalSharedPtr create(void) const;
+	AbstractInterval::SharedPtr create(void) const;
 	~FloatIntervalFactory(void) { }
 };
 

@@ -21,21 +21,21 @@
 
 #include <stdint.h>
 
-#include "Interval.hpp"
+#include "AbstractInterval.hpp"
 #include "../basic_types.h"
 #include "../fixed_config.h"
 
-class UIntInterval : public Interval
+class UIntInterval : public AbstractInterval
 {
 public:
 	typedef std::tr1::shared_ptr<UIntInterval> SharedPtr;
 	
-	UIntInterval(void) : Interval(SIT_UINT32) { }
+	UIntInterval(void) : AbstractInterval(SIT_UINT32) { }
 	UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value);
 	~UIntInterval() { }
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
-	Interval* clone(void) const;
+	AbstractInterval* clone(void) const;
 	void setValue(uint32_t value) {_value = value;}
 	uint32_t getValue() const {return _value;}
 	

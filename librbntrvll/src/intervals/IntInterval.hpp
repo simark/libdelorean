@@ -23,14 +23,14 @@
 #include <stdint.h>
 
 #include "../fixed_config.h"
-#include "Interval.hpp"
+#include "AbstractInterval.hpp"
 
-class IntInterval : public Interval
+class IntInterval : public AbstractInterval
 {
 public:
 	typedef std::tr1::shared_ptr<IntInterval> SharedPtr;
 	
-	IntInterval(void) : Interval(SIT_INT32) { }
+	IntInterval(void) : AbstractInterval(SIT_INT32) { }
 	IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value);
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
