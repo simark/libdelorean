@@ -16,6 +16,8 @@
 #include <intervals/IntInterval.hpp>
 #include <intervals/StringInterval.hpp>
 
+#include <ex/TimeRangeEx.hpp>
+
 
 class NodeTest : public CppUnit::TestFixture
 {
@@ -37,6 +39,13 @@ private:
 	HistoryTreeLeafNodeSharedPtr leafNode;
 	HistoryTreeCoreNodeSharedPtr coreNode;
 	
+	HistoryTreeNodeSharedPtr thirdNode;
+	
+	IntervalSharedPtr interval_core_1;
+	IntervalSharedPtr interval_leaf_1;
+	IntervalSharedPtr interval_leaf_2;
+	IntervalSharedPtr interval_leaf_3;
+	
 public:
 	void setUp()
 	{	
@@ -49,14 +58,21 @@ public:
 		coreNode.reset(new HistoryTreeCoreNode(config, 2, -1, 5));
 		coreNode->linkNewChild(leafNode);
 		
-		coreNode->addInterval(IntervalSharedPtr(new IntInterval(12, 14, 1, 0)));
+		interval_core_1.reset(new IntInterval(12, 14, 1, 0));
+		interval_leaf_1.reset(new IntInterval(15, 19, 4, 14));
+		interval_leaf_2.reset(new IntInterval(13, 17, 2, 12));
+		interval_leaf_3.reset(new StringInterval(14, 18, 3, "treize"));
 		
-		leafNode->addInterval(IntervalSharedPtr(new IntInterval(15, 19, 4, 14)));
-		leafNode->addInterval(IntervalSharedPtr(new IntInterval(13, 17, 2, 12)));
-		leafNode->addInterval(IntervalSharedPtr(new StringInterval(14, 18, 3, "treize")));
+		coreNode->addInterval(interval_core_1);
+		
+		leafNode->addInterval(interval_leaf_1);
+		leafNode->addInterval(interval_leaf_2);
+		leafNode->addInterval(interval_leaf_3);
 		
 		coreNode->close(20);
 		leafNode->close(20);
+		
+		thirdNode.reset(new HistoryTreeLeafNode(config, 3, 2, 15));
 	}
 
 	void tearDown() 
@@ -86,23 +102,11 @@ public:
 	
 	void testIntervalInsert()
 	{
-		//CPPUNIT_ASSERT_NO_THROW(coreNode->addInterval(IntervalSharedPtr(new IntInterval(12, 14, 1, 0))));
-		
-		//CPPUNIT_ASSERT_NO_THROW(leafNode->addInterval(IntervalSharedPtr(new IntInterval(15, 19, 4, 14))));
-		//CPPUNIT_ASSERT_NO_THROW(leafNode->addInterval(IntervalSharedPtr(new IntInterval(13, 17, 2, 12))));
-		//CPPUNIT_ASSERT_NO_THROW(leafNode->addInterval(IntervalSharedPtr(new StringInterval(14, 18, 3, "treize"))));
-		
-		
-		//coreNode->addInterval(IntervalSharedPtr(new IntInterval(12, 14, 1, 0)));
-		
-		//leafNode->addInterval(IntervalSharedPtr(new IntInterval(15, 19, 4, 14)));
-		//leafNode->addInterval(IntervalSharedPtr(new IntInterval(13, 17, 2, 12)));
-		//leafNode->addInterval(IntervalSharedPtr(new StringInterval(14, 18, 3, "treize")));
+		CPPUNIT_ASSERT_THROW(thirdNode->addInterval(IntervalSharedPtr(new IntInterval(12, 14, 1, 0))), TimeRangeEx);
 	}
 	
 	void testIntervalSort()
 	{
-		leafNode->close(20); //This will sort the intervals
 		IntervalContainer::const_iterator it = leafNode->_intervals.begin();
 		while(it != leafNode->_intervals.end())
 		{
@@ -124,8 +128,10 @@ public:
 	
 	void testFreeSpace()
 	{
-		CPPUNIT_ASSERT(coreNode->getFreeSpace() == 128-(42+16+32)-(1*25));
-		CPPUNIT_ASSERT(leafNode->getFreeSpace() == 128-(34)      -(3*25)-8);
+		CPPUNIT_ASSERT(coreNode->getFreeSpace() == 128-(42+16+32)-(1*25)
+		-interval_core_1->getVariableValueSize());
+		CPPUNIT_ASSERT(leafNode->getFreeSpace() == 128-(34)      -(3*25)
+		-interval_leaf_1->getVariableValueSize()-interval_leaf_2->getVariableValueSize()-interval_leaf_3->getVariableValueSize());
 	}
 	
 	void testIntervalSearch()
@@ -228,7 +234,7 @@ public:
 		
 		int data_offset;
 		s.read((char*)&data_offset, 4);
-		CPPUNIT_ASSERT(120 == data_offset);
+		CPPUNIT_ASSERT(leafNode->_variableSectionOffset == data_offset);
 		
 		bool done;
 		s.read((char*)&done, 1);

@@ -53,13 +53,12 @@ HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config)
 }
 
 /**
- * The method to fill up the stateInfo (passed on from the Current State Tree when
- * it does a query on the SHT). We'll replace the data in that vector with whatever
- * relevant we can find from this node
+ * The method adds the intervals from this node that intersect the
+ * timestamp
  * 
- * @param stateInfo The same stateInfo that comes from SHT's doQuery()
- * @param t The timestamp for which the query is for. Only return intervals that intersect t.
- * @throw TimeRangeException 
+ * @param intervals The intervals that are added from node to node
+ * @param timestamp The timestamp for which the query is for. Only return intervals that intersect t.
+ * @throw TimeRangeEx
  */
 void HistoryTreeNode::writeInfoFromNode(vector<IntervalSharedPtr>& intervals, timestamp_t timestamp) const
 {
@@ -82,11 +81,15 @@ void HistoryTreeNode::writeInfoFromNode(vector<IntervalSharedPtr>& intervals, ti
 /**
  * Add an interval to this node
  * @param newInterval
+ * @throw TimeRangeEx
  */
-void HistoryTreeNode::addInterval(IntervalSharedPtr newInterval)
+void HistoryTreeNode::addInterval(IntervalSharedPtr newInterval) throw (TimeRangeEx)
 {
 	// Just in case, but should be checked before even calling this function
 	assert(newInterval->getTotalSize() <= getFreeSpace());
+	
+	if(newInterval->getStart() < _nodeStart)
+		throw TimeRangeEx("interval start time below node start time");
 	
 	// FIXME : We need to clone the interval, to guarantee ownership
 	_intervals.insert(newInterval);

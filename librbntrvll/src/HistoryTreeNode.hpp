@@ -32,6 +32,8 @@
 #include "HistoryTreeConfig.hpp"
 #include "basic_types.h"
 
+#include "ex/TimeRangeEx.hpp"
+
 class HistoryTreeNode;
 class InHistoryTree;
 
@@ -57,7 +59,7 @@ public:
 	virtual void unserializeSpecificHeader(std::istream& is) = 0;
 	virtual void serializeSpecificHeader(uint8_t* buf) const = 0;
 	virtual unsigned int getSpecificHeaderSize(void) const = 0;
-	void addInterval(IntervalSharedPtr);
+	void addInterval(IntervalSharedPtr) throw(TimeRangeEx);
 	void close(timestamp_t endtime);
 	IntervalSharedPtr getRelevantInterval(timestamp_t timestamp, attribute_t key) const;
 	IntervalContainer::const_iterator getStartIndexFor(timestamp_t timestamp) const;
