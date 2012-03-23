@@ -33,6 +33,7 @@ static void queryAndPrint(InHistoryTree* iht, int t)
 	}
 	for(vector<IntervalSharedPtr>::iterator it = intervals.begin(); it != intervals.end(); it++)
 	{
+		cout << *it;
 		if(*it != 0)
 			cout << **it << endl;
 	}
@@ -87,8 +88,6 @@ static void testInOutHT(void) {
 	// input history tree
 	HistoryTree* ht = new HistoryTree(config);
 	ht->open();
-	
-	cout <<"hm?"<<endl;
 	
 	// leaf (seq 0)
 	ht->addInterval(IntervalSharedPtr(new IntInterval(2, 7, 0, 32)));

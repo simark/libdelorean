@@ -62,8 +62,6 @@ HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config)
  */
 void HistoryTreeNode::writeInfoFromNode(vector<IntervalSharedPtr>& intervals, timestamp_t timestamp) const
 {
-	int startIndex;
-
 	if ( _intervals.size() == 0 ) { return; }
 
 	for (IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
@@ -71,7 +69,7 @@ void HistoryTreeNode::writeInfoFromNode(vector<IntervalSharedPtr>& intervals, ti
 		 * the End times necessarily fit */
 		if ( (*it)->getStart() <= timestamp ) {
 			if ((int) intervals.size() < (*it)->getAttribute()+1) 
-				intervals.resize((*it)->getAttribute()+1);
+				intervals.resize( (*it)->getAttribute()+1 > (int)intervals.size()*2 ? (*it)->getAttribute()+1 : intervals.size()*2);
 			intervals[(*it)->getAttribute()] = (*it);
 		}
 	}

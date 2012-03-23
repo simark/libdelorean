@@ -208,7 +208,7 @@ vector<IntervalSharedPtr> InHistoryTree::query(timestamp_t timestamp) const {
 	
 	// We start by reading the information in the root node
 	HistoryTreeNodeSharedPtr currentNode = _latest_branch[0];
-	vector<IntervalSharedPtr> relevantIntervals;
+	vector<IntervalSharedPtr> relevantIntervals(1);
 	currentNode->writeInfoFromNode(relevantIntervals, timestamp);
 	
 	
