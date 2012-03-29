@@ -13,7 +13,11 @@ LIB = -L$(LIB_PATH) -lrbntrvll
 
 # Fichier sources contenant les tests
 TEST_SRC=\
-	node/NodeTest.cpp
+	node/NodeTest.cpp \
+	interval/IntervalTest.cpp \
+	interval/IntervalCreatorTest.cpp \
+	interval/CustomInterval.cpp \
+	interval/CustomIntervalFactory.cpp
 
 # Fichier source démarrant les tests
 RUN_SRC=test.cpp
@@ -28,4 +32,4 @@ run: test
 	LD_LIBRARY_PATH=../src ./test
 
 test: $(SRC) $(TEST_SRC) $(RUN_SRC)
-	g++ $(CFLAGS) -o test $(TEST_SRC) $(RUN_SRC) $(LIB) -lcppunit
+	g++  -I./interval/ $(CFLAGS) -o test $(TEST_SRC) $(RUN_SRC) $(LIB) -lcppunit
