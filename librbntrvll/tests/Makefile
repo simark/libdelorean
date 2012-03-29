@@ -17,7 +17,8 @@ TEST_SRC=\
 	interval/IntervalTest.cpp \
 	interval/IntervalCreatorTest.cpp \
 	interval/CustomInterval.cpp \
-	interval/CustomIntervalFactory.cpp
+	interval/CustomIntervalFactory.cpp \
+	tree/TreeTest.cpp
 
 # Fichier source démarrant les tests
 RUN_SRC=test.cpp

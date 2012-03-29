@@ -42,7 +42,8 @@ public:
 	virtual ~AbstractHistoryTree();
 	
 	void setConfig(HistoryTreeConfig config) {
-		this->_config = config;
+		if (!_opened)
+			this->_config = config;
 	}
 	HistoryTreeConfig getConfig(void) const {		
 		return this->_config;

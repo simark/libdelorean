@@ -30,6 +30,7 @@
 #include "ex/IOEx.hpp"
 #include "ex/UnknownNodeTypeEx.hpp"
 #include "fixed_config.h"
+#include <sstream>
 
 using namespace std;
 using namespace std::tr1;
@@ -124,7 +125,9 @@ void InHistoryTree::unserializeHeader(void) {
 		f.read((char*) &mn, sizeof(int32_t));
 		if (mn != HF_MAGIC_NUMBER) {
 			f.exceptions(fstream::goodbit);
-			throw InvalidFormatEx("Wrong start bytes");
+			ostringstream oss;
+			oss << "Wrong start Bytes. Expected : " << HF_MAGIC_NUMBER << " Got : " << mn;
+			throw InvalidFormatEx(oss.str());
 		}
 		
 		// file version
