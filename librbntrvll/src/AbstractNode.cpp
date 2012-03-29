@@ -25,18 +25,18 @@
 
 #include "intervals/NullInterval.hpp"
 #include "IntervalCreator.hpp"
-#include "HistoryTreeNode.hpp"
+#include "AbstractNode.hpp"
 #include "basic_types.h"
 #include "ex/NodeFullEx.hpp"
 
 using namespace std;
 using namespace std::tr1;
 
-const unsigned int HistoryTreeNode::COMMON_HEADER_SIZE = 34;
+const unsigned int AbstractNode::COMMON_HEADER_SIZE = 34;
 
-bool orderIntervals (IntervalSharedPtr i, IntervalSharedPtr j) { return (*i<*j); }
+bool orderIntervals (AbstractInterval::SharedPtr i, AbstractInterval::SharedPtr j) { return (*i<*j); }
 
-HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config, seq_number_t seqNumber,
+AbstractNode::AbstractNode(HistoryTreeConfig config, seq_number_t seqNumber,
 seq_number_t parentSeqNumber, timestamp_t start, node_type_t type)
 : _config(config), _nodeStart(start), _sequenceNumber(seqNumber), _parentSequenceNumber(parentSeqNumber), _type(type), _intervals(orderIntervals)
 {
@@ -44,11 +44,11 @@ seq_number_t parentSeqNumber, timestamp_t start, node_type_t type)
 	_isDone = false;
 }
 
-HistoryTreeNode::~HistoryTreeNode()
+AbstractNode::~AbstractNode()
 {
 }
 
-HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config)
+AbstractNode::AbstractNode(HistoryTreeConfig config)
 : _config(config), _intervals(orderIntervals) {
 }
 
@@ -60,7 +60,7 @@ HistoryTreeNode::HistoryTreeNode(HistoryTreeConfig config)
  * @param timestamp The timestamp for which the query is for. Only return intervals that intersect t.
  * @throw TimeRangeEx
  */
-void HistoryTreeNode::writeInfoFromNode(vector<IntervalSharedPtr>& intervals, timestamp_t timestamp) const
+void AbstractNode::writeInfoFromNode(vector<AbstractInterval::SharedPtr>& intervals, timestamp_t timestamp) const
 {
 	int startIndex;
 
@@ -83,7 +83,7 @@ void HistoryTreeNode::writeInfoFromNode(vector<IntervalSharedPtr>& intervals, ti
  * @param newInterval
  * @throw TimeRangeEx
  */
-void HistoryTreeNode::addInterval(IntervalSharedPtr newInterval) throw (TimeRangeEx)
+void AbstractNode::addInterval(AbstractInterval::SharedPtr newInterval) throw (TimeRangeEx)
 {
 	// Just in case, but should be checked before even calling this function
 	assert(newInterval->getTotalSize() <= getFreeSpace());
@@ -105,7 +105,7 @@ void HistoryTreeNode::addInterval(IntervalSharedPtr newInterval) throw (TimeRang
  * @param endtime The nodeEnd time that the node will have
  * @throw TimeRangeException 
  */
-void HistoryTreeNode::close(timestamp_t endtime)
+void AbstractNode::close(timestamp_t endtime)
 {
 	assert ( endtime >= _nodeStart );
 	
@@ -123,11 +123,11 @@ void HistoryTreeNode::close(timestamp_t endtime)
  * @return The Interval containing the information we want, or null if it wasn't found
  * @throw TimeRangeEx
  */
-IntervalSharedPtr HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
+AbstractInterval::SharedPtr AbstractNode::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
 {
 	assert ( _isDone );
 		
-	if ( _intervals.size() == 0 ) { return IntervalSharedPtr(); }
+	if ( _intervals.size() == 0 ) { return AbstractInterval::SharedPtr(); }
 	
 	for ( IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
 		if ( (*it)->getAttribute() == key ) {
@@ -137,7 +137,7 @@ IntervalSharedPtr HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, at
 		}
 	}
 	/* We didn't find the relevant information in this node */
-	return IntervalSharedPtr();
+	return AbstractInterval::SharedPtr();
 }
 
 /**
@@ -149,9 +149,9 @@ IntervalSharedPtr HistoryTreeNode::getRelevantInterval(timestamp_t timestamp, at
  * @param timestamp
  * @return the index of the first interval in _intervals that could hold this timestamp
  */
-IntervalContainer::const_iterator HistoryTreeNode::getStartIndexFor(timestamp_t timestamp) const
+IntervalContainer::const_iterator AbstractNode::getStartIndexFor(timestamp_t timestamp) const
 {
-	static IntervalSharedPtr dummyInterval(new NullInterval(0, 0, 0));
+	static AbstractInterval::SharedPtr dummyInterval(new NullInterval(0, 0, 0));
 	dummyInterval->setEnd(timestamp);
 	IntervalContainer::const_iterator it;	
 	
@@ -164,25 +164,25 @@ IntervalContainer::const_iterator HistoryTreeNode::getStartIndexFor(timestamp_t 
  * Returns the free space in the node, which is simply put,
  * the stringSectionOffset - dataSectionOffset
  */
-unsigned int HistoryTreeNode::getFreeSpace() const
+unsigned int AbstractNode::getFreeSpace() const
 {
 	return _variableSectionOffset - getDataSectionEndOffset();
 }
 
-unsigned int HistoryTreeNode::getTotalHeaderSize() const
+unsigned int AbstractNode::getTotalHeaderSize() const
 {
-	return HistoryTreeNode::COMMON_HEADER_SIZE + this->getSpecificHeaderSize();
+	return AbstractNode::COMMON_HEADER_SIZE + this->getSpecificHeaderSize();
 }
 
 /**
  * @return The offset, within the node, where the Data (intervals) section ends
  */
-int HistoryTreeNode::getDataSectionEndOffset() const
+int AbstractNode::getDataSectionEndOffset() const
 {
-	return getTotalHeaderSize() + Interval::getHeaderSize() * _intervals.size();
+	return getTotalHeaderSize() + AbstractInterval::getHeaderSize() * _intervals.size();
 }
 
-void HistoryTreeNode::serialize(ostream& os)
+void AbstractNode::serialize(ostream& os)
 {
 	// allocate some byte buffer
 	// TODO: private buffer to avoid new/delete for each block write?
@@ -199,7 +199,7 @@ void HistoryTreeNode::serialize(ostream& os)
 	delete [] buf;
 }
 
-void HistoryTreeNode::serialize(uint8_t* buf)
+void AbstractNode::serialize(uint8_t* buf)
 {
 	// pointer backup
 	uint8_t* bkbuf = buf;
@@ -235,7 +235,7 @@ void HistoryTreeNode::serialize(uint8_t* buf)
 	IntervalContainer::iterator it;
 	uint8_t* var_addr = bkbuf + this->_config._blockSize;
 	for (it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {
-		IntervalSharedPtr interval = *it;
+		AbstractInterval::SharedPtr interval = *it;
 		// get interval variable value size
 		unsigned int var_size = interval->getVariableValueSize();
 		var_addr -= var_size;
@@ -252,7 +252,7 @@ void HistoryTreeNode::serialize(uint8_t* buf)
 	}
 }
 
-void HistoryTreeNode::unserialize(std::istream& is, const IntervalCreator& ic) {
+void AbstractNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 	// remember initial position within stream
 	unsigned int init_pos = is.tellg();
 	
@@ -289,7 +289,7 @@ void HistoryTreeNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 	for (int i = 0; i < interval_count; ++i) {
 		// get the appropriate interval from the creator
 		interval_type_t type = datPtr[20]; // TODO: make this prettier
-		IntervalSharedPtr interval = ic.createIntervalFromType(type);
+		AbstractInterval::SharedPtr interval = ic.createIntervalFromType(type);
 		
 		// unserialize it
 		unsigned int var_len = interval->unserialize(varPtr, datPtr);
@@ -299,7 +299,7 @@ void HistoryTreeNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 		this->_intervals.insert(interval);
 		
 		// new buffer offsets
-		datPtr += Interval::getHeaderSize();
+		datPtr += AbstractInterval::getHeaderSize();
 		varPtr -= var_len;
 		this->_variableSectionOffset -= var_len;
 	}
@@ -308,7 +308,7 @@ void HistoryTreeNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 	delete [] buf;
 }
 
-std::string HistoryTreeNode::toString(void) const {
+std::string AbstractNode::toString(void) const {
 	ostringstream oss;
 	stringstream endTime;
 	if(_isDone){
@@ -329,7 +329,7 @@ std::string HistoryTreeNode::toString(void) const {
 	return oss.str();
 }
 
-std::ostream& operator<<(std::ostream& out, const HistoryTreeNode& node) {
+std::ostream& operator<<(std::ostream& out, const AbstractNode& node) {
 	out << node.toString();
 	
 	return out;

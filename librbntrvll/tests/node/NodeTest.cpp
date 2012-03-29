@@ -8,9 +8,9 @@
 
 #define protected public
 #define private public
-#include <HistoryTreeNode.hpp>
-#include <HistoryTreeLeafNode.hpp>
-#include <HistoryTreeCoreNode.hpp>
+#include <AbstractNode.hpp>
+#include <LeafNode.hpp>
+#include <CoreNode.hpp>
 #undef protected
 #undef private
 #include <intervals/IntInterval.hpp>
@@ -36,15 +36,15 @@ class NodeTest : public CppUnit::TestFixture
 	
 private:
 	HistoryTreeConfig config;
-	HistoryTreeLeafNodeSharedPtr leafNode;
-	HistoryTreeCoreNodeSharedPtr coreNode;
+	LeafNode::SharedPtr leafNode;
+	CoreNode::SharedPtr coreNode;
 	
-	HistoryTreeNodeSharedPtr thirdNode;
+	AbstractNode::SharedPtr thirdNode;
 	
-	IntervalSharedPtr interval_core_1;
-	IntervalSharedPtr interval_leaf_1;
-	IntervalSharedPtr interval_leaf_2;
-	IntervalSharedPtr interval_leaf_3;
+	AbstractInterval::SharedPtr interval_core_1;
+	AbstractInterval::SharedPtr interval_leaf_1;
+	AbstractInterval::SharedPtr interval_leaf_2;
+	AbstractInterval::SharedPtr interval_leaf_3;
 	
 public:
 	void setUp()
@@ -54,8 +54,8 @@ public:
 		// 1 into a core node
 		config = HistoryTreeConfig("", 128, 4, 0); //size 128 bytes, 4 children
 		
-		leafNode.reset(new HistoryTreeLeafNode(config, 1, 2, 10));
-		coreNode.reset(new HistoryTreeCoreNode(config, 2, -1, 5));
+		leafNode.reset(new LeafNode(config, 1, 2, 10));
+		coreNode.reset(new CoreNode(config, 2, -1, 5));
 		coreNode->linkNewChild(leafNode);
 		
 		interval_core_1.reset(new IntInterval(12, 14, 1, 0));
@@ -72,7 +72,7 @@ public:
 		coreNode->close(20);
 		leafNode->close(20);
 		
-		thirdNode.reset(new HistoryTreeLeafNode(config, 3, 2, 15));
+		thirdNode.reset(new LeafNode(config, 3, 2, 15));
 	}
 
 	void tearDown() 
@@ -102,7 +102,7 @@ public:
 	
 	void testIntervalInsert()
 	{
-		CPPUNIT_ASSERT_THROW(thirdNode->addInterval(IntervalSharedPtr(new IntInterval(12, 14, 1, 0))), TimeRangeEx);
+		CPPUNIT_ASSERT_THROW(thirdNode->addInterval(AbstractInterval::SharedPtr(new IntInterval(12, 14, 1, 0))), TimeRangeEx);
 	}
 	
 	void testIntervalSort()

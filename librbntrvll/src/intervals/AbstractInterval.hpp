@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _INTERVAL_HPP
-#define _INTERVAL_HPP
+#ifndef _ABSTRACTINTERVAL_HPP
+#define _ABSTRACTINTERVAL_HPP
 
 #include <string>
 #include <tr1/memory>
@@ -27,39 +27,35 @@
 #include "../basic_types.h"
 #include "../IPrintable.hpp"
 
-class Interval;
-
-typedef std::tr1::shared_ptr<Interval> IntervalSharedPtr;
-
-class Interval : public IPrintable
+class AbstractInterval : public IPrintable
 {	
-	friend std::ostream& operator<<(std::ostream& out, const Interval& intr);
+	friend std::ostream& operator<<(std::ostream& out, const AbstractInterval& intr);
 	
 public:
-	typedef std::tr1::shared_ptr<Interval> SharedPtr;
+	typedef std::tr1::shared_ptr<AbstractInterval> SharedPtr;
 	
-	Interval(interval_type_t type) : _type(type) { }
-	Interval(timestamp_t start, timestamp_t end, attribute_t attribute, interval_type_t type);
-	virtual ~Interval() { }
+	AbstractInterval(interval_type_t type) : _type(type) { }
+	AbstractInterval(timestamp_t start, timestamp_t end, attribute_t attribute, interval_type_t type);
+	virtual ~AbstractInterval() { }
 	virtual std::string getStringValue(void) const = 0;
 	void serialize(uint8_t* var_ptr, uint8_t* head_ptr);
 	unsigned int unserialize(uint8_t* var_ptr, uint8_t* head_ptr);
 	virtual unsigned int getVariableValueSize(void) const = 0;
 	unsigned int getTotalSize(void) const {
-		return Interval::HEADER_SIZE + this->getVariableValueSize();
+		return AbstractInterval::HEADER_SIZE + this->getVariableValueSize();
 	}
 	static unsigned int getHeaderSize(void) {
-		return Interval::HEADER_SIZE;
+		return AbstractInterval::HEADER_SIZE;
 	}
 	std::string toString(void) const;
 	bool intersects(timestamp_t ts) const;
-	Interval* setInterval(timestamp_t start, timestamp_t end) {
+	AbstractInterval* setInterval(timestamp_t start, timestamp_t end) {
 		this->_start = start;
 		this->_end = end;
 		
 		return this;
 	}
-	Interval* setStart(timestamp_t start) {
+	AbstractInterval* setStart(timestamp_t start) {
 		this->_start = start;
 		
 		return this;
@@ -67,7 +63,7 @@ public:
 	timestamp_t getStart(void) const {
 		return this->_start;
 	}
-	Interval* setEnd(timestamp_t end) {
+	AbstractInterval* setEnd(timestamp_t end) {
 		this->_end = end;
 		
 		return this;
@@ -75,7 +71,7 @@ public:
 	timestamp_t getEnd(void) const {
 		return this->_end;
 	}
-	Interval* setAttribute(attribute_t attr) {
+	AbstractInterval* setAttribute(attribute_t attr) {
 		this->_attribute = attr;
 		
 		return this;
@@ -87,12 +83,12 @@ public:
 		return this->_type;
 	}
 	
-	bool operator==(const Interval& other);
-	bool operator<(const Interval& other);
-	bool operator<=(const Interval& other);
-	bool operator!=(const Interval& other);
-	bool operator>(const Interval& other);
-	bool operator>=(const Interval& other);
+	bool operator==(const AbstractInterval& other);
+	bool operator<(const AbstractInterval& other);
+	bool operator<=(const AbstractInterval& other);
+	bool operator!=(const AbstractInterval& other);
+	bool operator>(const AbstractInterval& other);
+	bool operator>=(const AbstractInterval& other);
 	
 protected:
 	virtual void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const = 0;
@@ -111,4 +107,4 @@ private:
 	interval_type_t _type;
 };
 
-#endif // _INTERVAL_HPP
+#endif // _ABSTRACTINTERVAL_HPP

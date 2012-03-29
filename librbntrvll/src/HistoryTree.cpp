@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
+ * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -17,7 +18,7 @@
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "HistoryTree.hpp"
-#include "HistoryTreeCoreNode.hpp"
+#include "CoreNode.hpp"
 #include "ex/TimeRangeEx.hpp"
 #include "ex/IOEx.hpp"
 

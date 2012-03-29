@@ -21,18 +21,18 @@
 
 #include "../basic_types.h"
 #include "../fixed_config.h"
-#include "Interval.hpp"
+#include "AbstractInterval.hpp"
 
-class FloatInterval : public Interval
+class FloatInterval : public AbstractInterval
 {
 public:
 	typedef std::tr1::shared_ptr<FloatInterval> SharedPtr;
 	
-	FloatInterval(void) : Interval(SIT_FLOAT32) { }
+	FloatInterval(void) : AbstractInterval(SIT_FLOAT32) { }
 	FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value);
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
-	Interval* clone(void) const;
+	AbstractInterval* clone(void) const;
 	
 	void setValue(float value) {_value = value;}
 	float getValue() const {return _value;}
