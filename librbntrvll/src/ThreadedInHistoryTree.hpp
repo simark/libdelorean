@@ -16,14 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _INHISTORYTREE_HPP
-#define _INHISTORYTREE_HPP
+#ifndef _THREADEDINHISTORYTREE_HPP
+#define _THREADEDINHISTORYTREE_HPP
 
 #include <vector>
 #include <fstream>
 
 #include "AbstractHistoryTree.hpp"
 #include "HistoryTreeConfig.hpp"
+#include "InHistoryTree.hpp"
+#include "AbstractThreadedHistoryTree.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "AbstractNode.hpp"
 #include "CoreNode.hpp"
@@ -33,36 +35,19 @@
 #include "ex/InvalidFormatEx.hpp"
 #include "basic_types.h"
 
-class InHistoryTree : virtual public AbstractHistoryTree
+class ThreadedInHistoryTree : virtual public InHistoryTree, virtual public AbstractThreadedHistoryTree
 {
 public:
-	InHistoryTree();
-	InHistoryTree(HistoryTreeConfig config);
-	void open();
-	void close(void) {
-		this->close(-1);
-	}
-	void close(timestamp_t end);
-	IntervalCreator& getIC(void) {
-		return _ic;
-	}
-	AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
+	ThreadedInHistoryTree();
+	ThreadedInHistoryTree(HistoryTreeConfig config);
+	
 	std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
 	AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
-	void test(void);
-	~InHistoryTree();
 
-protected:
-	void buildLatestBranch(void);
-	void unserializeHeader(void);
-
-
+private:
 	AbstractNode::SharedPtr createNodeFromStream() const;
 	AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
 	AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
-	seq_number_t _root_seq;
-	IntervalCreator _ic;
-private:
 };
 
-#endif // _INHISTORYTREE_HPP
+#endif // _THREADEDINHISTORYTREE_HPP

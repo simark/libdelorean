@@ -12,6 +12,8 @@ SRC = \
 	OutHistoryTree.cpp \
 	InHistoryTree.cpp \
 	HistoryTree.cpp \
+	AbstractThreadedHistoryTree.cpp \
+	ThreadedInHistoryTree.cpp \
 	AbstractNode.cpp \
 	CoreNode.cpp \
 	LeafNode.cpp \
@@ -22,6 +24,8 @@ H_SRC = \
 	OutHistoryTree.hpp \
 	InHistoryTree.hpp \
 	HistoryTree.hpp \
+	AbstractThreadedHistoryTree.hpp \
+	ThreadedInHistoryTree.hpp \
 	AbstractNode.hpp \
 	CoreNode.hpp \
 	LeafNode.hpp \
@@ -50,14 +54,14 @@ all: $(TARGET_SO)
 # shared library
 $(TARGET_SO): $(OBJ) subdirs
 	@echo "[LD]	" $@
-	@$(CPP) -shared -Wl,-soname,$(TARGET_SONAME) -o $@ $(OBJ) $(SUBDIRS_LIBS)
+	@$(CPP) -shared -Wl,-soname,$(TARGET_SONAME) -o $@ $(OBJ) $(SUBDIRS_LIBS) /usr/lib/libboost_thread.so
 	@ln -f -s $(TARGET_SO) $(TARGET_SONAME)
 	@ln -f -s $(TARGET_SO) $(TARGET_PLAIN)
 
 # objects
 %.o: %.cpp $(H_SRC)
 	@echo $(CXX_TEXT) $@
-	@$(CPP) $(CPPFLAGS) -c -fPIC -o $@ $<
+	@$(CPP) $(CPPFLAGS) -c -fPIC -lboost_thread -o $@ $<
 
 # subdirectories:
 subdirs: $(SUBDIRS)

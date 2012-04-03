@@ -9,7 +9,7 @@ SRC_DIR=../src
 
 # Librairie à tester
 LIB_PATH = ../src
-LIB = -L$(LIB_PATH) -lrbntrvll
+LIB =  -lboost_thread -L$(LIB_PATH) -lrbntrvll
 
 # Fichier sources contenant les tests
 TEST_SRC=\
