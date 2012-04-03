@@ -101,6 +101,9 @@ unsigned int Interval::unserialize(uint8_t* var_ptr, uint8_t* head_ptr) {
 	memcpy(&this->_type, head_ptr, sizeof(interval_type_t));
 	head_ptr += sizeof(interval_type_t);
 	
+	//Locate the variable data offset
+	var_ptr += *(uint32_t*)head_ptr;
+	
 	// unserialize values
 	return this->unserializeValues(var_ptr, head_ptr);
 }
