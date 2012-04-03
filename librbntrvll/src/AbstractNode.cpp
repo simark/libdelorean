@@ -62,8 +62,6 @@ AbstractNode::AbstractNode(HistoryTreeConfig config)
  */
 void AbstractNode::writeInfoFromNode(vector<AbstractInterval::SharedPtr>& intervals, timestamp_t timestamp) const
 {
-	int startIndex;
-
 	if ( _intervals.size() == 0 ) { return; }
 
 	for (IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
@@ -71,7 +69,7 @@ void AbstractNode::writeInfoFromNode(vector<AbstractInterval::SharedPtr>& interv
 		 * the End times necessarily fit */
 		if ( (*it)->getStart() <= timestamp ) {
 			if ((int) intervals.size() < (*it)->getAttribute()+1) 
-				intervals.resize((*it)->getAttribute()+1);
+				intervals.resize( (*it)->getAttribute()+1 > (int)intervals.size()*2 ? (*it)->getAttribute()+1 : intervals.size()*2);
 			intervals[(*it)->getAttribute()] = (*it);
 		}
 	}
@@ -285,7 +283,8 @@ void AbstractNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 	is.read((char*) buf, len);
 	this->_variableSectionOffset = this->_config._blockSize;
 	uint8_t* datPtr = buf;
-	uint8_t* varPtr = buf + len;
+	//Set varPtr to beginning of node (unallocated memory)
+	uint8_t* varPtr = buf - this->getTotalHeaderSize();
 	for (int i = 0; i < interval_count; ++i) {
 		// get the appropriate interval from the creator
 		interval_type_t type = datPtr[20]; // TODO: make this prettier
@@ -296,11 +295,10 @@ void AbstractNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 		assert(var_len == interval->getVariableValueSize());
 		
 		// keep it...
-		this->_intervals.insert(interval);
+		this->_intervals.insert(this->_intervals.end(), interval);
 		
 		// new buffer offsets
 		datPtr += AbstractInterval::getHeaderSize();
-		varPtr -= var_len;
 		this->_variableSectionOffset -= var_len;
 	}
 	

@@ -112,6 +112,14 @@ void HistoryTree::open(OpenMode mode)
 			throw IOEx("Unable to open file");
 		}
 		
+		// check if empty file
+		this->_stream.seekg(ios_base::end);
+		if (this->_stream.tellg() == 0){
+			this->_stream.close();
+			throw IOEx("This file is empty");
+		}
+		
+		
 		try{
 			// unserialize tree header
 			this->unserializeHeader();

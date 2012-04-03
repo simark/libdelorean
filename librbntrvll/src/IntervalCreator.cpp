@@ -52,6 +52,7 @@ IntervalCreator::~IntervalCreator(void) {
 void IntervalCreator::unregisterIntervalType(interval_type_t type) {
 	if (this->_factories[type] != NULL) {
 		delete this->_factories[type];
+		this->_factories[type] = NULL;
 	}
 }
 
