@@ -48,19 +48,19 @@ private:
 	InHistoryTree* iht;
 	HistoryTree* ht;
 	
-	Interval::SharedPtr interval1;
-	Interval::SharedPtr interval2;
-	Interval::SharedPtr interval3;
-	Interval::SharedPtr interval4;
-	Interval::SharedPtr interval5;
+	AbstractInterval::SharedPtr interval1;
+	AbstractInterval::SharedPtr interval2;
+	AbstractInterval::SharedPtr interval3;
+	AbstractInterval::SharedPtr interval4;
+	AbstractInterval::SharedPtr interval5;
 	
-	std::multiset<Interval::SharedPtr> intervals;
+	std::multiset<AbstractInterval::SharedPtr> intervals;
 	
 	/**
 	 * Compare 2 intervals' HEADERS only. The values are not compared.
 	 * 
 	 */ 
-	bool compare(Interval::SharedPtr i1, Interval::SharedPtr i2)
+	bool compare(AbstractInterval::SharedPtr i1, AbstractInterval::SharedPtr i2)
 	{
 		if(i1->getStart() == i2->getStart() && i1->getEnd() == i2->getEnd() && i1->getAttribute() == i2->getAttribute() && i1->getType() == i2->getType())
 		{
@@ -73,11 +73,11 @@ private:
 	 * Tests whether a given queryResult corresponds to the expected results
 	 * 
 	 */ 
-	bool verify(std::vector<Interval::SharedPtr> queryResult, timestamp_t timestamp)
+	bool verify(std::vector<AbstractInterval::SharedPtr> queryResult, timestamp_t timestamp)
 	{
 		// Construct the expected result vector
-		std::vector<std::pair<Interval::SharedPtr, bool> > expected;
-		for(std::multiset<Interval::SharedPtr>::const_iterator it = intervals.begin(); it != intervals.end(); it++)
+		std::vector<std::pair<AbstractInterval::SharedPtr, bool> > expected;
+		for(std::multiset<AbstractInterval::SharedPtr>::const_iterator it = intervals.begin(); it != intervals.end(); it++)
 		{
 			if((*it)->getStart() <= timestamp && (*it)->getEnd() >= timestamp)
 			{
@@ -86,12 +86,12 @@ private:
 		}
 		
 		// Find each query result inside the expected result vector
-		for(std::vector<Interval::SharedPtr>::const_iterator it = queryResult.begin(); it != queryResult.end(); it++)
+		for(std::vector<AbstractInterval::SharedPtr>::const_iterator it = queryResult.begin(); it != queryResult.end(); it++)
 		{
 			if (*it != 0)
 			{
 				bool found = false;
-				for(std::vector<std::pair<Interval::SharedPtr, bool> >::iterator it2 = expected.begin(); it2 != expected.end(); it2++)
+				for(std::vector<std::pair<AbstractInterval::SharedPtr, bool> >::iterator it2 = expected.begin(); it2 != expected.end(); it2++)
 				{
 					// We have found the query result inside the expected result, mark it as such
 					if(compare(it2->first, *it))
@@ -105,7 +105,7 @@ private:
 		}
 		
 		// Every expected result should have been found
-		for(std::vector<std::pair<Interval::SharedPtr, bool> >::const_iterator it = expected.begin(); it != expected.end(); it++)
+		for(std::vector<std::pair<AbstractInterval::SharedPtr, bool> >::const_iterator it = expected.begin(); it != expected.end(); it++)
 		{
 			if (it->second == false)
 				return false;
@@ -169,7 +169,7 @@ public:
 			CPPUNIT_FAIL("Could not open tree for reading");
 		}
 		
-		std::vector< IntervalSharedPtr > queryResult;
+		std::vector< AbstractInterval::SharedPtr > queryResult;
 		
 		
 		for (timestamp_t i = 0; i < 14; i++)
