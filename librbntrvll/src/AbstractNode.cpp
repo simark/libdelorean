@@ -299,7 +299,6 @@ void AbstractNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 		
 		// new buffer offsets
 		datPtr += AbstractInterval::getHeaderSize();
-
 		this->_variableSectionOffset -= var_len;
 	}
 	
