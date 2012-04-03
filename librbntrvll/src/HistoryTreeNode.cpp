@@ -283,22 +283,22 @@ void HistoryTreeNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 	is.read((char*) buf, len);
 	this->_variableSectionOffset = this->_config._blockSize;
 	uint8_t* datPtr = buf;
-	uint8_t* varPtr = buf;
+	//Set varPtr to beginning of node (unallocated memory)
+	uint8_t* varPtr = buf - this->getTotalHeaderSize();
 	for (int i = 0; i < interval_count; ++i) {
 		// get the appropriate interval from the creator
 		interval_type_t type = datPtr[20]; // TODO: make this prettier
 		IntervalSharedPtr interval = ic.createIntervalFromType(type);
-				
+		
 		// unserialize it
 		unsigned int var_len = interval->unserialize(varPtr, datPtr);
 		assert(var_len == interval->getVariableValueSize());
 		
 		// keep it...
-		this->_intervals.insert(interval);
+		this->_intervals.insert(this->_intervals.end(), interval);
 		
 		// new buffer offsets
 		datPtr += Interval::getHeaderSize();
-		//varPtr -= var_len;
 		this->_variableSectionOffset -= var_len;
 	}
 	
