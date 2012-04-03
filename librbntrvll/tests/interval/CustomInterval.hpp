@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include "intervals/Interval.hpp"
+#include "intervals/AbstractInterval.hpp"
 #include "basic_types.h"
 #include "fixed_config.h"
 
@@ -31,12 +31,12 @@ typedef struct
 	double y;
 } data;
 
-class CustomInterval : public Interval
+class CustomInterval : public AbstractInterval
 {
 public:
 	typedef std::tr1::shared_ptr<CustomInterval> SharedPtr;
 	
-	CustomInterval(void) : Interval(type) { }
+	CustomInterval(void) : AbstractInterval(type) { }
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
 	void setValue(data value) {_value = value;}

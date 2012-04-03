@@ -66,7 +66,7 @@ public:
 	
 	void testCreate()
 	{
-		Interval::SharedPtr i = intervalCreator->createIntervalFromType(SIT_STRING);
+		AbstractInterval::SharedPtr i = intervalCreator->createIntervalFromType(SIT_STRING);
 		CPPUNIT_ASSERT(i != 0);
 		CPPUNIT_ASSERT(std::tr1::dynamic_pointer_cast<StringInterval>(i) != 0);
 		
@@ -95,7 +95,7 @@ public:
 			CPPUNIT_FAIL("Exception thrown while registering");
 		}
 		
-		Interval::SharedPtr i = intervalCreator->createIntervalFromType(5);
+		AbstractInterval::SharedPtr i = intervalCreator->createIntervalFromType(5);
 		CPPUNIT_ASSERT(i != 0);
 		CPPUNIT_ASSERT(std::tr1::dynamic_pointer_cast<CustomInterval>(i) != 0);
 		
