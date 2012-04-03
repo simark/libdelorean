@@ -24,42 +24,42 @@
 #include <sstream>
 
 #include "HistoryTreeConfig.hpp"
-#include "HistoryTreeCoreNode.hpp"
-#include "HistoryTreeNode.hpp"
+#include "CoreNode.hpp"
+#include "AbstractNode.hpp"
 #include "basic_types.h"
 #include "fixed_config.h"
 
 using namespace std;
 using namespace std::tr1;
 
-HistoryTreeCoreNode::HistoryTreeCoreNode(HistoryTreeConfig config, seq_number_t seqNumber,
+CoreNode::CoreNode(HistoryTreeConfig config, seq_number_t seqNumber,
 seq_number_t parentSeqNumber, timestamp_t start)
-: HistoryTreeNode(config, seqNumber, parentSeqNumber, start, NT_CORE), _nbChildren(0) {
+: AbstractNode(config, seqNumber, parentSeqNumber, start, NT_CORE), _nbChildren(0) {
 	this->initChildren();
 }
 
-HistoryTreeCoreNode::HistoryTreeCoreNode(HistoryTreeConfig config)
-: HistoryTreeNode(config) {
+CoreNode::CoreNode(HistoryTreeConfig config)
+: AbstractNode(config) {
 	this->initChildren();
 }
 
-HistoryTreeCoreNode::~HistoryTreeCoreNode() {
+CoreNode::~CoreNode() {
 	this->finiChildren();
 }
 
-void HistoryTreeCoreNode::initChildren(void) {
+void CoreNode::initChildren(void) {
 	// initialize children data
 	this->_children = new seq_number_t [this->_config._maxChildren];
 	this->_childStart = new timestamp_t [this->_config._maxChildren];
 }
 
-void HistoryTreeCoreNode::finiChildren(void) {	
+void CoreNode::finiChildren(void) {	
 	// free children data
 	delete [] this->_children;
 	delete [] this->_childStart;
 }
 
-unsigned int HistoryTreeCoreNode::getSpecificHeaderSize(void) const
+unsigned int CoreNode::getSpecificHeaderSize(void) const
 {
 	const unsigned int mc = this->_config._maxChildren;
 	
@@ -71,7 +71,7 @@ unsigned int HistoryTreeCoreNode::getSpecificHeaderSize(void) const
 	);
 }
 
-void HistoryTreeCoreNode::linkNewChild(HistoryTreeNodeSharedPtr childNode)
+void CoreNode::linkNewChild(AbstractNode::SharedPtr childNode)
 {
 	assert (_nbChildren < _config._maxChildren);
 
@@ -87,7 +87,7 @@ void HistoryTreeCoreNode::linkNewChild(HistoryTreeNodeSharedPtr childNode)
  * @param timestamp
  * @return child sequence number or node's sequence number if no valid child
  */
-seq_number_t HistoryTreeCoreNode::getChildAtTimestamp(timestamp_t timestamp) const
+seq_number_t CoreNode::getChildAtTimestamp(timestamp_t timestamp) const
 {
 	seq_number_t potentialNextSeqNb = getSequenceNumber();
 	
@@ -101,7 +101,7 @@ seq_number_t HistoryTreeCoreNode::getChildAtTimestamp(timestamp_t timestamp) con
 	return potentialNextSeqNb;
 }
 
-void HistoryTreeCoreNode::serializeSpecificHeader(uint8_t* buf) const
+void CoreNode::serializeSpecificHeader(uint8_t* buf) const
 {	
 	// buffer pointer backup
 	uint8_t* bkbuf = buf;
@@ -125,7 +125,7 @@ void HistoryTreeCoreNode::serializeSpecificHeader(uint8_t* buf) const
 	memcpy(buf, this->_childStart, sizeof(timestamp_t) * mc);
 }
 
-void HistoryTreeCoreNode::unserializeSpecificHeader(std::istream& is) {
+void CoreNode::unserializeSpecificHeader(std::istream& is) {
 	// extended? we don't care
 	is.seekg(sizeof(int32_t), ios::cur);
 	
@@ -137,7 +137,7 @@ void HistoryTreeCoreNode::unserializeSpecificHeader(std::istream& is) {
 	is.read((char*) this->_childStart, sizeof(timestamp_t) * this->_config._maxChildren);
 }
 
-std::string HistoryTreeCoreNode::getInfos(void) const {
+std::string CoreNode::getInfos(void) const {
 	ostringstream oss;
 	
 	oss << ", " << this->_nbChildren << " children";

@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _HISTORYTREELEAFNODE_HPP
-#define _HISTORYTREELEAFNODE_HPP
+#ifndef _LEAFNODE_HPP
+#define _LEAFNODE_HPP
 
 #include <stdint.h>
 #include <ostream>
@@ -25,33 +25,31 @@
 #include <tr1/memory>
 
 #include "HistoryTreeConfig.hpp"
-#include "intervals/Interval.hpp"
+#include "intervals/AbstractInterval.hpp"
 #include "IntervalCreator.hpp"
-#include "HistoryTreeNode.hpp"
+#include "AbstractNode.hpp"
 #include "basic_types.h"
 
-class HistoryTreeLeafNode;
-
-typedef std::tr1::shared_ptr<HistoryTreeLeafNode> HistoryTreeLeafNodeSharedPtr;
-typedef std::tr1::shared_ptr<const HistoryTreeLeafNode>	ConstHistoryTreeLeafNodeSharedPtr;
-
-class HistoryTreeLeafNode : public HistoryTreeNode 
+class LeafNode : public AbstractNode 
 {
 public:
-	HistoryTreeLeafNode(HistoryTreeConfig config);
-	HistoryTreeLeafNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
-	~HistoryTreeLeafNode() { }
+	typedef std::tr1::shared_ptr<LeafNode> SharedPtr;
+	typedef std::tr1::shared_ptr<const LeafNode> ConstSharedPtr;
+
+	LeafNode(HistoryTreeConfig config);
+	LeafNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
+	~LeafNode() { }
 	std::string getInfos(void) const;
 	void serializeSpecificHeader(uint8_t* buf) const {
 		// no header here!
 	}
 	void unserializeSpecificHeader(std::istream& is);
 	unsigned int getSpecificHeaderSize(void) const {
-		return HistoryTreeLeafNode::HEADER_SIZE;
+		return LeafNode::HEADER_SIZE;
 	}
 	static const unsigned int HEADER_SIZE;
 
 private:
 };
 
-#endif // _HISTORYTREELEAFNODE_HPP
+#endif // _LEAFNODE_HPP

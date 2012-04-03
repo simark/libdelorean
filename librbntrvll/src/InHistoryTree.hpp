@@ -24,10 +24,10 @@
 
 #include "AbstractHistoryTree.hpp"
 #include "HistoryTreeConfig.hpp"
-#include "intervals/Interval.hpp"
-#include "HistoryTreeNode.hpp"
-#include "HistoryTreeCoreNode.hpp"
-#include "HistoryTreeLeafNode.hpp"
+#include "intervals/AbstractInterval.hpp"
+#include "AbstractNode.hpp"
+#include "CoreNode.hpp"
+#include "LeafNode.hpp"
 #include "IntervalCreator.hpp"
 #include "ex/TimeRangeEx.hpp"
 #include "ex/InvalidFormatEx.hpp"
@@ -46,9 +46,9 @@ public:
 	IntervalCreator& getIC(void) {
 		return _ic;
 	}
-	HistoryTreeNodeSharedPtr selectNextChild(HistoryTreeCoreNodeSharedPtr currentNode, timestamp_t timestamp) const;
-	std::vector< IntervalSharedPtr > query(timestamp_t timestamp) const;
-	IntervalSharedPtr query(timestamp_t timestamp, attribute_t key) const;
+	AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
+	std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
+	AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
 	void test(void);
 	~InHistoryTree();
 
@@ -57,9 +57,9 @@ protected:
 	void unserializeHeader(void);
 
 private:
-	HistoryTreeNodeSharedPtr createNodeFromStream() const;
-	HistoryTreeNodeSharedPtr createNodeFromSeq(seq_number_t seq) const;
-	HistoryTreeNodeSharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
+	AbstractNode::SharedPtr createNodeFromStream() const;
+	AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
+	AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
 	seq_number_t _root_seq;
 	IntervalCreator _ic;
 };

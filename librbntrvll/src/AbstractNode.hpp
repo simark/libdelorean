@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _HISTORYTREENODE_HPP
-#define _HISTORYTREENODE_HPP
+#ifndef _ABSTRACTNODE_HPP
+#define _ABSTRACTNODE_HPP
 
 #include <stdint.h>
 #include <ostream>
@@ -27,41 +27,38 @@
 #include <string>
 
 #include "IPrintable.hpp"
-#include "intervals/Interval.hpp"
+#include "intervals/AbstractInterval.hpp"
 #include "IntervalCreator.hpp"
 #include "HistoryTreeConfig.hpp"
 #include "basic_types.h"
 
 #include "ex/TimeRangeEx.hpp"
 
-class HistoryTreeNode;
-class InHistoryTree;
+typedef std::multiset<AbstractInterval::SharedPtr, bool (*)(AbstractInterval::SharedPtr, AbstractInterval::SharedPtr)> IntervalContainer;
 
-typedef std::tr1::shared_ptr<HistoryTreeNode>	HistoryTreeNodeSharedPtr;
-typedef std::tr1::shared_ptr<const HistoryTreeNode>	ConstHistoryTreeNodeSharedPtr;
-
-typedef std::multiset<IntervalSharedPtr, bool(*)(IntervalSharedPtr,IntervalSharedPtr)> IntervalContainer;
-
-class HistoryTreeNode : public IPrintable
+class AbstractNode : public IPrintable
 {
-	friend std::ostream& operator<<(std::ostream& out, const HistoryTreeNode& node);
+	friend std::ostream& operator<<(std::ostream& out, const AbstractNode& node);
 	
 public:
-	HistoryTreeNode(HistoryTreeConfig config);
-	HistoryTreeNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start, node_type_t type);
-	virtual ~HistoryTreeNode();
+	typedef std::tr1::shared_ptr<AbstractNode> SharedPtr;
+	typedef std::tr1::shared_ptr<const AbstractNode> ConstSharedPtr;
+
+	AbstractNode(HistoryTreeConfig config);
+	AbstractNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start, node_type_t type);
+	virtual ~AbstractNode();
 	std::string toString(void) const;
 	virtual std::string getInfos(void) const = 0;
-	void writeInfoFromNode(std::vector<IntervalSharedPtr>& intervals, timestamp_t timestamp) const;
+	void writeInfoFromNode(std::vector<AbstractInterval::SharedPtr>& intervals, timestamp_t timestamp) const;
 	void serialize(uint8_t* buf);
 	void serialize(std::ostream& os);
 	void unserialize(std::istream& is, const IntervalCreator& ic);
 	virtual void unserializeSpecificHeader(std::istream& is) = 0;
 	virtual void serializeSpecificHeader(uint8_t* buf) const = 0;
 	virtual unsigned int getSpecificHeaderSize(void) const = 0;
-	void addInterval(IntervalSharedPtr) throw(TimeRangeEx);
+	void addInterval(AbstractInterval::SharedPtr) throw(TimeRangeEx);
 	void close(timestamp_t endtime);
-	IntervalSharedPtr getRelevantInterval(timestamp_t timestamp, attribute_t key) const;
+	AbstractInterval::SharedPtr getRelevantInterval(timestamp_t timestamp, attribute_t key) const;
 	IntervalContainer::const_iterator getStartIndexFor(timestamp_t timestamp) const;
 	unsigned int getFreeSpace() const;
 	unsigned int getTotalHeaderSize() const;
@@ -117,4 +114,4 @@ protected:
 	int getDataSectionEndOffset() const;
 };
 
-#endif // _HISTORYTREENODE_HPP
+#endif // _ABSTRACTNODE_HPP

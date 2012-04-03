@@ -21,8 +21,8 @@
 #include <ostream>
 #include <cstring>
 
-#include "HistoryTreeLeafNode.hpp"
-#include "HistoryTreeNode.hpp"
+#include "LeafNode.hpp"
+#include "AbstractNode.hpp"
 #include "IntervalCreator.hpp"
 #include "basic_types.h"
 #include "fixed_config.h"
@@ -30,20 +30,20 @@
 using namespace std;
 using namespace std::tr1;
 
-const unsigned int HistoryTreeLeafNode::HEADER_SIZE = 0;
+const unsigned int LeafNode::HEADER_SIZE = 0;
 
-HistoryTreeLeafNode::HistoryTreeLeafNode(HistoryTreeConfig config)
-: HistoryTreeNode(config) {
+LeafNode::LeafNode(HistoryTreeConfig config)
+: AbstractNode(config) {
 }
 
-HistoryTreeLeafNode::HistoryTreeLeafNode(HistoryTreeConfig config, seq_number_t seqNumber,
+LeafNode::LeafNode(HistoryTreeConfig config, seq_number_t seqNumber,
 seq_number_t parentSeqNumber, timestamp_t start)
-: HistoryTreeNode(config, seqNumber, parentSeqNumber, start, NT_LEAF) {
+: AbstractNode(config, seqNumber, parentSeqNumber, start, NT_LEAF) {
 }
 
-std::string HistoryTreeLeafNode::getInfos(void) const {
+std::string LeafNode::getInfos(void) const {
 	return "";
 }
 
-void HistoryTreeLeafNode::unserializeSpecificHeader(std::istream& is) {
+void LeafNode::unserializeSpecificHeader(std::istream& is) {
 }

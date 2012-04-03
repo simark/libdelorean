@@ -23,10 +23,10 @@
 
 #include "AbstractHistoryTree.hpp"
 #include "HistoryTreeConfig.hpp"
-#include "intervals/Interval.hpp"
-#include "HistoryTreeNode.hpp"
-#include "HistoryTreeCoreNode.hpp"
-#include "HistoryTreeLeafNode.hpp"
+#include "intervals/AbstractInterval.hpp"
+#include "AbstractNode.hpp"
+#include "CoreNode.hpp"
+#include "LeafNode.hpp"
 #include "ex/TimeRangeEx.hpp"
 #include "basic_types.h"
 
@@ -40,24 +40,24 @@ public:
 		this->close(this->_end);
 	}
 	void close(timestamp_t end);
-	void addInterval(IntervalSharedPtr interval) throw(TimeRangeEx);
-	OutHistoryTree& operator<<(IntervalSharedPtr interval) throw(TimeRangeEx);
+	void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
+	OutHistoryTree& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
 	~OutHistoryTree();
 	
 	void setCustomData(const char* buffer, size_t length);
 
 protected:
-	void tryInsertAtNode(IntervalSharedPtr interval, unsigned int index);
+	void tryInsertAtNode(AbstractInterval::SharedPtr interval, unsigned int index);
 	void addSiblingNode(unsigned int index);
 	void initEmptyTree(void);
 	void addNewRootNode(void);
 	void openStream(void);
 	void closeStream(void);
 	void serializeHeader(void);
-	void serializeNode(HistoryTreeNodeSharedPtr node);
+	void serializeNode(AbstractNode::SharedPtr node);
 	void incNodeCount(timestamp_t new_start);
-	HistoryTreeCoreNodeSharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
-	HistoryTreeLeafNodeSharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
+	CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
+	LeafNode::SharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
 	void writeCustomData();
 
 private:

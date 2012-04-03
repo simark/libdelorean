@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "Interval.hpp"
+#include "AbstractInterval.hpp"
 #include "StringInterval.hpp"
 #include "StringIntervalFactory.hpp"
 
-IntervalSharedPtr StringIntervalFactory::create(void) const {
-	IntervalSharedPtr interval(new StringInterval());
+AbstractInterval::SharedPtr StringIntervalFactory::create(void) const {
+	AbstractInterval::SharedPtr interval(new StringInterval());
 	
 	return interval;
 }

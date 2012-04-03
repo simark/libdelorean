@@ -23,8 +23,8 @@
 #include <fstream>
 
 #include "HistoryTreeConfig.hpp"
-#include "HistoryTreeNode.hpp"
-#include "intervals/Interval.hpp"
+#include "AbstractNode.hpp"
+#include "intervals/AbstractInterval.hpp"
 #include "basic_types.h"
 
 class AbstractHistoryTree
@@ -62,7 +62,7 @@ public:
 
 protected:
 	bool checkValidTime(timestamp_t timestamp) const;
-	bool nodeHasChildren(ConstHistoryTreeNodeSharedPtr node) const;
+	bool nodeHasChildren(AbstractNode::ConstSharedPtr node) const;
 	unsigned int filePosFromSeq(seq_number_t seq) {
 		return this->getHeaderSize() + seq * this->_config._blockSize;
 	}
@@ -74,7 +74,7 @@ protected:
 	bool _opened;
 	timestamp_t _end;
 	unsigned int _node_count;
-	std::vector<HistoryTreeNodeSharedPtr> _latest_branch;
+	std::vector<AbstractNode::SharedPtr> _latest_branch;
 	mutable std::fstream _stream;
 };
 

@@ -24,24 +24,24 @@
 #include <map>
 
 #include "../basic_types.h"
-#include "Interval.hpp"
+#include "AbstractInterval.hpp"
 #include "IntInterval.hpp"
 
 using namespace std;
 
-const unsigned int Interval::HEADER_SIZE = (
+const unsigned int AbstractInterval::HEADER_SIZE = (
 	2 * sizeof(timestamp_t) +	// start/end
 	sizeof(attribute_t) +		// attribute
 	sizeof(interval_type_t) +	// interval type
 	sizeof(uint32_t)		// value/variable section pointer
 );
 
-Interval::Interval(timestamp_t start, timestamp_t end, attribute_t attribute, interval_type_t type)
+AbstractInterval::AbstractInterval(timestamp_t start, timestamp_t end, attribute_t attribute, interval_type_t type)
 : _start(start), _end(end), _attribute(attribute), _type(type)
 {
 }
 
-std::string Interval::toString(void) const
+std::string AbstractInterval::toString(void) const
 {
 	map<uint8_t, string> types;
 	types.insert(make_pair(SIT_INT32, "int32"));
@@ -64,18 +64,18 @@ std::string Interval::toString(void) const
 	return oss.str();
 }
 
-bool Interval::intersects(timestamp_t ts) const {
+bool AbstractInterval::intersects(timestamp_t ts) const {
 	return this->_start <= ts && this->_end >= ts;
 }
 
-ostream& operator<<(ostream& out, Interval const& intr)
+ostream& operator<<(ostream& out, AbstractInterval const& intr)
 {
 	out << intr.toString();
 	
 	return out;
 }
 
-void Interval::serialize(uint8_t* var_ptr, uint8_t* head_ptr) {
+void AbstractInterval::serialize(uint8_t* var_ptr, uint8_t* head_ptr) {
 	// serialize header
 	memcpy(head_ptr, &this->_start, sizeof(timestamp_t));
 	head_ptr += sizeof(timestamp_t);
@@ -90,7 +90,7 @@ void Interval::serialize(uint8_t* var_ptr, uint8_t* head_ptr) {
 	this->serializeValues(var_ptr, head_ptr);
 }
 
-unsigned int Interval::unserialize(uint8_t* var_ptr, uint8_t* head_ptr) {
+unsigned int AbstractInterval::unserialize(uint8_t* var_ptr, uint8_t* head_ptr) {
 	// unserialize header
 	memcpy(&this->_start, head_ptr, sizeof(timestamp_t));
 	head_ptr += sizeof(timestamp_t);
@@ -108,32 +108,32 @@ unsigned int Interval::unserialize(uint8_t* var_ptr, uint8_t* head_ptr) {
 	return this->unserializeValues(var_ptr, head_ptr);
 }
 
-bool Interval::operator==(const Interval& other)
+bool AbstractInterval::operator==(const AbstractInterval& other)
 {
 	return this->_end == other._end;
 }
 
-bool Interval::operator<(const Interval& other)
+bool AbstractInterval::operator<(const AbstractInterval& other)
 {
 	return this->_end < other._end;
 }
 
-bool Interval::operator<=(const Interval& other)
+bool AbstractInterval::operator<=(const AbstractInterval& other)
 {
 	return this->_end <= other._end;
 }
 
-bool Interval::operator!=(const Interval& other)
+bool AbstractInterval::operator!=(const AbstractInterval& other)
 {
 	return this->_end != other._end;
 }
 
-bool Interval::operator>(const Interval& other)
+bool AbstractInterval::operator>(const AbstractInterval& other)
 {
 	return this->_end > other._end;
 }
 
-bool Interval::operator>=(const Interval& other)
+bool AbstractInterval::operator>=(const AbstractInterval& other)
 {
 	return this->_end >= other._end;
 }

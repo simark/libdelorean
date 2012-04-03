@@ -25,12 +25,12 @@
 using namespace std;
 
 StringInterval::StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, string value)
-: Interval(start, end, attribute, SIT_STRING), _value(value)
+: AbstractInterval(start, end, attribute, SIT_STRING), _value(value)
 {
 }
 
 StringInterval::StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, const char* value)
-: Interval(start, end, attribute, SIT_STRING), _value(value)
+: AbstractInterval(start, end, attribute, SIT_STRING), _value(value)
 {
 }
 
@@ -64,6 +64,6 @@ unsigned int StringInterval::getVariableValueSize(void) const {
 	return sizeof(uint32_t) + _value.size();
 }
 
-Interval* StringInterval::clone(void) const{
+AbstractInterval* StringInterval::clone(void) const{
 	return new StringInterval(*this);
 }
