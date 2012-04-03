@@ -37,7 +37,8 @@ class TreeTest : public CppUnit::TestFixture
 	
 	CPPUNIT_TEST( testWrite );
 	CPPUNIT_TEST( testRead );
-	//CPPUNIT_TEST( testInexistentFile );
+	CPPUNIT_TEST( testInexistentFile );
+	CPPUNIT_TEST( testBadExistingFile );
 	
 	CPPUNIT_TEST_SUITE_END();
 	
@@ -55,6 +56,10 @@ private:
 	
 	std::multiset<Interval::SharedPtr> intervals;
 	
+	/**
+	 * Compare 2 intervals' HEADERS only. The values are not compared.
+	 * 
+	 */ 
 	bool compare(Interval::SharedPtr i1, Interval::SharedPtr i2)
 	{
 		if(i1->getStart() == i2->getStart() && i1->getEnd() == i2->getEnd() && i1->getAttribute() == i2->getAttribute() && i1->getType() == i2->getType())
@@ -64,32 +69,42 @@ private:
 		return false;
 	}
 	
+	/**
+	 * Tests whether a given queryResult corresponds to the expected results
+	 * 
+	 */ 
 	bool verify(std::vector<Interval::SharedPtr> queryResult, timestamp_t timestamp)
 	{
+		// Construct the expected result vector
 		std::vector<std::pair<Interval::SharedPtr, bool> > expected;
-		std::vector<bool> correct;
 		for(std::multiset<Interval::SharedPtr>::const_iterator it = intervals.begin(); it != intervals.end(); it++)
 		{
-			if((*it)->getStart() >= timestamp && (*it)->getEnd() <= timestamp)
+			if((*it)->getStart() <= timestamp && (*it)->getEnd() >= timestamp)
 			{
 				expected.push_back(std::make_pair(*it, false));
 			}
 		}
 		
+		// Find each query result inside the expected result vector
 		for(std::vector<Interval::SharedPtr>::const_iterator it = queryResult.begin(); it != queryResult.end(); it++)
 		{
 			if (*it != 0)
 			{
+				bool found = false;
 				for(std::vector<std::pair<Interval::SharedPtr, bool> >::iterator it2 = expected.begin(); it2 != expected.end(); it2++)
 				{
+					// We have found the query result inside the expected result, mark it as such
 					if(compare(it2->first, *it))
 					{
 						it2->second = true;
+						found = true;
 					}
 				}
+				if (!found) return false;
 			}
 		}
 		
+		// Every expected result should have been found
 		for(std::vector<std::pair<Interval::SharedPtr, bool> >::const_iterator it = expected.begin(); it != expected.end(); it++)
 		{
 			if (it->second == false)
@@ -136,10 +151,10 @@ public:
 		oht->addInterval(interval1);
 		oht->addInterval(interval2);
 		oht->addInterval(interval3);
-		//oht->addInterval(interval4);
-		//oht->addInterval(interval5);
+		oht->addInterval(interval4);
+		oht->addInterval(interval5);
 		
-		oht->close(15);
+		oht->close();
 	}
 	
 	void testRead()
@@ -157,17 +172,19 @@ public:
 		std::vector< IntervalSharedPtr > queryResult;
 		
 		
-		for (timestamp_t i = 0; i < 8; i++)
+		for (timestamp_t i = 0; i < 14; i++)
 		{
 			try{
 				queryResult = iht->query(i);
 			}catch(TimeRangeEx& ex){
-				CPPUNIT_FAIL("This is not possible!");
+				CPPUNIT_FAIL("Reading inside bounds resulted in out-of-bound error");
 			}catch(...){
-				CPPUNIT_FAIL("Something very wrong happened");
+				CPPUNIT_FAIL("Critical error during read");
 			}
 			CPPUNIT_ASSERT(verify(queryResult, i));
 		}
+		CPPUNIT_ASSERT_THROW(iht->query(15), TimeRangeEx);
+		CPPUNIT_ASSERT_THROW(iht->query(-1), TimeRangeEx);
 	}
 	
 	void testInexistentFile()
@@ -207,12 +224,14 @@ public:
 	
 	void testBadExistingFile()
 	{
+		fstream f("./o.ht");
+		f.seekp(0);
+		f.write("problem?", 8);
+		f.close();
 		
-	}
-	
-	void testHeader()
-	{
-		
+		HistoryTreeConfig iConfig("./o.ht", 128, 3, 0);
+		iht->setConfig(iConfig);
+		CPPUNIT_ASSERT_THROW(iht->open(), InvalidFormatEx);
 	}
 	
 };
