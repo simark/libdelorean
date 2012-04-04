@@ -15,6 +15,7 @@ SRC = \
 	AbstractThreadedHistoryTree.cpp \
 	ThreadedInHistoryTree.cpp \
 	ThreadedOutHistoryTree.cpp \
+	ThreadedHistoryTree.cpp \
 	AbstractNode.cpp \
 	CoreNode.cpp \
 	LeafNode.cpp \
@@ -28,6 +29,7 @@ H_SRC = \
 	AbstractThreadedHistoryTree.hpp \
 	ThreadedInHistoryTree.hpp \
 	ThreadedOutHistoryTree.hpp \
+	ThreadedHistoryTree.hpp \
 	AbstractNode.hpp \
 	CoreNode.hpp \
 	LeafNode.hpp \

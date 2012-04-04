@@ -28,6 +28,7 @@
 class HistoryTree : public InHistoryTree, public OutHistoryTree
 {
 public:
+	HistoryTree();
 	HistoryTree(HistoryTreeConfig config);
 	virtual ~HistoryTree();
 	

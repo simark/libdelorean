@@ -15,6 +15,7 @@
 #include <HistoryTree.hpp>
 #include <ThreadedInHistoryTree.hpp>
 #include <ThreadedOutHistoryTree.hpp>
+#include <ThreadedHistoryTree.hpp>
 #undef protected
 #undef private
 
@@ -213,7 +214,7 @@ public:
 		
 		
 		HistoryTreeConfig ioConfig("./io.ht", 128, 3, 0);
-		iht->setConfig(ioConfig);
+		ht->setConfig(ioConfig);
 		try{
 			ht->open();
 		}catch(InvalidFormatEx& ex){

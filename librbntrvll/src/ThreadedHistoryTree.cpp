@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "HistoryTree.hpp"
+#include "ThreadedHistoryTree.hpp"
 #include "CoreNode.hpp"
 #include "ex/TimeRangeEx.hpp"
 #include "ex/IOEx.hpp"
@@ -26,13 +26,20 @@
 
 using namespace std;
 
+ThreadedHistoryTree::ThreadedHistoryTree()
+:AbstractHistoryTree(), HistoryTree(),
+ThreadedInHistoryTree(), ThreadedOutHistoryTree()
+{
+}
+
 /**
  * Create a new HistoryTree using a configuration
  * 
  * @param config
  */
 ThreadedHistoryTree::ThreadedHistoryTree(HistoryTreeConfig config)
-:AbstractHistoryTree(config), InHistoryTree(config), OutHistoryTree(config)
+:AbstractHistoryTree(config), HistoryTree(config),
+ThreadedInHistoryTree(config), ThreadedOutHistoryTree(config)
 {
 }
 
@@ -52,22 +59,8 @@ ThreadedHistoryTree::~ThreadedHistoryTree()
  */
 void ThreadedHistoryTree::open()
 {
-	// is this history tree already opened?
-	if (this->_opened) {
-		throw IOEx("This tree is already opened");
-	}
-	
-	try{
-		open(APPEND);
-	}catch(InvalidFormatEx& ex){
-		throw;
-	}catch(IOEx& ex){
-		try{
-			open(TRUNCATE);
-		}catch(IOEx& ex){
-			throw;
-		}
-	}
+	HistoryTree::open();
+	this->startThread();
 }
 
 /**
@@ -85,7 +78,7 @@ void ThreadedHistoryTree::open()
  */
 void ThreadedHistoryTree::open(OpenMode mode)
 {	
-	HistoryTree::open();
+	HistoryTree::open(mode);
 	this->startThread();
 }
 
