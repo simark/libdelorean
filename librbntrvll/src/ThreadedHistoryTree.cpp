@@ -31,12 +31,12 @@ using namespace std;
  * 
  * @param config
  */
-HistoryTree::HistoryTree(HistoryTreeConfig config)
+ThreadedHistoryTree::ThreadedHistoryTree(HistoryTreeConfig config)
 :AbstractHistoryTree(config), InHistoryTree(config), OutHistoryTree(config)
 {
 }
 
-HistoryTree::~HistoryTree()
+ThreadedHistoryTree::~ThreadedHistoryTree()
 {
 }
 
@@ -50,7 +50,7 @@ HistoryTree::~HistoryTree()
  * @throw IOEx 
  * @throw InvalidFormatEx
  */
-void HistoryTree::open()
+void ThreadedHistoryTree::open()
 {
 	// is this history tree already opened?
 	if (this->_opened) {
@@ -83,69 +83,10 @@ void HistoryTree::open()
  * @param mode either APPEND (keep existing file) or TRUNCATE (replace existing file)
  * @throw IOEx
  */
-void HistoryTree::open(OpenMode mode)
+void ThreadedHistoryTree::open(OpenMode mode)
 {	
-	// is this history tree already opened?
-	if (this->_opened) {
-		throw IOEx("This tree is already opened");
-	}
-	
-	if(mode == TRUNCATE){
-		// open stream
-		this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary | fstream::trunc);
-		
-		// check for open errors
-		if (!this->_stream) {
-			throw IOEx("Unable to open file");
-		}
-		initEmptyTree();
-	
-		// update internal status
-		this->_opened = true;
-		
-	}else if (mode == APPEND){
-		// open stream
-		this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary);
-		
-		// check for open errors
-		if (!this->_stream) {
-			throw IOEx("Unable to open file");
-		}
-		
-		// check if empty file
-		this->_stream.seekg(ios_base::end);
-		if (this->_stream.tellg() == 0){
-			this->_stream.close();
-			throw IOEx("This file is empty");
-		}
-		
-		
-		try{
-			// unserialize tree header
-			this->unserializeHeader();
-		}catch(InvalidFormatEx& ex){	
-			this->_stream.close();		
-			throw;
-		}catch(IOEx& ex){
-			this->_stream.close();
-			throw;
-		}
-		//We read the header correctly, init the tree
-		
-		// store latest branch in memory
-		this->buildLatestBranch();
-		
-		// The user could not possibly know the start and end times of the tree
-		// Set it to the correct value using the root node
-		_config._treeStart = _latest_branch[0]->getStart();
-		_end = _latest_branch[0]->getEnd();
-		
-		// update internal status
-		this->_opened = true;
-		
-	}else{
-		assert(false);
-	}
+	HistoryTree::open();
+	this->startThread();
 }
 
 /**
@@ -156,12 +97,12 @@ void HistoryTree::open(OpenMode mode)
  * @throws TimeRangeException 
  * 
  */
-void HistoryTree::close(timestamp_t end)
+void ThreadedHistoryTree::close(timestamp_t end)
 {
-	OutHistoryTree::close(end);
+	ThreadedOutHistoryTree::close(end);
 }
 
-void HistoryTree::close(void)
+void ThreadedHistoryTree::close(void)
 {
 	close(getEnd());
 }

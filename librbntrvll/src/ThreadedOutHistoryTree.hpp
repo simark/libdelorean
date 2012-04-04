@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _OUTHISTORYTREE_HPP
-#define _OUTHISTORYTREE_HPP
+#ifndef _THREADEDOUTHISTORYTREE_HPP
+#define _THREADEDOUTHISTORYTREE_HPP
 
 #include <vector>
 
-#include "AbstractHistoryTree.hpp"
+#include "AbstractThreadedHistoryTree.hpp"
+#include "OutHistoryTree.hpp"
 #include "HistoryTreeConfig.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "AbstractNode.hpp"
@@ -30,38 +31,33 @@
 #include "ex/TimeRangeEx.hpp"
 #include "basic_types.h"
 
-class OutHistoryTree : virtual public AbstractHistoryTree
+#include <queue>
+#include <boost/thread/thread.hpp>
+
+class ThreadedOutHistoryTree : virtual public OutHistoryTree, virtual public AbstractThreadedHistoryTree
 {
 public:
-	OutHistoryTree();
-	OutHistoryTree(HistoryTreeConfig config);
+	ThreadedOutHistoryTree();
+	ThreadedOutHistoryTree(HistoryTreeConfig config);
 	virtual void open();
-	void close(void) {
-		this->close(this->_end);
-	}
 	virtual void close(timestamp_t end);
 	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
-	OutHistoryTree& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
-	~OutHistoryTree();
+
+protected:	
+	void addSiblingNode(unsigned int index);
+	void initEmptyTree(void);
+	void addNewRootNode(void);
 	
-	void setCustomData(const char* buffer, size_t length);
-
-protected:
-	void tryInsertAtNode(AbstractInterval::SharedPtr interval, unsigned int index);
-	virtual void addSiblingNode(unsigned int index);
-	virtual void initEmptyTree(void);
-	virtual void addNewRootNode(void);
-	void openStream(void);
-	void closeStream(void);
-	void serializeHeader(void);
-	void serializeNode(AbstractNode::SharedPtr node);
-	void incNodeCount(timestamp_t new_start);
-	CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
-	LeafNode::SharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
-	void writeCustomData();
-
+	void manageInsert(void);
+	void startThread(void);
+	void stopThread(void);
+	
+	std::queue<AbstractInterval::SharedPtr> _insertQueue;
+	boost::mutex _insertQueue_mutex;
+	boost::thread _insertThread;
+	boost::condition_variable _insertConditionVariable;
 private:
 
 };
 
-#endif // _OUTHISTORYTREE_HPP
+#endif // _THREADEDOUTHISTORYTREE_HPP

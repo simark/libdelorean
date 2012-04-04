@@ -13,6 +13,8 @@
 #include <InHistoryTree.hpp>
 #include <OutHistoryTree.hpp>
 #include <HistoryTree.hpp>
+#include <ThreadedInHistoryTree.hpp>
+#include <ThreadedOutHistoryTree.hpp>
 #undef protected
 #undef private
 
@@ -217,7 +219,6 @@ public:
 		}catch(InvalidFormatEx& ex){
 			CPPUNIT_FAIL("Invalid header");
 		}catch(IOEx& ex){
-			std::cerr << "2" << ex.what();
 			CPPUNIT_FAIL("Could not open file for writing");
 		}
 	}

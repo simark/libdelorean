@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _HISTORYTREE_HPP
-#define _HISTORYTREE_HPP
+#ifndef _THREADEDHISTORYTREE_HPP
+#define _THREADEDHISTORYTREE_HPP
 
 #include <fstream>
 
-#include "InHistoryTree.hpp"
-#include "OutHistoryTree.hpp"
+#include "HistoryTree.hpp"
+#include "ThreadedInHistoryTree.hpp"
+#include "ThreadedOutHistoryTree.hpp"
 #include "HistoryTreeConfig.hpp"
 
-class HistoryTree : public InHistoryTree, public OutHistoryTree
+class ThreadedHistoryTree : public HistoryTree, public ThreadedInHistoryTree, public ThreadedOutHistoryTree 
 {
 public:
-	HistoryTree(HistoryTreeConfig config);
-	virtual ~HistoryTree();
+	ThreadedHistoryTree();
+	ThreadedHistoryTree(HistoryTreeConfig config);
+	virtual ~ThreadedHistoryTree();
 	
 	virtual void open();
 	virtual void open(OpenMode mode);
@@ -38,4 +40,4 @@ public:
 private:
 };
 
-#endif // _HISTORYTREE_HPP
+#endif // _THREADEDHISTORYTREE_HPP
