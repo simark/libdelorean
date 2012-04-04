@@ -5,6 +5,11 @@
 	<xsl:param name="admon.graphics.path"></xsl:param>
 	<xsl:param name="chunk.section.depth" select="1"></xsl:param>
 	<xsl:param name="section.autolabel" select="1"></xsl:param>
-	<xsl:param name="html.stylesheet" select="'librbrntrvll.css'" />
+	<xsl:template name="user.head.content">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript" src="scripts/jquery.snippet.min.js"></script>
+		<script type="text/javascript" src="scripts/master.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/master.css" />
+	</xsl:template>
 </xsl:stylesheet>
 

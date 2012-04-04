@@ -74,6 +74,13 @@
 						the system state evolution.
 					</para>
 				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">People history</emphasis>: by setting intervals between birth
+						and death of lots of people, e.g. public personalities, we may afterwards query a given date
+						and get all living people at that time.
+					</para>
+				</listitem>
 			</itemizedlist>
 			<para>
 				As you can see, basically anything implying the recording of ordered related events may find
@@ -187,11 +194,72 @@ make install</screen>
 			<para>
 				Here is a basic librbrntrvll class diagram:
 			</para>
-			
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="img/cd_mid.png" />
+				</imageobject>
+			</mediaobject>
 			<para>
-				All classes that you may use are visible on this diagram. It does not show,
-				however, their public methods and how they interact.
+				Classes that you will use are blue on this diagram. The rest shows the internal
+				library architecture, but is not detailed in this documentation. 
 			</para>
+		</section>
+		<section>
+			<title>Minimal example</title>
+			<para>
+				Here's a short yet working example of using librbrntrvll. This demo adds a few simple intervals
+				to an output history tree and then creates the <acronym>HTF</acronym>. The file is then opened
+				and queried for a specific time stamp.
+			</para>
+<programlisting>
+#include &lt;rbrntrvll.hpp&gt;
+
+using namespace rbrntrvll;
+using namespace std;
+
+int main(void) {
+	// create intervals
+	IntInterval::SharedPtr myInt(new IntInterval(4, 49, 1, 384));
+	StringInterval::SharedPtr myString(new StringInterval(3, 102, 1, "Hi there!"));
+	FloatInterval::SharedPtr myFloat(new FloatInterval(67, 300, 2, 1.05946309));
+	
+	// create a basic history tree configuration
+	HistoryTreeConfig config("history_tree_file.htf");
+	
+	// create an output history tree and open the output file
+	OutHistoryTree oht(config);
+	oht.open();
+	
+	// add intervals to the tree
+	oht.addInterval(myInt);
+	oht.addInterval(myString);
+	oht.addInterval(myFloat);
+	
+	// close the tree so the file is written to disk
+	oht.close();
+	
+	// create an input history tree and open the input file
+	InHistoryTree iht(config);
+	iht.open();
+	
+	// create the vector which will contain the query results
+	vector&lt;AbstractInterval::SharedPtr&gt; results;
+	
+	// query the tree for a specific time stamp
+	results = iht.query(25);
+	
+	// list results
+	for (int i = 0; i &lt; results.size(); ++i) {
+		cout &lt;&lt; results[i]->getStringValue() &lt;&lt; endl;
+	}
+	
+	// close the tree
+	iht.close();
+	
+	// done!	
+	return 0;
+}
+</programlisting>
 		</section>
 		<section>
 			<title>Intervals</title>
@@ -206,14 +274,13 @@ make install</screen>
 				intervals. Simple intervals are shipped with this library. Complex ones are defined
 				by you, should you ever need to.
 			</para>
-			
 			<section>
 				<title>Building a simple interval</title>
 				<para>
 					Simple intervals are easy to build: just instanciate one and you're
 					done. Intervals shipped with this library are always named
 					<code>TypeInterval</code>, where <code>Type</code> is the value
-					type. The following is a list of all simple intervals:
+					type. The following is a list of all simple intervals types:
 				</para>
 				<itemizedlist>
 					<listitem>
@@ -244,7 +311,36 @@ make install</screen>
 				</itemizedlist>
 				<para>
 					That's it. If you want something more complex as an interval value, you'll
-					have to
+					have to create your own custom type, but that is covered later in this
+					document.
+				</para>
+				<para>
+					Since the history tree classes only accept <emphasis>shared pointers</emphasis> to
+					intervals in order to add them, it's a better idea to instanciate them like this the
+					first time:
+				</para>
+<programlisting>
+#include &lt;rbrntrvll.hpp&gt;
+
+using namespace rbrntrvll;
+
+...
+
+IntInterval::SharedPtr myInt(new IntInterval(4, 78, 1, -578));
+</programlisting>
+				<para>
+					This means: instanciate a shared pointer to an interval beginning at time 4, ending at time 78, having
+					identifier 1 and containing value/payload -578.
+				</para>
+				<para>
+					The string interval is just as easy to create directly:
+				</para>
+<programlisting>
+StringInterval::SharedPtr myString(new StringInterval(19, 1967, 1, "Hello, World!"));
+</programlisting>
+				<para>
+					As you may have noticed, both intervals share the same ID (1). We will come back later to what this
+					ID field means and when you need it.
 				</para>
 			</section>
 			
