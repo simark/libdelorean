@@ -1,0 +1,81 @@
+body {
+	font-family: Verdana, sans-serif;
+	font-size: 12px;
+}
+.navheader table th {
+	font-size: 24px;
+	color: #FFC929;
+}
+.navheader table a,
+.navfooter table {
+	font-size: 12px;
+}
+a:link,
+a:visited {
+	text-decoration: none;
+	color: #5C85FF;
+}
+a:hover {
+	text-decoration: underline;
+}
+hr {
+	border: 0;
+	width: 95%;
+	height: 2px;
+	color: #B82E00;
+	background: #B82E00;
+	margin: 16px auto 16px auto;
+}
+h2 {
+	font-size: 18px;
+	color: #333;
+	margin: 0px 0px 8px 0px;
+}
+h3.author {
+	font-size: 12px;
+	margin: 0;
+	font-weight: normal;
+}
+h3 {
+	font-size: 16px;
+	color: #444;
+	margin: 0px 0px 8px 0px;
+}
+h4 {
+	font-size: 14px;
+	color: #555;
+	margin: 0px 0px 8px 0px;
+}
+dl, dt, dd {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+div.toc {
+	margin-bottom: 12px;
+}
+div.section {
+	margin-top: 16px;
+}
+div.section p,
+div.section ul,
+pre {
+	margin: 0px 0px 8px 0px;
+}
+pre.screen {
+	background: #e8e8e8;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	margin-left: 16px;
+	padding: 5px;
+	font-size: 11px;
+}
+div.section ul p {
+	margin: 0px 0px 4px 0px;
+}
+acronym {
+	color: #666;
+}
+code {
+	background: #e8e8e8;
+	padding: 0px 2px 0px 2px;
+}
