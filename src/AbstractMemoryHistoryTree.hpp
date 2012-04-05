@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
+ * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -16,27 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _HISTORYTREE_HPP
-#define _HISTORYTREE_HPP
+#ifndef _ABSTRACTMEMORYHISTORYTREE_HPP
+#define _ABSTRACTMEMORYHISTORYTREE_HPP
 
-#include <fstream>
+#include "AbstractHistoryTree.hpp"
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/recursive_mutex.hpp>
+#include <boost/thread/shared_mutex.hpp>
 
-#include "InHistoryTree.hpp"
-#include "OutHistoryTree.hpp"
-#include "HistoryTreeConfig.hpp"
-
-class HistoryTree : public InHistoryTree, public OutHistoryTree
+class AbstractMemoryHistoryTree : virtual public AbstractHistoryTree
 {
 public:
-	HistoryTree();
-	HistoryTree(HistoryTreeConfig config);
-	virtual ~HistoryTree();
+	AbstractMemoryHistoryTree();
+	AbstractMemoryHistoryTree(HistoryTreeConfig config);
 	
-	void open();
-	void open(OpenMode mode);
-	void close(timestamp_t end);
-	void close();
-private:
+protected:
+	mutable boost::shared_mutex _latest_branch_mutex;
+	
+	mutable boost::shared_mutex _nodes_mutex;
+	std::vector<AbstractNode::SharedPtr> _nodes;
 };
 
-#endif // _HISTORYTREE_HPP
+#endif // _ABSTRACTMEMORYINHISTORYTREE_HPP

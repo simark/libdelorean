@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
+ * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
  *
  * This file is part of librbntrvll.
  *
@@ -16,27 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _HISTORYTREE_HPP
-#define _HISTORYTREE_HPP
+#include "AbstractMemoryHistoryTree.hpp"
+#include "CoreNode.hpp"
 
-#include <fstream>
+using namespace std;
+using namespace std::tr1;
 
-#include "InHistoryTree.hpp"
-#include "OutHistoryTree.hpp"
-#include "HistoryTreeConfig.hpp"
+AbstractMemoryHistoryTree::AbstractMemoryHistoryTree()
+: AbstractHistoryTree() {
+}
 
-class HistoryTree : public InHistoryTree, public OutHistoryTree
-{
-public:
-	HistoryTree();
-	HistoryTree(HistoryTreeConfig config);
-	virtual ~HistoryTree();
-	
-	void open();
-	void open(OpenMode mode);
-	void close(timestamp_t end);
-	void close();
-private:
-};
-
-#endif // _HISTORYTREE_HPP
+AbstractMemoryHistoryTree::AbstractMemoryHistoryTree(HistoryTreeConfig config) :
+AbstractHistoryTree(config) {
+}

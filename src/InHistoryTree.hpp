@@ -38,28 +38,29 @@ class InHistoryTree : virtual public AbstractHistoryTree
 public:
 	InHistoryTree();
 	InHistoryTree(HistoryTreeConfig config);
-	void open();
-	void close(void) {
+	virtual void open();
+	virtual void close(void) {
 		this->close(-1);
 	}
-	void close(timestamp_t end);
+	virtual void close(timestamp_t end);
 	IntervalCreator& getIC(void) {
 		return _ic;
 	}
-	AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
-	std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
-	AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
-	void test(void);
+	virtual AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
+	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
+	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
+	virtual void test(void);
 	~InHistoryTree();
 
 protected:
-	void buildLatestBranch(void);
-	void unserializeHeader(void);
+	virtual void buildLatestBranch(void);
+	virtual void unserializeHeader(void);
+	
+	virtual AbstractNode::SharedPtr createNodeFromStream() const;
+	virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
+	virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
 
 private:
-	AbstractNode::SharedPtr createNodeFromStream() const;
-	AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
-	AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
 	seq_number_t _root_seq;
 	IntervalCreator _ic;
 };

@@ -18,6 +18,7 @@
 
 #include <ex/TimeRangeEx.hpp>
 
+using namespace std;
 
 class NodeTest : public CppUnit::TestFixture
 {
@@ -79,7 +80,7 @@ public:
 	}
 	
 	void testProperties()
-	{		
+	{	
 		CPPUNIT_ASSERT(10 == leafNode->getStart());
 		CPPUNIT_ASSERT(5 == coreNode->getStart());
 		

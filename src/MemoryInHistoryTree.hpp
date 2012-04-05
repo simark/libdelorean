@@ -16,50 +16,47 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _OUTHISTORYTREE_HPP
-#define _OUTHISTORYTREE_HPP
+#ifndef _MEMORYINHISTORYTREE_HPP
+#define _MEMORYINHISTORYTREE_HPP
 
 #include <vector>
+#include <fstream>
 
 #include "AbstractHistoryTree.hpp"
 #include "HistoryTreeConfig.hpp"
+#include "InHistoryTree.hpp"
+#include "AbstractMemoryHistoryTree.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "AbstractNode.hpp"
 #include "CoreNode.hpp"
 #include "LeafNode.hpp"
+#include "IntervalCreator.hpp"
 #include "ex/TimeRangeEx.hpp"
+#include "ex/InvalidFormatEx.hpp"
 #include "basic_types.h"
 
-class OutHistoryTree : virtual public AbstractHistoryTree
+class MemoryInHistoryTree : virtual public InHistoryTree, virtual public AbstractMemoryHistoryTree
 {
 public:
-	OutHistoryTree();
-	OutHistoryTree(HistoryTreeConfig config);
+	MemoryInHistoryTree();
+	MemoryInHistoryTree(HistoryTreeConfig config);
 	virtual void open();
 	virtual void close(void) {
-		this->close(this->_end);
+		this->close(-1);
 	}
 	virtual void close(timestamp_t end);
-	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
-	OutHistoryTree& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
-	~OutHistoryTree();
-
+	
+	virtual AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
+	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
+	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
 protected:
-	virtual void tryInsertAtNode(AbstractInterval::SharedPtr interval, unsigned int index);
-	virtual void addSiblingNode(unsigned int index);
-	virtual void initEmptyTree(void);
-	virtual void addNewRootNode(void);
-	void openStream(void);
-	void closeStream(void);
-	void serializeHeader(void);
-	void serializeNode(AbstractNode::SharedPtr node);
-	void incNodeCount(timestamp_t new_start);
-
-	virtual CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
-	virtual LeafNode::SharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
+	virtual AbstractNode::SharedPtr createNodeFromStream() const;
+	virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
+	virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
+	
+	virtual void loadNodes();
 
 private:
-
 };
 
-#endif // _OUTHISTORYTREE_HPP
+#endif // _MEMORYINHISTORYTREE_HPP

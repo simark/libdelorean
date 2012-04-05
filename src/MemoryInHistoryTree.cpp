@@ -22,6 +22,7 @@
 #include <tr1/memory>
 #include <cstdlib>
  
+#include "MemoryInHistoryTree.hpp"
 #include "InHistoryTree.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "HistoryTreeConfig.hpp"
@@ -32,15 +33,20 @@
 #include "fixed_config.h"
 #include <sstream>
 
+#include <boost/thread/locks.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/shared_mutex.hpp>
+
+
 using namespace std;
 using namespace std::tr1;
 
-InHistoryTree::InHistoryTree()
-: AbstractHistoryTree() {
+MemoryInHistoryTree::MemoryInHistoryTree()
+: AbstractHistoryTree() , InHistoryTree(), AbstractMemoryHistoryTree(){
 }
 
-InHistoryTree::InHistoryTree(HistoryTreeConfig config)
-: AbstractHistoryTree(config) {
+MemoryInHistoryTree::MemoryInHistoryTree(HistoryTreeConfig config)
+: AbstractHistoryTree(config), InHistoryTree(config), AbstractMemoryHistoryTree(config) {
 }
 
 /**
@@ -50,7 +56,7 @@ InHistoryTree::InHistoryTree(HistoryTreeConfig config)
  * @throw IOEx if no file, incorrect format, or already open
  * 
  */
-void InHistoryTree::open() {
+void MemoryInHistoryTree::open() {
 	// is this history tree already opened?
 	if (this->_opened) {
 		throw IOEx("This tree is already opened");
@@ -75,6 +81,9 @@ void InHistoryTree::open() {
 		throw;
 	}
 	
+	// load everything in memory
+	this->loadNodes();
+	
 	// store latest branch in memory
 	this->buildLatestBranch();
 	
@@ -83,99 +92,21 @@ void InHistoryTree::open() {
 	_config._treeStart = _latest_branch[0]->getStart();
 	_end = _latest_branch[0]->getEnd();
 	
+	// We no longer need the file for the rest of the process
+	this->_stream.close();
+	
 	// update internal status
 	this->_opened = true;
 }
 
-/**
- * From an existing tree on the disk, rebuild the latest branch.
- * 
- */ 
-void InHistoryTree::buildLatestBranch(void) {
-	assert(this->_node_count > 0);
-	
-	this->_latest_branch.clear();
-	
-	//Read root
-	AbstractNode::SharedPtr node = createNodeFromSeq(this->_root_seq);
-	CoreNode::SharedPtr coreNode = dynamic_pointer_cast<CoreNode>(node);
-	node->reopen();
-	_latest_branch.push_back(node);
-	
-	//Follow the latest branch down
-	while(coreNode != NULL && coreNode->getNbChildren() > 0) {
-		unsigned int nbChildren = coreNode->getNbChildren();
-		seq_number_t nextSeq = coreNode->getChild(nbChildren-1);
-		node = createNodeFromSeq(nextSeq);
-		node->reopen();
-		this->_latest_branch.push_back(node);
-		coreNode = dynamic_pointer_cast<CoreNode>(node);
-	}
-	return;
-}
-
-void InHistoryTree::unserializeHeader(void) {
-	fstream& f = this->_stream;
-	f.exceptions ( fstream::failbit | fstream::badbit );
-	try{
-		// goto beginning
-		f.seekg(0);
-		
-		// verify that this is an history tree file
-		int32_t mn;
-		f.read((char*) &mn, sizeof(int32_t));
-		if (mn != HF_MAGIC_NUMBER) {
-			f.exceptions(fstream::goodbit);
-			ostringstream oss;
-			oss << "Wrong start Bytes. Expected : " << HF_MAGIC_NUMBER << " Got : " << mn;
-			throw InvalidFormatEx(oss.str());
-		}
-		
-		// file version
-		int32_t major, minor;
-		f.read((char*) &major, sizeof(int32_t));
-		f.read((char*) &minor, sizeof(int32_t));
-		if (major != HF_MAJOR || minor != HF_MINOR) {
-			f.exceptions(fstream::goodbit);
-			throw InvalidFormatEx("Unsupported version");
-		}
-		
-		// block size
-		f.read((char*) &this->_config._blockSize, sizeof(int32_t));
-		
-		// max. children
-		f.read((char*) &this->_config._maxChildren, sizeof(int32_t));
-		
-		// node count
-		f.read((char*) &this->_node_count, sizeof(int32_t));
-		
-		// root sequence number
-		f.read((char*) &this->_root_seq, sizeof(int32_t));
-	}catch(fstream::failure& e) {
-		f.clear();
-		f.exceptions(fstream::goodbit);
-		throw IOEx("Error while reading file header");
-	}
-	f.exceptions(fstream::goodbit);
-}
-
-void InHistoryTree::close(timestamp_t end) {	
+void MemoryInHistoryTree::close(timestamp_t end) {	
 	// is this history tree at least opened?
 	if (!this->_opened) {
 		throw IOEx("This tree was not open");
 	}
 	
-	// close stream
-	this->_stream.close();
-	
 	// update internal status
 	this->_opened = false;
-}
-
-InHistoryTree::~InHistoryTree() {
-	if (this->_opened) {
-		this->close();
-	}
 }
 
 /**
@@ -187,7 +118,7 @@ InHistoryTree::~InHistoryTree() {
  * @param t
  * @return The child node intersecting t
  */
-AbstractNode::SharedPtr InHistoryTree::selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const {
+AbstractNode::SharedPtr MemoryInHistoryTree::selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const {
 	assert ( currentNode->getNbChildren() > 0 );
 	int potentialNextSeqNb = currentNode->getChildAtTimestamp(timestamp);
 	
@@ -195,28 +126,20 @@ AbstractNode::SharedPtr InHistoryTree::selectNextChild(CoreNode::SharedPtr curre
 	 * If we didn't, there's a problem. */
 	assert ( potentialNextSeqNb != currentNode->getSequenceNumber() );
 	
-	/* Since this code path is quite performance-critical, avoid iterating
-	 * through the whole latestBranch array if we know for sure the next
-	 * node has to be on disk */
-	if ( currentNode->isDone() ) {
-		return createNodeFromSeq(potentialNextSeqNb);
-	} else {
-		AbstractNode::SharedPtr childNode;
-		childNode = fetchNodeFromLatestBranch(potentialNextSeqNb);
-		if(childNode == 0){
-			childNode = createNodeFromSeq(potentialNextSeqNb);
-		}
-		return childNode;
-	}
+	return createNodeFromSeq(potentialNextSeqNb);
 }
 
-vector<AbstractInterval::SharedPtr> InHistoryTree::query(timestamp_t timestamp) const {
+vector<AbstractInterval::SharedPtr> MemoryInHistoryTree::query(timestamp_t timestamp) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
 	
 	// We start by reading the information in the root node
-	AbstractNode::SharedPtr currentNode = _latest_branch[0];
+	AbstractNode::SharedPtr currentNode;
+	{
+		boost::shared_lock<boost::shared_mutex> l(_latest_branch_mutex);
+		currentNode = _latest_branch[0];
+	}
 	vector<AbstractInterval::SharedPtr> relevantIntervals(1);
 	currentNode->writeInfoFromNode(relevantIntervals, timestamp);
 	
@@ -225,7 +148,6 @@ vector<AbstractInterval::SharedPtr> InHistoryTree::query(timestamp_t timestamp) 
 	// Stop at leaf nodes or if a core node has no children
 	while ( nodeHasChildren(currentNode) ) {
 		CoreNode::SharedPtr coreNode = dynamic_pointer_cast<CoreNode>(currentNode);
-		assert(coreNode != NULL);
 		currentNode = selectNextChild(coreNode, timestamp);
 		currentNode->writeInfoFromNode(relevantIntervals, timestamp);
 	}
@@ -234,12 +156,16 @@ vector<AbstractInterval::SharedPtr> InHistoryTree::query(timestamp_t timestamp) 
 	return relevantIntervals;	
 }
 
-AbstractInterval::SharedPtr InHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
+AbstractInterval::SharedPtr MemoryInHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
 	
-	AbstractNode::SharedPtr currentNode = _latest_branch[0];
+	AbstractNode::SharedPtr currentNode;
+	{
+		boost::shared_lock<boost::shared_mutex> l(_latest_branch_mutex);
+		currentNode = _latest_branch[0];
+	}
 	AbstractInterval::SharedPtr interval = currentNode->getRelevantInterval(timestamp, key);
 	
 	// Follow the branch down until we find the required interval or there are no children left
@@ -256,56 +182,31 @@ AbstractInterval::SharedPtr InHistoryTree::query(timestamp_t timestamp, attribut
 	return interval;
 }
 
-AbstractNode::SharedPtr InHistoryTree::createNodeFromStream() const {
-	fstream& f = this->_stream;
-	unsigned int init_pos = f.tellg();
+/**
+ * It makes no sense to call this method in a memory history tree
+ * @return null pointer
+ */ 
+AbstractNode::SharedPtr MemoryInHistoryTree::createNodeFromStream() const {
 	
-	// node to return
-	AbstractNode::SharedPtr n;
-	
-	// type
-	node_type_t nt;
-	f.read((char*) &nt, sizeof(node_type_t));
-	
-	// create node according to type
-	switch (nt) {
-		case NT_CORE:
-		n.reset(new CoreNode(this->_config));
-		break;
-		
-		case NT_LEAF:
-		n.reset(new LeafNode(this->_config));
-		break;
-		
-		default:
-		throw(UnknownNodeTypeEx(nt));
-		break;
-	}
-	
-	// unserialize the node
-	f.seekg(init_pos);
-	n->unserialize(f, this->_ic);
-	
-	return n;
+	return InHistoryTree::createNodeFromStream();
 }
 
-AbstractNode::SharedPtr InHistoryTree::createNodeFromSeq(seq_number_t seq) const {
+AbstractNode::SharedPtr MemoryInHistoryTree::createNodeFromSeq(seq_number_t seq) const {
+	
+	boost::shared_lock<boost::shared_mutex> l(_nodes_mutex);
+	
 	// make sure everything is okay
 	assert((unsigned int) seq < this->_node_count);
 	
-	// compute where the node begins in file
-	unsigned int offset = this->getHeaderSize() + seq * this->_config._blockSize;
-	
-	// seek there
-	this->_stream.seekg(offset, ios::beg);
-	
 	// get the node
-	return this->createNodeFromStream();
+	return this->_nodes[seq];
 }
 
-AbstractNode::SharedPtr InHistoryTree::fetchNodeFromLatestBranch(seq_number_t seq) const {
+AbstractNode::SharedPtr MemoryInHistoryTree::fetchNodeFromLatestBranch(seq_number_t seq) const {
 
 	std::vector<AbstractNode::SharedPtr>::const_iterator it;
+	
+	boost::shared_lock<boost::shared_mutex> l(_latest_branch_mutex);
 	
 	for (it = _latest_branch.begin(); it != _latest_branch.end(); it++) {
 		if ((*it)->getSequenceNumber() == seq) {
@@ -315,12 +216,22 @@ AbstractNode::SharedPtr InHistoryTree::fetchNodeFromLatestBranch(seq_number_t se
 	return AbstractNode::SharedPtr();
 }
 
-void InHistoryTree::test(void) {
-	for (unsigned int i = 0; i < this->_node_count; ++i) {
-		AbstractNode::SharedPtr node(fetchNodeFromLatestBranch(i));
-		//The node is not in the latest branch, it must be on disk
-		if (node == 0)
-			node = this->createNodeFromSeq(i);
-		cout << *node << endl;
+void MemoryInHistoryTree::loadNodes() {
+	
+	//Not required to acquire mutex since the tree is not yet opened
+	
+	_nodes.clear();
+	// compute where the nodes begin in file
+	unsigned int offset = this->getHeaderSize();
+	
+	for(unsigned int i = 0; i < this->_node_count; ++i){
+		 
+		// seek there
+		this->_stream.seekg(offset, ios::beg);
+		// get the node
+		AbstractNode::SharedPtr node = this->createNodeFromStream();
+		_nodes.push_back(node);
+		 
+		 offset += this->_config._blockSize;
 	}
 }

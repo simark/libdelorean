@@ -13,6 +13,9 @@
 #include <InHistoryTree.hpp>
 #include <OutHistoryTree.hpp>
 #include <HistoryTree.hpp>
+#include <MemoryInHistoryTree.hpp>
+#include <MemoryOutHistoryTree.hpp>
+#include <MemoryHistoryTree.hpp>
 #undef protected
 #undef private
 
@@ -114,12 +117,21 @@ private:
 		
 	}
 	
+	void outputQuery(std::vector<AbstractInterval::SharedPtr> queryResult, timestamp_t timestamp){
+		cout << "Request result at t=" << timestamp << endl;
+		for(std::vector<AbstractInterval::SharedPtr>::const_iterator it = queryResult.begin(); it != queryResult.end(); it++){
+			if(*it != 0){
+				cout << **it << endl;
+			}
+		}
+	}
+	
 public:
 	void setUp()
 	{			
-		oht = new OutHistoryTree(HistoryTreeConfig());
-		iht = new InHistoryTree(HistoryTreeConfig());
-		ht = new HistoryTree(HistoryTreeConfig());
+		oht = new MemoryOutHistoryTree(HistoryTreeConfig());
+		iht = new MemoryInHistoryTree(HistoryTreeConfig());
+		ht = new MemoryHistoryTree(HistoryTreeConfig());
 		
 		interval1.reset(new IntInterval(0,10,5,20));
 		interval2.reset(new StringInterval(5,11,4,"value"));
@@ -144,9 +156,10 @@ public:
 	void testWrite()
 	{
 		delete oht;
-		oht = new OutHistoryTree();
+		oht = new MemoryOutHistoryTree();
 		oht->setConfig(HistoryTreeConfig("./o.ht", 128, 3, 0));
 		oht->open();
+		
 		
 		oht->addInterval(interval1);
 		oht->addInterval(interval2);
@@ -160,7 +173,7 @@ public:
 	void testRead()
 	{
 		delete iht;
-		iht = new InHistoryTree();
+		iht = new MemoryInHistoryTree();
 		iht->setConfig(HistoryTreeConfig("./o.ht", 128, 3, 0));
 		try{
 			iht->open();
@@ -169,13 +182,13 @@ public:
 			CPPUNIT_FAIL("Could not open tree for reading");
 		}
 		
-		std::vector< AbstractInterval::SharedPtr > queryResult;
-		
+		std::vector< AbstractInterval::SharedPtr > queryResult;		
 		
 		for (timestamp_t i = 0; i < 14; i++)
 		{
 			try{
 				queryResult = iht->query(i);
+				//outputQuery(queryResult, i);
 			}catch(TimeRangeEx& ex){
 				CPPUNIT_FAIL("Reading inside bounds resulted in out-of-bound error");
 			}catch(...){
@@ -203,23 +216,22 @@ public:
 		}catch(IOEx& ex){
 			CPPUNIT_FAIL("Could not open file for writing");
 		}
-		oht->close(1);
+		oht->close(1);		
 		
 		HistoryTreeConfig iConfig("./i.ht", 128, 3, 0);
 		iht->setConfig(iConfig);
-		CPPUNIT_ASSERT_THROW(iht->open(), IOEx);
-		
+		CPPUNIT_ASSERT_THROW(iht->open(), IOEx);		
 		
 		HistoryTreeConfig ioConfig("./io.ht", 128, 3, 0);
-		iht->setConfig(ioConfig);
+		ht->setConfig(ioConfig);
 		try{
 			ht->open();
 		}catch(InvalidFormatEx& ex){
 			CPPUNIT_FAIL("Invalid header");
 		}catch(IOEx& ex){
-			std::cerr << "2" << ex.what();
 			CPPUNIT_FAIL("Could not open file for writing");
 		}
+		ht->close();
 	}
 	
 	void testBadExistingFile()

@@ -29,6 +29,8 @@
 #include "basic_types.h"
 #include "ex/NodeFullEx.hpp"
 
+#include <boost/thread/locks.hpp>
+
 using namespace std;
 using namespace std::tr1;
 
@@ -62,6 +64,8 @@ AbstractNode::AbstractNode(HistoryTreeConfig config)
  */
 void AbstractNode::writeInfoFromNode(vector<AbstractInterval::SharedPtr>& intervals, timestamp_t timestamp) const
 {
+	boost::shared_lock<boost::shared_mutex> l(_mutex);
+	
 	if ( _intervals.size() == 0 ) { return; }
 
 	for (IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
@@ -83,6 +87,8 @@ void AbstractNode::writeInfoFromNode(vector<AbstractInterval::SharedPtr>& interv
  */
 void AbstractNode::addInterval(AbstractInterval::SharedPtr newInterval) throw (TimeRangeEx)
 {
+	boost::unique_lock<boost::shared_mutex> l(_mutex);
+	
 	// Just in case, but should be checked before even calling this function
 	assert(newInterval->getTotalSize() <= getFreeSpace());
 	
@@ -105,6 +111,8 @@ void AbstractNode::addInterval(AbstractInterval::SharedPtr newInterval) throw (T
  */
 void AbstractNode::close(timestamp_t endtime)
 {
+	boost::unique_lock<boost::shared_mutex> l(_mutex);
+	
 	assert ( endtime >= _nodeStart );
 	
 	_isDone = true;
@@ -123,7 +131,8 @@ void AbstractNode::close(timestamp_t endtime)
  */
 AbstractInterval::SharedPtr AbstractNode::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
 {
-	assert ( _isDone );
+	boost::shared_lock<boost::shared_mutex> l(_mutex);
+	
 		
 	if ( _intervals.size() == 0 ) { return AbstractInterval::SharedPtr(); }
 	
@@ -143,13 +152,15 @@ AbstractInterval::SharedPtr AbstractNode::getRelevantInterval(timestamp_t timest
  * Since the intervals are ordered by ending time, it is possible to skip
  * the first ones and use an efficient search algorithm to find the first
  * interval that could possibly hold a given timestamp
+ * 
+ * When calling this method, make sure to acquire the _mutex first (shared lock is sufficient)
  *  
  * @param timestamp
  * @return the index of the first interval in _intervals that could hold this timestamp
  */
 IntervalContainer::const_iterator AbstractNode::getStartIndexFor(timestamp_t timestamp) const
-{
-	static AbstractInterval::SharedPtr dummyInterval(new NullInterval(0, 0, 0));
+{	
+	AbstractInterval::SharedPtr dummyInterval(new NullInterval(0, 0, 0));
 	dummyInterval->setEnd(timestamp);
 	IntervalContainer::const_iterator it;	
 	
@@ -173,6 +184,7 @@ unsigned int AbstractNode::getTotalHeaderSize() const
 }
 
 /**
+ * When calling this method, make sure to acquire the _mutex first (shared lock is sufficient)
  * @return The offset, within the node, where the Data (intervals) section ends
  */
 int AbstractNode::getDataSectionEndOffset() const
@@ -182,6 +194,8 @@ int AbstractNode::getDataSectionEndOffset() const
 
 void AbstractNode::serialize(ostream& os)
 {
+	//locking the mutex is not required here as the node cannot be modified further
+	
 	// allocate some byte buffer
 	// TODO: private buffer to avoid new/delete for each block write?
 	const unsigned int bufsz = this->_config._blockSize;
@@ -199,6 +213,8 @@ void AbstractNode::serialize(ostream& os)
 
 void AbstractNode::serialize(uint8_t* buf)
 {
+	//locking the mutex is not required here as the node cannot be modified further
+	
 	// pointer backup
 	uint8_t* bkbuf = buf;
 	
@@ -251,6 +267,8 @@ void AbstractNode::serialize(uint8_t* buf)
 }
 
 void AbstractNode::unserialize(std::istream& is, const IntervalCreator& ic) {
+	//locking the mutex is not required here as the node cannot be modified yet
+	
 	// remember initial position within stream
 	unsigned int init_pos = is.tellg();
 	
@@ -307,6 +325,8 @@ void AbstractNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 }
 
 std::string AbstractNode::toString(void) const {
+	boost::shared_lock<boost::shared_mutex> l(_mutex);
+	
 	ostringstream oss;
 	stringstream endTime;
 	if(_isDone){

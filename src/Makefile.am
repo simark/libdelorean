@@ -5,6 +5,8 @@ librbrntrvll_la_CXXFLAGS = -fPIC -Wall -std=gnu++0x
 librbrntrvll_la_SOURCES = \
 	AbstractHistoryTree.cpp \
 	AbstractHistoryTree.hpp \
+	AbstractMemoryHistoryTree.cpp \
+	AbstractMemoryHistoryTree.hpp \
 	ex/ExistingIntervalTypeEx.cpp \
 	ex/ExistingIntervalTypeEx.hpp \
 	ex/InvalidFormatEx.cpp \
@@ -57,5 +59,11 @@ librbrntrvll_la_SOURCES = \
 	intervals/UIntIntervalFactory.hpp \
 	intervals/UIntInterval.hpp \
 	IPrintable.hpp \
+	MemoryHistoryTree.cpp \
+	MemoryHistoryTree.hpp \
+	MemoryInHistoryTree.cpp \
+	MemoryInHistoryTree.hpp \
+	MemoryOutHistoryTree.cpp \
+	MemoryOutHistoryTree.hpp \
 	OutHistoryTree.cpp \
-	OutHistoryTree.hpp 
+	OutHistoryTree.hpp
