@@ -5,9 +5,9 @@
 # files
 SRC = test.cpp
 TARGET = test
-LIB_PATH = ../../librbntrvll/src
-INC_PATH = $(LIB_PATH)
-LIB = -L$(LIB_PATH) -lrbntrvll
+LIB_PATH = ../../../src/.libs
+INC_PATH = ../../../src/
+LIB = -L$(LIB_PATH) -lrbrntrvll
 
 # automatic
 OBJ = $(SRC:.cpp=.o)
@@ -26,10 +26,6 @@ all: $(TARGET)
 # run target
 run: $(TARGET)
 	@LD_LIBRARY_PATH=$(LIB_PATH) ./test
-	
-# run target
-rundb: $(TARGET)
-	@LD_LIBRARY_PATH=$(LIB_PATH) gdb ./test
 
 # target
 $(TARGET): $(SRC)
