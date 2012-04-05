@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "docbook/dtd/xml/4.3/docbookx.dtd">
+<article>
+	<articleinfo>
+		<title>librbrntrvll documentation</title>
+		<author>
+			<firstname>Philippe</firstname>
+			<surname>Proulx</surname>
+			<email>philippe.proulx@polymtl.ca</email>
+		</author>
+	</articleinfo>
+	
+	<section>
+		<title>Introduction</title>
+		<para>
+			<emphasis>librbrntrvll</emphasis> is a C++ thread-safe library designed to allow the reading and
+			writing of history tree files (<acronym>HTF</acronym>). A history tree file is a tree data structure
+			containing intervals. When writing to a <acronym>HTF</acronym>, you add intervals to it. When
+			reading from a <acronym>HTF</acronym>, you query the tree for a given time stamp and it returns
+			a set of all intervals crossing that time. This way, the <emphasis>state</emphasis> of the
+			underlying system may be easily and rapidly retrieved.
+		</para>
+		<para>
+			This document does not constitute a complete reference for librbrntrvll classes; the
+			Doxygen pages do that.
+		</para>
+		<para>
+			To supplement this documentation, there are simple yet useful examples included in the source
+			code tarball. The test suite, which is also part of the source code tarball, is also a good place
+			to look for the correct usage of the library classes.
+		</para>
+		<section>
+			<title>Applications</title>
+			<para>
+				Although librbrntrvll was initially designed to fulfill the needs of a Linux tracing framework called
+				<ulink url="http://lttng.org/"><application>LTTng</application></ulink>, it can be used for many other
+				applications involving storage of intervals. Please note, however, that the library and its internal
+				mechanisms are optimized for end-time ordered intervals writing. This means that the insertion of
+				interval [23,&nbsp;78] after having already inserted [31,&nbsp;122] is permitted, but suboptimal in terms
+				of both computation time and storage size. This "limitation" is just a consequence of how the
+				interval tree works.
+			</para>
+			<para>
+				Knowing that, here's a brief list of possible applications:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						<emphasis role="bold">Tracing</emphasis>: tracing a system, may it be an
+						operating system or any embedded one, usually involves getting single events
+						as they happen. Those events eventually frame states and thus intervals
+						corresponding to states may be recorded. The <acronym>HTF</acronym> may later be opened and
+						querying a given time stamp allows developers to look at the precise state
+						(known by getting which intervals cross this time stamp) at this given time.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">Digital musical recording</emphasis>: real-time musical recording
+						is possible when musical events arrive in the order they were played. Such events
+						can be <acronym>MIDI</acronym> messages (note on, note off, pitch bend, continuous controller, etc.)
+						carrying a certain payload (what note, velocity, channel/instrument, pitch bend
+						value, etc.). Subsequently (after the recording), the musician can query a
+						time stamp (or a bar) and get the recording state, i.e. what instruments were playing
+						and how.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">System administration</emphasis>: just like a system log records
+						user actions and system events, a system <acronym>HTF</acronym> records intervals
+						between those actions and events. A system log shows all the entries in ascending order;
+						querying a system <acronym>HTF</acronym> at different time stamps shows a global view of
+						the system state evolution.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">People history</emphasis>: by setting intervals between birth
+						and death of lots of people, e.g. public personalities, we may afterwards query a given date
+						and get all living people at that time.
+					</para>
+				</listitem>
+			</itemizedlist>
+			<para>
+				As you can see, basically anything implying the recording of ordered related events may find
+				its application using librbrntrvll. Looking at a list of events is interesting, but getting states
+				out of them is usually more useful for an in-depth analysis. This library is about storing those
+				states as intervals for later use.
+			</para>
+		</section>
+		<section>
+			<title>Getting librbrntrvll</title>
+			<para>
+				librbrntrvll may be downloaded as a source tarball or as various distribution
+				packages from its <ulink url="http://google.com/">official website</ulink>. It can also
+				be git-cloned from its <ulink url="http://git.dorsal.polymtl.ca/~pproulx/?p=librbrntrvll.git">repository</ulink>:
+			</para>
+			<screen>git clone git://git.dorsal.polymtl.ca/~pproulx/librbrntrvll.git</screen>
+		</section>
+		<section>
+			<title>Version history</title>
+			<para>
+				...
+			</para>
+		</section>
+		<section>
+			<title>License</title>
+			<para>
+				The <ulink url="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</ulink> version 3 specifies
+				the terms and conditions of use for librbrntrvll. This should allow any application to <emphasis>use</emphasis>
+				the library regardless of its philosophy (open/closed source).
+			</para>
+		</section>
+		<section>
+			<title>People</title>
+			<para>
+				Alexandre Montplaisir (École Polytechnique de Montréal, Québec)
+				initially designed and developed the idea of this efficient interval recording
+				library. He wrote a Java prototype that evolved in a complete working library. Later on, Philippe Proulx
+				and François Rajotte, also in Montréal, ported the concept to a C++ library, mostly to
+				integrate the feature into <ulink url="http://lttng.org/lttv">LTTV</ulink>.
+			</para>
+			<para>
+				We would also like to thank Simon Marchi and other small contributors whose patches
+				accelerated a lot librbrntrvll's development.
+			</para>
+		</section>
+	</section>
+	<section>
+		<title>Installation</title>
+		<para>
+			This sections covers the library installation process. There are several ways to
+			install the library, that is, if you want it installed. You might also want to build it
+			locally and test it without any installation.
+		</para>
+		<section>
+			<title>Prerequisites</title>
+			<para>
+				librbrntrvll depends on:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						<ulink url="http://www.boost.org/"><application>Boost 1.49.0</application></ulink>
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						some <acronym>POSIX</acronym> features
+					</para>
+				</listitem>
+			</itemizedlist>
+			<para>
+				Of course, if you intend to build the library from scratch, you will also
+				need the <application>g++</application> compiler.
+			</para>
+		</section>
+		<section>
+			<title>Building the library from a source tarball</title>
+			<para>
+				When using a librbrntrvll source tarball, the steps are pretty straightforward:
+			</para>
+<screen>./configure
+make
+make install</screen>
+			<para>
+				Just skip the last command line if you don't want to install the library. In this case,
+				notice the soft link to the compiled shared library is located at
+				<code>src/.libs/librbrntrvll.so</code> from the source root directory.
+			</para>
+		</section>
+		<section>
+			<title>Building the library from the development tree</title>
+			<para>
+				If you want to build librbrntrvll off the latest git tree, you will need
+				libtoolize, a package that's easy to get within most distributions. The process
+				is then:
+			</para>
+			<screen>./bootstrap</screen>
+			<para>
+				This will generate a <code>configure</code> script. From there, build the
+				library as you would normally do from a source tarball.
+			</para>
+		</section>
+	</section>
+	<section>
+		<title>Using librbrntrvll</title>
+		<para>
+			This section documents how to use librbrntrvll. It features simple and more complex examples.
+		</para>
+		<section>
+			<title>Basic class diagram</title>
+			<para>
+				Here is a basic librbrntrvll class diagram:
+			</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="img/cd_mid.png" />
+				</imageobject>
+			</mediaobject>
+			<para>
+				Classes that you will use are blue on this diagram. The rest shows the internal
+				library architecture, but is not detailed in this documentation. 
+			</para>
+		</section>
+		<section>
+			<title>Minimal example</title>
+			<para>
+				Here's a short yet working example of using librbrntrvll. This demo adds a few simple intervals
+				to an output history tree and then creates the <acronym>HTF</acronym>. The file is then opened
+				and queried for a specific time stamp.
+			</para>
+<programlisting>
+#include &lt;rbrntrvll.hpp&gt;
+
+using namespace rbrntrvll;
+using namespace std;
+
+int main(void) {
+	// create intervals
+	IntInterval::SharedPtr myInt(new IntInterval(4, 49, 1, 384));
+	StringInterval::SharedPtr myString(new StringInterval(3, 102, 1, "Hi there!"));
+	FloatInterval::SharedPtr myFloat(new FloatInterval(67, 300, 2, 1.05946309));
+	
+	// create a basic history tree configuration
+	HistoryTreeConfig config("history_tree_file.htf");
+	
+	// create an output history tree and open the output file
+	OutHistoryTree oht(config);
+	oht.open();
+	
+	// add intervals to the tree
+	oht.addInterval(myInt);
+	oht.addInterval(myString);
+	oht.addInterval(myFloat);
+	
+	// close the tree so the file is written to disk
+	oht.close();
+	
+	// create an input history tree and open the input file
+	InHistoryTree iht(config);
+	iht.open();
+	
+	// create the vector which will contain the query results
+	vector&lt;AbstractInterval::SharedPtr&gt; results;
+	
+	// query the tree for a specific time stamp
+	results = iht.query(25);
+	
+	// list results
+	for (int i = 0; i &lt; results.size(); ++i) {
+		cout &lt;&lt; results[i]->getStringValue() &lt;&lt; endl;
+	}
+	
+	// close the tree
+	iht.close();
+	
+	// done!	
+	return 0;
+}
+</programlisting>
+		</section>
+		<section>
+			<title>Intervals</title>
+			<para>
+				History tree files are filled with nodes containing <emphasis>intervals</emphasis>. An interval is
+				a simple concept: it has a beginning time stamp and an ending one, an identifier and
+				a value, or payload. The value may be anything you want, but for convenience sake,
+				a few basic interval types are shipped with the library.
+			</para>
+			<para>
+				This section explains how to create <emphasis>simple</emphasis> and <emphasis>complex</emphasis>
+				intervals. Simple intervals are shipped with this library. Complex ones are defined
+				by you, should you ever need to.
+			</para>
+			<section>
+				<title>Building a simple interval</title>
+				<para>
+					Simple intervals are easy to build: just instanciate one and you're
+					done. Intervals shipped with this library are always named
+					<code>TypeInterval</code>, where <code>Type</code> is the value
+					type. The following is a list of all simple intervals types:
+				</para>
+				<itemizedlist>
+					<listitem>
+						<para>
+							<code>NullInterval</code>: has no value;
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<code>IntInterval</code>: 32-bit signed integer value;
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<code>UIntInterval</code>: 32-bit unsigned integer value;
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<code>FloatInterval</code>: 32-bit floating point number value;
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<code>StringInterval</code>: UTF-8 string.
+						</para>
+					</listitem>
+				</itemizedlist>
+				<para>
+					That's it. If you want something more complex as an interval value, you'll
+					have to create your own custom type, but that is covered later in this
+					document.
+				</para>
+				<para>
+					Since the history tree classes only accept <emphasis>shared pointers</emphasis> to
+					intervals in order to add them, it's a better idea to instanciate them like this the
+					first time:
+				</para>
+<programlisting>
+#include &lt;rbrntrvll.hpp&gt;
+
+using namespace rbrntrvll;
+
+...
+
+IntInterval::SharedPtr myInt(new IntInterval(4, 78, 1, -578));
+</programlisting>
+				<para>
+					This means: instanciate a shared pointer to an interval beginning at time 4, ending at time 78, having
+					identifier 1 and containing value/payload -578.
+				</para>
+				<para>
+					The string interval is just as easy to create directly:
+				</para>
+<programlisting>
+StringInterval::SharedPtr myString(new StringInterval(19, 1967, 1, "Hello, World!"));
+</programlisting>
+				<para>
+					As you may have noticed, both intervals share the same ID (1). We will come back later to what this
+					ID field means and when you need it.
+				</para>
+			</section>
+			
+		</section>
+	</section>
+</article>

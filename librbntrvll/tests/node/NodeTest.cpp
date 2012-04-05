@@ -21,17 +21,15 @@
 
 class NodeTest : public CppUnit::TestFixture
 {
-	CPPUNIT_TEST_SUITE( NodeTest );
-	
-	CPPUNIT_TEST( testProperties );
-	CPPUNIT_TEST( testIntervalInsert );
-	CPPUNIT_TEST( testIntervalSort );
-	CPPUNIT_TEST( testHeaderSize );
-	CPPUNIT_TEST( testFreeSpace );
-	CPPUNIT_TEST( testIntervalSearch );
-	CPPUNIT_TEST( testCoreSerialize );
-	CPPUNIT_TEST( testLeafSerialize );
-	
+	CPPUNIT_TEST_SUITE(NodeTest);
+		CPPUNIT_TEST(testProperties);
+		CPPUNIT_TEST(testIntervalInsert);
+		CPPUNIT_TEST(testIntervalSort);
+		CPPUNIT_TEST(testHeaderSize);
+		CPPUNIT_TEST(testFreeSpace);
+		CPPUNIT_TEST(testIntervalSearch);
+		CPPUNIT_TEST(testCoreSerialize);
+		CPPUNIT_TEST(testLeafSerialize);
 	CPPUNIT_TEST_SUITE_END();
 	
 private:
@@ -242,4 +240,4 @@ public:
 	}	
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( NodeTest );
+CPPUNIT_TEST_SUITE_REGISTRATION(NodeTest);

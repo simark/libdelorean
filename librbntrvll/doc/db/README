@@ -1,0 +1,31 @@
+librbrntrvll documentation
+
+
+PREREQUISITES
+=============
+
+You need the following packages in order to build this documentation:
+
+	* xmlto
+	* docbook
+	* docbook-xml
+	* docbook-xsl
+	* docbook-xsl-doc-html
+
+Additionally, you need those to edit diagrams:
+
+	* dia
+
+
+BUILDING
+========
+
+To build the documentation, just call make:
+
+	$ make
+
+The complete output structure will be in the "out" directory and
+"out/index.html" is the HTML index. To clean it, call
+
+	$ make clean
+
