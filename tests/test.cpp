@@ -5,8 +5,7 @@
 #include <cppunit/TestResultCollector.h>
 #include <cppunit/BriefTestProgressListener.h>
 
-int main( int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	CppUnit::TestResult controller;
 	CppUnit::BriefTestProgressListener l;
 	CppUnit::TextUi::TestRunner runner; 
@@ -16,8 +15,9 @@ int main( int argc, char **argv)
 	/* Add listener to show tests names */
 	controller.addListener(&l);	
 	controller.addListener(&result);
+	
 	/* Add the tests */
-	runner.addTest( registry.makeTest() );
+	runner.addTest(registry.makeTest());
 
 	/* Run the tests */
 	runner.run(controller);

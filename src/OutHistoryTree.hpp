@@ -43,8 +43,6 @@ public:
 	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
 	OutHistoryTree& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
 	~OutHistoryTree();
-	
-	void setCustomData(const char* buffer, size_t length);
 
 protected:
 	void tryInsertAtNode(AbstractInterval::SharedPtr interval, unsigned int index);
@@ -56,9 +54,9 @@ protected:
 	void serializeHeader(void);
 	void serializeNode(AbstractNode::SharedPtr node);
 	void incNodeCount(timestamp_t new_start);
+
 	CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
 	LeafNode::SharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
-	void writeCustomData();
 
 private:
 
