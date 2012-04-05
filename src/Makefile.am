@@ -21,14 +21,14 @@ librbrntrvll_la_SOURCES = \
 	ex/UnknownNodeTypeEx.hpp \
 	HistoryTreeConfig.cpp \
 	HistoryTreeConfig.hpp \
-	HistoryTreeCoreNode.cpp \
-	HistoryTreeCoreNode.hpp \
+	CoreNode.cpp \
+	CoreNode.hpp \
 	HistoryTree.cpp \
 	HistoryTree.hpp \
-	HistoryTreeLeafNode.cpp \
-	HistoryTreeLeafNode.hpp \
-	HistoryTreeNode.cpp \
-	HistoryTreeNode.hpp \
+	LeafNode.cpp \
+	LeafNode.hpp \
+	AbstractNode.cpp \
+	AbstractNode.hpp \
 	InHistoryTree.cpp \
 	InHistoryTree.hpp \
 	IntervalCreator.cpp \
@@ -38,8 +38,8 @@ librbrntrvll_la_SOURCES = \
 	intervals/FloatIntervalFactory.hpp \
 	intervals/FloatInterval.hpp \
 	intervals/IIntervalFactory.hpp \
-	intervals/Interval.cpp \
-	intervals/Interval.hpp \
+	intervals/AbstractInterval.cpp \
+	intervals/AbstractInterval.hpp \
 	intervals/IntInterval.cpp \
 	intervals/IntIntervalFactory.cpp \
 	intervals/IntIntervalFactory.hpp \
