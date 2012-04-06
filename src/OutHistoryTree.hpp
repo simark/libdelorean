@@ -41,7 +41,7 @@ public:
 	}
 	virtual void close(timestamp_t end);
 	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
-	OutHistoryTree& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
+	virtual OutHistoryTree& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
 	~OutHistoryTree();
 
 protected:

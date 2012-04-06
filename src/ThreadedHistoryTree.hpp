@@ -37,6 +37,12 @@ public:
 	virtual void open(OpenMode mode);
 	virtual void close(timestamp_t end);
 	virtual void close();
+	
+	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
+	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
+	
+	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
+	//virtual OutHistoryTree& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
 private:
 };
 

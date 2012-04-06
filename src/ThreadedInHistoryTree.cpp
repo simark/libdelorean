@@ -139,7 +139,7 @@ AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromStream() const {
 AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromSeq(seq_number_t seq) const {
 	// make sure everything is okay
 	assert((unsigned int) seq < this->_node_count);
-	
+		
 	// compute where the node begins in file
 	unsigned int offset = this->getHeaderSize() + seq * this->_config._blockSize;
 	

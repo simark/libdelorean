@@ -99,3 +99,24 @@ void ThreadedHistoryTree::close(void)
 {
 	close(getEnd());
 }
+
+vector<AbstractInterval::SharedPtr> ThreadedHistoryTree::query(timestamp_t timestamp) const {
+	return ThreadedInHistoryTree::query(timestamp);	
+}
+
+AbstractInterval::SharedPtr ThreadedHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
+	return ThreadedInHistoryTree::query(timestamp, key);
+}
+
+void ThreadedHistoryTree::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
+	ThreadedOutHistoryTree::addInterval(interval);
+}
+/*
+OutHistoryTree& ThreadedHistoryTree::operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
+	this->addInterval(interval);
+	
+	return *(ThreadedOutHistoryTree*)this;
+}
+
+
+*/

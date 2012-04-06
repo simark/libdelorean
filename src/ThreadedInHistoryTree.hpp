@@ -41,13 +41,13 @@ public:
 	ThreadedInHistoryTree();
 	ThreadedInHistoryTree(HistoryTreeConfig config);
 	
-	std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
-	AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
+	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
+	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
 
 private:
-	AbstractNode::SharedPtr createNodeFromStream() const;
-	AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
-	AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
+	virtual AbstractNode::SharedPtr createNodeFromStream() const;
+	virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
+	virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
 };
 
 #endif // _THREADEDINHISTORYTREE_HPP
