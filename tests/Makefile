@@ -34,5 +34,5 @@ run: test
 
 test: $(SRC) $(TEST_SRC) $(RUN_SRC)
 
-	g++  -I./interval/ $(CFLAGS) -o test $(TEST_SRC) $(RUN_SRC) $(LIB) -lcppunit
+	g++  -I./interval/ $(CFLAGS) -o test $(TEST_SRC) $(RUN_SRC) $(LIB) -lcppunit -lboost_thread
 

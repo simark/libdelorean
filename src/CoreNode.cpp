@@ -102,10 +102,7 @@ seq_number_t CoreNode::getChildAtTimestamp(timestamp_t timestamp) const
 }
 
 void CoreNode::serializeSpecificHeader(uint8_t* buf) const
-{	
-	// buffer pointer backup
-	uint8_t* bkbuf = buf;
-	
+{		
 	// extended sequence number (not used)
 	seq_number_t extended = -1;
 	memcpy(buf, &extended, sizeof(seq_number_t));

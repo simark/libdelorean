@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _OUTHISTORYTREE_HPP
-#define _OUTHISTORYTREE_HPP
+#ifndef _MEMORYOUTHISTORYTREE_HPP
+#define _MEMORYOUTHISTORYTREE_HPP
 
 #include <vector>
 
-#include "AbstractHistoryTree.hpp"
+#include "AbstractMemoryHistoryTree.hpp"
+#include "OutHistoryTree.hpp"
 #include "HistoryTreeConfig.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "AbstractNode.hpp"
@@ -30,36 +31,43 @@
 #include "ex/TimeRangeEx.hpp"
 #include "basic_types.h"
 
-class OutHistoryTree : virtual public AbstractHistoryTree
+#include <queue>
+#include <boost/thread/thread.hpp>
+
+class MemoryOutHistoryTree : virtual public OutHistoryTree, virtual public AbstractMemoryHistoryTree
 {
 public:
-	OutHistoryTree();
-	OutHistoryTree(HistoryTreeConfig config);
+	MemoryOutHistoryTree(bool writeOnClose = true);
+	MemoryOutHistoryTree(HistoryTreeConfig config, bool writeOnClose = true);
 	virtual void open();
 	virtual void close(void) {
 		this->close(this->_end);
 	}
 	virtual void close(timestamp_t end);
+	virtual void setWriteOnClose(bool write) { _writeOnClose = write; };
+	bool getWriteOnClose() { return _writeOnClose; };
+	virtual ~MemoryOutHistoryTree();
 	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
-	OutHistoryTree& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
-	~OutHistoryTree();
 
-protected:
-	virtual void tryInsertAtNode(AbstractInterval::SharedPtr interval, unsigned int index);
+protected:	
 	virtual void addSiblingNode(unsigned int index);
 	virtual void initEmptyTree(void);
 	virtual void addNewRootNode(void);
-	void openStream(void);
-	void closeStream(void);
-	void serializeHeader(void);
-	void serializeNode(AbstractNode::SharedPtr node);
-	void incNodeCount(timestamp_t new_start);
-
 	virtual CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
 	virtual LeafNode::SharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
-
+	
+	void manageInsert(void);
+	void startThread(void);
+	void stopThread(void);
+	
+	virtual void writeToFile();
+	
+	std::queue<AbstractInterval::SharedPtr> _insertQueue;
+	boost::mutex _insertQueue_mutex;
+	boost::thread _insertThread;
+	boost::condition_variable _insertConditionVariable;
 private:
-
+	bool _writeOnClose;
 };
 
-#endif // _OUTHISTORYTREE_HPP
+#endif // _MEMORYOUTHISTORYTREE_HPP

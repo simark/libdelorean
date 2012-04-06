@@ -22,23 +22,25 @@
 #include <tr1/memory>
 #include <cstdlib>
  
-#include "OutHistoryTree.hpp"
+#include "MemoryOutHistoryTree.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "HistoryTreeConfig.hpp"
 #include "CoreNode.hpp"
 #include "LeafNode.hpp"
 #include "ex/IOEx.hpp"
 #include "fixed_config.h"
+
+#include "intervals/NullInterval.hpp"
  
 using namespace std;
 using namespace std::tr1;
  
-OutHistoryTree::OutHistoryTree()
-: AbstractHistoryTree() {
+MemoryOutHistoryTree::MemoryOutHistoryTree(bool writeOnClose)
+: AbstractHistoryTree() , OutHistoryTree(), AbstractMemoryHistoryTree(), _writeOnClose(writeOnClose){
 }
 
-OutHistoryTree::OutHistoryTree(HistoryTreeConfig config)
-: AbstractHistoryTree(config) {
+MemoryOutHistoryTree::MemoryOutHistoryTree(HistoryTreeConfig config, bool writeOnClose)
+: AbstractHistoryTree(config) , OutHistoryTree(config), AbstractMemoryHistoryTree(config), _writeOnClose(writeOnClose){
 }
 
 /**
@@ -47,25 +49,19 @@ OutHistoryTree::OutHistoryTree(HistoryTreeConfig config)
  * 
  * @throw IOEx if file already open or general IO error
  */ 
-void OutHistoryTree::open() {
-	// is this history tree already opened?
-	if (this->_opened) {
-		throw IOEx("This tree is already opened");
-	}
+void MemoryOutHistoryTree::open() {
+	
+	_nodes.clear();
 	initEmptyTree();
 	
-	// open stream
-	this->openStream();
+	this->startThread();
 	
-	// update internal status
-	this->_opened = true;
+	_opened = true;
 }
 
-void OutHistoryTree::close(timestamp_t end) {
-	// is this history tree at least opened?
-	if (!this->_opened) {
-		throw IOEx("This tree was not open");
-	}
+void MemoryOutHistoryTree::close(timestamp_t end) {
+	
+	this->stopThread();
 	
 	// proper end time
 	if (end < this->_end) {
@@ -75,90 +71,49 @@ void OutHistoryTree::close(timestamp_t end) {
 	// close the latest branch
 	for (unsigned int i = 0; i < this->_latest_branch.size(); ++i) {
 		this->_latest_branch[i]->close(this->_end);
-		this->serializeNode(this->_latest_branch[i]);
 	}
 	
-	// write tree header
-	this->serializeHeader();
+	if(_writeOnClose) {
+		writeToFile();
+	}
 	
-	// close stream
-	this->closeStream();
+	_opened = false;
+}
+
+void MemoryOutHistoryTree::writeToFile() {
 	
-	// update internal status
-	this->_opened = false;
+	openStream();
+	
+	serializeHeader();
+	for(unsigned int i = 0; i < this->_node_count; ++i){
+		serializeNode(_nodes[i]);
+	}
+	
+	closeStream();
 }
 
-void OutHistoryTree::openStream(void) {
-	if (this->_stream.is_open()) {
-		throw IOEx("The stream is already open");
-	}
-	this->_stream.open(this->_config._stateFile.c_str(), fstream::out | fstream::binary | fstream::trunc);
-	if (!this->_stream) {
-		throw IOEx("Unable to open file");
-	}
-}
-
-void OutHistoryTree::closeStream(void) {
-	if (this->_stream.is_open()) {
-		this->_stream.close();
-	}
-}
-
-OutHistoryTree::~OutHistoryTree() {
+MemoryOutHistoryTree::~MemoryOutHistoryTree() {
 	if (this->_opened) {
-		this->close();
+		close();
 	}
 }
 
-OutHistoryTree& OutHistoryTree::operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
-	this->addInterval(interval);
+void MemoryOutHistoryTree::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
 	
-	return *this;
-}
-
-void OutHistoryTree::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
 	if (interval->getStart() < this->_config._treeStart) {
 		throw TimeRangeEx("interval start time below tree start time");
 	}
-	this->tryInsertAtNode(interval, this->_latest_branch.size() - 1);
-}
-
-void OutHistoryTree::tryInsertAtNode(AbstractInterval::SharedPtr interval, unsigned int index) {
-	// target node
 	
-	AbstractNode::SharedPtr target_node = this->_latest_branch[index];
-	
-	/*cout << "trying " << *interval << " (" << interval->getTotalSize() << ")  fs " <<
-		target_node->getFreeSpace() << "  seq " << target_node->getSequenceNumber() << endl;*/
-	
-	// is there enough room in prospective target node?
-	if (interval->getTotalSize() > target_node->getFreeSpace()) {
-		// nope: add to a new sibling instead
-		this->addSiblingNode(index);
-		this->tryInsertAtNode(interval, this->_latest_branch.size() - 1);
-		
-		return;
-	}
-	
-	// make sure the interval time range fits this node
-	if (interval->getStart() < target_node->getStart()) {
-		// nope: check recursively in parents if it fits
-		assert(index >= 1);
-		this->tryInsertAtNode(interval, index - 1);
-		
-		return;
-	}
-	
-	// everything seems okay here
-	target_node->addInterval(interval);
-	
-	// update tree end time if needed
-	if (interval->getEnd() > this->_end) {
-		this->_end = interval->getEnd();
+	boost::unique_lock<boost::mutex> lock(_insertQueue_mutex);
+	bool const was_empty=_insertQueue.empty();
+	_insertQueue.push(interval);
+	if(was_empty)
+	{
+		_insertConditionVariable.notify_one();
 	}
 }
 
-void OutHistoryTree::addSiblingNode(unsigned int index) {
+void MemoryOutHistoryTree::addSiblingNode(unsigned int index) {
 	AbstractNode::SharedPtr new_node;
 	CoreNode::SharedPtr prev_node;
 	timestamp_t split_time = this->_end;
@@ -184,9 +139,10 @@ void OutHistoryTree::addSiblingNode(unsigned int index) {
 	}
 
 	// split off the new branch from the old one
+	boost::unique_lock<boost::shared_mutex> l(_latest_branch_mutex);
 	for (unsigned int i = index; i < this->_latest_branch.size(); ++i) {
 		this->_latest_branch[i]->close(split_time);
-		this->serializeNode(this->_latest_branch[i]);
+		//this->serializeNode(this->_latest_branch[i]);
 		
 		// get parent node
 		prev_node = dynamic_pointer_cast<CoreNode>(this->_latest_branch[i - 1]);
@@ -207,18 +163,24 @@ void OutHistoryTree::addSiblingNode(unsigned int index) {
 	return;
 }
 
-void OutHistoryTree::initEmptyTree(void) {
+void MemoryOutHistoryTree::initEmptyTree(void) {
+	
+	boost::unique_lock<boost::shared_mutex> bl(_latest_branch_mutex);
 	// do init. stuff...
 	this->_end = this->_config._treeStart;
 	this->_node_count = 0;
 	this->_latest_branch.clear();
+	{
+		boost::unique_lock<boost::shared_mutex> nl(_nodes_mutex);
+		this->_nodes.clear();
+	}
 	
 	// add a first (*leaf*) node
 	LeafNode::SharedPtr n = this->initNewLeafNode(-1, this->_config._treeStart);
 	_latest_branch.push_back(n);
 }
 
-void OutHistoryTree::addNewRootNode(void) {
+void MemoryOutHistoryTree::addNewRootNode(void) {
 	unsigned int i, depth;
 	AbstractNode::SharedPtr new_node;
 	CoreNode::SharedPtr prev_node;
@@ -234,13 +196,14 @@ void OutHistoryTree::addNewRootNode(void) {
 	// close off the whole current latest branch
 	for (i = 0; i < this->_latest_branch.size(); ++i) {
 		_latest_branch[i]->close(split_time);
-		this->serializeNode(this->_latest_branch[i]);
+		//this->serializeNode(this->_latest_branch[i]);
 	}
 	
 	// link the new root to its first child (the previous root node)
 	new_root->linkNewChild(old_root);
 	
 	// rebuild a brand new latest branch
+	boost::unique_lock<boost::shared_mutex> l(_latest_branch_mutex);
 	depth = _latest_branch.size();
 	_latest_branch.clear();
 	_latest_branch.push_back(new_root);
@@ -262,73 +225,85 @@ void OutHistoryTree::addNewRootNode(void) {
 	}
 }
 
-void OutHistoryTree::serializeHeader(void) {
-	// since this is a private method, this should already be checked, but just in case...
-	assert(this->_stream.is_open());
-	fstream& f = this->_stream;
-	f.seekp(0);
-	
-	// magic number
-	int32_t magic_number = HF_MAGIC_NUMBER;
-	f.write((char*) &magic_number, sizeof(int32_t));
-	
-	// versions
-	int32_t major = HF_MAJOR;
-	int32_t minor = HF_MINOR;
-	f.write((char*) &major, sizeof(int32_t));
-	f.write((char*) &minor, sizeof(int32_t));
-	
-	// block size
-	int32_t bs = (int32_t) this->_config._blockSize;
-	f.write((char*) &bs, sizeof(int32_t));
-	
-	// maximum children/node
-	int32_t mc = (int32_t) this->_config._maxChildren;
-	f.write((char*) &mc, sizeof(int32_t));
-	
-	// node count
-	int32_t node_count = (int32_t) this->_node_count;
-	f.write((char*) &node_count, sizeof(int32_t));
-	
-	// root node sequence number
-	seq_number_t root_seq = this->_latest_branch[0]->getSequenceNumber();
-	f.write((char*) &root_seq, sizeof(seq_number_t));
-}
 
-void OutHistoryTree::serializeNode(AbstractNode::SharedPtr node) {
-	// seek to correct position
-	this->_stream.seekp(this->filePosFromSeq(node->getSequenceNumber()));
-	
-	// serialize node as is
-	node->serialize(this->_stream);
-}
-
-void OutHistoryTree::incNodeCount(timestamp_t new_start) {
-	// increment our node count since we now have one more
-	++this->_node_count;
-	
-	// update tree's end time if needed
-	if (new_start >= this->_end) {
-		this->_end = new_start + 1;
-	}
-}
-
-CoreNode::SharedPtr OutHistoryTree::initNewCoreNode(seq_number_t parent_seq, timestamp_t start) {
+CoreNode::SharedPtr MemoryOutHistoryTree::initNewCoreNode(seq_number_t parent_seq, timestamp_t start) {
 	// allocate new core node
 	CoreNode::SharedPtr n(new CoreNode(this->_config, this->_node_count, parent_seq, start));
 	
+	{
+		boost::unique_lock<boost::shared_mutex> l(_nodes_mutex);
+		_nodes.push_back(n);
+	}
+	
 	// new node count
 	this->incNodeCount(start);
 	
 	return n;
 }
 
-LeafNode::SharedPtr OutHistoryTree::initNewLeafNode(seq_number_t parent_seq, timestamp_t start) {
+LeafNode::SharedPtr MemoryOutHistoryTree::initNewLeafNode(seq_number_t parent_seq, timestamp_t start) {
 	// allocate new leaf node
 	LeafNode::SharedPtr n(new LeafNode(this->_config, this->_node_count, parent_seq, start));
+	
+	{
+		boost::unique_lock<boost::shared_mutex> l(_nodes_mutex);
+		_nodes.push_back(n);
+	}
 	
 	// new node count
 	this->incNodeCount(start);
 	
 	return n;
+}
+
+
+void MemoryOutHistoryTree::manageInsert(void){
+	bool poisoned = false;
+	boost::unique_lock<boost::mutex> l(_insertQueue_mutex);
+	while(!poisoned)
+	{
+		//Wait for data to process
+		while(_insertQueue.empty()){
+			_insertConditionVariable.wait(l);
+		}
+		
+		// Process data
+		while(!_insertQueue.empty()){
+			AbstractInterval::SharedPtr interval = _insertQueue.front();
+			_insertQueue.pop();
+			
+			// Unlock mutex for the actual insert
+			l.unlock();
+			
+			// Check for poisoned data
+			if (interval->getStart() < this->_config._treeStart){
+				poisoned = true;
+				break;
+			}
+			
+			//Insert data in tree
+			this->tryInsertAtNode(interval, this->_latest_branch.size() - 1);
+			
+			// Relock mutex for next pop
+			l.lock();
+		}
+	}
+}
+
+void MemoryOutHistoryTree::startThread(void){
+	
+	_insertThread = boost::thread(boost::bind(&MemoryOutHistoryTree::manageInsert, this));
+}
+
+void MemoryOutHistoryTree::stopThread(void){
+	{
+		boost::unique_lock<boost::mutex> lock(_insertQueue_mutex);
+		bool const was_empty=_insertQueue.empty();
+		_insertQueue.push(AbstractInterval::SharedPtr(new NullInterval(this->_config._treeStart-1, this->_config._treeStart-1, 0)));
+		if(was_empty)
+		{
+			_insertConditionVariable.notify_one();
+		}
+	}
+	_insertThread.join();	
 }

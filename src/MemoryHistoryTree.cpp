@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "HistoryTree.hpp"
+#include "MemoryHistoryTree.hpp"
 #include "CoreNode.hpp"
 #include "ex/TimeRangeEx.hpp"
 #include "ex/IOEx.hpp"
@@ -26,19 +26,9 @@
 
 using namespace std;
 
-
-HistoryTree::HistoryTree()
-:AbstractHistoryTree(), InHistoryTree(), OutHistoryTree()
-{
-}
-
-/**
- * Create a new HistoryTree using a default configuration
- * 
- * @param config
- */
-HistoryTree::HistoryTree()
-:AbstractHistoryTree(), InHistoryTree(), OutHistoryTree()
+MemoryHistoryTree::MemoryHistoryTree(bool writeOnClose)
+:AbstractHistoryTree(), HistoryTree(),
+MemoryInHistoryTree(), MemoryOutHistoryTree(writeOnClose)
 {
 }
 
@@ -47,12 +37,13 @@ HistoryTree::HistoryTree()
  * 
  * @param config
  */
-HistoryTree::HistoryTree(HistoryTreeConfig config)
-:AbstractHistoryTree(config), InHistoryTree(config), OutHistoryTree(config)
+MemoryHistoryTree::MemoryHistoryTree(HistoryTreeConfig config, bool writeOnClose)
+:AbstractHistoryTree(config), HistoryTree(config),
+MemoryInHistoryTree(config), MemoryOutHistoryTree(config, writeOnClose)
 {
 }
 
-HistoryTree::~HistoryTree()
+MemoryHistoryTree::~MemoryHistoryTree()
 {
 }
 
@@ -66,7 +57,7 @@ HistoryTree::~HistoryTree()
  * @throw IOEx 
  * @throw InvalidFormatEx
  */
-void HistoryTree::open()
+void MemoryHistoryTree::open()
 {
 	// is this history tree already opened?
 	if (this->_opened) {
@@ -99,7 +90,7 @@ void HistoryTree::open()
  * @param mode either APPEND (keep existing file) or TRUNCATE (replace existing file)
  * @throw IOEx
  */
-void HistoryTree::open(OpenMode mode)
+void MemoryHistoryTree::open(OpenMode mode)
 {	
 	// is this history tree already opened?
 	if (this->_opened) {
@@ -107,21 +98,15 @@ void HistoryTree::open(OpenMode mode)
 	}
 	
 	if(mode == TRUNCATE){
-		// open stream
-		this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary | fstream::trunc);
 		
-		// check for open errors
-		if (!this->_stream) {
-			throw IOEx("Unable to open file");
-		}
-		initEmptyTree();
+		MemoryOutHistoryTree::initEmptyTree();
 	
 		// update internal status
 		this->_opened = true;
 		
 	}else if (mode == APPEND){
 		// open stream
-		this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary);
+		this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::binary);
 		
 		// check for open errors
 		if (!this->_stream) {
@@ -138,7 +123,7 @@ void HistoryTree::open(OpenMode mode)
 		
 		try{
 			// unserialize tree header
-			this->unserializeHeader();
+			this->MemoryInHistoryTree::unserializeHeader();
 		}catch(InvalidFormatEx& ex){	
 			this->_stream.close();		
 			throw;
@@ -146,10 +131,11 @@ void HistoryTree::open(OpenMode mode)
 			this->_stream.close();
 			throw;
 		}
-		//We read the header correctly, init the tree
+		//We read the header correctly, init the tree		
+		this->loadNodes();
 		
 		// store latest branch in memory
-		this->buildLatestBranch();
+		this->MemoryInHistoryTree::buildLatestBranch();
 		
 		// The user could not possibly know the start and end times of the tree
 		// Set it to the correct value using the root node
@@ -172,12 +158,12 @@ void HistoryTree::open(OpenMode mode)
  * @throws TimeRangeException 
  * 
  */
-void HistoryTree::close(timestamp_t end)
+void MemoryHistoryTree::close(timestamp_t end)
 {
-	OutHistoryTree::close(end);
+	MemoryOutHistoryTree::close(end);
 }
 
-void HistoryTree::close(void)
+void MemoryHistoryTree::close(void)
 {
 	close(getEnd());
 }

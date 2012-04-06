@@ -34,6 +34,8 @@
 
 #include "ex/TimeRangeEx.hpp"
 
+#include <boost/thread/shared_mutex.hpp>
+
 typedef std::multiset<AbstractInterval::SharedPtr, bool (*)(AbstractInterval::SharedPtr, AbstractInterval::SharedPtr)> IntervalContainer;
 
 class AbstractNode : public IPrintable
@@ -66,11 +68,7 @@ public:
 		return _nodeStart;
 	}
 	timestamp_t getEnd() const {
-		if (_isDone) {
-			return _nodeEnd;
-		} else {
-			return 0;
-		}
+		return _nodeEnd;
 	}
 	seq_number_t getSequenceNumber() const {
 		return _sequenceNumber;
@@ -83,6 +81,9 @@ public:
 	}
 	bool isDone() const {
 		return _isDone;
+	}
+	void reopen(){
+		_isDone = false;
 	}
 	
 	static const unsigned int COMMON_HEADER_SIZE;
@@ -110,6 +111,9 @@ protected:
 	
 	// vector containing all the node intervals
 	IntervalContainer _intervals;
+	
+	// mutex to prevent changes to a node while it is being accessed
+	mutable boost::shared_mutex _mutex;
 	
 	int getDataSectionEndOffset() const;
 };

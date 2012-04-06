@@ -16,14 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _INHISTORYTREE_HPP
-#define _INHISTORYTREE_HPP
+#ifndef _MEMORYINHISTORYTREE_HPP
+#define _MEMORYINHISTORYTREE_HPP
 
 #include <vector>
 #include <fstream>
 
 #include "AbstractHistoryTree.hpp"
 #include "HistoryTreeConfig.hpp"
+#include "InHistoryTree.hpp"
+#include "AbstractMemoryHistoryTree.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "AbstractNode.hpp"
 #include "CoreNode.hpp"
@@ -33,39 +35,28 @@
 #include "ex/InvalidFormatEx.hpp"
 #include "basic_types.h"
 
-class InHistoryTree : virtual public AbstractHistoryTree
+class MemoryInHistoryTree : virtual public InHistoryTree, virtual public AbstractMemoryHistoryTree
 {
 public:
-	InHistoryTree();
-	InHistoryTree(HistoryTreeConfig config);
+	MemoryInHistoryTree();
+	MemoryInHistoryTree(HistoryTreeConfig config);
 	virtual void open();
 	virtual void close(void) {
 		this->close(-1);
 	}
 	virtual void close(timestamp_t end);
-	IntervalCreator& getIC(void) {
-		return _ic;
-	}
+	
 	virtual AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
 	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
 	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
-	virtual void test(void);
-	~InHistoryTree();
-
 protected:
-	virtual void buildLatestBranch(void);
-	virtual void unserializeHeader(void);
-	
 	virtual AbstractNode::SharedPtr createNodeFromStream() const;
 	virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
 	virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
+	
+	virtual void loadNodes();
 
-	AbstractNode::SharedPtr createNodeFromStream() const;
-	AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
-	AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
 private:
-	seq_number_t _root_seq;
-	IntervalCreator _ic;
 };
 
-#endif // _INHISTORYTREE_HPP
+#endif // _MEMORYINHISTORYTREE_HPP
