@@ -42,6 +42,10 @@ class ThreadedTreeTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 	
 private:
+
+	static const unsigned int INSERTS_PER_THREAD = 1000;
+	static const unsigned int NB_THREADS = 10;
+	
 		
 	OutHistoryTree* oht;
 	InHistoryTree* iht;
@@ -55,7 +59,7 @@ private:
 	
 	std::multiset<AbstractInterval::SharedPtr> intervals;
 	
-	std::vector<AbstractInterval::SharedPtr> _insertedVector[10];
+	std::vector<AbstractInterval::SharedPtr> _insertedVector[NB_THREADS];
 	
 	/**
 	 * Compare 2 intervals' HEADERS only. The values are not compared.
@@ -125,7 +129,7 @@ private:
 	}
 	
 	void writeIntervals(OutHistoryTree* outTree, attribute_t start){
-		for(unsigned int i = 0; i < 10; i++){
+		for(unsigned int i = 0; i < INSERTS_PER_THREAD; i++){
 			AbstractInterval::SharedPtr interval(new NullInterval(0,i,start+i));
 			outTree->addInterval(interval);
 		}
@@ -193,10 +197,10 @@ public:
 		iht = new ThreadedInHistoryTree(HistoryTreeConfig());
 		ht = new ThreadedHistoryTree(HistoryTreeConfig());
 		
-		for(unsigned int att = 0; att < 10; att++){
+		for(unsigned int att = 0; att < NB_THREADS; att++){
 			
-			for(unsigned int i = 0; i < 10; i++){
-				AbstractInterval::SharedPtr interval(new NullInterval(0,i,(att*10)+i));
+			for(unsigned int i = 0; i < INSERTS_PER_THREAD; i++){
+				AbstractInterval::SharedPtr interval(new NullInterval(0,i,(INSERTS_PER_THREAD*att)+i));
 				_insertedVector[att].push_back(interval);
 			}
 		}
@@ -217,13 +221,13 @@ public:
 		vector<boost::thread*> threads;
 		
 		//Start 10 threads
-		for(unsigned int i = 0; i < 10; i++)
-			threads.push_back(new boost::thread(boost::bind(&ThreadedTreeTest::writeIntervals, this, oht, 10*i)));
+		for(unsigned int i = 0; i < NB_THREADS; i++)
+			threads.push_back(new boost::thread(boost::bind(&ThreadedTreeTest::writeIntervals, this, oht, INSERTS_PER_THREAD*i)));
 			
-		for(unsigned int i = 0; i < 10; i++)
+		for(unsigned int i = 0; i < NB_THREADS; i++)
 			threads[i]->join();
 			
-		for(unsigned int i = 0; i < 10; i++){
+		for(unsigned int i = 0; i < NB_THREADS; i++){
 			delete threads[i];
 		}
 		
@@ -240,11 +244,11 @@ public:
 			CPPUNIT_FAIL("Could not open tree for reading");
 		}
 		
-		std::vector<AbstractInterval::SharedPtr> expected[10];
+		std::vector<AbstractInterval::SharedPtr> expected[INSERTS_PER_THREAD];
 		//For every timestamp in the tree (0-9)
-		for(unsigned int i = 0; i < 10; i++){
+		for(unsigned int i = 0; i < INSERTS_PER_THREAD; i++){
 			//For every insertion thread
-			for(unsigned int j = 0; j < 10; j++){
+			for(unsigned int j = 0; j < NB_THREADS; j++){
 				//Find the intervals at timestamp i
 				std::vector<AbstractInterval::SharedPtr> inserted = _insertedVector[j];
 				for(std::vector<AbstractInterval::SharedPtr>::const_iterator it = inserted.begin(); it!=inserted.end(); it++){
@@ -256,25 +260,25 @@ public:
 		}
 		
 		vector<boost::thread*> threads;
-		bool success[10];
+		bool success[NB_THREADS];
 		
-		for(unsigned int i = 0; i < 10; i++)
+		for(unsigned int i = 0; i < NB_THREADS; i++)
 		{
 			success[i] = false;
 			threads.push_back(new boost::thread(boost::bind(&ThreadedTreeTest::readIntervals, this, iht, i, expected[i], &success[i])));
 		}
 		
-		for(unsigned int i = 0; i < 10; i++)
+		for(unsigned int i = 0; i < NB_THREADS; i++)
 		{
 			threads[i]->join();
 		}
 		
-		for(unsigned int i = 0; i < 10; i++)
+		for(unsigned int i = 0; i < NB_THREADS; i++)
 		{
 			delete threads[i];
 		}
 		
-		for(unsigned int i = 0; i < 10; i++)
+		for(unsigned int i = 0; i < NB_THREADS; i++)
 		{
 			CPPUNIT_ASSERT(true == success[i]);
 		}		

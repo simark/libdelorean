@@ -84,30 +84,46 @@ void ThreadedHistoryTree::open(OpenMode mode)
 
 /**
  * "Save" the tree to disk.
- * This method will cause the treeIO object to commit all nodes to disk
- * and then return the RandomAccessFile descriptor so the Tree object can
- * save its configuration into the header of the file.
- * @throws TimeRangeException 
- * 
+ * If the specified end time is smaller than the greatest timestamp 
+ * in the tree, it will be ajusted to be equal to the greatest timestamp
+ * @param end : the desired end time of the tree
  */
 void ThreadedHistoryTree::close(timestamp_t end)
 {
 	ThreadedOutHistoryTree::close(end);
 }
 
+/**
+ * "Save" the tree to disk.
+ * The greatest timestamp in the tree is used as the end time.
+ */
 void ThreadedHistoryTree::close(void)
 {
 	close(getEnd());
 }
 
+/**
+ * It is necessary to specify which parent method to call because
+ * both the threaded and non-threaded version of the history tree
+ * are parents of this class.
+ */ 
 vector<AbstractInterval::SharedPtr> ThreadedHistoryTree::query(timestamp_t timestamp) const {
 	return ThreadedInHistoryTree::query(timestamp);	
 }
 
+/**
+ * It is necessary to specify which parent method to call because
+ * both the threaded and non-threaded version of the history tree
+ * are parents of this class.
+ */ 
 AbstractInterval::SharedPtr ThreadedHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
 	return ThreadedInHistoryTree::query(timestamp, key);
 }
-
+/**
+ * It is necessary to specify which parent method to call because
+ * both the threaded and non-threaded version of the history tree
+ * are parents of this class.
+ */ 
 void ThreadedHistoryTree::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
 	ThreadedOutHistoryTree::addInterval(interval);
 }
