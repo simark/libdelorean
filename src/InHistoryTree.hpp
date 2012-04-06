@@ -59,13 +59,10 @@ protected:
 	virtual AbstractNode::SharedPtr createNodeFromStream() const;
 	virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
 	virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
-
-	AbstractNode::SharedPtr createNodeFromStream() const;
-	AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
-	AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
-private:
+	
 	seq_number_t _root_seq;
 	IntervalCreator _ic;
+private:
 };
 
 #endif // _INHISTORYTREE_HPP

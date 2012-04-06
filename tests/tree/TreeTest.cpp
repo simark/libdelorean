@@ -158,8 +158,6 @@ public:
 	
 	void testWrite()
 	{
-		delete oht;
-		oht = new MemoryOutHistoryTree();
 		oht->setConfig(HistoryTreeConfig("./o.ht", 128, 3, 0));
 		oht->open();
 		
@@ -175,8 +173,6 @@ public:
 	
 	void testRead()
 	{
-		delete iht;
-		iht = new MemoryInHistoryTree();
 		iht->setConfig(HistoryTreeConfig("./o.ht", 128, 3, 0));
 		try{
 			iht->open();

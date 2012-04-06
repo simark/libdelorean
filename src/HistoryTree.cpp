@@ -27,11 +27,6 @@
 using namespace std;
 
 
-HistoryTree::HistoryTree()
-:AbstractHistoryTree(), InHistoryTree(), OutHistoryTree()
-{
-}
-
 /**
  * Create a new HistoryTree using a default configuration
  * 

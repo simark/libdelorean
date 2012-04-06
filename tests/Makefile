@@ -9,7 +9,7 @@ SRC_DIR=../src
 
 # Librairie à tester
 LIB_PATH = ../src/.libs
-LIB =  -lboost_thread -L$(LIB_PATH) -lrbrntrvll
+LIB =  -L$(LIB_PATH) -lrbrntrvll
 
 # Fichier sources contenant les tests
 TEST_SRC=\
@@ -34,5 +34,5 @@ run: test
 
 test: $(SRC) $(TEST_SRC) $(RUN_SRC)
 
-	g++  -I./interval/ $(CFLAGS) -o test $(TEST_SRC) $(RUN_SRC) $(LIB) -lcppunit -lboost_thread
+	g++  -I./interval/ $(CFLAGS) -o test $(TEST_SRC) $(RUN_SRC) $(LIB) -lcppunit
 
