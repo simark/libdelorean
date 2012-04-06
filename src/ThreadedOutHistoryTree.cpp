@@ -189,6 +189,15 @@ void ThreadedOutHistoryTree::addNewRootNode(void) {
 	}
 }
 
+void ThreadedOutHistoryTree::serializeNode(AbstractNode::SharedPtr node) {
+	boost::unique_lock<boost::recursive_mutex> l(this->_stream_read_mutex);
+	// seek to correct position
+	this->_stream.seekp(this->filePosFromSeq(node->getSequenceNumber()));
+	
+	// serialize node as is
+	node->serialize(this->_stream);
+}
+
 void ThreadedOutHistoryTree::manageInsert(void){
 	bool poisoned = false;
 	boost::unique_lock<boost::mutex> l(_insertQueue_mutex);

@@ -73,6 +73,7 @@ unsigned int CoreNode::getSpecificHeaderSize(void) const
 
 void CoreNode::linkNewChild(AbstractNode::SharedPtr childNode)
 {
+	boost::unique_lock<boost::shared_mutex> l(_mutex);
 	assert (_nbChildren < _config._maxChildren);
 
 	_children[_nbChildren] = childNode->getSequenceNumber();
@@ -89,6 +90,7 @@ void CoreNode::linkNewChild(AbstractNode::SharedPtr childNode)
  */
 seq_number_t CoreNode::getChildAtTimestamp(timestamp_t timestamp) const
 {
+	boost::shared_lock<boost::shared_mutex> l(_mutex);
 	seq_number_t potentialNextSeqNb = getSequenceNumber();
 	
 	for ( unsigned int i = 0; i < getNbChildren(); i++ ) {

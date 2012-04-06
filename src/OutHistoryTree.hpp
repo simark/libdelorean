@@ -52,7 +52,7 @@ protected:
 	void openStream(void);
 	void closeStream(void);
 	void serializeHeader(void);
-	void serializeNode(AbstractNode::SharedPtr node);
+	virtual void serializeNode(AbstractNode::SharedPtr node);
 	void incNodeCount(timestamp_t new_start);
 
 	virtual CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);

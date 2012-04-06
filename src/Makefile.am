@@ -69,6 +69,7 @@ librbrntrvll_la_SOURCES = \
 	MemoryOutHistoryTree.hpp \
 	OutHistoryTree.cpp \
 	OutHistoryTree.hpp \
+	ThreadedHistoryTree.cpp \
 	ThreadedHistoryTree.hpp \
 	ThreadedInHistoryTree.cpp \
 	ThreadedInHistoryTree.hpp \

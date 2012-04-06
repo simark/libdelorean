@@ -9,7 +9,7 @@ SRC_DIR=../src
 
 # Librairie à tester
 LIB_PATH = ../src/.libs
-LIB =  -L$(LIB_PATH) -lrbrntrvll
+LIB =  -lboost_thread -L$(LIB_PATH) -lrbrntrvll
 
 # Fichier sources contenant les tests
 TEST_SRC=\
@@ -18,7 +18,9 @@ TEST_SRC=\
 	interval/IntervalCreatorTest.cpp \
 	interval/CustomInterval.cpp \
 	interval/CustomIntervalFactory.cpp \
-	tree/TreeTest.cpp
+	tree/TreeTest.cpp \
+	tree/ThreadedTreeTest.cpp
+	#tree/MemoryTreeTest.cpp
 
 # Fichier source démarrant les tests
 RUN_SRC=test.cpp

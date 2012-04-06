@@ -13,12 +13,6 @@
 #include <InHistoryTree.hpp>
 #include <OutHistoryTree.hpp>
 #include <HistoryTree.hpp>
-#include <ThreadedInHistoryTree.hpp>
-#include <ThreadedOutHistoryTree.hpp>
-#include <ThreadedHistoryTree.hpp>
-#include <MemoryInHistoryTree.hpp>
-#include <MemoryOutHistoryTree.hpp>
-#include <MemoryHistoryTree.hpp>
 #undef protected
 #undef private
 
@@ -42,6 +36,7 @@ class TreeTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE( TreeTest );
 	
 	CPPUNIT_TEST( testWrite );
+	CPPUNIT_TEST( testProperties );
 	CPPUNIT_TEST( testRead );
 	CPPUNIT_TEST( testInexistentFile );
 	CPPUNIT_TEST( testBadExistingFile );
@@ -132,9 +127,9 @@ private:
 public:
 	void setUp()
 	{			
-		oht = new MemoryOutHistoryTree(HistoryTreeConfig());
-		iht = new MemoryInHistoryTree(HistoryTreeConfig());
-		ht = new MemoryHistoryTree(HistoryTreeConfig());
+		oht = new OutHistoryTree(HistoryTreeConfig());
+		iht = new InHistoryTree(HistoryTreeConfig());
+		ht = new HistoryTree(HistoryTreeConfig());
 		
 		interval1.reset(new IntInterval(0,10,5,20));
 		interval2.reset(new StringInterval(5,11,4,"value"));
@@ -169,6 +164,17 @@ public:
 		oht->addInterval(interval5);
 		
 		oht->close();
+	}
+	
+	void testProperties()
+	{
+		iht->setConfig(HistoryTreeConfig("./o.ht", 128, 3, 0));
+		iht->open();
+		
+		CPPUNIT_ASSERT(13 == iht->getEnd());
+		CPPUNIT_ASSERT(3 == iht->_node_count);
+		
+		iht->close();
 	}
 	
 	void testRead()

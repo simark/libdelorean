@@ -44,9 +44,10 @@ public:
 	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
 
 protected:	
-	void addSiblingNode(unsigned int index);
-	void initEmptyTree(void);
-	void addNewRootNode(void);
+	virtual void addSiblingNode(unsigned int index);
+	virtual void initEmptyTree(void);
+	virtual void addNewRootNode(void);
+	virtual void serializeNode(AbstractNode::SharedPtr node);
 	
 	void manageInsert(void);
 	void startThread(void);
