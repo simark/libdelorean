@@ -104,7 +104,7 @@ AbstractInterval::SharedPtr ThreadedInHistoryTree::query(timestamp_t timestamp, 
 
 AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromStream() const {
 	fstream& f = this->_stream;
-	boost::unique_lock<boost::recursive_mutex> l(_stream_read_mutex);
+	boost::unique_lock<boost::recursive_mutex> l(_stream_mutex);
 	unsigned int init_pos = f.tellg();
 	
 	// node to return
@@ -144,7 +144,7 @@ AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromSeq(seq_number_t se
 	unsigned int offset = this->getHeaderSize() + seq * this->_config._blockSize;
 	
 	// seek there
-	boost::unique_lock<boost::recursive_mutex> l(_stream_read_mutex);
+	boost::unique_lock<boost::recursive_mutex> l(_stream_mutex);
 	this->_stream.seekg(offset, ios::beg);
 	
 	// get the node

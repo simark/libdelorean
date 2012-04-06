@@ -32,8 +32,7 @@ public:
 	
 protected:
 	mutable boost::shared_mutex _latest_branch_mutex;
-	mutable boost::recursive_mutex _stream_read_mutex;
-	mutable boost::mutex _stream_write_mutex;
+	mutable boost::recursive_mutex _stream_mutex;
 };
 
 #endif // _ABSTRACTTHREADEDINHISTORYTREE_HPP
