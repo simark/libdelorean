@@ -12,6 +12,10 @@ LT_INIT
 AC_CHECK_HEADERS([stdint.h])
 AC_CHECK_FUNCS([memset])
 
+
+AX_BOOST_BASE([], [], AC_MSG_ERROR(["Where is boost !?!?"]))
+AX_BOOST_THREAD
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_INT32_T
 AC_TYPE_INT64_T
