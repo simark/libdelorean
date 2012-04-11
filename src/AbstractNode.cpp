@@ -73,7 +73,7 @@ void AbstractNode::writeInfoFromNode(vector<AbstractInterval::SharedPtr>& interv
 		 * the End times necessarily fit */
 		if ( (*it)->getStart() <= timestamp ) {
 			if ((int) intervals.size() < (*it)->getAttribute()+1) 
-				intervals.resize( (*it)->getAttribute()+1 > (int)intervals.size()*2 ? (*it)->getAttribute()+1 : intervals.size()*2);
+				intervals.resize( (*it)->getAttribute()+1 );
 			intervals[(*it)->getAttribute()] = (*it);
 		}
 	}
