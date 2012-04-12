@@ -19,8 +19,8 @@
 #include <string>
 #include <sstream>
 
-#include "UnknownNodeTypeEx.hpp"
-#include "../basic_types.h"
+#include <rbrntrvll/ex/UnknownNodeTypeEx.hpp>
+#include <rbrntrvll/basic_types.h>
 
 using namespace std;
 

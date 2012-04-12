@@ -22,15 +22,15 @@
 #include <tr1/memory>
 #include <cstdlib>
  
-#include "MemoryOutHistoryTree.hpp"
-#include "intervals/AbstractInterval.hpp"
-#include "HistoryTreeConfig.hpp"
-#include "CoreNode.hpp"
-#include "LeafNode.hpp"
-#include "ex/IOEx.hpp"
-#include "fixed_config.h"
+#include <rbrntrvll/MemoryOutHistoryTree.hpp>
+#include <rbrntrvll/intervals/AbstractInterval.hpp>
+#include <rbrntrvll/HistoryTreeConfig.hpp>
+#include <rbrntrvll/CoreNode.hpp>
+#include <rbrntrvll/LeafNode.hpp>
+#include <rbrntrvll/ex/IOEx.hpp>
+#include <rbrntrvll/fixed_config.h>
 
-#include "intervals/NullInterval.hpp"
+#include <rbrntrvll/intervals/NullInterval.hpp>
  
 using namespace std;
 using namespace std::tr1;

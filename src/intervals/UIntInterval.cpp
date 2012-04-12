@@ -18,9 +18,9 @@
  */
 #include <sstream>
 
-#include "UIntInterval.hpp"
-#include "../basic_types.h"
-#include "../fixed_config.h"
+#include <rbrntrvll/intervals/UIntInterval.hpp>
+#include <rbrntrvll/basic_types.h>
+#include <rbrntrvll/fixed_config.h>
 
 UIntInterval::UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value)
 : AbstractInterval(start, end, attribute, SIT_UINT32), _value(value)

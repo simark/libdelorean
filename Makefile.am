@@ -1,3 +1,3 @@
 ACLOCAL_AMFLAGS = -I config
 
-SUBDIRS = src
+SUBDIRS = include src

@@ -16,4 +16,4 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "NodeFullEx.hpp"
+#include <rbrntrvll/ex/NodeFullEx.hpp>

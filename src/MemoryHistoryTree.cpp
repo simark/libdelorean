@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "MemoryHistoryTree.hpp"
-#include "CoreNode.hpp"
-#include "ex/TimeRangeEx.hpp"
-#include "ex/IOEx.hpp"
+#include <rbrntrvll/MemoryHistoryTree.hpp>
+#include <rbrntrvll/CoreNode.hpp>
+#include <rbrntrvll/ex/TimeRangeEx.hpp>
+#include <rbrntrvll/ex/IOEx.hpp>
 
 #include <assert.h>
 

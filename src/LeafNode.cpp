@@ -21,11 +21,11 @@
 #include <ostream>
 #include <cstring>
 
-#include "LeafNode.hpp"
-#include "AbstractNode.hpp"
-#include "IntervalCreator.hpp"
-#include "basic_types.h"
-#include "fixed_config.h"
+#include <rbrntrvll/LeafNode.hpp>
+#include <rbrntrvll/AbstractNode.hpp>
+#include <rbrntrvll/IntervalCreator.hpp>
+#include <rbrntrvll/basic_types.h>
+#include <rbrntrvll/fixed_config.h>
 
 using namespace std;
 using namespace std::tr1;

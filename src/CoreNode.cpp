@@ -23,11 +23,11 @@
 #include <cstring>
 #include <sstream>
 
-#include "HistoryTreeConfig.hpp"
-#include "CoreNode.hpp"
-#include "AbstractNode.hpp"
-#include "basic_types.h"
-#include "fixed_config.h"
+#include <rbrntrvll/HistoryTreeConfig.hpp>
+#include <rbrntrvll/CoreNode.hpp>
+#include <rbrntrvll/AbstractNode.hpp>
+#include <rbrntrvll/basic_types.h>
+#include <rbrntrvll/fixed_config.h>
 
 using namespace std;
 using namespace std::tr1;

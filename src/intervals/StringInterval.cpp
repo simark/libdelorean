@@ -19,8 +19,8 @@
 #include <sstream>
 #include <cstring>
 
-#include "StringInterval.hpp"
-#include "../basic_types.h"
+#include <rbrntrvll/intervals/StringInterval.hpp>
+#include <rbrntrvll/basic_types.h>
 
 using namespace std;
 

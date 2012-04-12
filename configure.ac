@@ -13,7 +13,7 @@ AC_CHECK_HEADERS([stdint.h])
 AC_CHECK_FUNCS([memset])
 
 
-AX_BOOST_BASE([], [], AC_MSG_ERROR(["Where is boost !?!?"]))
+AX_BOOST_BASE([], [], AC_MSG_ERROR(["Boost library was not found."]))
 AX_BOOST_THREAD
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -28,6 +28,7 @@ AC_TYPE_UINT8_T
 
 AC_CONFIG_FILES([
 	Makefile \
+	include/Makefile \
 	src/Makefile \
 	])
 
