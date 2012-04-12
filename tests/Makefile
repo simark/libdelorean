@@ -19,8 +19,8 @@ TEST_SRC=\
 	interval/CustomInterval.cpp \
 	interval/CustomIntervalFactory.cpp \
 	tree/TreeTest.cpp \
-	tree/ThreadedTreeTest.cpp
-	#tree/MemoryTreeTest.cpp
+	tree/ThreadedTreeTest.cpp \
+	tree/MemoryTreeTest.cpp
 
 # Fichier source démarrant les tests
 RUN_SRC=test.cpp

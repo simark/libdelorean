@@ -42,9 +42,10 @@ public:
 	ThreadedInHistoryTree(HistoryTreeConfig config);
 	
 	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
+	virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
 	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
 
-private:
+protected:
 	virtual AbstractNode::SharedPtr createNodeFromStream() const;
 	virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
 	virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;

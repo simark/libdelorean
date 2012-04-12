@@ -48,6 +48,7 @@ public:
 	}
 	virtual AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
 	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
+	virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
 	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
 	virtual void test(void);
 	~InHistoryTree();

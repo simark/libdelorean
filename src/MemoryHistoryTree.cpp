@@ -167,3 +167,38 @@ void MemoryHistoryTree::close(void)
 {
 	close(getEnd());
 }
+
+/**
+ * It is necessary to specify which parent method to call because
+ * both the threaded and non-threaded version of the history tree
+ * are parents of this class.
+ */ 
+vector<AbstractInterval::SharedPtr> MemoryHistoryTree::query(timestamp_t timestamp) const {
+	return MemoryInHistoryTree::query(timestamp);	
+}
+
+/**
+ * It is necessary to specify which parent method to call because
+ * both the threaded and non-threaded version of the history tree
+ * are parents of this class.
+ */ 
+AbstractInterval::SharedPtr MemoryHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
+	return MemoryInHistoryTree::query(timestamp, key);
+}
+
+/**
+ * It is necessary to specify which parent method to call because
+ * both the threaded and non-threaded version of the history tree
+ * are parents of this class.
+ */ 
+multimap<attribute_t, AbstractInterval::SharedPtr> MemoryHistoryTree::sparseQuery(timestamp_t timestamp) const {
+	return MemoryHistoryTree::sparseQuery(timestamp);
+}
+/**
+ * It is necessary to specify which parent method to call because
+ * both the threaded and non-threaded version of the history tree
+ * are parents of this class.
+ */ 
+void MemoryHistoryTree::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
+	MemoryOutHistoryTree::addInterval(interval);
+}

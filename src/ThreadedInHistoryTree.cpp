@@ -60,7 +60,7 @@ vector<AbstractInterval::SharedPtr> ThreadedInHistoryTree::query(timestamp_t tim
 		boost::shared_lock<boost::shared_mutex> l(_latest_branch_mutex);
 		currentNode = _latest_branch[0];
 	}
-	vector<AbstractInterval::SharedPtr> relevantIntervals(1);
+	vector<AbstractInterval::SharedPtr> relevantIntervals;
 	currentNode->writeInfoFromNode(relevantIntervals, timestamp);
 	
 	
@@ -100,6 +100,34 @@ AbstractInterval::SharedPtr ThreadedInHistoryTree::query(timestamp_t timestamp, 
 	assert (interval != NULL);
 	
 	return interval;
+}
+
+std::multimap<attribute_t, AbstractInterval::SharedPtr> ThreadedInHistoryTree::sparseQuery(timestamp_t timestamp) const {
+	if ( !checkValidTime(timestamp) ) {
+		throw TimeRangeEx("Query timestamp outside of bounds");
+	}
+	
+	// We start by reading the information in the root node
+	AbstractNode::SharedPtr currentNode;
+	{
+		boost::shared_lock<boost::shared_mutex> l(_latest_branch_mutex);
+		currentNode = _latest_branch[0];
+	}
+	multimap<attribute_t, AbstractInterval::SharedPtr> relevantIntervals;
+	currentNode->writeInfoFromNode(relevantIntervals, timestamp);
+	
+	
+	// Then we follow the branch down in the relevant children
+	// Stop at leaf nodes or if a core node has no children
+	while ( nodeHasChildren(currentNode) ) {
+		CoreNode::SharedPtr coreNode = dynamic_pointer_cast<CoreNode>(currentNode);
+		assert(coreNode != NULL);
+		currentNode = selectNextChild(coreNode, timestamp);
+		currentNode->writeInfoFromNode(relevantIntervals, timestamp);
+	}
+	
+	// The relevantIntervals should now be filled with everything needed
+	return relevantIntervals;	
 }
 
 AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromStream() const {

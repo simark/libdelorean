@@ -119,6 +119,15 @@ vector<AbstractInterval::SharedPtr> ThreadedHistoryTree::query(timestamp_t times
 AbstractInterval::SharedPtr ThreadedHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
 	return ThreadedInHistoryTree::query(timestamp, key);
 }
+
+/**
+ * It is necessary to specify which parent method to call because
+ * both the threaded and non-threaded version of the history tree
+ * are parents of this class.
+ */ 
+multimap<attribute_t, AbstractInterval::SharedPtr> ThreadedHistoryTree::sparseQuery(timestamp_t timestamp) const {
+	return ThreadedInHistoryTree::sparseQuery(timestamp);
+}
 /**
  * It is necessary to specify which parent method to call because
  * both the threaded and non-threaded version of the history tree
@@ -127,12 +136,3 @@ AbstractInterval::SharedPtr ThreadedHistoryTree::query(timestamp_t timestamp, at
 void ThreadedHistoryTree::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
 	ThreadedOutHistoryTree::addInterval(interval);
 }
-/*
-OutHistoryTree& ThreadedHistoryTree::operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
-	this->addInterval(interval);
-	
-	return *(ThreadedOutHistoryTree*)this;
-}
-
-
-*/

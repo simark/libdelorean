@@ -168,7 +168,7 @@ private:
 	
 	void superWrite(OutHistoryTree* outTree){
 		for(unsigned int i = 0; i < 10000; i++){
-			*outTree << (AbstractInterval::SharedPtr(new NullInterval(i, i+10, (i+i+10)/2)));
+			(*outTree) << (AbstractInterval::SharedPtr(new NullInterval(i, i+10, (i+i+10)/2)));
 		}
 	}
 	

@@ -25,6 +25,7 @@
 #include <vector>
 #include <set>
 #include <string>
+#include <map>
 
 #include "IPrintable.hpp"
 #include "intervals/AbstractInterval.hpp"
@@ -52,6 +53,7 @@ public:
 	std::string toString(void) const;
 	virtual std::string getInfos(void) const = 0;
 	void writeInfoFromNode(std::vector<AbstractInterval::SharedPtr>& intervals, timestamp_t timestamp) const;
+	void writeInfoFromNode(std::multimap<attribute_t, AbstractInterval::SharedPtr>& intervals, timestamp_t timestamp) const;
 	void serialize(uint8_t* buf);
 	void serialize(std::ostream& os);
 	void unserialize(std::istream& is, const IntervalCreator& ic);

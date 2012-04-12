@@ -56,7 +56,8 @@ AbstractNode::AbstractNode(HistoryTreeConfig config)
 
 /**
  * The method adds the intervals from this node that intersect the
- * timestamp
+ * timestamp to a vector.
+ * The intervals' attribute is used as an index in that vector.
  * 
  * @param intervals The intervals that are added from node to node
  * @param timestamp The timestamp for which the query is for. Only return intervals that intersect t.
@@ -75,6 +76,31 @@ void AbstractNode::writeInfoFromNode(vector<AbstractInterval::SharedPtr>& interv
 			if ((int) intervals.size() < (*it)->getAttribute()+1) 
 				intervals.resize( (*it)->getAttribute()+1 );
 			intervals[(*it)->getAttribute()] = (*it);
+		}
+	}
+	return;
+}
+
+/**
+ * The method adds the intervals from this node that intersect the
+ * timestamp to a vector.
+ * The intervals' attribute is used as an index in that vector.
+ * 
+ * @param intervals The intervals that are added from node to node
+ * @param timestamp The timestamp for which the query is for. Only return intervals that intersect t.
+ * @throw TimeRangeEx
+ */
+void AbstractNode::writeInfoFromNode(multimap<attribute_t, AbstractInterval::SharedPtr>& intervals, timestamp_t timestamp) const
+{
+	boost::shared_lock<boost::shared_mutex> l(_mutex);
+	
+	if ( _intervals.size() == 0 ) { return; }
+
+	for (IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
+		/* Now we only have to compare the Start times, since we know
+		 * the End times necessarily fit */
+		if ( (*it)->getStart() <= timestamp ) {
+			intervals.insert(make_pair((*it)->getAttribute(),*it));
 		}
 	}
 	return;

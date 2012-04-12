@@ -38,6 +38,7 @@ class TreeTest : public CppUnit::TestFixture
 	CPPUNIT_TEST( testWrite );
 	CPPUNIT_TEST( testProperties );
 	CPPUNIT_TEST( testRead );
+	CPPUNIT_TEST( testSparseRead );
 	CPPUNIT_TEST( testInexistentFile );
 	CPPUNIT_TEST( testBadExistingFile );
 	
@@ -114,6 +115,51 @@ private:
 		return true;
 		
 	}
+	
+	/**
+	 * Tests whether a given queryResult corresponds to the expected results
+	 * 
+	 */ 
+	bool verify(std::multimap<attribute_t, AbstractInterval::SharedPtr> queryResult, timestamp_t timestamp)
+	{
+		// Construct the expected result vector
+		std::vector<std::pair<AbstractInterval::SharedPtr, bool> > expected;
+		for(std::multiset<AbstractInterval::SharedPtr>::const_iterator it = intervals.begin(); it != intervals.end(); it++)
+		{
+			if((*it)->getStart() <= timestamp && (*it)->getEnd() >= timestamp)
+			{
+				expected.push_back(std::make_pair(*it, false));
+			}
+		}
+		
+		// Find each query result inside the expected result vector
+		for(std::multimap<attribute_t, AbstractInterval::SharedPtr>::const_iterator it = queryResult.begin(); it != queryResult.end(); it++)
+		{
+			if (it->second != 0)
+			{
+				bool found = false;
+				for(std::vector<std::pair<AbstractInterval::SharedPtr, bool> >::iterator it2 = expected.begin(); it2 != expected.end(); it2++)
+				{
+					// We have found the query result inside the expected result, mark it as such
+					if(compare(it2->first, it->second))
+					{
+						it2->second = true;
+						found = true;
+					}
+				}
+				if (!found) return false;
+			}
+		}
+		
+		// Every expected result should have been found
+		for(std::vector<std::pair<AbstractInterval::SharedPtr, bool> >::const_iterator it = expected.begin(); it != expected.end(); it++)
+		{
+			if (it->second == false)
+				return false;
+		}
+		return true;
+		
+	}	
 	
 	void outputQuery(std::vector<AbstractInterval::SharedPtr> queryResult, timestamp_t timestamp){
 		cout << "Request result at t=" << timestamp << endl;
@@ -204,6 +250,34 @@ public:
 		CPPUNIT_ASSERT_THROW(iht->query(15), TimeRangeEx);
 		CPPUNIT_ASSERT_THROW(iht->query(-1), TimeRangeEx);
 	}
+	
+	void testSparseRead()
+	{
+		iht->setConfig(HistoryTreeConfig("./o.ht", 128, 3, 0));
+		try{
+			iht->open();
+		}catch(...)
+		{
+			CPPUNIT_FAIL("Could not open tree for reading");
+		}
+		
+		std::multimap<attribute_t, AbstractInterval::SharedPtr > queryResult;		
+		
+		for (timestamp_t i = 0; i < 14; i++)
+		{
+			try{
+				queryResult = iht->sparseQuery(i);
+				//outputQuery(queryResult, i);
+			}catch(TimeRangeEx& ex){
+				CPPUNIT_FAIL("Reading inside bounds resulted in out-of-bound error");
+			}catch(...){
+				CPPUNIT_FAIL("Critical error during read");
+			}
+			CPPUNIT_ASSERT(verify(queryResult, i));
+		}
+		CPPUNIT_ASSERT_THROW(iht->query(15), TimeRangeEx);
+		CPPUNIT_ASSERT_THROW(iht->query(-1), TimeRangeEx);
+	}	
 	
 	void testInexistentFile()
 	{

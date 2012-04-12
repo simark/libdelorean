@@ -217,7 +217,7 @@ vector<AbstractInterval::SharedPtr> InHistoryTree::query(timestamp_t timestamp) 
 	
 	// We start by reading the information in the root node
 	AbstractNode::SharedPtr currentNode = _latest_branch[0];
-	vector<AbstractInterval::SharedPtr> relevantIntervals(1);
+	vector<AbstractInterval::SharedPtr> relevantIntervals;
 	currentNode->writeInfoFromNode(relevantIntervals, timestamp);
 	
 	
@@ -254,6 +254,30 @@ AbstractInterval::SharedPtr InHistoryTree::query(timestamp_t timestamp, attribut
 	assert (interval != NULL);
 	
 	return interval;
+}
+
+std::multimap<attribute_t, AbstractInterval::SharedPtr> InHistoryTree::sparseQuery(timestamp_t timestamp) const {
+	if ( !checkValidTime(timestamp) ) {
+		throw TimeRangeEx("Query timestamp outside of bounds");
+	}
+	
+	// We start by reading the information in the root node
+	AbstractNode::SharedPtr currentNode = _latest_branch[0];
+	multimap<attribute_t, AbstractInterval::SharedPtr> relevantIntervals;
+	currentNode->writeInfoFromNode(relevantIntervals, timestamp);
+	
+	
+	// Then we follow the branch down in the relevant children
+	// Stop at leaf nodes or if a core node has no children
+	while ( nodeHasChildren(currentNode) ) {
+		CoreNode::SharedPtr coreNode = dynamic_pointer_cast<CoreNode>(currentNode);
+		assert(coreNode != NULL);
+		currentNode = selectNextChild(coreNode, timestamp);
+		currentNode->writeInfoFromNode(relevantIntervals, timestamp);
+	}
+	
+	// The relevantIntervals should now be filled with everything needed
+	return relevantIntervals;	
 }
 
 AbstractNode::SharedPtr InHistoryTree::createNodeFromStream() const {
