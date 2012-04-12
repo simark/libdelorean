@@ -22,13 +22,13 @@
 #include <tr1/memory>
 #include <cstdlib>
  
-#include "OutHistoryTree.hpp"
-#include "intervals/AbstractInterval.hpp"
-#include "HistoryTreeConfig.hpp"
-#include "CoreNode.hpp"
-#include "LeafNode.hpp"
-#include "ex/IOEx.hpp"
-#include "fixed_config.h"
+#include <rbrntrvll/OutHistoryTree.hpp>
+#include <rbrntrvll/intervals/AbstractInterval.hpp>
+#include <rbrntrvll/HistoryTreeConfig.hpp>
+#include <rbrntrvll/CoreNode.hpp>
+#include <rbrntrvll/LeafNode.hpp>
+#include <rbrntrvll/ex/IOEx.hpp>
+#include <rbrntrvll/fixed_config.h>
  
 using namespace std;
 using namespace std::tr1;

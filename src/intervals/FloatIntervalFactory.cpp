@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "AbstractInterval.hpp"
-#include "FloatInterval.hpp"
-#include "FloatIntervalFactory.hpp"
+#include <rbrntrvll/intervals/AbstractInterval.hpp>
+#include <rbrntrvll/intervals/FloatInterval.hpp>
+#include <rbrntrvll/intervals/FloatIntervalFactory.hpp>
 
 AbstractInterval::SharedPtr FloatIntervalFactory::create(void) const {
 	AbstractInterval::SharedPtr interval(new FloatInterval());

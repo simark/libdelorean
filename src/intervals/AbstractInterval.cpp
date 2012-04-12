@@ -23,9 +23,9 @@
 #include <cstring>
 #include <map>
 
-#include "../basic_types.h"
-#include "AbstractInterval.hpp"
-#include "IntInterval.hpp"
+#include <rbrntrvll/basic_types.h>
+#include <rbrntrvll/intervals/AbstractInterval.hpp>
+#include <rbrntrvll/intervals/IntInterval.hpp>
 
 using namespace std;
 

@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "FloatInterval.hpp"
-#include "../basic_types.h"
+#include <rbrntrvll/intervals/FloatInterval.hpp>
+#include <rbrntrvll/basic_types.h>
 
 #include <sstream>
 

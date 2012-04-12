@@ -19,17 +19,17 @@
 #include <cstdlib>
 #include <sstream>
 
-#include "IntervalCreator.hpp"
-#include "intervals/IIntervalFactory.hpp"
-#include "intervals/IntIntervalFactory.hpp"
-#include "intervals/UIntIntervalFactory.hpp"
-#include "intervals/StringIntervalFactory.hpp"
-#include "intervals/FloatIntervalFactory.hpp"
-#include "intervals/NullIntervalFactory.hpp"
-#include "fixed_config.h"
-#include "basic_types.h"
-#include "ex/UnknownIntervalTypeEx.hpp"
-#include "ex/ExistingIntervalTypeEx.hpp"
+#include <rbrntrvll/IntervalCreator.hpp>
+#include <rbrntrvll/intervals/IIntervalFactory.hpp>
+#include <rbrntrvll/intervals/IntIntervalFactory.hpp>
+#include <rbrntrvll/intervals/UIntIntervalFactory.hpp>
+#include <rbrntrvll/intervals/StringIntervalFactory.hpp>
+#include <rbrntrvll/intervals/FloatIntervalFactory.hpp>
+#include <rbrntrvll/intervals/NullIntervalFactory.hpp>
+#include <rbrntrvll/fixed_config.h>
+#include <rbrntrvll/basic_types.h>
+#include <rbrntrvll/ex/UnknownIntervalTypeEx.hpp>
+#include <rbrntrvll/ex/ExistingIntervalTypeEx.hpp>
 
 IntervalCreator::IntervalCreator(void) {
 	// reset all factories

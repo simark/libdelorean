@@ -19,8 +19,8 @@
 #include <string>
 #include <sstream>
 
-#include "UnknownIntervalTypeEx.hpp"
-#include "../basic_types.h"
+#include <rbrntrvll/ex/UnknownIntervalTypeEx.hpp>
+#include <rbrntrvll/basic_types.h>
 
 using namespace std;
 

@@ -16,5 +16,5 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "IOEx.hpp"
+#include <rbrntrvll/ex/IOEx.hpp>
 

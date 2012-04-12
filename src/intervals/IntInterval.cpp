@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "IntInterval.hpp"
-#include "../fixed_config.h"
+#include <rbrntrvll/intervals/IntInterval.hpp>
+#include <rbrntrvll/fixed_config.h>
 
 #include <sstream>
 

@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "AbstractThreadedHistoryTree.hpp"
-#include "CoreNode.hpp"
+#include <rbrntrvll/AbstractThreadedHistoryTree.hpp>
+#include <rbrntrvll/CoreNode.hpp>
 
 using namespace std;
 using namespace std::tr1;

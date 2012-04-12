@@ -21,16 +21,17 @@
 #include <cassert>
 #include <tr1/memory>
 #include <cstdlib>
- 
-#include "InHistoryTree.hpp"
-#include "intervals/AbstractInterval.hpp"
-#include "HistoryTreeConfig.hpp"
-#include "CoreNode.hpp"
-#include "LeafNode.hpp"
-#include "ex/IOEx.hpp"
-#include "ex/UnknownNodeTypeEx.hpp"
-#include "fixed_config.h"
 #include <sstream>
+ 
+#include <rbrntrvll/InHistoryTree.hpp>
+#include <rbrntrvll/intervals/AbstractInterval.hpp>
+#include <rbrntrvll/HistoryTreeConfig.hpp>
+#include <rbrntrvll/CoreNode.hpp>
+#include <rbrntrvll/LeafNode.hpp>
+#include <rbrntrvll/ex/IOEx.hpp>
+#include <rbrntrvll/ex/UnknownNodeTypeEx.hpp>
+#include <rbrntrvll/fixed_config.h>
+
 
 using namespace std;
 using namespace std::tr1;

@@ -23,11 +23,11 @@
 #include <cstring>
 #include <sstream>
 
-#include "intervals/NullInterval.hpp"
-#include "IntervalCreator.hpp"
-#include "AbstractNode.hpp"
-#include "basic_types.h"
-#include "ex/NodeFullEx.hpp"
+#include <rbrntrvll/intervals/NullInterval.hpp>
+#include <rbrntrvll/IntervalCreator.hpp>
+#include <rbrntrvll/AbstractNode.hpp>
+#include <rbrntrvll/basic_types.h>
+#include <rbrntrvll/ex/NodeFullEx.hpp>
 
 #include <boost/thread/locks.hpp>
 

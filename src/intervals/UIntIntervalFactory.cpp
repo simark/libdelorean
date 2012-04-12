@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "AbstractInterval.hpp"
-#include "UIntInterval.hpp"
-#include "UIntIntervalFactory.hpp"
+#include <rbrntrvll/intervals/AbstractInterval.hpp>
+#include <rbrntrvll/intervals/UIntInterval.hpp>
+#include <rbrntrvll/intervals/UIntIntervalFactory.hpp>
 
 AbstractInterval::SharedPtr UIntIntervalFactory::create(void) const {
 	AbstractInterval::SharedPtr interval(new UIntInterval());
