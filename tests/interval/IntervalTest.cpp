@@ -129,7 +129,7 @@ public:
 	
 	void testIntervalVariableSize()
 	{
-		CPPUNIT_ASSERT(s_interval->getVariableValueSize() == 4+7);
+		CPPUNIT_ASSERT(s_interval->getVariableValueSize() == 2+7);
 		CPPUNIT_ASSERT(i_interval->getVariableValueSize() == 0);
 		CPPUNIT_ASSERT(u_interval->getVariableValueSize() == 0);
 		CPPUNIT_ASSERT(f_interval->getVariableValueSize() == 0);
@@ -144,17 +144,15 @@ public:
 		memset(constant, 0, 4);
 		memset(variable, 0, 256);
 		memset(expected, 0, 256);
-		expected[0] = 7;
-		expected[1] = 0;
-		expected[2] = 0;
-		expected[3] = 0;
+		expected[0] = 9;
+		expected[1] = '1';
+		expected[2] = '2';
+		expected[3] = '-';
 		expected[4] = '1';
-		expected[5] = '2';
+		expected[5] = '5';
 		expected[6] = '-';
 		expected[7] = '1';
-		expected[8] = '5';
-		expected[9] = '-';
-		expected[10] = '1';
+		expected[8] = 0;
 		
 		s_interval->serializeValues(variable, constant);
 		

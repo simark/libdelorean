@@ -5,7 +5,7 @@
 INC_DIR=.
 
 # Dossier contenant la source à tester
-SRC_DIR=../src
+SRC_DIR=../include/rbrntrvll
 
 # Librairie à tester
 LIB_PATH = ../src/.libs

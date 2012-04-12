@@ -21,6 +21,7 @@
 
 #include <rbrntrvll/intervals/StringInterval.hpp>
 #include <rbrntrvll/basic_types.h>
+#include <rbrntrvll/ex/IOEx.hpp>
 
 using namespace std;
 
@@ -41,27 +42,35 @@ std::string StringInterval::getStringValue(void) const
 
 void StringInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
 	// copy string length (enables faster reads than ASCIIZ)
-	uint32_t sz = _value.size();
+	uint8_t sz = _value.size()+2;
 	memcpy(var_addr, &sz, sizeof(sz));
-	
+		
 	// copy string
 	memcpy((unsigned char*) var_addr + sizeof(sz), _value.c_str(), _value.size());
+	
+	// add NULL character
+	*(var_addr+sz-1) = 0;
 }
 
 unsigned int StringInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
 	// read string length
-	uint32_t sz;
+	uint8_t sz;
 	memcpy(&sz, var_addr, sizeof(sz));
 	
-	// read string
-	_value.assign((char*) var_addr + sizeof(sz), sz);
+	// check NULL character
+	if(*(var_addr+sz-1) != 0) {
+		throw IOEx("Corrupt string entry");
+	}
 	
-	return sizeof(sz) + sz;
+	// read string
+	_value.assign((char*) var_addr + sizeof(sz), sz-2);
+	
+	return sz;
 }
 
 unsigned int StringInterval::getVariableValueSize(void) const {
-	// length of string + 32-bit header
-	return sizeof(uint32_t) + _value.size();
+	// length of string + 8-bit header + 8-bit NULL character
+	return sizeof(uint8_t)*2 + _value.size();
 }
 
 AbstractInterval* StringInterval::clone(void) const{
