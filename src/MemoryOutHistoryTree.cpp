@@ -149,11 +149,7 @@ void MemoryOutHistoryTree::addSiblingNode(unsigned int index) {
 		assert(prev_node.get() != NULL);
 		
 		// is this a leaf node or a core node?
-		if (i == this->_latest_branch.size() - 1) {
-			new_node = this->initNewLeafNode(prev_node->getSequenceNumber(), split_time + 1);
-		} else {
-			new_node = this->initNewCoreNode(prev_node->getSequenceNumber(), split_time + 1);
-		}
+		new_node = this->initNewCoreNode(prev_node->getSequenceNumber(), split_time + 1);
 		
 		// link the new child to its parent
 		prev_node->linkNewChild(new_node);
@@ -176,7 +172,7 @@ void MemoryOutHistoryTree::initEmptyTree(void) {
 	}
 	
 	// add a first (*leaf*) node
-	LeafNode::SharedPtr n = this->initNewLeafNode(-1, this->_config._treeStart);
+	CoreNode::SharedPtr n = this->initNewCoreNode(-1, this->_config._treeStart);
 	_latest_branch.push_back(n);
 }
 
@@ -212,11 +208,7 @@ void MemoryOutHistoryTree::addNewRootNode(void) {
 		prev_node = dynamic_pointer_cast<CoreNode>(this->_latest_branch[i - 1]);
 		
 		// is this a leaf node or a core node?
-		if (i == depth) {
-			new_node = this->initNewLeafNode(prev_node->getSequenceNumber(), split_time + 1);
-		} else {
-			new_node = this->initNewCoreNode(prev_node->getSequenceNumber(), split_time + 1);
-		}
+		new_node = this->initNewCoreNode(prev_node->getSequenceNumber(), split_time + 1);
 		
 		// link the new child to its parent
 		prev_node->linkNewChild(new_node);

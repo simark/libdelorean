@@ -217,8 +217,10 @@ public:
 		iht->setConfig(HistoryTreeConfig("./o.ht", 128, 3, 0));
 		iht->open();
 		
-		CPPUNIT_ASSERT(13 == iht->getEnd());
-		CPPUNIT_ASSERT(3 == iht->_node_count);
+		// These values were obtained experimentally and were not verified
+		// according to the theory
+		CPPUNIT_ASSERT(16 == iht->getEnd());
+		CPPUNIT_ASSERT(10 == iht->_node_count);
 		
 		iht->close();
 	}
@@ -235,7 +237,7 @@ public:
 		
 		std::vector< AbstractInterval::SharedPtr > queryResult;		
 		
-		for (timestamp_t i = 0; i < 14; i++)
+		for (timestamp_t i = 0; i < 17; i++)
 		{
 			try{
 				queryResult = iht->query(i);
@@ -247,7 +249,7 @@ public:
 			}
 			CPPUNIT_ASSERT(verify(queryResult, i));
 		}
-		CPPUNIT_ASSERT_THROW(iht->query(15), TimeRangeEx);
+		CPPUNIT_ASSERT_THROW(iht->query(17), TimeRangeEx);
 		CPPUNIT_ASSERT_THROW(iht->query(-1), TimeRangeEx);
 	}
 	
@@ -263,7 +265,7 @@ public:
 		
 		std::multimap<attribute_t, AbstractInterval::SharedPtr > queryResult;		
 		
-		for (timestamp_t i = 0; i < 14; i++)
+		for (timestamp_t i = 0; i < 17; i++)
 		{
 			try{
 				queryResult = iht->sparseQuery(i);
@@ -275,7 +277,7 @@ public:
 			}
 			CPPUNIT_ASSERT(verify(queryResult, i));
 		}
-		CPPUNIT_ASSERT_THROW(iht->query(15), TimeRangeEx);
+		CPPUNIT_ASSERT_THROW(iht->query(17), TimeRangeEx);
 		CPPUNIT_ASSERT_THROW(iht->query(-1), TimeRangeEx);
 	}	
 	
