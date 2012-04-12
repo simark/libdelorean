@@ -35,7 +35,7 @@ public:
 	StringInterval(timestamp_t start, timestamp_t end, attribute_t attribute, const char* value);
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
-	AbstractInterval* clone(void) const;
+	AbstractInterval::SharedPtr clone(void) const;
 	void setValue(std::string value) {_value = value;}
 	std::string getValue() const {return _value;}
 	

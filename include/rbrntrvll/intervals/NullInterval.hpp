@@ -35,6 +35,7 @@ public:
 
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
+	AbstractInterval::SharedPtr clone(void) const;
 	
 	static const interval_type_t type = SIT_NULL;
 	

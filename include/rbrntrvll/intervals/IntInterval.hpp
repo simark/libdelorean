@@ -34,6 +34,7 @@ public:
 	IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value);
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
+	AbstractInterval::SharedPtr clone(void) const;
 	IntInterval* setValue(int32_t value) {
 		this->_value = value;
 		

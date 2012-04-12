@@ -48,3 +48,7 @@ unsigned int IntInterval::getVariableValueSize(void) const {
 	return 0;
 }
 
+AbstractInterval::SharedPtr IntInterval::clone(void) const{
+	return AbstractInterval::SharedPtr(new IntInterval(*this));
+}
+

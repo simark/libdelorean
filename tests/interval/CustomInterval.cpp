@@ -51,3 +51,7 @@ unsigned int CustomInterval::getVariableValueSize(void) const {
 	// length of struct
 	return sizeof(data);
 }
+
+AbstractInterval::SharedPtr CustomInterval::clone() const{
+	return AbstractInterval::SharedPtr(new CustomInterval(*this));
+}

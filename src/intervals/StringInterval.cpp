@@ -73,6 +73,6 @@ unsigned int StringInterval::getVariableValueSize(void) const {
 	return sizeof(uint8_t)*2 + _value.size();
 }
 
-AbstractInterval* StringInterval::clone(void) const{
-	return new StringInterval(*this);
+AbstractInterval::SharedPtr StringInterval::clone(void) const{
+	return AbstractInterval::SharedPtr(new StringInterval(*this));
 }

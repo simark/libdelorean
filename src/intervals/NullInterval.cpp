@@ -46,3 +46,7 @@ unsigned int NullInterval::getVariableValueSize(void) const {
 	return 0;
 }
 
+AbstractInterval::SharedPtr NullInterval::clone(void) const{
+	return AbstractInterval::SharedPtr(new NullInterval(*this));
+}
+

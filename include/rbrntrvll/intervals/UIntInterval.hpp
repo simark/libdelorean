@@ -35,7 +35,7 @@ public:
 	~UIntInterval() { }
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
-	AbstractInterval* clone(void) const;
+	AbstractInterval::SharedPtr clone(void) const;
 	void setValue(uint32_t value) {_value = value;}
 	uint32_t getValue() const {return _value;}
 	

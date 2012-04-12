@@ -122,7 +122,7 @@ void AbstractNode::addInterval(AbstractInterval::SharedPtr newInterval) throw (T
 		throw TimeRangeEx("interval start time below node start time");
 	
 	// FIXME : We need to clone the interval, to guarantee ownership
-	_intervals.insert(newInterval);
+	_intervals.insert(newInterval->clone());
 	
 	// Update the in-node offset "pointer"
 	_variableSectionOffset -= (newInterval->getVariableValueSize());

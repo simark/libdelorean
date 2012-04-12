@@ -39,6 +39,7 @@ public:
 	CustomInterval(void) : AbstractInterval(type) { }
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
+	virtual AbstractInterval::SharedPtr clone() const;
 	void setValue(data value) {_value = value;}
 	data getValue() const {return _value;}
 	

@@ -41,6 +41,7 @@ public:
 	void serialize(uint8_t* var_ptr, uint8_t* head_ptr);
 	unsigned int unserialize(uint8_t* var_ptr, uint8_t* head_ptr);
 	virtual unsigned int getVariableValueSize(void) const = 0;
+	virtual AbstractInterval::SharedPtr clone() const = 0;
 	unsigned int getTotalSize(void) const {
 		return AbstractInterval::HEADER_SIZE + this->getVariableValueSize();
 	}

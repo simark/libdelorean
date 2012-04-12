@@ -47,6 +47,6 @@ unsigned int FloatInterval::getVariableValueSize(void) const {
 	return 0;
 }
 
-AbstractInterval* FloatInterval::clone(void) const{
-	return new FloatInterval(*this);
+AbstractInterval::SharedPtr FloatInterval::clone(void) const{
+	return AbstractInterval::SharedPtr(new FloatInterval(*this));
 }

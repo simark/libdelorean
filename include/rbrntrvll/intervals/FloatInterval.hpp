@@ -32,7 +32,7 @@ public:
 	FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value);
 	std::string getStringValue(void) const;
 	unsigned int getVariableValueSize(void) const;
-	AbstractInterval* clone(void) const;
+	AbstractInterval::SharedPtr clone(void) const;
 	
 	void setValue(float value) {_value = value;}
 	float getValue() const {return _value;}

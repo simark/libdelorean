@@ -48,6 +48,6 @@ unsigned int UIntInterval::getVariableValueSize(void) const {
 	return 0;
 }
 
-AbstractInterval* UIntInterval::clone(void) const{
-	return new UIntInterval(*this);
+AbstractInterval::SharedPtr UIntInterval::clone(void) const{
+	return AbstractInterval::SharedPtr(new UIntInterval(*this));
 }
