@@ -29,8 +29,8 @@
 class ThreadedHistoryTree : public HistoryTree, public ThreadedInHistoryTree, public ThreadedOutHistoryTree 
 {
 public:
-	ThreadedHistoryTree();
-	ThreadedHistoryTree(HistoryTreeConfig config);
+	ThreadedHistoryTree(unsigned int maxQueueSize = 10000);
+	ThreadedHistoryTree(HistoryTreeConfig config, unsigned int maxQueueSize = 10000);
 	virtual ~ThreadedHistoryTree();
 	
 	virtual void open();

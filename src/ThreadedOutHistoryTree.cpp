@@ -35,12 +35,25 @@
 using namespace std;
 using namespace std::tr1;
  
-ThreadedOutHistoryTree::ThreadedOutHistoryTree()
-: AbstractHistoryTree() , OutHistoryTree(), AbstractThreadedHistoryTree(){
+ /**
+  * Constructs a threaded output history tree, using a default configuration
+  * 
+  * @param maxQueueSize the maximum allowed size for the insertion queue
+  */ 
+ThreadedOutHistoryTree::ThreadedOutHistoryTree(unsigned int maxQueueSize)
+: AbstractHistoryTree() , OutHistoryTree(), AbstractThreadedHistoryTree(), 
+  _maxQueueSize(maxQueueSize) {
 }
 
-ThreadedOutHistoryTree::ThreadedOutHistoryTree(HistoryTreeConfig config)
-: AbstractHistoryTree(config) , OutHistoryTree(config), AbstractThreadedHistoryTree(config){
+ /**
+  * Constructs a threaded output history tree, using the given configuration
+  * 
+  * @param config A configuration
+  * @param maxQueueSize the maximum allowed size for the insertion queue
+  */ 
+ThreadedOutHistoryTree::ThreadedOutHistoryTree(HistoryTreeConfig config, unsigned int maxQueueSize)
+: AbstractHistoryTree(config) , OutHistoryTree(config), AbstractThreadedHistoryTree(config), 
+  _maxQueueSize(maxQueueSize) {
 }
 
 /**
@@ -73,6 +86,12 @@ void ThreadedOutHistoryTree::addInterval(AbstractInterval::SharedPtr interval) t
 	}
 	
 	boost::unique_lock<boost::mutex> lock(_insertQueue_mutex);
+	
+	//if queue is full, wait for it to be emptied
+	while (_insertQueue.size() >= _maxQueueSize) {
+		_queueFullConditionVariable.wait(lock);
+	}
+	
 	bool const was_empty=_insertQueue.empty();
 	_insertQueue.push(interval);
 	if(was_empty)
@@ -117,11 +136,7 @@ void ThreadedOutHistoryTree::addSiblingNode(unsigned int index) {
 		assert(prev_node.get() != NULL);
 		
 		// is this a leaf node or a core node?
-		if (i == this->_latest_branch.size() - 1) {
-			new_node = this->initNewLeafNode(prev_node->getSequenceNumber(), split_time + 1);
-		} else {
-			new_node = this->initNewCoreNode(prev_node->getSequenceNumber(), split_time + 1);
-		}
+		new_node = this->initNewCoreNode(prev_node->getSequenceNumber(), split_time + 1);
 		
 		// link the new child to its parent
 		prev_node->linkNewChild(new_node);
@@ -140,7 +155,7 @@ void ThreadedOutHistoryTree::initEmptyTree(void) {
 	this->_latest_branch.clear();
 	
 	// add a first (*leaf*) node
-	LeafNode::SharedPtr n = this->initNewLeafNode(-1, this->_config._treeStart);
+	AbstractNode::SharedPtr n = this->initNewCoreNode(-1, this->_config._treeStart);
 	_latest_branch.push_back(n);
 }
 
@@ -176,11 +191,7 @@ void ThreadedOutHistoryTree::addNewRootNode(void) {
 		prev_node = dynamic_pointer_cast<CoreNode>(this->_latest_branch[i - 1]);
 		
 		// is this a leaf node or a core node?
-		if (i == depth) {
-			new_node = this->initNewLeafNode(prev_node->getSequenceNumber(), split_time + 1);
-		} else {
-			new_node = this->initNewCoreNode(prev_node->getSequenceNumber(), split_time + 1);
-		}
+		new_node = this->initNewCoreNode(prev_node->getSequenceNumber(), split_time + 1);
 		
 		// link the new child to its parent
 		prev_node->linkNewChild(new_node);
@@ -228,6 +239,8 @@ void ThreadedOutHistoryTree::manageInsert(void){
 			// Relock mutex for next pop
 			l.lock();
 		}
+		//We have processed the whole queue here, tell those waiting to wake up
+		_queueFullConditionVariable.notify_all();
 	}
 }
 

@@ -44,7 +44,7 @@ private:
 	
 public:
 	void setUp()
-	{			
+	{	
 		intervalCreator = new IntervalCreator();
 	}
 
@@ -55,13 +55,16 @@ public:
 	
 	void testRegister()
 	{
+		IIntervalFactory* nullFactory1 = new NullIntervalFactory();
+		IIntervalFactory* nullFactory2 = new NullIntervalFactory();
 		intervalCreator->unregisterIntervalType(SIT_NULL);
 		try{
-			intervalCreator->registerIntervalType(SIT_NULL, new NullIntervalFactory());
+			intervalCreator->registerIntervalType(SIT_NULL, nullFactory1);
 		}catch(...){
 			CPPUNIT_FAIL("Exception thrown when registering");
 		}
-		CPPUNIT_ASSERT_THROW(intervalCreator->registerIntervalType(SIT_NULL, new NullIntervalFactory), ExistingIntervalTypeEx);
+		CPPUNIT_ASSERT_THROW(intervalCreator->registerIntervalType(SIT_NULL, nullFactory2), ExistingIntervalTypeEx);
+		delete nullFactory2;
 	}
 	
 	void testCreate()

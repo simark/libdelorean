@@ -83,8 +83,8 @@ void AbstractNode::writeInfoFromNode(vector<AbstractInterval::SharedPtr>& interv
 
 /**
  * The method adds the intervals from this node that intersect the
- * timestamp to a vector.
- * The intervals' attribute is used as an index in that vector.
+ * timestamp to a multimap.
+ * The intervals' attribute is used as an index in that multimap.
  * 
  * @param intervals The intervals that are added from node to node
  * @param timestamp The timestamp for which the query is for. Only return intervals that intersect t.
@@ -121,8 +121,15 @@ void AbstractNode::addInterval(AbstractInterval::SharedPtr newInterval) throw (T
 	if(newInterval->getStart() < _nodeStart)
 		throw TimeRangeEx("interval start time below node start time");
 	
-	// FIXME : We need to clone the interval, to guarantee ownership
-	_intervals.insert(newInterval->clone());
+	// We need to clone the interval, to guarantee ownership
+	if(_intervals.size() > 0) {
+		IntervalContainer::iterator pos = _intervals.end();
+		pos--;
+		_intervals.insert(pos, newInterval->clone());
+	} else {
+		_intervals.insert(newInterval->clone());
+	}
+		
 	
 	// Update the in-node offset "pointer"
 	_variableSectionOffset -= (newInterval->getVariableValueSize());
@@ -339,7 +346,13 @@ void AbstractNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 		assert(var_len == interval->getVariableValueSize());
 		
 		// keep it...
-		this->_intervals.insert(this->_intervals.end(), interval);
+		if (this->_intervals.size() > 0) {
+			IntervalContainer::iterator pos = _intervals.end();
+			pos--;			
+			this->_intervals.insert(pos, interval);			
+		} else {			
+			this->_intervals.insert(interval);			
+		}
 		
 		// new buffer offsets
 		datPtr += AbstractInterval::getHeaderSize();

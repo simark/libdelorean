@@ -37,8 +37,8 @@
 class ThreadedOutHistoryTree : virtual public OutHistoryTree, virtual public AbstractThreadedHistoryTree
 {
 public:
-	ThreadedOutHistoryTree();
-	ThreadedOutHistoryTree(HistoryTreeConfig config);
+	ThreadedOutHistoryTree(unsigned int maxQueueSize = 10000);
+	ThreadedOutHistoryTree(HistoryTreeConfig config, unsigned int maxQueueSize = 10000);
 	virtual void open();
 	virtual void close(timestamp_t end);
 	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
@@ -55,8 +55,10 @@ protected:
 	
 	std::queue<AbstractInterval::SharedPtr> _insertQueue;
 	boost::mutex _insertQueue_mutex;
+	const unsigned int _maxQueueSize;
 	boost::thread _insertThread;
 	boost::condition_variable _insertConditionVariable;
+	boost::condition_variable _queueFullConditionVariable;
 private:
 
 };

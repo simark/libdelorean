@@ -26,20 +26,26 @@
 
 using namespace std;
 
-ThreadedHistoryTree::ThreadedHistoryTree()
+ /**
+  * Constructs a threaded history tree, using a default configuration
+  * 
+  * @param maxQueueSize the maximum allowed size for the insertion queue
+  */ 
+ThreadedHistoryTree::ThreadedHistoryTree(unsigned int maxQueueSize)
 :AbstractHistoryTree(), HistoryTree(),
-ThreadedInHistoryTree(), ThreadedOutHistoryTree()
+ThreadedInHistoryTree(), ThreadedOutHistoryTree(maxQueueSize)
 {
 }
 
-/**
- * Create a new HistoryTree using a configuration
- * 
- * @param config
- */
-ThreadedHistoryTree::ThreadedHistoryTree(HistoryTreeConfig config)
+ /**
+  * Constructs a threaded history tree, using the given configuration
+  * 
+  * @param config A configuration
+  * @param maxQueueSize the maximum allowed size for the insertion queue
+  */ 
+ThreadedHistoryTree::ThreadedHistoryTree(HistoryTreeConfig config, unsigned int maxQueueSize)
 :AbstractHistoryTree(config), HistoryTree(config),
-ThreadedInHistoryTree(config), ThreadedOutHistoryTree(config)
+ThreadedInHistoryTree(config), ThreadedOutHistoryTree(config, maxQueueSize)
 {
 }
 
