@@ -250,7 +250,7 @@ void MemoryInHistoryTree::loadNodes() {
 	
 	_nodes.clear();
 	// compute where the nodes begin in file
-	unsigned int offset = this->getHeaderSize();
+	streamoff offset = this->getHeaderSize();
 	
 	for(unsigned int i = 0; i < this->_node_count; ++i){
 		 

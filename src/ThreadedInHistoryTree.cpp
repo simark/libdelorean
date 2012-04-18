@@ -133,7 +133,7 @@ std::multimap<attribute_t, AbstractInterval::SharedPtr> ThreadedInHistoryTree::s
 AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromStream() const {
 	fstream& f = this->_stream;
 	boost::unique_lock<boost::recursive_mutex> l(_stream_mutex);
-	unsigned int init_pos = f.tellg();
+	streampos init_pos = f.tellg();
 	
 	// node to return
 	AbstractNode::SharedPtr n;
@@ -169,7 +169,7 @@ AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromSeq(seq_number_t se
 	assert((unsigned int) seq < this->_node_count);
 		
 	// compute where the node begins in file
-	unsigned int offset = this->getHeaderSize() + seq * this->_config._blockSize;
+	streampos offset = filePosFromSeq(seq);
 	
 	// seek there
 	boost::unique_lock<boost::recursive_mutex> l(_stream_mutex);

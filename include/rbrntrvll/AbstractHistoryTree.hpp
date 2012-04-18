@@ -63,8 +63,8 @@ public:
 protected:
 	bool checkValidTime(timestamp_t timestamp) const;
 	bool nodeHasChildren(AbstractNode::ConstSharedPtr node) const;
-	unsigned int filePosFromSeq(seq_number_t seq) {
-		return this->getHeaderSize() + seq * this->_config._blockSize;
+	std::streampos filePosFromSeq(seq_number_t seq) const {
+		return (uint64_t)this->getHeaderSize() + (uint64_t)seq * (uint64_t)this->_config._blockSize;
 	}
 	unsigned int getHeaderSize(void) const {
 		return AbstractHistoryTree::HEADER_SIZE;

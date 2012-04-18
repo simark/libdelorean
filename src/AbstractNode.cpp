@@ -303,7 +303,7 @@ void AbstractNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 	//locking the mutex is not required here as the node cannot be modified yet
 	
 	// remember initial position within stream
-	unsigned int init_pos = is.tellg();
+	streampos init_pos = is.tellg();
 	
 	// type
 	is.read((char*) &this->_type, sizeof(node_type_t));
@@ -330,7 +330,7 @@ void AbstractNode::unserialize(std::istream& is, const IntervalCreator& ic) {
 	// unserialize intervals
 	unsigned int len = this->_config._blockSize - this->getTotalHeaderSize();
 	uint8_t* const buf = new uint8_t [len];
-	is.seekg(init_pos + this->getTotalHeaderSize(), ios::beg);
+	is.seekg(init_pos + (streamoff)this->getTotalHeaderSize(), ios::beg);
 	is.read((char*) buf, len);
 	this->_variableSectionOffset = this->_config._blockSize;
 	uint8_t* datPtr = buf;

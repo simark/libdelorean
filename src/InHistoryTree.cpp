@@ -283,7 +283,7 @@ std::multimap<attribute_t, AbstractInterval::SharedPtr> InHistoryTree::sparseQue
 
 AbstractNode::SharedPtr InHistoryTree::createNodeFromStream() const {
 	fstream& f = this->_stream;
-	unsigned int init_pos = f.tellg();
+	streampos init_pos = f.tellg();
 	
 	// node to return
 	AbstractNode::SharedPtr n;
@@ -319,7 +319,7 @@ AbstractNode::SharedPtr InHistoryTree::createNodeFromSeq(seq_number_t seq) const
 	assert((unsigned int) seq < this->_node_count);
 	
 	// compute where the node begins in file
-	unsigned int offset = this->getHeaderSize() + seq * this->_config._blockSize;
+	streampos offset = filePosFromSeq(seq);
 	
 	// seek there
 	this->_stream.seekg(offset, ios::beg);
