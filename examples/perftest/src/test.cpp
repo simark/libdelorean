@@ -15,15 +15,16 @@
 #include <HistoryTree.hpp>
 #include <HistoryTreeConfig.hpp>
 #include <ThreadedOutHistoryTree.hpp>
+#include <MemoryOutHistoryTree.hpp>
 
 using namespace std;
 using namespace std::tr1;
 
-const unsigned int NB_INSERT=100000000;
+const unsigned int NB_INSERT=10000000;
 
 void static stressTest() {
 	HistoryTreeConfig config("./out.ht", 0);
-	OutHistoryTree* oht = new ThreadedOutHistoryTree(config);
+	OutHistoryTree* oht = new OutHistoryTree(config);
 	oht->open();
 	for(unsigned int i = 10; i < NB_INSERT; ++i) {
 		unsigned int start = i - rand() % 10;
@@ -33,6 +34,7 @@ void static stressTest() {
 		*oht << sint;
 	}
 	oht->close();
+	delete oht;
 }
 
 int main(void) {
