@@ -250,10 +250,8 @@ AbstractInterval::SharedPtr InHistoryTree::query(timestamp_t timestamp, attribut
 		currentNode = selectNextChild(coreNode, timestamp);
 		interval = currentNode->getRelevantInterval(timestamp, key);
 	}
-	/* Since we should now have intervals at every attribute/timestamp
-	 * combination, it should NOT be null here. */
-	assert (interval != NULL);
 	
+	// The interval should now contain the relevant interval
 	return interval;
 }
 

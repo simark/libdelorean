@@ -13,11 +13,11 @@ LIB =  -lboost_thread -L$(LIB_PATH) -lrbrntrvll
 
 # Fichier sources contenant les tests
 TEST_SRC=\
-	node/NodeTest.cpp \
 	interval/IntervalTest.cpp \
 	interval/IntervalCreatorTest.cpp \
 	interval/CustomInterval.cpp \
 	interval/CustomIntervalFactory.cpp \
+	node/NodeTest.cpp \
 	tree/TreeTest.cpp \
 	tree/ThreadedTreeTest.cpp \
 	tree/MemoryTreeTest.cpp
