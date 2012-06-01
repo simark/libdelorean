@@ -26,7 +26,7 @@
 #define SIT_STRING	1
 #define SIT_UINT32	2
 #define SIT_FLOAT32	3
-#define SIT_NULL	4
+#define SIT_NULL	-1
 
 /**
  * Node types.

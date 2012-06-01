@@ -114,17 +114,17 @@ public:
 	
 	void testIntervalTypes()
 	{
-		CPPUNIT_ASSERT(s_interval->getType() == 1);
-		CPPUNIT_ASSERT(i_interval->getType() == 0);
-		CPPUNIT_ASSERT(u_interval->getType() == 2);
-		CPPUNIT_ASSERT(f_interval->getType() == 3);
-		CPPUNIT_ASSERT(n_interval->getType() == 4);
+		CPPUNIT_ASSERT(s_interval->getType() == (interval_type_t)1);
+		CPPUNIT_ASSERT(i_interval->getType() == (interval_type_t)0);
+		CPPUNIT_ASSERT(u_interval->getType() == (interval_type_t)2);
+		CPPUNIT_ASSERT(f_interval->getType() == (interval_type_t)3);
+		CPPUNIT_ASSERT(n_interval->getType() == (interval_type_t)-1);
 		
-		CPPUNIT_ASSERT(StringInterval::type == 1);
-		CPPUNIT_ASSERT(IntInterval::type == 0);
-		CPPUNIT_ASSERT(UIntInterval::type == 2);
-		CPPUNIT_ASSERT(FloatInterval::type == 3);
-		CPPUNIT_ASSERT(NullInterval::type == 4);
+		CPPUNIT_ASSERT(StringInterval::type == (interval_type_t)1);
+		CPPUNIT_ASSERT(IntInterval::type == (interval_type_t)0);
+		CPPUNIT_ASSERT(UIntInterval::type == (interval_type_t)2);
+		CPPUNIT_ASSERT(FloatInterval::type == (interval_type_t)3);
+		CPPUNIT_ASSERT(NullInterval::type == (interval_type_t)-1);
 	}
 	
 	void testIntervalVariableSize()
@@ -232,7 +232,7 @@ public:
 		*((uint64_t*) &expected[0]) = 12;
 		*((uint64_t*) &expected[8]) = 15;
 		*((uint32_t*) &expected[16]) = 1;
-		expected[20] = 1;
+		expected[20] = (interval_type_t)1;
 		
 		s_interval->serialize(variable, buffer);
 		
@@ -246,7 +246,7 @@ public:
 		*((uint64_t*) &expected[0]) = 12;
 		*((uint64_t*) &expected[8]) = 15;
 		*((uint32_t*) &expected[16]) = 1;
-		expected[20] = 0;
+		expected[20] = (interval_type_t)0;
 		*((uint32_t*) &expected[21]) = 12151;
 		
 		i_interval->serialize(variable, buffer);
@@ -261,7 +261,7 @@ public:
 		*((uint64_t*) &expected[0]) = 12;
 		*((uint64_t*) &expected[8]) = 15;
 		*((uint32_t*) &expected[16]) = 1;
-		expected[20] = 2;
+		expected[20] = (interval_type_t)2;
 		*((uint32_t*) &expected[21]) = 12151;
 		
 		u_interval->serialize(variable, buffer);
@@ -276,7 +276,7 @@ public:
 		*((uint64_t*) &expected[0]) = 12;
 		*((uint64_t*) &expected[8]) = 15;
 		*((uint32_t*) &expected[16]) = 1;
-		expected[20] = 3;
+		expected[20] = (interval_type_t)3;
 		*((float*) &expected[21]) = 12.151;
 		
 		f_interval->serialize(variable, buffer);
@@ -292,7 +292,7 @@ public:
 		*((uint64_t*) &expected[0]) = 12;
 		*((uint64_t*) &expected[8]) = 15;
 		*((uint32_t*) &expected[16]) = 1;
-		expected[20] = 4;
+		expected[20] = (interval_type_t)-1;
 		
 		n_interval->serialize(variable, buffer);
 		
