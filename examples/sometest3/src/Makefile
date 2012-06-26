@@ -6,7 +6,7 @@
 SRC = test.cpp
 TARGET = test
 LIB_PATH = ../../../src/.libs
-INC_PATH = ../../../src/
+INC_PATH = ../../../include/rbrntrvll/
 LIB = -L$(LIB_PATH) -lrbrntrvll
 
 # automatic

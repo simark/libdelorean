@@ -4,13 +4,14 @@
 #include <cstring>
 #include <cstdio>
 
+#include <intervals/AbstractInterval.hpp>
 #include <intervals/IntIntervalFactory.hpp>
 #include <intervals/IntInterval.hpp>
 #include <IntervalCreator.hpp>
 #include <intervals/StringInterval.hpp>
 #define protected public
 #define private public
-#include <HistoryTreeCoreNode.hpp>
+#include <CoreNode.hpp>
 #undef private
 #undef protected
 #include <HistoryTree.hpp>
@@ -30,7 +31,7 @@ static void testInterval(void) {
 	IIntervalFactory* factory = new IntIntervalFactory();
 	
 	// create interval
-	IntervalSharedPtr interval = factory->create();
+	AbstractInterval::SharedPtr interval = factory->create();
 	delete factory;
 	
 	// set attributes
@@ -60,7 +61,7 @@ static void testStringInterval(void) {
 	char somebuf [] = "    here is a string";
 	uint32_t len = strlen(somebuf) - 4;
 	memcpy(somebuf, &len, 4);
-	IntervalSharedPtr interval(new StringInterval());
+	AbstractInterval::SharedPtr interval(new StringInterval());
 	//FIXME this next line does not compile anymore
 	//interval->unserialize(somebuf, NULL);
 	interval->setInterval(13, 4657);
@@ -72,7 +73,7 @@ static void testIntervalCreator(void) {
 	printTestHeader("testIntervalCreator");
 	
 	IntervalCreator creator;
-	IntervalSharedPtr interval;
+	AbstractInterval::SharedPtr interval;
 	
 	try {
 		creator.createIntervalFromType(1);
@@ -104,10 +105,10 @@ static void testNode(void) {
 	
 	//HistoryTree tree(config);
 	
-	HistoryTreeCoreNode node(config, 34, 14, 1);
+	CoreNode node(config, 34, 14, 1);
 	
 	for(unsigned int i = 0; i < 10; i++){
-		IntervalSharedPtr interval(new IntInterval(1, 20-i, i, i));
+		AbstractInterval::SharedPtr interval(new IntInterval(1, 20-i, i, i));
 		node.addInterval(interval);
 	}
 	node.close(20);
@@ -153,8 +154,8 @@ static void testNode(void) {
 static void testNodeDump(void) {
 	printTestHeader("testNodeDump");
 		
-	IntervalSharedPtr int_interval(new IntInterval(2, 18, 7, 65));
-	IntervalSharedPtr str_interval(new StringInterval(5, 25, 6, "allo vous!"));
+	AbstractInterval::SharedPtr int_interval(new IntInterval(2, 18, 7, 65));
+	AbstractInterval::SharedPtr str_interval(new StringInterval(5, 25, 6, "allo vous!"));
 	
 	HistoryTreeConfig config;
 	config._stateFile = "/tmp/lol";
@@ -164,7 +165,7 @@ static void testNodeDump(void) {
 	
 	//HistoryTree tree(config);
 	
-	HistoryTreeCoreNode node(config, 34, 14, 1);
+	CoreNode node(config, 34, 14, 1);
 	node.addInterval(str_interval);
 	node.addInterval(int_interval);
 	node.close(100);
@@ -179,8 +180,8 @@ static void testNodeDump(void) {
 static void testIntervalCopy(void) {
 	printTestHeader("testIntervalCopy");
 	
-	IntervalSharedPtr int_interval1(new IntInterval(1,2,1,1));
-	IntervalSharedPtr int_interval2(new IntInterval(3,4,2,2));
+	AbstractInterval::SharedPtr int_interval1(new IntInterval(1,2,1,1));
+	AbstractInterval::SharedPtr int_interval2(new IntInterval(3,4,2,2));
 	
 	*int_interval2 = *int_interval1;
 	

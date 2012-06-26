@@ -25,15 +25,14 @@ static void printTestHeader(string what) {
 static void queryAndPrint(InHistoryTree* iht, int t)
 {
 	cout << "Request at t=" << t << endl;
-	vector<IntervalSharedPtr> intervals;
+	vector<AbstractInterval::SharedPtr> intervals;
 	try{
 		intervals = iht->query(t);
 	}catch(TimeRangeEx& ex){
 		cout << ex.what() << endl;
 	}
-	for(vector<IntervalSharedPtr>::iterator it = intervals.begin(); it != intervals.end(); it++)
+	for(vector<AbstractInterval::SharedPtr>::iterator it = intervals.begin(); it != intervals.end(); it++)
 	{
-		cout << *it;
 		if(*it != 0)
 			cout << **it << endl;
 	}
@@ -90,23 +89,23 @@ static void testInOutHT(void) {
 	ht->open();
 	
 	// leaf (seq 0)
-	ht->addInterval(IntervalSharedPtr(new IntInterval(2, 7, 0, 32)));
-	ht->addInterval(IntervalSharedPtr(new IntInterval(5, 11, 1, 33)));
-	ht->addInterval(IntervalSharedPtr(new IntInterval(3, 25, 2, 34)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(2, 7, 0, 32)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(5, 11, 1, 33)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(3, 25, 2, 34)));
 	
 	// leaf (seq 2)
-	ht->addInterval(IntervalSharedPtr(new IntInterval(28, 35, 3, 35)));
-	ht->addInterval(IntervalSharedPtr(new IntInterval(32, 45, 4, 36)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(28, 35, 3, 35)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(32, 45, 4, 36)));
 	
 	// core (seq 1)
-	ht->addInterval(IntervalSharedPtr(new IntInterval(16, 50, 5, 37)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(16, 50, 5, 37)));
 	
 	// leaf (seq 2)
-	ht->addInterval(IntervalSharedPtr(new IntInterval(26, 52, 6, 38)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(26, 52, 6, 38)));
 	
 	// leaf (seq 3)
-	ht->addInterval(IntervalSharedPtr(new IntInterval(65, 70, 7, 39)));
-	ht->addInterval(IntervalSharedPtr(new IntInterval(56, 74, 8, 40)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(65, 70, 7, 39)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(56, 74, 8, 40)));
 	
 	//Write the tree to disk...
 	ht->close();
@@ -114,21 +113,21 @@ static void testInOutHT(void) {
 	ht->open(HistoryTree::APPEND);
 	
 	// core (seq 4)
-	ht->addInterval(IntervalSharedPtr(new IntInterval(35, 76, 9, 40)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(35, 76, 9, 40)));
 	
 	// leaf (seq 6)
-	ht->addInterval(IntervalSharedPtr(new IntInterval(80, 85, 10, 41)));
-	ht->addInterval(IntervalSharedPtr(new IntInterval(76, 88, 11, 42)));
-	ht->addInterval(IntervalSharedPtr(new IntInterval(90, 10, 12, 43)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(80, 85, 10, 41)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(76, 88, 11, 42)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(90, 10, 12, 43)));
 	
 	// leaf (seq 7)
-	ht->addInterval(IntervalSharedPtr(new IntInterval(105, 110, 13, 44)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(105, 110, 13, 44)));
 	
 	// core (seq 5)
-	ht->addInterval(IntervalSharedPtr(new IntInterval(77, 120, 14, 45)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(77, 120, 14, 45)));
 	
 	// leaf (seq 7)
-	ht->addInterval(IntervalSharedPtr(new IntInterval(102, 137, 15, 46)));
+	ht->addInterval(AbstractInterval::SharedPtr(new IntInterval(102, 137, 15, 46)));
 	
 	ht->test();
 	
