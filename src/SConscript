@@ -12,7 +12,6 @@ main_sources = [
     'AbstractHistory.cpp',
     'AbstractMemoryHistory.cpp',
     'AbstractNode.cpp',
-    'AbstractThreadedHistory.cpp',
     'CoreNode.cpp',
     'HistoryConfig.cpp',
     'History.cpp',
@@ -23,9 +22,6 @@ main_sources = [
     'MemoryInHistory.cpp',
     'MemoryOutHistory.cpp',
     'OutHistory.cpp',
-    'ThreadedHistory.cpp',
-    'ThreadedInHistory.cpp',
-    'ThreadedOutHistory.cpp',
 ]
 
 ex_base = 'ex'
