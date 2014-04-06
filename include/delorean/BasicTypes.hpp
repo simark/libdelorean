@@ -21,10 +21,10 @@
 
 #include <stdint.h>
 
-typedef int64_t		timestamp_t;
-typedef int32_t		attribute_t;
-typedef uint8_t		interval_type_t;
-typedef uint8_t		node_type_t;
-typedef int32_t		seq_number_t;
+typedef int64_t     timestamp_t;
+typedef int32_t     attribute_t;
+typedef uint8_t     interval_type_t;
+typedef uint8_t     node_type_t;
+typedef int32_t     seq_number_t;
 
 #endif // _BASIC_TYPES_HPP

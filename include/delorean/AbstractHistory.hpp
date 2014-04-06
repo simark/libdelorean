@@ -30,52 +30,52 @@
 class AbstractHistory
 {
 public:
-	enum OpenMode { TRUNCATE, APPEND };
+    enum OpenMode { TRUNCATE, APPEND };
 
-	AbstractHistory();
-	AbstractHistory(HistoryConfig config);
-	
-	// TODO: template method design pattern for those?
-	virtual void open() = 0;
-	virtual void close(timestamp_t end) = 0;
-	virtual void close() = 0;
-	virtual ~AbstractHistory();
-	
-	void setConfig(HistoryConfig config) {
-		if (!_opened)
-			this->_config = config;
-	}
-	HistoryConfig getConfig(void) const {		
-		return this->_config;
-	}	
-	timestamp_t getStart() const {
-		return _config._treeStart;
-	}
-	
-	timestamp_t getEnd() const {
-		return _end;
-	}
-	
-	timestamp_t getNodeCount() const {
-		return _node_count;
-	}
+    AbstractHistory();
+    AbstractHistory(HistoryConfig config);
+
+    // TODO: template method design pattern for those?
+    virtual void open() = 0;
+    virtual void close(timestamp_t end) = 0;
+    virtual void close() = 0;
+    virtual ~AbstractHistory();
+
+    void setConfig(HistoryConfig config) {
+        if (!_opened)
+            this->_config = config;
+    }
+    HistoryConfig getConfig(void) const {
+        return this->_config;
+    }
+    timestamp_t getStart() const {
+        return _config._treeStart;
+    }
+
+    timestamp_t getEnd() const {
+        return _end;
+    }
+
+    timestamp_t getNodeCount() const {
+        return _node_count;
+    }
 
 protected:
-	bool checkValidTime(timestamp_t timestamp) const;
-	bool nodeHasChildren(AbstractNode::ConstSharedPtr node) const;
-	std::streampos filePosFromSeq(seq_number_t seq) const {
-		return (uint64_t)this->getHeaderSize() + (uint64_t)seq * (uint64_t)this->_config._blockSize;
-	}
-	unsigned int getHeaderSize(void) const {
-		return AbstractHistory::HEADER_SIZE;
-	}
-	static const unsigned int HEADER_SIZE;
-	HistoryConfig _config;
-	bool _opened;
-	timestamp_t _end;
-	unsigned int _node_count;
-	std::vector<AbstractNode::SharedPtr> _latest_branch;
-	mutable std::fstream _stream;
+    bool checkValidTime(timestamp_t timestamp) const;
+    bool nodeHasChildren(AbstractNode::ConstSharedPtr node) const;
+    std::streampos filePosFromSeq(seq_number_t seq) const {
+        return (uint64_t)this->getHeaderSize() + (uint64_t)seq * (uint64_t)this->_config._blockSize;
+    }
+    unsigned int getHeaderSize(void) const {
+        return AbstractHistory::HEADER_SIZE;
+    }
+    static const unsigned int HEADER_SIZE;
+    HistoryConfig _config;
+    bool _opened;
+    timestamp_t _end;
+    unsigned int _node_count;
+    std::vector<AbstractNode::SharedPtr> _latest_branch;
+    mutable std::fstream _stream;
 };
 
 #endif // _ABSTRACTHISTORYTREE_HPP

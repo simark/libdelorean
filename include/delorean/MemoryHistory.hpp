@@ -26,23 +26,23 @@
 #include "MemoryOutHistory.hpp"
 #include "HistoryConfig.hpp"
 
-class MemoryHistory : public History, public MemoryInHistory, public MemoryOutHistory 
+class MemoryHistory : public History, public MemoryInHistory, public MemoryOutHistory
 {
 public:
-	MemoryHistory(bool writeOnClose = true);
-	MemoryHistory(HistoryConfig config, bool writeOnClose = true);
-	virtual ~MemoryHistory();
-	
-	virtual void open();
-	virtual void open(OpenMode mode);
-	virtual void close(timestamp_t end);
-	virtual void close();
-	
-	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
-	virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
-	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
-	
-	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
+    MemoryHistory(bool writeOnClose = true);
+    MemoryHistory(HistoryConfig config, bool writeOnClose = true);
+    virtual ~MemoryHistory();
+
+    virtual void open();
+    virtual void open(OpenMode mode);
+    virtual void close(timestamp_t end);
+    virtual void close();
+
+    virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
+    virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
+    virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
+
+    virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
 private:
 };
 

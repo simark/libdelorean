@@ -37,42 +37,42 @@ StringInterval::StringInterval(timestamp_t start, timestamp_t end, attribute_t a
 
 std::string StringInterval::getStringValue(void) const
 {
-	return _value;
+    return _value;
 }
 
 void StringInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
-	// copy string length (enables faster reads than ASCIIZ)
-	uint8_t sz = _value.size()+2;
-	memcpy(var_addr, &sz, sizeof(sz));
-		
-	// copy string
-	memcpy((unsigned char*) var_addr + sizeof(sz), _value.c_str(), _value.size());
-	
-	// add NULL character
-	*(var_addr+sz-1) = 0;
+    // copy string length (enables faster reads than ASCIIZ)
+    uint8_t sz = _value.size()+2;
+    memcpy(var_addr, &sz, sizeof(sz));
+
+    // copy string
+    memcpy((unsigned char*) var_addr + sizeof(sz), _value.c_str(), _value.size());
+
+    // add NULL character
+    *(var_addr+sz-1) = 0;
 }
 
 unsigned int StringInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
-	// read string length
-	uint8_t sz;
-	memcpy(&sz, var_addr, sizeof(sz));
-	
-	// check NULL character
-	if(*(var_addr+sz-1) != 0) {
-		throw IOEx("Corrupt string entry");
-	}
-	
-	// read string
-	_value.assign((char*) var_addr + sizeof(sz), sz-2);
-	
-	return sz;
+    // read string length
+    uint8_t sz;
+    memcpy(&sz, var_addr, sizeof(sz));
+
+    // check NULL character
+    if(*(var_addr+sz-1) != 0) {
+        throw IOEx("Corrupt string entry");
+    }
+
+    // read string
+    _value.assign((char*) var_addr + sizeof(sz), sz-2);
+
+    return sz;
 }
 
 unsigned int StringInterval::getVariableValueSize(void) const {
-	// length of string + 8-bit header + 8-bit NULL character
-	return sizeof(uint8_t)*2 + _value.size();
+    // length of string + 8-bit header + 8-bit NULL character
+    return sizeof(uint8_t)*2 + _value.size();
 }
 
 AbstractInterval::SharedPtr StringInterval::clone(void) const{
-	return AbstractInterval::SharedPtr(new StringInterval(*this));
+    return AbstractInterval::SharedPtr(new StringInterval(*this));
 }

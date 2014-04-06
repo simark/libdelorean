@@ -28,25 +28,25 @@ FloatInterval::FloatInterval(timestamp_t start, timestamp_t end, attribute_t att
 
 std::string FloatInterval::getStringValue(void) const
 {
-	std::ostringstream oss;
-	oss << _value;
-	return oss.str();
+    std::ostringstream oss;
+    oss << _value;
+    return oss.str();
 }
 
 void FloatInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
-	*((float*) u32_addr) = this->_value;
+    *((float*) u32_addr) = this->_value;
 }
 
 unsigned int FloatInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
-	this->_value = *((float*) u32_addr);
-	
-	return 0;
+    this->_value = *((float*) u32_addr);
+
+    return 0;
 }
 
 unsigned int FloatInterval::getVariableValueSize(void) const {
-	return 0;
+    return 0;
 }
 
 AbstractInterval::SharedPtr FloatInterval::clone(void) const{
-	return AbstractInterval::SharedPtr(new FloatInterval(*this));
+    return AbstractInterval::SharedPtr(new FloatInterval(*this));
 }

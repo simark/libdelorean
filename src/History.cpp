@@ -29,7 +29,7 @@ using namespace std;
 
 /**
  * Create a new History using a default configuration
- * 
+ *
  * @param config
  */
 History::History()
@@ -39,7 +39,7 @@ History::History()
 
 /**
  * Create a new History using a configuration
- * 
+ *
  * @param config
  */
 History::History(HistoryConfig config)
@@ -56,29 +56,29 @@ History::~History()
  * First, tries to open an existing file
  * If the format is invalid, create an empty tree and overwrite the file
  * If the format is valid, read the file and init the tree
- * 
+ *
  * Second, tries to create an empty tree and a new file
- * @throw IOEx 
+ * @throw IOEx
  * @throw InvalidFormatEx
  */
 void History::open()
 {
-	// is this history tree already opened?
-	if (this->_opened) {
-		throw IOEx("This tree is already opened");
-	}
-	
-	try{
-		open(APPEND);
-	}catch(InvalidFormatEx& ex){
-		throw;
-	}catch(IOEx& ex){
-		try{
-			open(TRUNCATE);
-		}catch(IOEx& ex){
-			throw;
-		}
-	}
+    // is this history tree already opened?
+    if (this->_opened) {
+        throw IOEx("This tree is already opened");
+    }
+
+    try{
+        open(APPEND);
+    }catch(InvalidFormatEx& ex){
+        throw;
+    }catch(IOEx& ex){
+        try{
+            open(TRUNCATE);
+        }catch(IOEx& ex){
+            throw;
+        }
+    }
 }
 
 /**
@@ -87,76 +87,76 @@ void History::open()
  * It allows to specify if the contents of the file should be :
  * - read first and kept (APPEND)
  * - discarded (TRUNCATE)
- * 
+ *
  * Using the APPEND mode requires the file to already exist or else
  * an exception will be thrown.
- * 
+ *
  * @param mode either APPEND (keep existing file) or TRUNCATE (replace existing file)
  * @throw IOEx
  */
 void History::open(OpenMode mode)
-{	
-	// is this history tree already opened?
-	if (this->_opened) {
-		throw IOEx("This tree is already opened");
-	}
-	
-	if(mode == TRUNCATE){
-		// open stream
-		this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary | fstream::trunc);
-		
-		// check for open errors
-		if (!this->_stream) {
-			throw IOEx("Unable to open file");
-		}
-		initEmptyTree();
-	
-		// update internal status
-		this->_opened = true;
-		
-	}else if (mode == APPEND){
-		// open stream
-		this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary);
-		
-		// check for open errors
-		if (!this->_stream) {
-			throw IOEx("Unable to open file");
-		}
-		
-		// check if empty file
-		this->_stream.seekg(ios_base::end);
-		if (this->_stream.tellg() == 0){
-			this->_stream.close();
-			throw IOEx("This file is empty");
-		}
-		
-		
-		try{
-			// unserialize tree header
-			this->unserializeHeader();
-		}catch(InvalidFormatEx& ex){	
-			this->_stream.close();		
-			throw;
-		}catch(IOEx& ex){
-			this->_stream.close();
-			throw;
-		}
-		//We read the header correctly, init the tree
-		
-		// store latest branch in memory
-		this->buildLatestBranch();
-		
-		// The user could not possibly know the start and end times of the tree
-		// Set it to the correct value using the root node
-		_config._treeStart = _latest_branch[0]->getStart();
-		_end = _latest_branch[0]->getEnd();
-		
-		// update internal status
-		this->_opened = true;
-		
-	}else{
-		assert(false);
-	}
+{
+    // is this history tree already opened?
+    if (this->_opened) {
+        throw IOEx("This tree is already opened");
+    }
+
+    if(mode == TRUNCATE){
+        // open stream
+        this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary | fstream::trunc);
+
+        // check for open errors
+        if (!this->_stream) {
+            throw IOEx("Unable to open file");
+        }
+        initEmptyTree();
+
+        // update internal status
+        this->_opened = true;
+
+    }else if (mode == APPEND){
+        // open stream
+        this->_stream.open(this->_config._stateFile.c_str(), fstream::in | fstream::out | fstream::binary);
+
+        // check for open errors
+        if (!this->_stream) {
+            throw IOEx("Unable to open file");
+        }
+
+        // check if empty file
+        this->_stream.seekg(ios_base::end);
+        if (this->_stream.tellg() == 0){
+            this->_stream.close();
+            throw IOEx("This file is empty");
+        }
+
+
+        try{
+            // unserialize tree header
+            this->unserializeHeader();
+        }catch(InvalidFormatEx& ex){
+            this->_stream.close();
+            throw;
+        }catch(IOEx& ex){
+            this->_stream.close();
+            throw;
+        }
+        //We read the header correctly, init the tree
+
+        // store latest branch in memory
+        this->buildLatestBranch();
+
+        // The user could not possibly know the start and end times of the tree
+        // Set it to the correct value using the root node
+        _config._treeStart = _latest_branch[0]->getStart();
+        _end = _latest_branch[0]->getEnd();
+
+        // update internal status
+        this->_opened = true;
+
+    }else{
+        assert(false);
+    }
 }
 
 /**
@@ -164,15 +164,15 @@ void History::open(OpenMode mode)
  * This method will cause the treeIO object to commit all nodes to disk
  * and then return the RandomAccessFile descriptor so the Tree object can
  * save its configuration into the header of the file.
- * @throws TimeRangeException 
- * 
+ * @throws TimeRangeException
+ *
  */
 void History::close(timestamp_t end)
 {
-	OutHistory::close(end);
+    OutHistory::close(end);
 }
 
 void History::close(void)
 {
-	close(getEnd());
+    close(getEnd());
 }

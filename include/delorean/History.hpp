@@ -28,14 +28,14 @@
 class History : public InHistory, public OutHistory
 {
 public:
-	History();
-	History(HistoryConfig config);
-	virtual ~History();
-	
-	virtual void open();
-	virtual void open(OpenMode mode);
-	virtual void close(timestamp_t end);
-	virtual void close();
+    History();
+    History(HistoryConfig config);
+    virtual ~History();
+
+    virtual void open();
+    virtual void open(OpenMode mode);
+    virtual void close(timestamp_t end);
+    virtual void close();
 private:
 };
 

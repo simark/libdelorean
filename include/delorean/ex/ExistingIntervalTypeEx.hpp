@@ -27,7 +27,7 @@
 class ExistingIntervalTypeEx : public std::runtime_error
 {
 public:
-	ExistingIntervalTypeEx(const std::string& msg) : runtime_error(msg) { }
+    ExistingIntervalTypeEx(const std::string& msg) : runtime_error(msg) { }
 };
 
 #endif // _EXISTINGINTERVALTYPEEX_HPP

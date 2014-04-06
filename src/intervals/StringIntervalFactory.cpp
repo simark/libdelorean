@@ -21,7 +21,7 @@
 #include <delorean/intervals/StringIntervalFactory.hpp>
 
 AbstractInterval::SharedPtr StringIntervalFactory::create(void) const {
-	AbstractInterval::SharedPtr interval(new StringInterval());
-	
-	return interval;
+    AbstractInterval::SharedPtr interval(new StringInterval());
+
+    return interval;
 }

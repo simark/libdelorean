@@ -21,5 +21,5 @@
 #include <delorean/intervals/NullIntervalFactory.hpp>
 
 AbstractInterval::SharedPtr NullIntervalFactory::create(void) const {
-	return AbstractInterval::SharedPtr(new NullInterval());
+    return AbstractInterval::SharedPtr(new NullInterval());
 }

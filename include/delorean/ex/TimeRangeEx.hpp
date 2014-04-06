@@ -27,9 +27,8 @@
 class TimeRangeEx : public std::runtime_error
 {
 public:
-	TimeRangeEx(const std::string& msg) : runtime_error(msg) { }
+    TimeRangeEx(const std::string& msg) : runtime_error(msg) { }
 };
 
 
 #endif // _TIMERANGEEX_HPP
-

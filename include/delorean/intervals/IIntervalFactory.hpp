@@ -26,8 +26,8 @@
 class IIntervalFactory
 {
 public:
-	virtual AbstractInterval::SharedPtr create(void) const = 0;
-	virtual ~IIntervalFactory(void) { }
+    virtual AbstractInterval::SharedPtr create(void) const = 0;
+    virtual ~IIntervalFactory(void) { }
 };
 
 #endif // _IINTERVALFACTORY_HPP

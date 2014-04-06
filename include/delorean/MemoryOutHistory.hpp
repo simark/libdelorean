@@ -37,37 +37,37 @@
 class MemoryOutHistory : virtual public OutHistory, virtual public AbstractMemoryHistory
 {
 public:
-	MemoryOutHistory(bool writeOnClose = true);
-	MemoryOutHistory(HistoryConfig config, bool writeOnClose = true);
-	virtual void open();
-	virtual void close(void) {
-		this->close(this->_end);
-	}
-	virtual void close(timestamp_t end);
-	virtual void setWriteOnClose(bool write) { _writeOnClose = write; };
-	bool getWriteOnClose() { return _writeOnClose; };
-	virtual ~MemoryOutHistory();
-	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
+    MemoryOutHistory(bool writeOnClose = true);
+    MemoryOutHistory(HistoryConfig config, bool writeOnClose = true);
+    virtual void open();
+    virtual void close(void) {
+        this->close(this->_end);
+    }
+    virtual void close(timestamp_t end);
+    virtual void setWriteOnClose(bool write) { _writeOnClose = write; };
+    bool getWriteOnClose() { return _writeOnClose; };
+    virtual ~MemoryOutHistory();
+    virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
 
-protected:	
-	virtual void addSiblingNode(unsigned int index);
-	virtual void initEmptyTree(void);
-	virtual void addNewRootNode(void);
-	virtual CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
-	virtual LeafNode::SharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
-	
-	void manageInsert(void);
-	void startThread(void);
-	void stopThread(void);
-	
-	virtual void writeToFile();
-	
-	std::queue<AbstractInterval::SharedPtr> _insertQueue;
-	boost::mutex _insertQueue_mutex;
-	boost::thread _insertThread;
-	boost::condition_variable _insertConditionVariable;
+protected:
+    virtual void addSiblingNode(unsigned int index);
+    virtual void initEmptyTree(void);
+    virtual void addNewRootNode(void);
+    virtual CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
+    virtual LeafNode::SharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
+
+    void manageInsert(void);
+    void startThread(void);
+    void stopThread(void);
+
+    virtual void writeToFile();
+
+    std::queue<AbstractInterval::SharedPtr> _insertQueue;
+    boost::mutex _insertQueue_mutex;
+    boost::thread _insertThread;
+    boost::condition_variable _insertConditionVariable;
 private:
-	bool _writeOnClose;
+    bool _writeOnClose;
 };
 
 #endif // _MEMORYOUTHISTORYTREE_HPP

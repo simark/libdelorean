@@ -26,25 +26,25 @@
 class FloatInterval : public AbstractInterval
 {
 public:
-	typedef std::tr1::shared_ptr<FloatInterval> SharedPtr;
-	
-	FloatInterval(void) : AbstractInterval(SIT_FLOAT32) { }
-	FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value);
-	std::string getStringValue(void) const;
-	unsigned int getVariableValueSize(void) const;
-	AbstractInterval::SharedPtr clone(void) const;
-	
-	void setValue(float value) {_value = value;}
-	float getValue() const {return _value;}
-	
-	static const interval_type_t type = SIT_FLOAT32;
+    typedef std::tr1::shared_ptr<FloatInterval> SharedPtr;
+
+    FloatInterval(void) : AbstractInterval(SIT_FLOAT32) { }
+    FloatInterval(timestamp_t start, timestamp_t end, attribute_t attribute, float value);
+    std::string getStringValue(void) const;
+    unsigned int getVariableValueSize(void) const;
+    AbstractInterval::SharedPtr clone(void) const;
+
+    void setValue(float value) {_value = value;}
+    float getValue() const {return _value;}
+
+    static const interval_type_t type = SIT_FLOAT32;
 
 protected:
-	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
-	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
+    void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
+    unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
 
 private:
-	float _value;
+    float _value;
 };
 
 #endif // _FLOATINTERVAL_HPP

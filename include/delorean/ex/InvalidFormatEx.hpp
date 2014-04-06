@@ -27,10 +27,8 @@
 class InvalidFormatEx : public std::runtime_error
 {
 public:
-	InvalidFormatEx(const std::string& msg) : runtime_error(msg) { }
+    InvalidFormatEx(const std::string& msg) : runtime_error(msg) { }
 };
 
 
 #endif // _INVALIDFORMATEX_HPP
-
-

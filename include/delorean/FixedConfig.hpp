@@ -22,23 +22,23 @@
 /**
  * Simple interval types.
  */
-#define SIT_INT32	0
-#define SIT_STRING	1
-#define SIT_UINT32	2
-#define SIT_FLOAT32	3
-#define SIT_NULL	-1
+#define SIT_INT32   0
+#define SIT_STRING  1
+#define SIT_UINT32  2
+#define SIT_FLOAT32 3
+#define SIT_NULL    -1
 
 /**
  * Node types.
  */
-#define NT_CORE		1
-#define NT_LEAF		2
+#define NT_CORE     1
+#define NT_LEAF     2
 
 /**
  * History file magic number.
  */
-#define HF_MAGIC_NUMBER		0x05ffa900
-#define HF_MAJOR		3
-#define HF_MINOR		0
+#define HF_MAGIC_NUMBER     0x05ffa900
+#define HF_MAJOR        3
+#define HF_MINOR        0
 
 #endif // _FIXED_CONFIG_HPP

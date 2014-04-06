@@ -25,9 +25,8 @@
 using namespace std;
 
 std::string UnknownNodeTypeEx::getMsg(interval_type_t type) {
-	ostringstream oss;
-	oss << "unknown node type " << (unsigned int) type;
-	
-	return oss.str();
-}
+    ostringstream oss;
+    oss << "unknown node type " << (unsigned int) type;
 
+    return oss.str();
+}

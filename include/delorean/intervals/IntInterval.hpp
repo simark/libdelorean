@@ -28,28 +28,28 @@
 class IntInterval : public AbstractInterval
 {
 public:
-	typedef std::tr1::shared_ptr<IntInterval> SharedPtr;
-	
-	IntInterval(void) : AbstractInterval(SIT_INT32) { }
-	IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value);
-	std::string getStringValue(void) const;
-	unsigned int getVariableValueSize(void) const;
-	AbstractInterval::SharedPtr clone(void) const;
-	IntInterval* setValue(int32_t value) {
-		this->_value = value;
-		
-		return this;
-	}
-	int32_t getValue() const {return _value;}
-	
-	static const interval_type_t type = SIT_INT32;
+    typedef std::tr1::shared_ptr<IntInterval> SharedPtr;
+
+    IntInterval(void) : AbstractInterval(SIT_INT32) { }
+    IntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, int32_t value);
+    std::string getStringValue(void) const;
+    unsigned int getVariableValueSize(void) const;
+    AbstractInterval::SharedPtr clone(void) const;
+    IntInterval* setValue(int32_t value) {
+        this->_value = value;
+
+        return this;
+    }
+    int32_t getValue() const {return _value;}
+
+    static const interval_type_t type = SIT_INT32;
 
 protected:
-	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
-	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
+    void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
+    unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
 
 private:
-	int32_t _value;
+    int32_t _value;
 };
 
 #endif // _INTINTERVAL_HPP

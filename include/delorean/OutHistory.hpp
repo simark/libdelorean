@@ -33,30 +33,30 @@
 class OutHistory : virtual public AbstractHistory
 {
 public:
-	OutHistory();
-	OutHistory(HistoryConfig config);
-	virtual void open();
-	virtual void close(void) {
-		this->close(this->_end);
-	}
-	virtual void close(timestamp_t end);
-	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
-	virtual OutHistory& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
-	~OutHistory();
+    OutHistory();
+    OutHistory(HistoryConfig config);
+    virtual void open();
+    virtual void close(void) {
+        this->close(this->_end);
+    }
+    virtual void close(timestamp_t end);
+    virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
+    virtual OutHistory& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
+    ~OutHistory();
 
 protected:
-	virtual void tryInsertAtNode(AbstractInterval::SharedPtr interval, unsigned int index);
-	virtual void addSiblingNode(unsigned int index);
-	virtual void initEmptyTree(void);
-	virtual void addNewRootNode(void);
-	void openStream(void);
-	void closeStream(void);
-	void serializeHeader(void);
-	virtual void serializeNode(AbstractNode::SharedPtr node);
-	void incNodeCount(timestamp_t new_start);
+    virtual void tryInsertAtNode(AbstractInterval::SharedPtr interval, unsigned int index);
+    virtual void addSiblingNode(unsigned int index);
+    virtual void initEmptyTree(void);
+    virtual void addNewRootNode(void);
+    void openStream(void);
+    void closeStream(void);
+    void serializeHeader(void);
+    virtual void serializeNode(AbstractNode::SharedPtr node);
+    void incNodeCount(timestamp_t new_start);
 
-	virtual CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
-	virtual LeafNode::SharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
+    virtual CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
+    virtual LeafNode::SharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
 
 private:
 

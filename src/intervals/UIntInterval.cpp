@@ -29,25 +29,25 @@ UIntInterval::UIntInterval(timestamp_t start, timestamp_t end, attribute_t attri
 
 std::string UIntInterval::getStringValue(void) const
 {
-	std::ostringstream oss;
-	oss << _value;
-	return oss.str();
+    std::ostringstream oss;
+    oss << _value;
+    return oss.str();
 }
 
 void UIntInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
-	*((uint32_t*) u32_addr) = this->_value;
+    *((uint32_t*) u32_addr) = this->_value;
 }
 
 unsigned int UIntInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
-	this->_value = *((uint32_t*) u32_addr);
-	
-	return 0;
+    this->_value = *((uint32_t*) u32_addr);
+
+    return 0;
 }
 
 unsigned int UIntInterval::getVariableValueSize(void) const {
-	return 0;
+    return 0;
 }
 
 AbstractInterval::SharedPtr UIntInterval::clone(void) const{
-	return AbstractInterval::SharedPtr(new UIntInterval(*this));
+    return AbstractInterval::SharedPtr(new UIntInterval(*this));
 }

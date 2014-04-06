@@ -25,8 +25,8 @@
 class NullIntervalFactory : public IIntervalFactory
 {
 public:
-	AbstractInterval::SharedPtr create(void) const;
-	~NullIntervalFactory(void) { }
+    AbstractInterval::SharedPtr create(void) const;
+    ~NullIntervalFactory(void) { }
 };
 
 #endif // _NULL_INTERVALFACTORY_HPP

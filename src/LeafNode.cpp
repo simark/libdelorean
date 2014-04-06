@@ -42,7 +42,7 @@ seq_number_t parentSeqNumber, timestamp_t start)
 }
 
 std::string LeafNode::getInfos(void) const {
-	return "";
+    return "";
 }
 
 void LeafNode::unserializeSpecificHeader(std::istream& is) {

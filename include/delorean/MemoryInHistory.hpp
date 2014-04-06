@@ -38,24 +38,24 @@
 class MemoryInHistory : virtual public InHistory, virtual public AbstractMemoryHistory
 {
 public:
-	MemoryInHistory();
-	MemoryInHistory(HistoryConfig config);
-	virtual void open();
-	virtual void close(void) {
-		this->close(-1);
-	}
-	virtual void close(timestamp_t end);
-	
-	virtual AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
-	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
-	virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
-	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
+    MemoryInHistory();
+    MemoryInHistory(HistoryConfig config);
+    virtual void open();
+    virtual void close(void) {
+        this->close(-1);
+    }
+    virtual void close(timestamp_t end);
+
+    virtual AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
+    virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
+    virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
+    virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
 protected:
-	virtual AbstractNode::SharedPtr createNodeFromStream() const;
-	virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
-	virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
-	
-	virtual void loadNodes();
+    virtual AbstractNode::SharedPtr createNodeFromStream() const;
+    virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
+    virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
+
+    virtual void loadNodes();
 
 private:
 };

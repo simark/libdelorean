@@ -25,8 +25,8 @@
 class IntIntervalFactory : public IIntervalFactory
 {
 public:
-	AbstractInterval::SharedPtr create(void) const;
-	~IntIntervalFactory(void) { }
+    AbstractInterval::SharedPtr create(void) const;
+    ~IntIntervalFactory(void) { }
 };
 
 #endif // _INTINTERVALFACTORY_HPP

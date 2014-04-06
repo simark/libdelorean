@@ -31,44 +31,44 @@
 #include "AbstractNode.hpp"
 #include "BasicTypes.hpp"
 
-class CoreNode : public AbstractNode 
+class CoreNode : public AbstractNode
 {
 public:
-	typedef std::tr1::shared_ptr<CoreNode> SharedPtr;
-	typedef std::tr1::shared_ptr<const CoreNode> ConstSharedPtr;
+    typedef std::tr1::shared_ptr<CoreNode> SharedPtr;
+    typedef std::tr1::shared_ptr<const CoreNode> ConstSharedPtr;
 
-	CoreNode(HistoryConfig config);
-	CoreNode(HistoryConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
-	~CoreNode();
-	std::string getInfos(void) const;
-	void serializeSpecificHeader(uint8_t* buf) const;
-	void unserializeSpecificHeader(std::istream& is);
-	unsigned int getSpecificHeaderSize(void) const;
-	void linkNewChild(AbstractNode::SharedPtr childNode);
-	seq_number_t getChildAtTimestamp(timestamp_t timestamp) const;
-	seq_number_t getChild(unsigned int index) const {
-		return _children[index];
-	}
-	timestamp_t getChildStart(int index) const {
-		return _childStart[index];
-	}
-	unsigned int getNbChildren() const {
-		return _nbChildren;
-	}
+    CoreNode(HistoryConfig config);
+    CoreNode(HistoryConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
+    ~CoreNode();
+    std::string getInfos(void) const;
+    void serializeSpecificHeader(uint8_t* buf) const;
+    void unserializeSpecificHeader(std::istream& is);
+    unsigned int getSpecificHeaderSize(void) const;
+    void linkNewChild(AbstractNode::SharedPtr childNode);
+    seq_number_t getChildAtTimestamp(timestamp_t timestamp) const;
+    seq_number_t getChild(unsigned int index) const {
+        return _children[index];
+    }
+    timestamp_t getChildStart(int index) const {
+        return _childStart[index];
+    }
+    unsigned int getNbChildren() const {
+        return _nbChildren;
+    }
 
 private:
-	// allocates/frees children data
-	void initChildren(void);
-	void finiChildren(void);
+    // allocates/frees children data
+    void initChildren(void);
+    void finiChildren(void);
 
-	// number of children
-	unsigned int _nbChildren;
-	
-	// children (size => owner tree config's max. children)
-	seq_number_t* _children;
-	
-	// start time of each child (size => owner tree config's max. children)
-	timestamp_t* _childStart;
+    // number of children
+    unsigned int _nbChildren;
+
+    // children (size => owner tree config's max. children)
+    seq_number_t* _children;
+
+    // start time of each child (size => owner tree config's max. children)
+    timestamp_t* _childStart;
 };
 
 #endif // _CORENODE_HPP

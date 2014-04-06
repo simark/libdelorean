@@ -36,33 +36,33 @@
 class InHistory : virtual public AbstractHistory
 {
 public:
-	InHistory();
-	InHistory(HistoryConfig config);
-	virtual void open();
-	virtual void close(void) {
-		this->close(-1);
-	}
-	virtual void close(timestamp_t end);
-	IntervalCreator& getIC(void) {
-		return _ic;
-	}
-	virtual AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
-	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
-	virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
-	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
-	virtual void test(void);
-	~InHistory();
+    InHistory();
+    InHistory(HistoryConfig config);
+    virtual void open();
+    virtual void close(void) {
+        this->close(-1);
+    }
+    virtual void close(timestamp_t end);
+    IntervalCreator& getIC(void) {
+        return _ic;
+    }
+    virtual AbstractNode::SharedPtr selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const;
+    virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
+    virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
+    virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
+    virtual void test(void);
+    ~InHistory();
 
 protected:
-	virtual void buildLatestBranch(void);
-	virtual void unserializeHeader(void);
-	
-	virtual AbstractNode::SharedPtr createNodeFromStream() const;
-	virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
-	virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
-	
-	seq_number_t _root_seq;
-	IntervalCreator _ic;
+    virtual void buildLatestBranch(void);
+    virtual void unserializeHeader(void);
+
+    virtual AbstractNode::SharedPtr createNodeFromStream() const;
+    virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
+    virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
+
+    seq_number_t _root_seq;
+    IntervalCreator _ic;
 private:
 };
 

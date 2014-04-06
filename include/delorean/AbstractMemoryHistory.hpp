@@ -27,14 +27,14 @@
 class AbstractMemoryHistory : virtual public AbstractHistory
 {
 public:
-	AbstractMemoryHistory();
-	AbstractMemoryHistory(HistoryConfig config);
-	
+    AbstractMemoryHistory();
+    AbstractMemoryHistory(HistoryConfig config);
+
 protected:
-	mutable boost::shared_mutex _latest_branch_mutex;
-	
-	mutable boost::shared_mutex _nodes_mutex;
-	std::vector<AbstractNode::SharedPtr> _nodes;
+    mutable boost::shared_mutex _latest_branch_mutex;
+
+    mutable boost::shared_mutex _nodes_mutex;
+    std::vector<AbstractNode::SharedPtr> _nodes;
 };
 
 #endif // _ABSTRACTMEMORYINHISTORYTREE_HPP

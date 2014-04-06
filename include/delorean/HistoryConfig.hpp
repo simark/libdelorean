@@ -26,38 +26,38 @@
 class HistoryConfig
 {
 public:
-	// TODO: encapsulate?
-	std::string _stateFile;
-	unsigned int _blockSize;
-	unsigned int _maxChildren;
-	timestamp_t _treeStart;
-	
-	HistoryConfig(std::string file) : _stateFile(file) {		
-	}
-	
-	HistoryConfig(std::string newStateFile, int blockSize, int maxChildren,
-			timestamp_t startTime) 
-	:_stateFile(newStateFile), _blockSize(blockSize), _maxChildren(maxChildren), _treeStart(startTime)
-	{
-	}
-	
-	/**
-	 * Version using default values for blocksize and maxchildren
-	 * @param stateFileName
-	 * @param startTime
-	 */
-	HistoryConfig(std::string newStateFile, timestamp_t startTime) 
-	:_stateFile(newStateFile), _blockSize(64 * 1024), _maxChildren(50), _treeStart(startTime)
-	{
-	}
+    // TODO: encapsulate?
+    std::string _stateFile;
+    unsigned int _blockSize;
+    unsigned int _maxChildren;
+    timestamp_t _treeStart;
 
-	/**
-	 * Default constructor
-	 */	
-	HistoryConfig()
-	:_stateFile("/dev/urandom"), _blockSize(4096), _maxChildren(50), _treeStart(0)
-	{
-	}
+    HistoryConfig(std::string file) : _stateFile(file) {
+    }
+
+    HistoryConfig(std::string newStateFile, int blockSize, int maxChildren,
+            timestamp_t startTime)
+    :_stateFile(newStateFile), _blockSize(blockSize), _maxChildren(maxChildren), _treeStart(startTime)
+    {
+    }
+
+    /**
+     * Version using default values for blocksize and maxchildren
+     * @param stateFileName
+     * @param startTime
+     */
+    HistoryConfig(std::string newStateFile, timestamp_t startTime)
+    :_stateFile(newStateFile), _blockSize(64 * 1024), _maxChildren(50), _treeStart(startTime)
+    {
+    }
+
+    /**
+     * Default constructor
+     */
+    HistoryConfig()
+    :_stateFile("/dev/urandom"), _blockSize(4096), _maxChildren(50), _treeStart(0)
+    {
+    }
 };
 
 #endif // _HISTORYTREECONFIG_HPP

@@ -27,12 +27,11 @@
 class UnknownIntervalTypeEx : public std::runtime_error
 {
 private:
-	static std::string getMsg(interval_type_t type);
+    static std::string getMsg(interval_type_t type);
 public:
-	UnknownIntervalTypeEx(const std::string& msg) : runtime_error(msg) { }
-	UnknownIntervalTypeEx(interval_type_t type) : runtime_error(getMsg(type)) { }
+    UnknownIntervalTypeEx(const std::string& msg) : runtime_error(msg) { }
+    UnknownIntervalTypeEx(interval_type_t type) : runtime_error(getMsg(type)) { }
 };
 
 
 #endif // _UNKNOWNINTERVALTYPEEX_HPP
-

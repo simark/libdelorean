@@ -21,7 +21,7 @@
 
 using namespace std;
 using namespace std::tr1;
- 
+
 const unsigned int AbstractHistory::HEADER_SIZE = 4096;
 
 AbstractHistory::AbstractHistory()
@@ -35,11 +35,11 @@ _config(config), _opened(false) {
 AbstractHistory::~AbstractHistory() {
 }
 
-bool AbstractHistory::checkValidTime(timestamp_t timestamp) const {	
-	return (timestamp >= _config._treeStart && timestamp <= _end);
+bool AbstractHistory::checkValidTime(timestamp_t timestamp) const {
+    return (timestamp >= _config._treeStart && timestamp <= _end);
 }
 
 bool AbstractHistory::nodeHasChildren(AbstractNode::ConstSharedPtr node) const {
-	CoreNode::ConstSharedPtr coreNode = dynamic_pointer_cast<const CoreNode>(node);
-	return(coreNode && coreNode->getNbChildren());
+    CoreNode::ConstSharedPtr coreNode = dynamic_pointer_cast<const CoreNode>(node);
+    return(coreNode && coreNode->getNbChildren());
 }

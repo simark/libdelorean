@@ -30,24 +30,24 @@
 #include "AbstractNode.hpp"
 #include "BasicTypes.hpp"
 
-class LeafNode : public AbstractNode 
+class LeafNode : public AbstractNode
 {
 public:
-	typedef std::tr1::shared_ptr<LeafNode> SharedPtr;
-	typedef std::tr1::shared_ptr<const LeafNode> ConstSharedPtr;
+    typedef std::tr1::shared_ptr<LeafNode> SharedPtr;
+    typedef std::tr1::shared_ptr<const LeafNode> ConstSharedPtr;
 
-	LeafNode(HistoryConfig config);
-	LeafNode(HistoryConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
-	~LeafNode() { }
-	std::string getInfos(void) const;
-	void serializeSpecificHeader(uint8_t* buf) const {
-		// no header here!
-	}
-	void unserializeSpecificHeader(std::istream& is);
-	unsigned int getSpecificHeaderSize(void) const {
-		return LeafNode::HEADER_SIZE;
-	}
-	static const unsigned int HEADER_SIZE;
+    LeafNode(HistoryConfig config);
+    LeafNode(HistoryConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
+    ~LeafNode() { }
+    std::string getInfos(void) const;
+    void serializeSpecificHeader(uint8_t* buf) const {
+        // no header here!
+    }
+    void unserializeSpecificHeader(std::istream& is);
+    unsigned int getSpecificHeaderSize(void) const {
+        return LeafNode::HEADER_SIZE;
+    }
+    static const unsigned int HEADER_SIZE;
 
 private:
 };

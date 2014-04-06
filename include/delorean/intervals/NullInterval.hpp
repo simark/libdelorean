@@ -28,20 +28,20 @@
 class NullInterval : public AbstractInterval
 {
 public:
-	typedef std::tr1::shared_ptr<NullInterval> SharedPtr;
-	
-	NullInterval(void) : AbstractInterval(SIT_NULL) { }
-	NullInterval(timestamp_t start, timestamp_t end, attribute_t attribute);
+    typedef std::tr1::shared_ptr<NullInterval> SharedPtr;
 
-	std::string getStringValue(void) const;
-	unsigned int getVariableValueSize(void) const;
-	AbstractInterval::SharedPtr clone(void) const;
-	
-	static const interval_type_t type = SIT_NULL;
-	
+    NullInterval(void) : AbstractInterval(SIT_NULL) { }
+    NullInterval(timestamp_t start, timestamp_t end, attribute_t attribute);
+
+    std::string getStringValue(void) const;
+    unsigned int getVariableValueSize(void) const;
+    AbstractInterval::SharedPtr clone(void) const;
+
+    static const interval_type_t type = SIT_NULL;
+
 protected:
-	void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
-	unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
+    void serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const;
+    unsigned int unserializeValues(uint8_t* var_addr, uint8_t* u32_addr);
 };
 
 #endif // _NULLINTERVAL_HPP

@@ -23,8 +23,8 @@
 
 class IPrintable
 {
-	public:
-	virtual std::string toString(void) const = 0;
+    public:
+    virtual std::string toString(void) const = 0;
 };
 
 #endif // _IPRINTABLE_HPP

@@ -27,9 +27,8 @@
 class NodeFullEx : public std::runtime_error
 {
 public:
-	NodeFullEx(const std::string& msg) : runtime_error(msg) { }
+    NodeFullEx(const std::string& msg) : runtime_error(msg) { }
 };
 
 
 #endif // _NODEFULLEX_HPP
-

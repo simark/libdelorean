@@ -42,8 +42,8 @@ AbstractNode::AbstractNode(HistoryConfig config, seq_number_t seqNumber,
 seq_number_t parentSeqNumber, timestamp_t start, node_type_t type)
 : _config(config), _nodeStart(start), _sequenceNumber(seqNumber), _parentSequenceNumber(parentSeqNumber), _type(type), _intervals(orderIntervals)
 {
-	_variableSectionOffset = config._blockSize;
-	_isDone = false;
+    _variableSectionOffset = config._blockSize;
+    _isDone = false;
 }
 
 AbstractNode::~AbstractNode()
@@ -58,52 +58,52 @@ AbstractNode::AbstractNode(HistoryConfig config)
  * The method adds the intervals from this node that intersect the
  * timestamp to a vector.
  * The intervals' attribute is used as an index in that vector.
- * 
+ *
  * @param intervals The intervals that are added from node to node
  * @param timestamp The timestamp for which the query is for. Only return intervals that intersect t.
  * @throw TimeRangeEx
  */
 void AbstractNode::writeInfoFromNode(vector<AbstractInterval::SharedPtr>& intervals, timestamp_t timestamp) const
 {
-	boost::shared_lock<boost::shared_mutex> l(_mutex);
-	
-	if ( _intervals.size() == 0 ) { return; }
+    boost::shared_lock<boost::shared_mutex> l(_mutex);
 
-	for (IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
-		/* Now we only have to compare the Start times, since we know
-		 * the End times necessarily fit */
-		if ( (*it)->getStart() <= timestamp ) {
-			if ((int) intervals.size() < (*it)->getAttribute()+1) 
-				intervals.resize( (*it)->getAttribute()+1 );
-			intervals[(*it)->getAttribute()] = (*it);
-		}
-	}
-	return;
+    if ( _intervals.size() == 0 ) { return; }
+
+    for (IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
+        /* Now we only have to compare the Start times, since we know
+         * the End times necessarily fit */
+        if ( (*it)->getStart() <= timestamp ) {
+            if ((int) intervals.size() < (*it)->getAttribute()+1)
+                intervals.resize( (*it)->getAttribute()+1 );
+            intervals[(*it)->getAttribute()] = (*it);
+        }
+    }
+    return;
 }
 
 /**
  * The method adds the intervals from this node that intersect the
  * timestamp to a multimap.
  * The intervals' attribute is used as an index in that multimap.
- * 
+ *
  * @param intervals The intervals that are added from node to node
  * @param timestamp The timestamp for which the query is for. Only return intervals that intersect t.
  * @throw TimeRangeEx
  */
 void AbstractNode::writeInfoFromNode(multimap<attribute_t, AbstractInterval::SharedPtr>& intervals, timestamp_t timestamp) const
 {
-	boost::shared_lock<boost::shared_mutex> l(_mutex);
-	
-	if ( _intervals.size() == 0 ) { return; }
+    boost::shared_lock<boost::shared_mutex> l(_mutex);
 
-	for (IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
-		/* Now we only have to compare the Start times, since we know
-		 * the End times necessarily fit */
-		if ( (*it)->getStart() <= timestamp ) {
-			intervals.insert(make_pair((*it)->getAttribute(),*it));
-		}
-	}
-	return;
+    if ( _intervals.size() == 0 ) { return; }
+
+    for (IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
+        /* Now we only have to compare the Start times, since we know
+         * the End times necessarily fit */
+        if ( (*it)->getStart() <= timestamp ) {
+            intervals.insert(make_pair((*it)->getAttribute(),*it));
+        }
+    }
+    return;
 }
 
 /**
@@ -113,50 +113,50 @@ void AbstractNode::writeInfoFromNode(multimap<attribute_t, AbstractInterval::Sha
  */
 void AbstractNode::addInterval(AbstractInterval::SharedPtr newInterval) throw (TimeRangeEx)
 {
-	boost::unique_lock<boost::shared_mutex> l(_mutex);
-	
-	// Just in case, but should be checked before even calling this function
-	assert(newInterval->getTotalSize() <= getFreeSpace());
-	
-	if(newInterval->getStart() < _nodeStart)
-		throw TimeRangeEx("interval start time below node start time");
-	
-	// We need to clone the interval, to guarantee ownership
-	if(_intervals.size() > 0) {
-		IntervalContainer::iterator pos = _intervals.end();
-		pos--;
-		_intervals.insert(pos, newInterval->clone());
-	} else {
-		_intervals.insert(newInterval->clone());
-	}
-		
-	
-	// Update the in-node offset "pointer"
-	_variableSectionOffset -= (newInterval->getVariableValueSize());
+    boost::unique_lock<boost::shared_mutex> l(_mutex);
+
+    // Just in case, but should be checked before even calling this function
+    assert(newInterval->getTotalSize() <= getFreeSpace());
+
+    if(newInterval->getStart() < _nodeStart)
+        throw TimeRangeEx("interval start time below node start time");
+
+    // We need to clone the interval, to guarantee ownership
+    if(_intervals.size() > 0) {
+        IntervalContainer::iterator pos = _intervals.end();
+        pos--;
+        _intervals.insert(pos, newInterval->clone());
+    } else {
+        _intervals.insert(newInterval->clone());
+    }
+
+
+    // Update the in-node offset "pointer"
+    _variableSectionOffset -= (newInterval->getVariableValueSize());
 }
 
 /**
  * We've received word from the containerTree that newest nodes now exist to
  * our right. (Puts isDone = true and sets the endtime)
- * 
+ *
  * @param endtime The nodeEnd time that the node will have
- * @throw TimeRangeException 
+ * @throw TimeRangeException
  */
 void AbstractNode::close(timestamp_t endtime)
 {
-	boost::unique_lock<boost::shared_mutex> l(_mutex);
-	
-	assert ( endtime >= _nodeStart );
-	
-	_isDone = true;
-	_nodeEnd = endtime;
-	return;	
+    boost::unique_lock<boost::shared_mutex> l(_mutex);
+
+    assert ( endtime >= _nodeStart );
+
+    _isDone = true;
+    _nodeEnd = endtime;
+    return;
 }
 
 /**
  * Get a single Interval from the information in this node
  * If the key/timestamp pair cannot be found, we return a null pointer.
- * 
+ *
  * @param key
  * @param t
  * @return The Interval containing the information we want, or null if it wasn't found
@@ -164,20 +164,20 @@ void AbstractNode::close(timestamp_t endtime)
  */
 AbstractInterval::SharedPtr AbstractNode::getRelevantInterval(timestamp_t timestamp, attribute_t key) const
 {
-	boost::shared_lock<boost::shared_mutex> l(_mutex);
-	
-		
-	if ( _intervals.size() == 0 ) { return AbstractInterval::SharedPtr(); }
-	
-	for ( IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
-		if ( (*it)->getAttribute() == key ) {
-			if ( (*it)->getStart() <= timestamp ) {
-				return (*it);
-			}
-		}
-	}
-	/* We didn't find the relevant information in this node */
-	return AbstractInterval::SharedPtr();
+    boost::shared_lock<boost::shared_mutex> l(_mutex);
+
+
+    if ( _intervals.size() == 0 ) { return AbstractInterval::SharedPtr(); }
+
+    for ( IntervalContainer::const_iterator it = getStartIndexFor(timestamp); it != _intervals.end(); it++ ) {
+        if ( (*it)->getAttribute() == key ) {
+            if ( (*it)->getStart() <= timestamp ) {
+                return (*it);
+            }
+        }
+    }
+    /* We didn't find the relevant information in this node */
+    return AbstractInterval::SharedPtr();
 }
 
 /**
@@ -185,21 +185,21 @@ AbstractInterval::SharedPtr AbstractNode::getRelevantInterval(timestamp_t timest
  * Since the intervals are ordered by ending time, it is possible to skip
  * the first ones and use an efficient search algorithm to find the first
  * interval that could possibly hold a given timestamp
- * 
+ *
  * When calling this method, make sure to acquire the _mutex first (shared lock is sufficient)
- *  
+ *
  * @param timestamp
  * @return the index of the first interval in _intervals that could hold this timestamp
  */
 IntervalContainer::const_iterator AbstractNode::getStartIndexFor(timestamp_t timestamp) const
-{	
-	AbstractInterval::SharedPtr dummyInterval(new NullInterval(0, 0, 0));
-	dummyInterval->setEnd(timestamp);
-	IntervalContainer::const_iterator it;	
-	
-	it = _intervals.lower_bound(dummyInterval);
-	
-	return it;
+{
+    AbstractInterval::SharedPtr dummyInterval(new NullInterval(0, 0, 0));
+    dummyInterval->setEnd(timestamp);
+    IntervalContainer::const_iterator it;
+
+    it = _intervals.lower_bound(dummyInterval);
+
+    return it;
 }
 
 /**
@@ -208,12 +208,12 @@ IntervalContainer::const_iterator AbstractNode::getStartIndexFor(timestamp_t tim
  */
 unsigned int AbstractNode::getFreeSpace() const
 {
-	return _variableSectionOffset - getDataSectionEndOffset();
+    return _variableSectionOffset - getDataSectionEndOffset();
 }
 
 unsigned int AbstractNode::getTotalHeaderSize() const
 {
-	return AbstractNode::COMMON_HEADER_SIZE + this->getSpecificHeaderSize();
+    return AbstractNode::COMMON_HEADER_SIZE + this->getSpecificHeaderSize();
 }
 
 /**
@@ -222,172 +222,172 @@ unsigned int AbstractNode::getTotalHeaderSize() const
  */
 int AbstractNode::getDataSectionEndOffset() const
 {
-	return getTotalHeaderSize() + AbstractInterval::getHeaderSize() * _intervals.size();
+    return getTotalHeaderSize() + AbstractInterval::getHeaderSize() * _intervals.size();
 }
 
 void AbstractNode::serialize(ostream& os)
 {
-	//locking the mutex is not required here as the node cannot be modified further
-	
-	// allocate some byte buffer
-	// TODO: private buffer to avoid new/delete for each block write?
-	const unsigned int bufsz = this->_config._blockSize;
-	uint8_t* buf = new uint8_t [bufsz];
-	
-	// serialize to buffer
-	this->serialize(buf);
-	
-	// write to output
-	os.write((char*) buf, bufsz);
-	
-	// free buffer
-	delete [] buf;
+    //locking the mutex is not required here as the node cannot be modified further
+
+    // allocate some byte buffer
+    // TODO: private buffer to avoid new/delete for each block write?
+    const unsigned int bufsz = this->_config._blockSize;
+    uint8_t* buf = new uint8_t [bufsz];
+
+    // serialize to buffer
+    this->serialize(buf);
+
+    // write to output
+    os.write((char*) buf, bufsz);
+
+    // free buffer
+    delete [] buf;
 }
 
 void AbstractNode::serialize(uint8_t* buf)
 {
-	//locking the mutex is not required here as the node cannot be modified further
-	
-	// pointer backup
-	uint8_t* bkbuf = buf;
-	
-	// prepare common header fields
-	int32_t interval_count = (int32_t) this->_intervals.size();
-	int32_t var_sect_offset = (int32_t) _variableSectionOffset;
-	uint8_t isDone = this->_isDone ? 1 : 0;
-	
-	// write block common header
-	memcpy(buf, &this->_type, sizeof(node_type_t));
-	buf += sizeof(node_type_t);
-	memcpy(buf, &this->_nodeStart, sizeof(timestamp_t));
-	buf += sizeof(timestamp_t);
-	memcpy(buf, &this->_nodeEnd, sizeof(timestamp_t));
-	buf += sizeof(timestamp_t);
-	memcpy(buf, &this->_sequenceNumber, sizeof(seq_number_t));
-	buf += sizeof(seq_number_t);
-	memcpy(buf, &this->_parentSequenceNumber, sizeof(seq_number_t));
-	buf += sizeof(seq_number_t);
-	memcpy(buf, &interval_count, sizeof(int32_t));
-	buf += sizeof(int32_t);
-	memcpy(buf, &var_sect_offset, sizeof(int32_t));
-	buf += sizeof(int32_t);
-	memcpy(buf, &isDone, sizeof(uint8_t));
-	buf += sizeof(uint8_t);
+    //locking the mutex is not required here as the node cannot be modified further
 
-	// write node's specific header
-	this->serializeSpecificHeader(buf);
-	buf += this->getSpecificHeaderSize();
+    // pointer backup
+    uint8_t* bkbuf = buf;
 
-	// write intervals (OO fashion)
-	IntervalContainer::iterator it;
-	uint8_t* var_addr = bkbuf + this->_config._blockSize;
-	for (it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {
-		AbstractInterval::SharedPtr interval = *it;
-		// get interval variable value size
-		unsigned int var_size = interval->getVariableValueSize();
-		var_addr -= var_size;
-		unsigned int offset_ptr = (unsigned int) (var_addr - bkbuf);
-		
-		// serialize interval
-		interval->serialize(var_addr, buf);
-		
-		// overwrite header's value with variable value "pointer" if variable size isn't 0
-		if (var_size != 0) {
-			memcpy(buf + interval->getHeaderSize() - sizeof(uint32_t), &offset_ptr, sizeof(uint32_t));
-		}
-		buf += interval->getHeaderSize();
-	}
+    // prepare common header fields
+    int32_t interval_count = (int32_t) this->_intervals.size();
+    int32_t var_sect_offset = (int32_t) _variableSectionOffset;
+    uint8_t isDone = this->_isDone ? 1 : 0;
+
+    // write block common header
+    memcpy(buf, &this->_type, sizeof(node_type_t));
+    buf += sizeof(node_type_t);
+    memcpy(buf, &this->_nodeStart, sizeof(timestamp_t));
+    buf += sizeof(timestamp_t);
+    memcpy(buf, &this->_nodeEnd, sizeof(timestamp_t));
+    buf += sizeof(timestamp_t);
+    memcpy(buf, &this->_sequenceNumber, sizeof(seq_number_t));
+    buf += sizeof(seq_number_t);
+    memcpy(buf, &this->_parentSequenceNumber, sizeof(seq_number_t));
+    buf += sizeof(seq_number_t);
+    memcpy(buf, &interval_count, sizeof(int32_t));
+    buf += sizeof(int32_t);
+    memcpy(buf, &var_sect_offset, sizeof(int32_t));
+    buf += sizeof(int32_t);
+    memcpy(buf, &isDone, sizeof(uint8_t));
+    buf += sizeof(uint8_t);
+
+    // write node's specific header
+    this->serializeSpecificHeader(buf);
+    buf += this->getSpecificHeaderSize();
+
+    // write intervals (OO fashion)
+    IntervalContainer::iterator it;
+    uint8_t* var_addr = bkbuf + this->_config._blockSize;
+    for (it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {
+        AbstractInterval::SharedPtr interval = *it;
+        // get interval variable value size
+        unsigned int var_size = interval->getVariableValueSize();
+        var_addr -= var_size;
+        unsigned int offset_ptr = (unsigned int) (var_addr - bkbuf);
+
+        // serialize interval
+        interval->serialize(var_addr, buf);
+
+        // overwrite header's value with variable value "pointer" if variable size isn't 0
+        if (var_size != 0) {
+            memcpy(buf + interval->getHeaderSize() - sizeof(uint32_t), &offset_ptr, sizeof(uint32_t));
+        }
+        buf += interval->getHeaderSize();
+    }
 }
 
 void AbstractNode::unserialize(std::istream& is, const IntervalCreator& ic) {
-	//locking the mutex is not required here as the node cannot be modified yet
-	
-	// remember initial position within stream
-	streampos init_pos = is.tellg();
-	
-	// type
-	is.read((char*) &this->_type, sizeof(node_type_t));
-	
-	// time stamps
-	is.read((char*) &this->_nodeStart, sizeof(timestamp_t));
-	is.read((char*) &this->_nodeEnd, sizeof(timestamp_t));
-	
-	// sequence numbers
-	is.read((char*) &this->_sequenceNumber, sizeof(seq_number_t));
-	is.read((char*) &this->_parentSequenceNumber, sizeof(seq_number_t));
-	
-	// interval count
-	int32_t interval_count;
-	is.read((char*) &interval_count, sizeof(int32_t));
-	
-	// skip var. data offset and done (will be deduced when parsing intervals)
-	is.seekg(sizeof(int32_t) + sizeof(uint8_t), ios::cur);
-	this->_isDone = true;
-	
-	// at specific header now
-	this->unserializeSpecificHeader(is);
-	
-	// unserialize intervals
-	unsigned int len = this->_config._blockSize - this->getTotalHeaderSize();
-	uint8_t* const buf = new uint8_t [len];
-	is.seekg(init_pos + (streamoff)this->getTotalHeaderSize(), ios::beg);
-	is.read((char*) buf, len);
-	this->_variableSectionOffset = this->_config._blockSize;
-	uint8_t* datPtr = buf;
-	//Set varPtr to beginning of node (unallocated memory)
-	uint8_t* varPtr = buf - this->getTotalHeaderSize();
-	for (int i = 0; i < interval_count; ++i) {
-		// get the appropriate interval from the creator
-		interval_type_t type = datPtr[20]; // TODO: make this prettier
-		AbstractInterval::SharedPtr interval = ic.createIntervalFromType(type);
-		
-		// unserialize it
-		unsigned int var_len = interval->unserialize(varPtr, datPtr);
-		assert(var_len == interval->getVariableValueSize());
-		
-		// keep it...
-		if (this->_intervals.size() > 0) {
-			IntervalContainer::iterator pos = _intervals.end();
-			pos--;			
-			this->_intervals.insert(pos, interval);			
-		} else {			
-			this->_intervals.insert(interval);			
-		}
-		
-		// new buffer offsets
-		datPtr += AbstractInterval::getHeaderSize();
-		this->_variableSectionOffset -= var_len;
-	}
-	
-	// clean
-	delete [] buf;
+    //locking the mutex is not required here as the node cannot be modified yet
+
+    // remember initial position within stream
+    streampos init_pos = is.tellg();
+
+    // type
+    is.read((char*) &this->_type, sizeof(node_type_t));
+
+    // time stamps
+    is.read((char*) &this->_nodeStart, sizeof(timestamp_t));
+    is.read((char*) &this->_nodeEnd, sizeof(timestamp_t));
+
+    // sequence numbers
+    is.read((char*) &this->_sequenceNumber, sizeof(seq_number_t));
+    is.read((char*) &this->_parentSequenceNumber, sizeof(seq_number_t));
+
+    // interval count
+    int32_t interval_count;
+    is.read((char*) &interval_count, sizeof(int32_t));
+
+    // skip var. data offset and done (will be deduced when parsing intervals)
+    is.seekg(sizeof(int32_t) + sizeof(uint8_t), ios::cur);
+    this->_isDone = true;
+
+    // at specific header now
+    this->unserializeSpecificHeader(is);
+
+    // unserialize intervals
+    unsigned int len = this->_config._blockSize - this->getTotalHeaderSize();
+    uint8_t* const buf = new uint8_t [len];
+    is.seekg(init_pos + (streamoff)this->getTotalHeaderSize(), ios::beg);
+    is.read((char*) buf, len);
+    this->_variableSectionOffset = this->_config._blockSize;
+    uint8_t* datPtr = buf;
+    //Set varPtr to beginning of node (unallocated memory)
+    uint8_t* varPtr = buf - this->getTotalHeaderSize();
+    for (int i = 0; i < interval_count; ++i) {
+        // get the appropriate interval from the creator
+        interval_type_t type = datPtr[20]; // TODO: make this prettier
+        AbstractInterval::SharedPtr interval = ic.createIntervalFromType(type);
+
+        // unserialize it
+        unsigned int var_len = interval->unserialize(varPtr, datPtr);
+        assert(var_len == interval->getVariableValueSize());
+
+        // keep it...
+        if (this->_intervals.size() > 0) {
+            IntervalContainer::iterator pos = _intervals.end();
+            pos--;
+            this->_intervals.insert(pos, interval);
+        } else {
+            this->_intervals.insert(interval);
+        }
+
+        // new buffer offsets
+        datPtr += AbstractInterval::getHeaderSize();
+        this->_variableSectionOffset -= var_len;
+    }
+
+    // clean
+    delete [] buf;
 }
 
 std::string AbstractNode::toString(void) const {
-	boost::shared_lock<boost::shared_mutex> l(_mutex);
-	
-	ostringstream oss;
-	stringstream endTime;
-	if(_isDone){
-		endTime << _nodeEnd;
-	}else{
-		endTime << "...";
-	}
-	oss << "# {" << this->_sequenceNumber << "} from {" << this->_parentSequenceNumber << "} " <<
-		"[" << this->_nodeStart << ", " << endTime.str() << "], " << this->_intervals.size() <<
-		" intervals" << this->getInfos();
-	
-	// intervals
-	oss << endl;
-	for (IntervalContainer::const_iterator it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {
-		oss << "  " << *(*it) << endl;
-	}
+    boost::shared_lock<boost::shared_mutex> l(_mutex);
 
-	return oss.str();
+    ostringstream oss;
+    stringstream endTime;
+    if(_isDone){
+        endTime << _nodeEnd;
+    }else{
+        endTime << "...";
+    }
+    oss << "# {" << this->_sequenceNumber << "} from {" << this->_parentSequenceNumber << "} " <<
+        "[" << this->_nodeStart << ", " << endTime.str() << "], " << this->_intervals.size() <<
+        " intervals" << this->getInfos();
+
+    // intervals
+    oss << endl;
+    for (IntervalContainer::const_iterator it = this->_intervals.begin(); it != this->_intervals.end(); ++it) {
+        oss << "  " << *(*it) << endl;
+    }
+
+    return oss.str();
 }
 
 std::ostream& operator<<(std::ostream& out, const AbstractNode& node) {
-	out << node.toString();
-	
-	return out;
+    out << node.toString();
+
+    return out;
 }

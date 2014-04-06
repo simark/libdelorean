@@ -32,50 +32,50 @@
 #include <delorean/ex/ExistingIntervalTypeEx.hpp>
 
 IntervalCreator::IntervalCreator(void) {
-	// reset all factories
-	for (unsigned int i = 0; i < 256; ++i) {
-		this->_factories[i] = NULL;
-	}
-	
-	// register simple ones (we know them)
-	this->registerIntervalType(SIT_INT32, new IntIntervalFactory());
-	this->registerIntervalType(SIT_UINT32, new UIntIntervalFactory());
-	this->registerIntervalType(SIT_STRING, new StringIntervalFactory());
-	this->registerIntervalType(SIT_FLOAT32, new FloatIntervalFactory());
-	this->registerIntervalType(SIT_NULL, new NullIntervalFactory());
+    // reset all factories
+    for (unsigned int i = 0; i < 256; ++i) {
+        this->_factories[i] = NULL;
+    }
+
+    // register simple ones (we know them)
+    this->registerIntervalType(SIT_INT32, new IntIntervalFactory());
+    this->registerIntervalType(SIT_UINT32, new UIntIntervalFactory());
+    this->registerIntervalType(SIT_STRING, new StringIntervalFactory());
+    this->registerIntervalType(SIT_FLOAT32, new FloatIntervalFactory());
+    this->registerIntervalType(SIT_NULL, new NullIntervalFactory());
 }
 
 IntervalCreator::~IntervalCreator(void) {
-	this->unregisterAll();
+    this->unregisterAll();
 }
 
 void IntervalCreator::unregisterIntervalType(interval_type_t type) {
-	if (this->_factories[type] != NULL) {
-		delete this->_factories[type];
-		this->_factories[type] = NULL;
-	}
+    if (this->_factories[type] != NULL) {
+        delete this->_factories[type];
+        this->_factories[type] = NULL;
+    }
 }
 
 void IntervalCreator::registerIntervalType(interval_type_t type, IIntervalFactory* factory) throw(ExistingIntervalTypeEx) {
-	if (this->_factories[type] != NULL) {
-		std::ostringstream oss;
-		oss << "interval type " << (unsigned int) type << " is already registered";
-		throw ExistingIntervalTypeEx(oss.str());
-	} else {
-		this->_factories[type] = factory;
-	}
+    if (this->_factories[type] != NULL) {
+        std::ostringstream oss;
+        oss << "interval type " << (unsigned int) type << " is already registered";
+        throw ExistingIntervalTypeEx(oss.str());
+    } else {
+        this->_factories[type] = factory;
+    }
 }
 
 void IntervalCreator::unregisterAll(void) {
-	for (unsigned int i = 0; i < 256; ++i) {
-		this->unregisterIntervalType(i);
-	}
+    for (unsigned int i = 0; i < 256; ++i) {
+        this->unregisterIntervalType(i);
+    }
 }
 
 AbstractInterval::SharedPtr IntervalCreator::createIntervalFromType(interval_type_t type) const throw(UnknownIntervalTypeEx) {
-	if (this->_factories[type] == NULL) {
-		throw UnknownIntervalTypeEx(type);
-	}
-	
-	return this->_factories[type]->create();
+    if (this->_factories[type] == NULL) {
+        throw UnknownIntervalTypeEx(type);
+    }
+
+    return this->_factories[type]->create();
 }

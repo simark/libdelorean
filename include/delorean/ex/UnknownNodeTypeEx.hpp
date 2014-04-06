@@ -27,13 +27,11 @@
 class UnknownNodeTypeEx : public std::runtime_error
 {
 private:
-	static std::string getMsg(node_type_t type);
+    static std::string getMsg(node_type_t type);
 public:
-	UnknownNodeTypeEx(const std::string& msg) : runtime_error(msg) { }
-	UnknownNodeTypeEx(interval_type_t type) : runtime_error(getMsg(type)) { }
+    UnknownNodeTypeEx(const std::string& msg) : runtime_error(msg) { }
+    UnknownNodeTypeEx(interval_type_t type) : runtime_error(getMsg(type)) { }
 };
 
 
 #endif // _UNKNOWNNODETYPEEX_HPP
-
-

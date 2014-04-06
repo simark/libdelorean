@@ -27,10 +27,8 @@
 class IOEx : public std::runtime_error
 {
 public:
-	IOEx(const std::string& msg) : runtime_error(msg) { }
+    IOEx(const std::string& msg) : runtime_error(msg) { }
 };
 
 
 #endif // _IOEX_HPP
-
-

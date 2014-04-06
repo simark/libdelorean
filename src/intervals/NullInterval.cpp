@@ -29,24 +29,23 @@ NullInterval::NullInterval(timestamp_t start, timestamp_t end, attribute_t attri
 
 std::string NullInterval::getStringValue(void) const
 {
-	return "(null)";
+    return "(null)";
 }
 
 void NullInterval::serializeValues(uint8_t* var_addr, uint8_t* u32_addr) const {
-	/* We don't need to write anything */
+    /* We don't need to write anything */
 }
 
 unsigned int NullInterval::unserializeValues(uint8_t* var_addr, uint8_t* u32_addr) {
-	/* We don't need to read anything */
-	
-	return 0;
+    /* We don't need to read anything */
+
+    return 0;
 }
 
 unsigned int NullInterval::getVariableValueSize(void) const {
-	return 0;
+    return 0;
 }
 
 AbstractInterval::SharedPtr NullInterval::clone(void) const{
-	return AbstractInterval::SharedPtr(new NullInterval(*this));
+    return AbstractInterval::SharedPtr(new NullInterval(*this));
 }
-
