@@ -1,0 +1,63 @@
+# author: Philippe Proulx <eepp.ca>
+
+
+import os.path
+
+
+Import('root_env')
+
+target = 'delorean'
+
+main_sources = [
+    'AbstractHistoryTree.cpp',
+    'AbstractMemoryHistoryTree.cpp',
+    'AbstractNode.cpp',
+    'AbstractThreadedHistoryTree.cpp',
+    'CoreNode.cpp',
+    'HistoryTreeConfig.cpp',
+    'HistoryTree.cpp',
+    'InHistoryTree.cpp',
+    'IntervalCreator.cpp',
+    'LeafNode.cpp',
+    'MemoryHistoryTree.cpp',
+    'MemoryInHistoryTree.cpp',
+    'MemoryOutHistoryTree.cpp',
+    'OutHistoryTree.cpp',
+    'ThreadedHistoryTree.cpp',
+    'ThreadedInHistoryTree.cpp',
+    'ThreadedOutHistoryTree.cpp',
+]
+
+ex_base = 'ex'
+ex_sources = [
+    'ExistingIntervalTypeEx.cpp',
+    'InvalidFormatEx.cpp',
+    'IOEx.cpp',
+    'NodeFullEx.cpp',
+    'TimeRangeEx.cpp',
+    'UnknownIntervalTypeEx.cpp',
+    'UnknownNodeTypeEx.cpp',
+]
+
+intervals_base = 'intervals'
+intervals_sources = [
+    'AbstractInterval.cpp',
+    'FloatInterval.cpp',
+    'FloatIntervalFactory.cpp',
+    'IntInterval.cpp',
+    'IntIntervalFactory.cpp',
+    'NullInterval.cpp',
+    'NullIntervalFactory.cpp',
+    'StringInterval.cpp',
+    'StringIntervalFactory.cpp',
+    'UIntInterval.cpp',
+    'UIntIntervalFactory.cpp',
+]
+
+sources = []
+sources += main_sources
+sources += [os.path.join(ex_base, f) for f in ex_sources]
+sources += [os.path.join(intervals_base, f) for f in intervals_sources]
+
+root_env.SharedLibrary(target=target, source=sources)
+root_env.Library(target=target, source=sources)
