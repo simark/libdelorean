@@ -1,20 +1,20 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
  *
- * This file is part of librbntrvll.
+ * This file is part of libdelorean.
  *
- * librbntrvll is free software: you can redistribute it and/or modify
+ * libdelorean is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * librbntrvll is distributed in the hope that it will be useful,
+ * libdelorean is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <fstream>
 #include <ostream>
@@ -22,13 +22,13 @@
 #include <tr1/memory>
 #include <cstdlib>
  
-#include <rbrntrvll/OutHistoryTree.hpp>
-#include <rbrntrvll/intervals/AbstractInterval.hpp>
-#include <rbrntrvll/HistoryTreeConfig.hpp>
-#include <rbrntrvll/CoreNode.hpp>
-#include <rbrntrvll/LeafNode.hpp>
-#include <rbrntrvll/ex/IOEx.hpp>
-#include <rbrntrvll/fixed_config.h>
+#include <delorean/OutHistoryTree.hpp>
+#include <delorean/intervals/AbstractInterval.hpp>
+#include <delorean/HistoryTreeConfig.hpp>
+#include <delorean/CoreNode.hpp>
+#include <delorean/LeafNode.hpp>
+#include <delorean/ex/IOEx.hpp>
+#include <delorean/fixed_config.h>
  
 using namespace std;
 using namespace std::tr1;

@@ -1,26 +1,26 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
  *
- * This file is part of librbntrvll.
+ * This file is part of libdelorean.
  *
- * librbntrvll is free software: you can redistribute it and/or modify
+ * libdelorean is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * librbntrvll is distributed in the hope that it will be useful,
+ * libdelorean is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <sstream>
 
-#include <rbrntrvll/intervals/UIntInterval.hpp>
-#include <rbrntrvll/basic_types.h>
-#include <rbrntrvll/fixed_config.h>
+#include <delorean/intervals/UIntInterval.hpp>
+#include <delorean/basic_types.h>
+#include <delorean/fixed_config.h>
 
 UIntInterval::UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value)
 : AbstractInterval(start, end, attribute, SIT_UINT32), _value(value)

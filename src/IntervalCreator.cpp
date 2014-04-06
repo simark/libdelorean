@@ -1,35 +1,35 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
  *
- * This file is part of librbntrvll.
+ * This file is part of libdelorean.
  *
- * librbntrvll is free software: you can redistribute it and/or modify
+ * libdelorean is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * librbntrvll is distributed in the hope that it will be useful,
+ * libdelorean is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cstdlib>
 #include <sstream>
 
-#include <rbrntrvll/IntervalCreator.hpp>
-#include <rbrntrvll/intervals/IIntervalFactory.hpp>
-#include <rbrntrvll/intervals/IntIntervalFactory.hpp>
-#include <rbrntrvll/intervals/UIntIntervalFactory.hpp>
-#include <rbrntrvll/intervals/StringIntervalFactory.hpp>
-#include <rbrntrvll/intervals/FloatIntervalFactory.hpp>
-#include <rbrntrvll/intervals/NullIntervalFactory.hpp>
-#include <rbrntrvll/fixed_config.h>
-#include <rbrntrvll/basic_types.h>
-#include <rbrntrvll/ex/UnknownIntervalTypeEx.hpp>
-#include <rbrntrvll/ex/ExistingIntervalTypeEx.hpp>
+#include <delorean/IntervalCreator.hpp>
+#include <delorean/intervals/IIntervalFactory.hpp>
+#include <delorean/intervals/IntIntervalFactory.hpp>
+#include <delorean/intervals/UIntIntervalFactory.hpp>
+#include <delorean/intervals/StringIntervalFactory.hpp>
+#include <delorean/intervals/FloatIntervalFactory.hpp>
+#include <delorean/intervals/NullIntervalFactory.hpp>
+#include <delorean/fixed_config.h>
+#include <delorean/basic_types.h>
+#include <delorean/ex/UnknownIntervalTypeEx.hpp>
+#include <delorean/ex/ExistingIntervalTypeEx.hpp>
 
 IntervalCreator::IntervalCreator(void) {
 	// reset all factories

@@ -1,24 +1,24 @@
 /**
  * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
  *
- * This file is part of librbntrvll.
+ * This file is part of libdelorean.
  *
- * librbntrvll is free software: you can redistribute it and/or modify
+ * libdelorean is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * librbntrvll is distributed in the hope that it will be useful,
+ * libdelorean is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <rbrntrvll/intervals/AbstractInterval.hpp>
-#include <rbrntrvll/intervals/FloatInterval.hpp>
-#include <rbrntrvll/intervals/FloatIntervalFactory.hpp>
+#include <delorean/intervals/AbstractInterval.hpp>
+#include <delorean/intervals/FloatInterval.hpp>
+#include <delorean/intervals/FloatIntervalFactory.hpp>
 
 AbstractInterval::SharedPtr FloatIntervalFactory::create(void) const {
 	AbstractInterval::SharedPtr interval(new FloatInterval());
