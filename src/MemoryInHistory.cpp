@@ -30,7 +30,7 @@
 #include <delorean/LeafNode.hpp>
 #include <delorean/ex/IOEx.hpp>
 #include <delorean/ex/UnknownNodeTypeEx.hpp>
-#include <delorean/fixed_config.h>
+#include <delorean/FixedConfig.hpp>
 #include <sstream>
 
 #include <boost/thread/locks.hpp>

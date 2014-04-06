@@ -23,7 +23,7 @@
 #include <cstring>
 #include <map>
 
-#include <delorean/basic_types.h>
+#include <delorean/BasicTypes.hpp>
 #include <delorean/intervals/AbstractInterval.hpp>
 #include <delorean/intervals/IntInterval.hpp>
 

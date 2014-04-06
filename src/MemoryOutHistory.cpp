@@ -28,7 +28,7 @@
 #include <delorean/CoreNode.hpp>
 #include <delorean/LeafNode.hpp>
 #include <delorean/ex/IOEx.hpp>
-#include <delorean/fixed_config.h>
+#include <delorean/FixedConfig.hpp>
 
 #include <delorean/intervals/NullInterval.hpp>
  

@@ -29,7 +29,7 @@
 #include "CoreNode.hpp"
 #include "LeafNode.hpp"
 #include "ex/TimeRangeEx.hpp"
-#include "basic_types.h"
+#include "BasicTypes.hpp"
 
 #include <queue>
 #include <boost/thread/thread.hpp>

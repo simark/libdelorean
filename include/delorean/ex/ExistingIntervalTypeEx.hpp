@@ -22,7 +22,7 @@
 #include <string>
 #include <stdexcept>
 
-#include "../basic_types.h"
+#include "../BasicTypes.hpp"
 
 class ExistingIntervalTypeEx : public std::runtime_error
 {

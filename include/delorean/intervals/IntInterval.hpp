@@ -22,7 +22,7 @@
 
 #include <stdint.h>
 
-#include "../fixed_config.h"
+#include "../FixedConfig.hpp"
 #include "AbstractInterval.hpp"
 
 class IntInterval : public AbstractInterval

@@ -31,7 +31,7 @@
 #include "intervals/AbstractInterval.hpp"
 #include "IntervalCreator.hpp"
 #include "HistoryConfig.hpp"
-#include "basic_types.h"
+#include "BasicTypes.hpp"
 
 #include "ex/TimeRangeEx.hpp"
 

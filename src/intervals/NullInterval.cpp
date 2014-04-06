@@ -18,7 +18,7 @@
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <delorean/intervals/NullInterval.hpp>
-#include <delorean/fixed_config.h>
+#include <delorean/FixedConfig.hpp>
 
 #include <sstream>
 

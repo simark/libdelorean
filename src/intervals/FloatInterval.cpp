@@ -17,7 +17,7 @@
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <delorean/intervals/FloatInterval.hpp>
-#include <delorean/basic_types.h>
+#include <delorean/BasicTypes.hpp>
 
 #include <sstream>
 

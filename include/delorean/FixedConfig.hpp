@@ -16,15 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with librbntrvll.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _BASIC_TYPES_H
-#define _BASIC_TYPES_H
+#ifndef _FIXED_CONFIG_HPP
+#define _FIXED_CONFIG_HPP
 
-#include <stdint.h>
+/**
+ * Simple interval types.
+ */
+#define SIT_INT32	0
+#define SIT_STRING	1
+#define SIT_UINT32	2
+#define SIT_FLOAT32	3
+#define SIT_NULL	-1
 
-typedef int64_t		timestamp_t;
-typedef int32_t		attribute_t;
-typedef uint8_t		interval_type_t;
-typedef uint8_t		node_type_t;
-typedef int32_t		seq_number_t;
+/**
+ * Node types.
+ */
+#define NT_CORE		1
+#define NT_LEAF		2
 
-#endif // _BASIC_TYPES_H
+/**
+ * History file magic number.
+ */
+#define HF_MAGIC_NUMBER		0x05ffa900
+#define HF_MAJOR		3
+#define HF_MINOR		0
+
+#endif // _FIXED_CONFIG_HPP

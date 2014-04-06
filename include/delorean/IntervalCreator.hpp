@@ -23,7 +23,7 @@
 #include "intervals/IIntervalFactory.hpp"
 #include "ex/UnknownIntervalTypeEx.hpp"
 #include "ex/ExistingIntervalTypeEx.hpp"
-#include "basic_types.h"
+#include "BasicTypes.hpp"
 
 class IntervalCreator
 {

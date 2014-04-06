@@ -20,7 +20,7 @@
 #include <cstring>
 
 #include <delorean/intervals/StringInterval.hpp>
-#include <delorean/basic_types.h>
+#include <delorean/BasicTypes.hpp>
 #include <delorean/ex/IOEx.hpp>
 
 using namespace std;

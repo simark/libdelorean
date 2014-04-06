@@ -19,8 +19,8 @@
 #ifndef _FLOATINTERVAL_HPP
 #define _FLOATINTERVAL_HPP
 
-#include "../basic_types.h"
-#include "../fixed_config.h"
+#include "../BasicTypes.hpp"
+#include "../FixedConfig.hpp"
 #include "AbstractInterval.hpp"
 
 class FloatInterval : public AbstractInterval

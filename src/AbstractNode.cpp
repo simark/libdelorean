@@ -26,7 +26,7 @@
 #include <delorean/intervals/NullInterval.hpp>
 #include <delorean/IntervalCreator.hpp>
 #include <delorean/AbstractNode.hpp>
-#include <delorean/basic_types.h>
+#include <delorean/BasicTypes.hpp>
 #include <delorean/ex/NodeFullEx.hpp>
 
 #include <boost/thread/locks.hpp>

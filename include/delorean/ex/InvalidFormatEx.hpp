@@ -22,7 +22,7 @@
 #include <string>
 #include <stdexcept>
 
-#include "../basic_types.h"
+#include "../BasicTypes.hpp"
 
 class InvalidFormatEx : public std::runtime_error
 {

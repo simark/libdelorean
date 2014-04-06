@@ -22,8 +22,8 @@
 #include <string>
 
 #include "AbstractInterval.hpp"
-#include "../basic_types.h"
-#include "../fixed_config.h"
+#include "../BasicTypes.hpp"
+#include "../FixedConfig.hpp"
 
 class StringInterval : public AbstractInterval
 {

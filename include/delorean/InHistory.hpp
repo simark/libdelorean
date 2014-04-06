@@ -31,7 +31,7 @@
 #include "IntervalCreator.hpp"
 #include "ex/TimeRangeEx.hpp"
 #include "ex/InvalidFormatEx.hpp"
-#include "basic_types.h"
+#include "BasicTypes.hpp"
 
 class InHistory : virtual public AbstractHistory
 {

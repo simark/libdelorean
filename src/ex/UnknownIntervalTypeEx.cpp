@@ -20,7 +20,7 @@
 #include <sstream>
 
 #include <delorean/ex/UnknownIntervalTypeEx.hpp>
-#include <delorean/basic_types.h>
+#include <delorean/BasicTypes.hpp>
 
 using namespace std;
 

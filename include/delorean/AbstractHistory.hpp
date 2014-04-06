@@ -25,7 +25,7 @@
 #include "HistoryConfig.hpp"
 #include "AbstractNode.hpp"
 #include "intervals/AbstractInterval.hpp"
-#include "basic_types.h"
+#include "BasicTypes.hpp"
 
 class AbstractHistory
 {

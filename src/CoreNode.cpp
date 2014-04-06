@@ -26,8 +26,8 @@
 #include <delorean/HistoryConfig.hpp>
 #include <delorean/CoreNode.hpp>
 #include <delorean/AbstractNode.hpp>
-#include <delorean/basic_types.h>
-#include <delorean/fixed_config.h>
+#include <delorean/BasicTypes.hpp>
+#include <delorean/FixedConfig.hpp>
 
 using namespace std;
 using namespace std::tr1;

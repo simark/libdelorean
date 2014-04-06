@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include "basic_types.h"
+#include "BasicTypes.hpp"
 
 class HistoryConfig
 {

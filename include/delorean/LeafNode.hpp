@@ -28,7 +28,7 @@
 #include "intervals/AbstractInterval.hpp"
 #include "IntervalCreator.hpp"
 #include "AbstractNode.hpp"
-#include "basic_types.h"
+#include "BasicTypes.hpp"
 
 class LeafNode : public AbstractNode 
 {

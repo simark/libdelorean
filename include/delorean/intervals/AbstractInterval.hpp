@@ -24,7 +24,7 @@
 #include <tr1/memory>
 #include <iostream>
 
-#include "../basic_types.h"
+#include "../BasicTypes.hpp"
 #include "../IPrintable.hpp"
 
 class AbstractInterval : public IPrintable

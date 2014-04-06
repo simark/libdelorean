@@ -19,8 +19,8 @@
 #include <sstream>
 
 #include <delorean/intervals/UIntInterval.hpp>
-#include <delorean/basic_types.h>
-#include <delorean/fixed_config.h>
+#include <delorean/BasicTypes.hpp>
+#include <delorean/FixedConfig.hpp>
 
 UIntInterval::UIntInterval(timestamp_t start, timestamp_t end, attribute_t attribute, uint32_t value)
 : AbstractInterval(start, end, attribute, SIT_UINT32), _value(value)

@@ -26,8 +26,8 @@
 #include <delorean/intervals/StringIntervalFactory.hpp>
 #include <delorean/intervals/FloatIntervalFactory.hpp>
 #include <delorean/intervals/NullIntervalFactory.hpp>
-#include <delorean/fixed_config.h>
-#include <delorean/basic_types.h>
+#include <delorean/FixedConfig.hpp>
+#include <delorean/BasicTypes.hpp>
 #include <delorean/ex/UnknownIntervalTypeEx.hpp>
 #include <delorean/ex/ExistingIntervalTypeEx.hpp>
 
