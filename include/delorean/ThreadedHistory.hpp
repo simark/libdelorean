@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of libdelorean.
  *
@@ -16,39 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _THREADEDINHISTORYTREE_HPP
-#define _THREADEDINHISTORYTREE_HPP
+#ifndef _THREADEDHISTORYTREE_HPP
+#define _THREADEDHISTORYTREE_HPP
 
-#include <vector>
 #include <fstream>
 
-#include "AbstractHistoryTree.hpp"
-#include "HistoryTreeConfig.hpp"
-#include "InHistoryTree.hpp"
-#include "AbstractThreadedHistoryTree.hpp"
-#include "intervals/AbstractInterval.hpp"
-#include "AbstractNode.hpp"
-#include "CoreNode.hpp"
-#include "LeafNode.hpp"
-#include "IntervalCreator.hpp"
-#include "ex/TimeRangeEx.hpp"
-#include "ex/InvalidFormatEx.hpp"
-#include "basic_types.h"
+#include "History.hpp"
+#include "ThreadedInHistory.hpp"
+#include "ThreadedOutHistory.hpp"
+#include "HistoryConfig.hpp"
 
-class ThreadedInHistoryTree : virtual public InHistoryTree, virtual public AbstractThreadedHistoryTree
+class ThreadedHistory : public History, public ThreadedInHistory, public ThreadedOutHistory 
 {
 public:
-	ThreadedInHistoryTree();
-	ThreadedInHistoryTree(HistoryTreeConfig config);
+	ThreadedHistory(unsigned int maxQueueSize = 10000);
+	ThreadedHistory(HistoryConfig config, unsigned int maxQueueSize = 10000);
+	virtual ~ThreadedHistory();
+	
+	virtual void open();
+	virtual void open(OpenMode mode);
+	virtual void close(timestamp_t end);
+	virtual void close();
 	
 	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
 	virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
 	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
-
-protected:
-	virtual AbstractNode::SharedPtr createNodeFromStream() const;
-	virtual AbstractNode::SharedPtr createNodeFromSeq(seq_number_t seq) const;
-	virtual AbstractNode::SharedPtr fetchNodeFromLatestBranch(seq_number_t seq) const;
+	
+	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
+private:
 };
 
-#endif // _THREADEDINHISTORYTREE_HPP
+#endif // _THREADEDHISTORYTREE_HPP

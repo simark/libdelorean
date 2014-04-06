@@ -9,23 +9,23 @@ Import('root_env')
 target = 'delorean'
 
 main_sources = [
-    'AbstractHistoryTree.cpp',
-    'AbstractMemoryHistoryTree.cpp',
+    'AbstractHistory.cpp',
+    'AbstractMemoryHistory.cpp',
     'AbstractNode.cpp',
-    'AbstractThreadedHistoryTree.cpp',
+    'AbstractThreadedHistory.cpp',
     'CoreNode.cpp',
-    'HistoryTreeConfig.cpp',
-    'HistoryTree.cpp',
-    'InHistoryTree.cpp',
+    'HistoryConfig.cpp',
+    'History.cpp',
+    'InHistory.cpp',
     'IntervalCreator.cpp',
     'LeafNode.cpp',
-    'MemoryHistoryTree.cpp',
-    'MemoryInHistoryTree.cpp',
-    'MemoryOutHistoryTree.cpp',
-    'OutHistoryTree.cpp',
-    'ThreadedHistoryTree.cpp',
-    'ThreadedInHistoryTree.cpp',
-    'ThreadedOutHistoryTree.cpp',
+    'MemoryHistory.cpp',
+    'MemoryInHistory.cpp',
+    'MemoryOutHistory.cpp',
+    'OutHistory.cpp',
+    'ThreadedHistory.cpp',
+    'ThreadedInHistory.cpp',
+    'ThreadedOutHistory.cpp',
 ]
 
 ex_base = 'ex'

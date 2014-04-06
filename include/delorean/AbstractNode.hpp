@@ -30,7 +30,7 @@
 #include "IPrintable.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "IntervalCreator.hpp"
-#include "HistoryTreeConfig.hpp"
+#include "HistoryConfig.hpp"
 #include "basic_types.h"
 
 #include "ex/TimeRangeEx.hpp"
@@ -47,8 +47,8 @@ public:
 	typedef std::tr1::shared_ptr<AbstractNode> SharedPtr;
 	typedef std::tr1::shared_ptr<const AbstractNode> ConstSharedPtr;
 
-	AbstractNode(HistoryTreeConfig config);
-	AbstractNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start, node_type_t type);
+	AbstractNode(HistoryConfig config);
+	AbstractNode(HistoryConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start, node_type_t type);
 	virtual ~AbstractNode();
 	std::string toString(void) const;
 	virtual std::string getInfos(void) const = 0;
@@ -92,7 +92,7 @@ public:
 
 protected:
 	// owner tree's configuration
-	HistoryTreeConfig _config;
+	HistoryConfig _config;
 	
 	// time range of this node
 	timestamp_t _nodeStart;

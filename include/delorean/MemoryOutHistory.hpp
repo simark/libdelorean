@@ -21,9 +21,9 @@
 
 #include <vector>
 
-#include "AbstractMemoryHistoryTree.hpp"
-#include "OutHistoryTree.hpp"
-#include "HistoryTreeConfig.hpp"
+#include "AbstractMemoryHistory.hpp"
+#include "OutHistory.hpp"
+#include "HistoryConfig.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "AbstractNode.hpp"
 #include "CoreNode.hpp"
@@ -34,11 +34,11 @@
 #include <queue>
 #include <boost/thread/thread.hpp>
 
-class MemoryOutHistoryTree : virtual public OutHistoryTree, virtual public AbstractMemoryHistoryTree
+class MemoryOutHistory : virtual public OutHistory, virtual public AbstractMemoryHistory
 {
 public:
-	MemoryOutHistoryTree(bool writeOnClose = true);
-	MemoryOutHistoryTree(HistoryTreeConfig config, bool writeOnClose = true);
+	MemoryOutHistory(bool writeOnClose = true);
+	MemoryOutHistory(HistoryConfig config, bool writeOnClose = true);
 	virtual void open();
 	virtual void close(void) {
 		this->close(this->_end);
@@ -46,7 +46,7 @@ public:
 	virtual void close(timestamp_t end);
 	virtual void setWriteOnClose(bool write) { _writeOnClose = write; };
 	bool getWriteOnClose() { return _writeOnClose; };
-	virtual ~MemoryOutHistoryTree();
+	virtual ~MemoryOutHistory();
 	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
 
 protected:	

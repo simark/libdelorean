@@ -22,10 +22,10 @@
 #include <tr1/memory>
 #include <cstdlib>
  
-#include <delorean/MemoryInHistoryTree.hpp>
-#include <delorean/InHistoryTree.hpp>
+#include <delorean/MemoryInHistory.hpp>
+#include <delorean/InHistory.hpp>
 #include <delorean/intervals/AbstractInterval.hpp>
-#include <delorean/HistoryTreeConfig.hpp>
+#include <delorean/HistoryConfig.hpp>
 #include <delorean/CoreNode.hpp>
 #include <delorean/LeafNode.hpp>
 #include <delorean/ex/IOEx.hpp>
@@ -41,12 +41,12 @@
 using namespace std;
 using namespace std::tr1;
 
-MemoryInHistoryTree::MemoryInHistoryTree()
-: AbstractHistoryTree() , InHistoryTree(), AbstractMemoryHistoryTree(){
+MemoryInHistory::MemoryInHistory()
+: AbstractHistory() , InHistory(), AbstractMemoryHistory(){
 }
 
-MemoryInHistoryTree::MemoryInHistoryTree(HistoryTreeConfig config)
-: AbstractHistoryTree(config), InHistoryTree(config), AbstractMemoryHistoryTree(config) {
+MemoryInHistory::MemoryInHistory(HistoryConfig config)
+: AbstractHistory(config), InHistory(config), AbstractMemoryHistory(config) {
 }
 
 /**
@@ -56,7 +56,7 @@ MemoryInHistoryTree::MemoryInHistoryTree(HistoryTreeConfig config)
  * @throw IOEx if no file, incorrect format, or already open
  * 
  */
-void MemoryInHistoryTree::open() {
+void MemoryInHistory::open() {
 	// is this history tree already opened?
 	if (this->_opened) {
 		throw IOEx("This tree is already opened");
@@ -99,7 +99,7 @@ void MemoryInHistoryTree::open() {
 	this->_opened = true;
 }
 
-void MemoryInHistoryTree::close(timestamp_t end) {	
+void MemoryInHistory::close(timestamp_t end) {	
 	// is this history tree at least opened?
 	if (!this->_opened) {
 		throw IOEx("This tree was not open");
@@ -118,7 +118,7 @@ void MemoryInHistoryTree::close(timestamp_t end) {
  * @param t
  * @return The child node intersecting t
  */
-AbstractNode::SharedPtr MemoryInHistoryTree::selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const {
+AbstractNode::SharedPtr MemoryInHistory::selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const {
 	assert ( currentNode->getNbChildren() > 0 );
 	int potentialNextSeqNb = currentNode->getChildAtTimestamp(timestamp);
 	
@@ -129,7 +129,7 @@ AbstractNode::SharedPtr MemoryInHistoryTree::selectNextChild(CoreNode::SharedPtr
 	return createNodeFromSeq(potentialNextSeqNb);
 }
 
-vector<AbstractInterval::SharedPtr> MemoryInHistoryTree::query(timestamp_t timestamp) const {
+vector<AbstractInterval::SharedPtr> MemoryInHistory::query(timestamp_t timestamp) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
@@ -156,7 +156,7 @@ vector<AbstractInterval::SharedPtr> MemoryInHistoryTree::query(timestamp_t times
 	return relevantIntervals;	
 }
 
-AbstractInterval::SharedPtr MemoryInHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
+AbstractInterval::SharedPtr MemoryInHistory::query(timestamp_t timestamp, attribute_t key) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
@@ -180,7 +180,7 @@ AbstractInterval::SharedPtr MemoryInHistoryTree::query(timestamp_t timestamp, at
 	return interval;
 }
 
-std::multimap<attribute_t, AbstractInterval::SharedPtr> MemoryInHistoryTree::sparseQuery(timestamp_t timestamp) const {
+std::multimap<attribute_t, AbstractInterval::SharedPtr> MemoryInHistory::sparseQuery(timestamp_t timestamp) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
@@ -212,12 +212,12 @@ std::multimap<attribute_t, AbstractInterval::SharedPtr> MemoryInHistoryTree::spa
  * It makes no sense to call this method in a memory history tree
  * @return null pointer
  */ 
-AbstractNode::SharedPtr MemoryInHistoryTree::createNodeFromStream() const {
+AbstractNode::SharedPtr MemoryInHistory::createNodeFromStream() const {
 	
-	return InHistoryTree::createNodeFromStream();
+	return InHistory::createNodeFromStream();
 }
 
-AbstractNode::SharedPtr MemoryInHistoryTree::createNodeFromSeq(seq_number_t seq) const {
+AbstractNode::SharedPtr MemoryInHistory::createNodeFromSeq(seq_number_t seq) const {
 	
 	boost::shared_lock<boost::shared_mutex> l(_nodes_mutex);
 	
@@ -228,7 +228,7 @@ AbstractNode::SharedPtr MemoryInHistoryTree::createNodeFromSeq(seq_number_t seq)
 	return this->_nodes[seq];
 }
 
-AbstractNode::SharedPtr MemoryInHistoryTree::fetchNodeFromLatestBranch(seq_number_t seq) const {
+AbstractNode::SharedPtr MemoryInHistory::fetchNodeFromLatestBranch(seq_number_t seq) const {
 
 	std::vector<AbstractNode::SharedPtr>::const_iterator it;
 	
@@ -242,7 +242,7 @@ AbstractNode::SharedPtr MemoryInHistoryTree::fetchNodeFromLatestBranch(seq_numbe
 	return AbstractNode::SharedPtr();
 }
 
-void MemoryInHistoryTree::loadNodes() {
+void MemoryInHistory::loadNodes() {
 	
 	//Not required to acquire mutex since the tree is not yet opened
 	

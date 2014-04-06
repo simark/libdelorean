@@ -25,7 +25,7 @@
 #include <vector>
 #include <tr1/memory>
 
-#include "HistoryTreeConfig.hpp"
+#include "HistoryConfig.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "IntervalCreator.hpp"
 #include "AbstractNode.hpp"
@@ -37,8 +37,8 @@ public:
 	typedef std::tr1::shared_ptr<CoreNode> SharedPtr;
 	typedef std::tr1::shared_ptr<const CoreNode> ConstSharedPtr;
 
-	CoreNode(HistoryTreeConfig config);
-	CoreNode(HistoryTreeConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
+	CoreNode(HistoryConfig config);
+	CoreNode(HistoryConfig config, seq_number_t seqNumber, seq_number_t parentSeqNumber, timestamp_t start);
 	~CoreNode();
 	std::string getInfos(void) const;
 	void serializeSpecificHeader(uint8_t* buf) const;

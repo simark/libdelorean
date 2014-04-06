@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/ThreadedHistoryTree.hpp>
+#include <delorean/ThreadedHistory.hpp>
 #include <delorean/CoreNode.hpp>
 #include <delorean/ex/TimeRangeEx.hpp>
 #include <delorean/ex/IOEx.hpp>
@@ -31,9 +31,9 @@ using namespace std;
   * 
   * @param maxQueueSize the maximum allowed size for the insertion queue
   */ 
-ThreadedHistoryTree::ThreadedHistoryTree(unsigned int maxQueueSize)
-:AbstractHistoryTree(), HistoryTree(),
-ThreadedInHistoryTree(), ThreadedOutHistoryTree(maxQueueSize)
+ThreadedHistory::ThreadedHistory(unsigned int maxQueueSize)
+:AbstractHistory(), History(),
+ThreadedInHistory(), ThreadedOutHistory(maxQueueSize)
 {
 }
 
@@ -43,13 +43,13 @@ ThreadedInHistoryTree(), ThreadedOutHistoryTree(maxQueueSize)
   * @param config A configuration
   * @param maxQueueSize the maximum allowed size for the insertion queue
   */ 
-ThreadedHistoryTree::ThreadedHistoryTree(HistoryTreeConfig config, unsigned int maxQueueSize)
-:AbstractHistoryTree(config), HistoryTree(config),
-ThreadedInHistoryTree(config), ThreadedOutHistoryTree(config, maxQueueSize)
+ThreadedHistory::ThreadedHistory(HistoryConfig config, unsigned int maxQueueSize)
+:AbstractHistory(config), History(config),
+ThreadedInHistory(config), ThreadedOutHistory(config, maxQueueSize)
 {
 }
 
-ThreadedHistoryTree::~ThreadedHistoryTree()
+ThreadedHistory::~ThreadedHistory()
 {
 }
 
@@ -63,9 +63,9 @@ ThreadedHistoryTree::~ThreadedHistoryTree()
  * @throw IOEx 
  * @throw InvalidFormatEx
  */
-void ThreadedHistoryTree::open()
+void ThreadedHistory::open()
 {
-	HistoryTree::open();
+	History::open();
 	this->startThread();
 }
 
@@ -82,9 +82,9 @@ void ThreadedHistoryTree::open()
  * @param mode either APPEND (keep existing file) or TRUNCATE (replace existing file)
  * @throw IOEx
  */
-void ThreadedHistoryTree::open(OpenMode mode)
+void ThreadedHistory::open(OpenMode mode)
 {	
-	HistoryTree::open(mode);
+	History::open(mode);
 	this->startThread();
 }
 
@@ -94,16 +94,16 @@ void ThreadedHistoryTree::open(OpenMode mode)
  * in the tree, it will be ajusted to be equal to the greatest timestamp
  * @param end : the desired end time of the tree
  */
-void ThreadedHistoryTree::close(timestamp_t end)
+void ThreadedHistory::close(timestamp_t end)
 {
-	ThreadedOutHistoryTree::close(end);
+	ThreadedOutHistory::close(end);
 }
 
 /**
  * "Save" the tree to disk.
  * The greatest timestamp in the tree is used as the end time.
  */
-void ThreadedHistoryTree::close(void)
+void ThreadedHistory::close(void)
 {
 	close(getEnd());
 }
@@ -113,8 +113,8 @@ void ThreadedHistoryTree::close(void)
  * both the threaded and non-threaded version of the history tree
  * are parents of this class.
  */ 
-vector<AbstractInterval::SharedPtr> ThreadedHistoryTree::query(timestamp_t timestamp) const {
-	return ThreadedInHistoryTree::query(timestamp);	
+vector<AbstractInterval::SharedPtr> ThreadedHistory::query(timestamp_t timestamp) const {
+	return ThreadedInHistory::query(timestamp);	
 }
 
 /**
@@ -122,8 +122,8 @@ vector<AbstractInterval::SharedPtr> ThreadedHistoryTree::query(timestamp_t times
  * both the threaded and non-threaded version of the history tree
  * are parents of this class.
  */ 
-AbstractInterval::SharedPtr ThreadedHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
-	return ThreadedInHistoryTree::query(timestamp, key);
+AbstractInterval::SharedPtr ThreadedHistory::query(timestamp_t timestamp, attribute_t key) const {
+	return ThreadedInHistory::query(timestamp, key);
 }
 
 /**
@@ -131,14 +131,14 @@ AbstractInterval::SharedPtr ThreadedHistoryTree::query(timestamp_t timestamp, at
  * both the threaded and non-threaded version of the history tree
  * are parents of this class.
  */ 
-multimap<attribute_t, AbstractInterval::SharedPtr> ThreadedHistoryTree::sparseQuery(timestamp_t timestamp) const {
-	return ThreadedInHistoryTree::sparseQuery(timestamp);
+multimap<attribute_t, AbstractInterval::SharedPtr> ThreadedHistory::sparseQuery(timestamp_t timestamp) const {
+	return ThreadedInHistory::sparseQuery(timestamp);
 }
 /**
  * It is necessary to specify which parent method to call because
  * both the threaded and non-threaded version of the history tree
  * are parents of this class.
  */ 
-void ThreadedHistoryTree::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
-	ThreadedOutHistoryTree::addInterval(interval);
+void ThreadedHistory::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
+	ThreadedOutHistory::addInterval(interval);
 }

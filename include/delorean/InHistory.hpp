@@ -22,8 +22,8 @@
 #include <vector>
 #include <fstream>
 
-#include "AbstractHistoryTree.hpp"
-#include "HistoryTreeConfig.hpp"
+#include "AbstractHistory.hpp"
+#include "HistoryConfig.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "AbstractNode.hpp"
 #include "CoreNode.hpp"
@@ -33,11 +33,11 @@
 #include "ex/InvalidFormatEx.hpp"
 #include "basic_types.h"
 
-class InHistoryTree : virtual public AbstractHistoryTree
+class InHistory : virtual public AbstractHistory
 {
 public:
-	InHistoryTree();
-	InHistoryTree(HistoryTreeConfig config);
+	InHistory();
+	InHistory(HistoryConfig config);
 	virtual void open();
 	virtual void close(void) {
 		this->close(-1);
@@ -51,7 +51,7 @@ public:
 	virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
 	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
 	virtual void test(void);
-	~InHistoryTree();
+	~InHistory();
 
 protected:
 	virtual void buildLatestBranch(void);

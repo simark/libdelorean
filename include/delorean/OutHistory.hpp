@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _THREADEDOUTHISTORYTREE_HPP
-#define _THREADEDOUTHISTORYTREE_HPP
+#ifndef _OUTHISTORYTREE_HPP
+#define _OUTHISTORYTREE_HPP
 
 #include <vector>
 
-#include "AbstractThreadedHistoryTree.hpp"
-#include "OutHistoryTree.hpp"
-#include "HistoryTreeConfig.hpp"
+#include "AbstractHistory.hpp"
+#include "HistoryConfig.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "AbstractNode.hpp"
 #include "CoreNode.hpp"
@@ -31,36 +30,36 @@
 #include "ex/TimeRangeEx.hpp"
 #include "basic_types.h"
 
-#include <queue>
-#include <boost/thread/thread.hpp>
-
-class ThreadedOutHistoryTree : virtual public OutHistoryTree, virtual public AbstractThreadedHistoryTree
+class OutHistory : virtual public AbstractHistory
 {
 public:
-	ThreadedOutHistoryTree(unsigned int maxQueueSize = 10000);
-	ThreadedOutHistoryTree(HistoryTreeConfig config, unsigned int maxQueueSize = 10000);
+	OutHistory();
+	OutHistory(HistoryConfig config);
 	virtual void open();
+	virtual void close(void) {
+		this->close(this->_end);
+	}
 	virtual void close(timestamp_t end);
 	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
+	virtual OutHistory& operator<<(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
+	~OutHistory();
 
-protected:	
+protected:
+	virtual void tryInsertAtNode(AbstractInterval::SharedPtr interval, unsigned int index);
 	virtual void addSiblingNode(unsigned int index);
 	virtual void initEmptyTree(void);
 	virtual void addNewRootNode(void);
+	void openStream(void);
+	void closeStream(void);
+	void serializeHeader(void);
 	virtual void serializeNode(AbstractNode::SharedPtr node);
-	
-	void manageInsert(void);
-	void startThread(void);
-	void stopThread(void);
-	
-	std::queue<AbstractInterval::SharedPtr> _insertQueue;
-	boost::mutex _insertQueue_mutex;
-	const unsigned int _maxQueueSize;
-	boost::thread _insertThread;
-	boost::condition_variable _insertConditionVariable;
-	boost::condition_variable _queueFullConditionVariable;
+	void incNodeCount(timestamp_t new_start);
+
+	virtual CoreNode::SharedPtr initNewCoreNode(seq_number_t parent_seq, timestamp_t start);
+	virtual LeafNode::SharedPtr initNewLeafNode(seq_number_t parent_seq, timestamp_t start);
+
 private:
 
 };
 
-#endif // _THREADEDOUTHISTORYTREE_HPP
+#endif // _OUTHISTORYTREE_HPP

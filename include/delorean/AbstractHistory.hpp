@@ -22,30 +22,30 @@
 #include <vector>
 #include <fstream>
 
-#include "HistoryTreeConfig.hpp"
+#include "HistoryConfig.hpp"
 #include "AbstractNode.hpp"
 #include "intervals/AbstractInterval.hpp"
 #include "basic_types.h"
 
-class AbstractHistoryTree
+class AbstractHistory
 {
 public:
 	enum OpenMode { TRUNCATE, APPEND };
 
-	AbstractHistoryTree();
-	AbstractHistoryTree(HistoryTreeConfig config);
+	AbstractHistory();
+	AbstractHistory(HistoryConfig config);
 	
 	// TODO: template method design pattern for those?
 	virtual void open() = 0;
 	virtual void close(timestamp_t end) = 0;
 	virtual void close() = 0;
-	virtual ~AbstractHistoryTree();
+	virtual ~AbstractHistory();
 	
-	void setConfig(HistoryTreeConfig config) {
+	void setConfig(HistoryConfig config) {
 		if (!_opened)
 			this->_config = config;
 	}
-	HistoryTreeConfig getConfig(void) const {		
+	HistoryConfig getConfig(void) const {		
 		return this->_config;
 	}	
 	timestamp_t getStart() const {
@@ -67,10 +67,10 @@ protected:
 		return (uint64_t)this->getHeaderSize() + (uint64_t)seq * (uint64_t)this->_config._blockSize;
 	}
 	unsigned int getHeaderSize(void) const {
-		return AbstractHistoryTree::HEADER_SIZE;
+		return AbstractHistory::HEADER_SIZE;
 	}
 	static const unsigned int HEADER_SIZE;
-	HistoryTreeConfig _config;
+	HistoryConfig _config;
 	bool _opened;
 	timestamp_t _end;
 	unsigned int _node_count;

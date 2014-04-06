@@ -23,7 +23,7 @@
 #include <cstring>
 #include <sstream>
 
-#include <delorean/HistoryTreeConfig.hpp>
+#include <delorean/HistoryConfig.hpp>
 #include <delorean/CoreNode.hpp>
 #include <delorean/AbstractNode.hpp>
 #include <delorean/basic_types.h>
@@ -32,13 +32,13 @@
 using namespace std;
 using namespace std::tr1;
 
-CoreNode::CoreNode(HistoryTreeConfig config, seq_number_t seqNumber,
+CoreNode::CoreNode(HistoryConfig config, seq_number_t seqNumber,
 seq_number_t parentSeqNumber, timestamp_t start)
 : AbstractNode(config, seqNumber, parentSeqNumber, start, NT_CORE), _nbChildren(0) {
 	this->initChildren();
 }
 
-CoreNode::CoreNode(HistoryTreeConfig config)
+CoreNode::CoreNode(HistoryConfig config)
 : AbstractNode(config) {
 	this->initChildren();
 }

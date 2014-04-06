@@ -16,16 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractMemoryHistoryTree.hpp>
-#include <delorean/CoreNode.hpp>
+#ifndef _ABSTRACTTHREADEDHISTORYTREE_HPP
+#define _ABSTRACTTHREADEDHISTORYTREE_HPP
 
-using namespace std;
-using namespace std::tr1;
+#include "AbstractHistory.hpp"
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/recursive_mutex.hpp>
+#include <boost/thread/shared_mutex.hpp>
 
-AbstractMemoryHistoryTree::AbstractMemoryHistoryTree()
-: AbstractHistoryTree() {
-}
+class AbstractThreadedHistory : virtual public AbstractHistory
+{
+public:
+	AbstractThreadedHistory();
+	AbstractThreadedHistory(HistoryConfig config);
+	
+protected:
+	mutable boost::shared_mutex _latest_branch_mutex;
+	mutable boost::recursive_mutex _stream_mutex;
+};
 
-AbstractMemoryHistoryTree::AbstractMemoryHistoryTree(HistoryTreeConfig config) :
-AbstractHistoryTree(config) {
-}
+#endif // _ABSTRACTTHREADEDINHISTORYTREE_HPP

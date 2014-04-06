@@ -32,11 +32,11 @@ using namespace std::tr1;
 
 const unsigned int LeafNode::HEADER_SIZE = 0;
 
-LeafNode::LeafNode(HistoryTreeConfig config)
+LeafNode::LeafNode(HistoryConfig config)
 : AbstractNode(config) {
 }
 
-LeafNode::LeafNode(HistoryTreeConfig config, seq_number_t seqNumber,
+LeafNode::LeafNode(HistoryConfig config, seq_number_t seqNumber,
 seq_number_t parentSeqNumber, timestamp_t start)
 : AbstractNode(config, seqNumber, parentSeqNumber, start, NT_LEAF) {
 }

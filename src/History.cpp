@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/HistoryTree.hpp>
+#include <delorean/History.hpp>
 #include <delorean/CoreNode.hpp>
 #include <delorean/ex/TimeRangeEx.hpp>
 #include <delorean/ex/IOEx.hpp>
@@ -28,26 +28,26 @@ using namespace std;
 
 
 /**
- * Create a new HistoryTree using a default configuration
+ * Create a new History using a default configuration
  * 
  * @param config
  */
-HistoryTree::HistoryTree()
-:AbstractHistoryTree(), InHistoryTree(), OutHistoryTree()
+History::History()
+:AbstractHistory(), InHistory(), OutHistory()
 {
 }
 
 /**
- * Create a new HistoryTree using a configuration
+ * Create a new History using a configuration
  * 
  * @param config
  */
-HistoryTree::HistoryTree(HistoryTreeConfig config)
-:AbstractHistoryTree(config), InHistoryTree(config), OutHistoryTree(config)
+History::History(HistoryConfig config)
+:AbstractHistory(config), InHistory(config), OutHistory(config)
 {
 }
 
-HistoryTree::~HistoryTree()
+History::~History()
 {
 }
 
@@ -61,7 +61,7 @@ HistoryTree::~HistoryTree()
  * @throw IOEx 
  * @throw InvalidFormatEx
  */
-void HistoryTree::open()
+void History::open()
 {
 	// is this history tree already opened?
 	if (this->_opened) {
@@ -94,7 +94,7 @@ void HistoryTree::open()
  * @param mode either APPEND (keep existing file) or TRUNCATE (replace existing file)
  * @throw IOEx
  */
-void HistoryTree::open(OpenMode mode)
+void History::open(OpenMode mode)
 {	
 	// is this history tree already opened?
 	if (this->_opened) {
@@ -167,12 +167,12 @@ void HistoryTree::open(OpenMode mode)
  * @throws TimeRangeException 
  * 
  */
-void HistoryTree::close(timestamp_t end)
+void History::close(timestamp_t end)
 {
-	OutHistoryTree::close(end);
+	OutHistory::close(end);
 }
 
-void HistoryTree::close(void)
+void History::close(void)
 {
 	close(getEnd());
 }

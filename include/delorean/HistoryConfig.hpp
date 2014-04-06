@@ -23,7 +23,7 @@
 
 #include "basic_types.h"
 
-class HistoryTreeConfig
+class HistoryConfig
 {
 public:
 	// TODO: encapsulate?
@@ -32,10 +32,10 @@ public:
 	unsigned int _maxChildren;
 	timestamp_t _treeStart;
 	
-	HistoryTreeConfig(std::string file) : _stateFile(file) {		
+	HistoryConfig(std::string file) : _stateFile(file) {		
 	}
 	
-	HistoryTreeConfig(std::string newStateFile, int blockSize, int maxChildren,
+	HistoryConfig(std::string newStateFile, int blockSize, int maxChildren,
 			timestamp_t startTime) 
 	:_stateFile(newStateFile), _blockSize(blockSize), _maxChildren(maxChildren), _treeStart(startTime)
 	{
@@ -46,7 +46,7 @@ public:
 	 * @param stateFileName
 	 * @param startTime
 	 */
-	HistoryTreeConfig(std::string newStateFile, timestamp_t startTime) 
+	HistoryConfig(std::string newStateFile, timestamp_t startTime) 
 	:_stateFile(newStateFile), _blockSize(64 * 1024), _maxChildren(50), _treeStart(startTime)
 	{
 	}
@@ -54,7 +54,7 @@ public:
 	/**
 	 * Default constructor
 	 */	
-	HistoryTreeConfig()
+	HistoryConfig()
 	:_stateFile("/dev/urandom"), _blockSize(4096), _maxChildren(50), _treeStart(0)
 	{
 	}

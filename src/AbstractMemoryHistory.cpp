@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractThreadedHistoryTree.hpp>
+#include <delorean/AbstractMemoryHistory.hpp>
 #include <delorean/CoreNode.hpp>
 
 using namespace std;
 using namespace std::tr1;
 
-AbstractThreadedHistoryTree::AbstractThreadedHistoryTree()
-: AbstractHistoryTree() {
+AbstractMemoryHistory::AbstractMemoryHistory()
+: AbstractHistory() {
 }
 
-AbstractThreadedHistoryTree::AbstractThreadedHistoryTree(HistoryTreeConfig config) :
-AbstractHistoryTree(config) {
+AbstractMemoryHistory::AbstractMemoryHistory(HistoryConfig config) :
+AbstractHistory(config) {
 }

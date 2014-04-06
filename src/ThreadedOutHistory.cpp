@@ -22,9 +22,9 @@
 #include <tr1/memory>
 #include <cstdlib>
  
-#include <delorean/ThreadedOutHistoryTree.hpp>
+#include <delorean/ThreadedOutHistory.hpp>
 #include <delorean/intervals/AbstractInterval.hpp>
-#include <delorean/HistoryTreeConfig.hpp>
+#include <delorean/HistoryConfig.hpp>
 #include <delorean/CoreNode.hpp>
 #include <delorean/LeafNode.hpp>
 #include <delorean/ex/IOEx.hpp>
@@ -40,8 +40,8 @@ using namespace std::tr1;
   * 
   * @param maxQueueSize the maximum allowed size for the insertion queue
   */ 
-ThreadedOutHistoryTree::ThreadedOutHistoryTree(unsigned int maxQueueSize)
-: AbstractHistoryTree() , OutHistoryTree(), AbstractThreadedHistoryTree(), 
+ThreadedOutHistory::ThreadedOutHistory(unsigned int maxQueueSize)
+: AbstractHistory() , OutHistory(), AbstractThreadedHistory(), 
   _maxQueueSize(maxQueueSize) {
 }
 
@@ -51,8 +51,8 @@ ThreadedOutHistoryTree::ThreadedOutHistoryTree(unsigned int maxQueueSize)
   * @param config A configuration
   * @param maxQueueSize the maximum allowed size for the insertion queue
   */ 
-ThreadedOutHistoryTree::ThreadedOutHistoryTree(HistoryTreeConfig config, unsigned int maxQueueSize)
-: AbstractHistoryTree(config) , OutHistoryTree(config), AbstractThreadedHistoryTree(config), 
+ThreadedOutHistory::ThreadedOutHistory(HistoryConfig config, unsigned int maxQueueSize)
+: AbstractHistory(config) , OutHistory(config), AbstractThreadedHistory(config), 
   _maxQueueSize(maxQueueSize) {
 }
 
@@ -62,25 +62,25 @@ ThreadedOutHistoryTree::ThreadedOutHistoryTree(HistoryTreeConfig config, unsigne
  * 
  * @throw IOEx if file already open or general IO error
  */ 
-void ThreadedOutHistoryTree::open() {
+void ThreadedOutHistory::open() {
 	
-	OutHistoryTree::open();	
+	OutHistory::open();	
 	this->startThread();
 }
 
-void ThreadedOutHistoryTree::close(timestamp_t end) {
+void ThreadedOutHistory::close(timestamp_t end) {
 	
 	this->stopThread();
-	OutHistoryTree::close(end);
+	OutHistory::close(end);
 }
 /*
-ThreadedOutHistoryTree::~ThreadedOutHistoryTree() {
+ThreadedOutHistory::~ThreadedOutHistory() {
 	if (this->_opened) {
-		OutHistoryTree::close();
+		OutHistory::close();
 	}
 }*/
 
-void ThreadedOutHistoryTree::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
+void ThreadedOutHistory::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
 	if (interval->getStart() < this->_config._treeStart) {
 		throw TimeRangeEx("interval start time below tree start time");
 	}
@@ -100,7 +100,7 @@ void ThreadedOutHistoryTree::addInterval(AbstractInterval::SharedPtr interval) t
 	}
 }
 
-void ThreadedOutHistoryTree::addSiblingNode(unsigned int index) {
+void ThreadedOutHistory::addSiblingNode(unsigned int index) {
 	AbstractNode::SharedPtr new_node;
 	CoreNode::SharedPtr prev_node;
 	timestamp_t split_time = this->_end;
@@ -146,7 +146,7 @@ void ThreadedOutHistoryTree::addSiblingNode(unsigned int index) {
 	return;
 }
 
-void ThreadedOutHistoryTree::initEmptyTree(void) {
+void ThreadedOutHistory::initEmptyTree(void) {
 	
 	boost::unique_lock<boost::shared_mutex> l(_latest_branch_mutex);
 	// do init. stuff...
@@ -159,7 +159,7 @@ void ThreadedOutHistoryTree::initEmptyTree(void) {
 	_latest_branch.push_back(n);
 }
 
-void ThreadedOutHistoryTree::addNewRootNode(void) {
+void ThreadedOutHistory::addNewRootNode(void) {
 	unsigned int i, depth;
 	AbstractNode::SharedPtr new_node;
 	CoreNode::SharedPtr prev_node;
@@ -200,7 +200,7 @@ void ThreadedOutHistoryTree::addNewRootNode(void) {
 	}
 }
 
-void ThreadedOutHistoryTree::serializeNode(AbstractNode::SharedPtr node) {
+void ThreadedOutHistory::serializeNode(AbstractNode::SharedPtr node) {
 	boost::unique_lock<boost::recursive_mutex> l(this->_stream_mutex);
 	// seek to correct position
 	this->_stream.seekp(this->filePosFromSeq(node->getSequenceNumber()));
@@ -209,7 +209,7 @@ void ThreadedOutHistoryTree::serializeNode(AbstractNode::SharedPtr node) {
 	node->serialize(this->_stream);
 }
 
-void ThreadedOutHistoryTree::manageInsert(void){
+void ThreadedOutHistory::manageInsert(void){
 	bool poisoned = false;
 	boost::unique_lock<boost::mutex> l(_insertQueue_mutex);
 	while(!poisoned)
@@ -244,12 +244,12 @@ void ThreadedOutHistoryTree::manageInsert(void){
 	}
 }
 
-void ThreadedOutHistoryTree::startThread(void){
+void ThreadedOutHistory::startThread(void){
 	
-	_insertThread = boost::thread(boost::bind(&ThreadedOutHistoryTree::manageInsert, this));
+	_insertThread = boost::thread(boost::bind(&ThreadedOutHistory::manageInsert, this));
 }
 
-void ThreadedOutHistoryTree::stopThread(void){
+void ThreadedOutHistory::stopThread(void){
 	{
 		boost::unique_lock<boost::mutex> lock(_insertQueue_mutex);
 		bool const was_empty=_insertQueue.empty();

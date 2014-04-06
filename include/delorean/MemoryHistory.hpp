@@ -21,17 +21,17 @@
 
 #include <fstream>
 
-#include "HistoryTree.hpp"
-#include "MemoryInHistoryTree.hpp"
-#include "MemoryOutHistoryTree.hpp"
-#include "HistoryTreeConfig.hpp"
+#include "History.hpp"
+#include "MemoryInHistory.hpp"
+#include "MemoryOutHistory.hpp"
+#include "HistoryConfig.hpp"
 
-class MemoryHistoryTree : public HistoryTree, public MemoryInHistoryTree, public MemoryOutHistoryTree 
+class MemoryHistory : public History, public MemoryInHistory, public MemoryOutHistory 
 {
 public:
-	MemoryHistoryTree(bool writeOnClose = true);
-	MemoryHistoryTree(HistoryTreeConfig config, bool writeOnClose = true);
-	virtual ~MemoryHistoryTree();
+	MemoryHistory(bool writeOnClose = true);
+	MemoryHistory(HistoryConfig config, bool writeOnClose = true);
+	virtual ~MemoryHistory();
 	
 	virtual void open();
 	virtual void open(OpenMode mode);

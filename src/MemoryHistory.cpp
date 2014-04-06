@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/MemoryHistoryTree.hpp>
+#include <delorean/MemoryHistory.hpp>
 #include <delorean/CoreNode.hpp>
 #include <delorean/ex/TimeRangeEx.hpp>
 #include <delorean/ex/IOEx.hpp>
@@ -26,24 +26,24 @@
 
 using namespace std;
 
-MemoryHistoryTree::MemoryHistoryTree(bool writeOnClose)
-:AbstractHistoryTree(), HistoryTree(),
-MemoryInHistoryTree(), MemoryOutHistoryTree(writeOnClose)
+MemoryHistory::MemoryHistory(bool writeOnClose)
+:AbstractHistory(), History(),
+MemoryInHistory(), MemoryOutHistory(writeOnClose)
 {
 }
 
 /**
- * Create a new HistoryTree using a configuration
+ * Create a new History using a configuration
  * 
  * @param config
  */
-MemoryHistoryTree::MemoryHistoryTree(HistoryTreeConfig config, bool writeOnClose)
-:AbstractHistoryTree(config), HistoryTree(config),
-MemoryInHistoryTree(config), MemoryOutHistoryTree(config, writeOnClose)
+MemoryHistory::MemoryHistory(HistoryConfig config, bool writeOnClose)
+:AbstractHistory(config), History(config),
+MemoryInHistory(config), MemoryOutHistory(config, writeOnClose)
 {
 }
 
-MemoryHistoryTree::~MemoryHistoryTree()
+MemoryHistory::~MemoryHistory()
 {
 }
 
@@ -57,7 +57,7 @@ MemoryHistoryTree::~MemoryHistoryTree()
  * @throw IOEx 
  * @throw InvalidFormatEx
  */
-void MemoryHistoryTree::open()
+void MemoryHistory::open()
 {
 	// is this history tree already opened?
 	if (this->_opened) {
@@ -90,7 +90,7 @@ void MemoryHistoryTree::open()
  * @param mode either APPEND (keep existing file) or TRUNCATE (replace existing file)
  * @throw IOEx
  */
-void MemoryHistoryTree::open(OpenMode mode)
+void MemoryHistory::open(OpenMode mode)
 {	
 	// is this history tree already opened?
 	if (this->_opened) {
@@ -99,7 +99,7 @@ void MemoryHistoryTree::open(OpenMode mode)
 	
 	if(mode == TRUNCATE){
 		
-		MemoryOutHistoryTree::initEmptyTree();
+		MemoryOutHistory::initEmptyTree();
 	
 		// update internal status
 		this->_opened = true;
@@ -123,7 +123,7 @@ void MemoryHistoryTree::open(OpenMode mode)
 		
 		try{
 			// unserialize tree header
-			this->MemoryInHistoryTree::unserializeHeader();
+			this->MemoryInHistory::unserializeHeader();
 		}catch(InvalidFormatEx& ex){	
 			this->_stream.close();		
 			throw;
@@ -135,7 +135,7 @@ void MemoryHistoryTree::open(OpenMode mode)
 		this->loadNodes();
 		
 		// store latest branch in memory
-		this->MemoryInHistoryTree::buildLatestBranch();
+		this->MemoryInHistory::buildLatestBranch();
 		
 		// The user could not possibly know the start and end times of the tree
 		// Set it to the correct value using the root node
@@ -158,12 +158,12 @@ void MemoryHistoryTree::open(OpenMode mode)
  * @throws TimeRangeException 
  * 
  */
-void MemoryHistoryTree::close(timestamp_t end)
+void MemoryHistory::close(timestamp_t end)
 {
-	MemoryOutHistoryTree::close(end);
+	MemoryOutHistory::close(end);
 }
 
-void MemoryHistoryTree::close(void)
+void MemoryHistory::close(void)
 {
 	close(getEnd());
 }
@@ -173,8 +173,8 @@ void MemoryHistoryTree::close(void)
  * both the threaded and non-threaded version of the history tree
  * are parents of this class.
  */ 
-vector<AbstractInterval::SharedPtr> MemoryHistoryTree::query(timestamp_t timestamp) const {
-	return MemoryInHistoryTree::query(timestamp);	
+vector<AbstractInterval::SharedPtr> MemoryHistory::query(timestamp_t timestamp) const {
+	return MemoryInHistory::query(timestamp);	
 }
 
 /**
@@ -182,8 +182,8 @@ vector<AbstractInterval::SharedPtr> MemoryHistoryTree::query(timestamp_t timesta
  * both the threaded and non-threaded version of the history tree
  * are parents of this class.
  */ 
-AbstractInterval::SharedPtr MemoryHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
-	return MemoryInHistoryTree::query(timestamp, key);
+AbstractInterval::SharedPtr MemoryHistory::query(timestamp_t timestamp, attribute_t key) const {
+	return MemoryInHistory::query(timestamp, key);
 }
 
 /**
@@ -191,14 +191,14 @@ AbstractInterval::SharedPtr MemoryHistoryTree::query(timestamp_t timestamp, attr
  * both the threaded and non-threaded version of the history tree
  * are parents of this class.
  */ 
-multimap<attribute_t, AbstractInterval::SharedPtr> MemoryHistoryTree::sparseQuery(timestamp_t timestamp) const {
-	return MemoryHistoryTree::sparseQuery(timestamp);
+multimap<attribute_t, AbstractInterval::SharedPtr> MemoryHistory::sparseQuery(timestamp_t timestamp) const {
+	return MemoryHistory::sparseQuery(timestamp);
 }
 /**
  * It is necessary to specify which parent method to call because
  * both the threaded and non-threaded version of the history tree
  * are parents of this class.
  */ 
-void MemoryHistoryTree::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
-	MemoryOutHistoryTree::addInterval(interval);
+void MemoryHistory::addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx) {
+	MemoryOutHistory::addInterval(interval);
 }

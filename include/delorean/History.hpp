@@ -16,34 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _THREADEDHISTORYTREE_HPP
-#define _THREADEDHISTORYTREE_HPP
+#ifndef _HISTORYTREE_HPP
+#define _HISTORYTREE_HPP
 
 #include <fstream>
 
-#include "HistoryTree.hpp"
-#include "ThreadedInHistoryTree.hpp"
-#include "ThreadedOutHistoryTree.hpp"
-#include "HistoryTreeConfig.hpp"
+#include "InHistory.hpp"
+#include "OutHistory.hpp"
+#include "HistoryConfig.hpp"
 
-class ThreadedHistoryTree : public HistoryTree, public ThreadedInHistoryTree, public ThreadedOutHistoryTree 
+class History : public InHistory, public OutHistory
 {
 public:
-	ThreadedHistoryTree(unsigned int maxQueueSize = 10000);
-	ThreadedHistoryTree(HistoryTreeConfig config, unsigned int maxQueueSize = 10000);
-	virtual ~ThreadedHistoryTree();
+	History();
+	History(HistoryConfig config);
+	virtual ~History();
 	
 	virtual void open();
 	virtual void open(OpenMode mode);
 	virtual void close(timestamp_t end);
 	virtual void close();
-	
-	virtual std::vector<AbstractInterval::SharedPtr> query(timestamp_t timestamp) const;
-	virtual std::multimap<attribute_t, AbstractInterval::SharedPtr> sparseQuery(timestamp_t timestamp) const;
-	virtual AbstractInterval::SharedPtr query(timestamp_t timestamp, attribute_t key) const;
-	
-	virtual void addInterval(AbstractInterval::SharedPtr interval) throw(TimeRangeEx);
 private:
 };
 
-#endif // _THREADEDHISTORYTREE_HPP
+#endif // _HISTORYTREE_HPP

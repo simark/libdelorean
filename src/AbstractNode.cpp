@@ -38,7 +38,7 @@ const unsigned int AbstractNode::COMMON_HEADER_SIZE = 34;
 
 bool orderIntervals (AbstractInterval::SharedPtr i, AbstractInterval::SharedPtr j) { return (*i<*j); }
 
-AbstractNode::AbstractNode(HistoryTreeConfig config, seq_number_t seqNumber,
+AbstractNode::AbstractNode(HistoryConfig config, seq_number_t seqNumber,
 seq_number_t parentSeqNumber, timestamp_t start, node_type_t type)
 : _config(config), _nodeStart(start), _sequenceNumber(seqNumber), _parentSequenceNumber(parentSeqNumber), _type(type), _intervals(orderIntervals)
 {
@@ -50,7 +50,7 @@ AbstractNode::~AbstractNode()
 {
 }
 
-AbstractNode::AbstractNode(HistoryTreeConfig config)
+AbstractNode::AbstractNode(HistoryConfig config)
 : _config(config), _intervals(orderIntervals) {
 }
 

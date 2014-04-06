@@ -23,9 +23,9 @@
 #include <cstdlib>
 #include <sstream>
  
-#include <delorean/InHistoryTree.hpp>
+#include <delorean/InHistory.hpp>
 #include <delorean/intervals/AbstractInterval.hpp>
-#include <delorean/HistoryTreeConfig.hpp>
+#include <delorean/HistoryConfig.hpp>
 #include <delorean/CoreNode.hpp>
 #include <delorean/LeafNode.hpp>
 #include <delorean/ex/IOEx.hpp>
@@ -36,12 +36,12 @@
 using namespace std;
 using namespace std::tr1;
 
-InHistoryTree::InHistoryTree()
-: AbstractHistoryTree() {
+InHistory::InHistory()
+: AbstractHistory() {
 }
 
-InHistoryTree::InHistoryTree(HistoryTreeConfig config)
-: AbstractHistoryTree(config) {
+InHistory::InHistory(HistoryConfig config)
+: AbstractHistory(config) {
 }
 
 /**
@@ -51,7 +51,7 @@ InHistoryTree::InHistoryTree(HistoryTreeConfig config)
  * @throw IOEx if no file, incorrect format, or already open
  * 
  */
-void InHistoryTree::open() {
+void InHistory::open() {
 	// is this history tree already opened?
 	if (this->_opened) {
 		throw IOEx("This tree is already opened");
@@ -92,7 +92,7 @@ void InHistoryTree::open() {
  * From an existing tree on the disk, rebuild the latest branch.
  * 
  */ 
-void InHistoryTree::buildLatestBranch(void) {
+void InHistory::buildLatestBranch(void) {
 	assert(this->_node_count > 0);
 	
 	this->_latest_branch.clear();
@@ -115,7 +115,7 @@ void InHistoryTree::buildLatestBranch(void) {
 	return;
 }
 
-void InHistoryTree::unserializeHeader(void) {
+void InHistory::unserializeHeader(void) {
 	fstream& f = this->_stream;
 	f.exceptions ( fstream::failbit | fstream::badbit );
 	try{
@@ -160,7 +160,7 @@ void InHistoryTree::unserializeHeader(void) {
 	f.exceptions(fstream::goodbit);
 }
 
-void InHistoryTree::close(timestamp_t end) {	
+void InHistory::close(timestamp_t end) {	
 	// is this history tree at least opened?
 	if (!this->_opened) {
 		throw IOEx("This tree was not open");
@@ -173,7 +173,7 @@ void InHistoryTree::close(timestamp_t end) {
 	this->_opened = false;
 }
 
-InHistoryTree::~InHistoryTree() {
+InHistory::~InHistory() {
 	if (this->_opened) {
 		this->close();
 	}
@@ -188,7 +188,7 @@ InHistoryTree::~InHistoryTree() {
  * @param t
  * @return The child node intersecting t
  */
-AbstractNode::SharedPtr InHistoryTree::selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const {
+AbstractNode::SharedPtr InHistory::selectNextChild(CoreNode::SharedPtr currentNode, timestamp_t timestamp) const {
 	assert ( currentNode->getNbChildren() > 0 );
 	int potentialNextSeqNb = currentNode->getChildAtTimestamp(timestamp);
 	
@@ -211,7 +211,7 @@ AbstractNode::SharedPtr InHistoryTree::selectNextChild(CoreNode::SharedPtr curre
 	}
 }
 
-vector<AbstractInterval::SharedPtr> InHistoryTree::query(timestamp_t timestamp) const {
+vector<AbstractInterval::SharedPtr> InHistory::query(timestamp_t timestamp) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
@@ -235,7 +235,7 @@ vector<AbstractInterval::SharedPtr> InHistoryTree::query(timestamp_t timestamp) 
 	return relevantIntervals;	
 }
 
-AbstractInterval::SharedPtr InHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
+AbstractInterval::SharedPtr InHistory::query(timestamp_t timestamp, attribute_t key) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
@@ -255,7 +255,7 @@ AbstractInterval::SharedPtr InHistoryTree::query(timestamp_t timestamp, attribut
 	return interval;
 }
 
-std::multimap<attribute_t, AbstractInterval::SharedPtr> InHistoryTree::sparseQuery(timestamp_t timestamp) const {
+std::multimap<attribute_t, AbstractInterval::SharedPtr> InHistory::sparseQuery(timestamp_t timestamp) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
@@ -279,7 +279,7 @@ std::multimap<attribute_t, AbstractInterval::SharedPtr> InHistoryTree::sparseQue
 	return relevantIntervals;	
 }
 
-AbstractNode::SharedPtr InHistoryTree::createNodeFromStream() const {
+AbstractNode::SharedPtr InHistory::createNodeFromStream() const {
 	fstream& f = this->_stream;
 	streampos init_pos = f.tellg();
 	
@@ -312,7 +312,7 @@ AbstractNode::SharedPtr InHistoryTree::createNodeFromStream() const {
 	return n;
 }
 
-AbstractNode::SharedPtr InHistoryTree::createNodeFromSeq(seq_number_t seq) const {
+AbstractNode::SharedPtr InHistory::createNodeFromSeq(seq_number_t seq) const {
 	// make sure everything is okay
 	assert((unsigned int) seq < this->_node_count);
 	
@@ -326,7 +326,7 @@ AbstractNode::SharedPtr InHistoryTree::createNodeFromSeq(seq_number_t seq) const
 	return this->createNodeFromStream();
 }
 
-AbstractNode::SharedPtr InHistoryTree::fetchNodeFromLatestBranch(seq_number_t seq) const {
+AbstractNode::SharedPtr InHistory::fetchNodeFromLatestBranch(seq_number_t seq) const {
 
 	std::vector<AbstractNode::SharedPtr>::const_iterator it;
 	
@@ -338,7 +338,7 @@ AbstractNode::SharedPtr InHistoryTree::fetchNodeFromLatestBranch(seq_number_t se
 	return AbstractNode::SharedPtr();
 }
 
-void InHistoryTree::test(void) {
+void InHistory::test(void) {
 	for (unsigned int i = 0; i < this->_node_count; ++i) {
 		AbstractNode::SharedPtr node(fetchNodeFromLatestBranch(i));
 		//The node is not in the latest branch, it must be on disk

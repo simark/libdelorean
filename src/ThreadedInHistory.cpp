@@ -22,10 +22,10 @@
 #include <tr1/memory>
 #include <cstdlib>
  
-#include <delorean/ThreadedInHistoryTree.hpp>
-#include <delorean/InHistoryTree.hpp>
+#include <delorean/ThreadedInHistory.hpp>
+#include <delorean/InHistory.hpp>
 #include <delorean/intervals/AbstractInterval.hpp>
-#include <delorean/HistoryTreeConfig.hpp>
+#include <delorean/HistoryConfig.hpp>
 #include <delorean/CoreNode.hpp>
 #include <delorean/LeafNode.hpp>
 #include <delorean/ex/IOEx.hpp>
@@ -41,15 +41,15 @@
 using namespace std;
 using namespace std::tr1;
 
-ThreadedInHistoryTree::ThreadedInHistoryTree()
-: AbstractHistoryTree() , InHistoryTree(), AbstractThreadedHistoryTree(){
+ThreadedInHistory::ThreadedInHistory()
+: AbstractHistory() , InHistory(), AbstractThreadedHistory(){
 }
 
-ThreadedInHistoryTree::ThreadedInHistoryTree(HistoryTreeConfig config)
-: AbstractHistoryTree(config), InHistoryTree(config), AbstractThreadedHistoryTree(config) {
+ThreadedInHistory::ThreadedInHistory(HistoryConfig config)
+: AbstractHistory(config), InHistory(config), AbstractThreadedHistory(config) {
 }
 
-vector<AbstractInterval::SharedPtr> ThreadedInHistoryTree::query(timestamp_t timestamp) const {
+vector<AbstractInterval::SharedPtr> ThreadedInHistory::query(timestamp_t timestamp) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
@@ -76,7 +76,7 @@ vector<AbstractInterval::SharedPtr> ThreadedInHistoryTree::query(timestamp_t tim
 	return relevantIntervals;	
 }
 
-AbstractInterval::SharedPtr ThreadedInHistoryTree::query(timestamp_t timestamp, attribute_t key) const {
+AbstractInterval::SharedPtr ThreadedInHistory::query(timestamp_t timestamp, attribute_t key) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
@@ -100,7 +100,7 @@ AbstractInterval::SharedPtr ThreadedInHistoryTree::query(timestamp_t timestamp, 
 	return interval;
 }
 
-std::multimap<attribute_t, AbstractInterval::SharedPtr> ThreadedInHistoryTree::sparseQuery(timestamp_t timestamp) const {
+std::multimap<attribute_t, AbstractInterval::SharedPtr> ThreadedInHistory::sparseQuery(timestamp_t timestamp) const {
 	if ( !checkValidTime(timestamp) ) {
 		throw TimeRangeEx("Query timestamp outside of bounds");
 	}
@@ -128,7 +128,7 @@ std::multimap<attribute_t, AbstractInterval::SharedPtr> ThreadedInHistoryTree::s
 	return relevantIntervals;	
 }
 
-AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromStream() const {
+AbstractNode::SharedPtr ThreadedInHistory::createNodeFromStream() const {
 	fstream& f = this->_stream;
 	boost::unique_lock<boost::recursive_mutex> l(_stream_mutex);
 	streampos init_pos = f.tellg();
@@ -162,7 +162,7 @@ AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromStream() const {
 	return n;
 }
 
-AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromSeq(seq_number_t seq) const {
+AbstractNode::SharedPtr ThreadedInHistory::createNodeFromSeq(seq_number_t seq) const {
 	// make sure everything is okay
 	assert((unsigned int) seq < this->_node_count);
 		
@@ -177,7 +177,7 @@ AbstractNode::SharedPtr ThreadedInHistoryTree::createNodeFromSeq(seq_number_t se
 	return this->createNodeFromStream();
 }
 
-AbstractNode::SharedPtr ThreadedInHistoryTree::fetchNodeFromLatestBranch(seq_number_t seq) const {
+AbstractNode::SharedPtr ThreadedInHistory::fetchNodeFromLatestBranch(seq_number_t seq) const {
 
 	std::vector<AbstractNode::SharedPtr>::const_iterator it;
 	

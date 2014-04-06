@@ -16,30 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistoryTree.hpp>
+#include <delorean/AbstractHistory.hpp>
 #include <delorean/CoreNode.hpp>
 
 using namespace std;
 using namespace std::tr1;
  
-const unsigned int AbstractHistoryTree::HEADER_SIZE = 4096;
+const unsigned int AbstractHistory::HEADER_SIZE = 4096;
 
-AbstractHistoryTree::AbstractHistoryTree()
+AbstractHistory::AbstractHistory()
 : _opened(false) {
 }
 
-AbstractHistoryTree::AbstractHistoryTree(HistoryTreeConfig config) :
+AbstractHistory::AbstractHistory(HistoryConfig config) :
 _config(config), _opened(false) {
 }
 
-AbstractHistoryTree::~AbstractHistoryTree() {
+AbstractHistory::~AbstractHistory() {
 }
 
-bool AbstractHistoryTree::checkValidTime(timestamp_t timestamp) const {	
+bool AbstractHistory::checkValidTime(timestamp_t timestamp) const {	
 	return (timestamp >= _config._treeStart && timestamp <= _end);
 }
 
-bool AbstractHistoryTree::nodeHasChildren(AbstractNode::ConstSharedPtr node) const {
+bool AbstractHistory::nodeHasChildren(AbstractNode::ConstSharedPtr node) const {
 	CoreNode::ConstSharedPtr coreNode = dynamic_pointer_cast<const CoreNode>(node);
 	return(coreNode && coreNode->getNbChildren());
 }
