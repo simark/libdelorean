@@ -60,4 +60,3 @@ sources += [os.path.join(ex_base, f) for f in ex_sources]
 sources += [os.path.join(intervals_base, f) for f in intervals_sources]
 
 root_env.SharedLibrary(target=target, source=sources)
-root_env.Library(target=target, source=sources)
