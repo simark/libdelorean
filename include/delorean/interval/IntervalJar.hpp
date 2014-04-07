@@ -16,8 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _INTERVALJAR_HPP
+#define _INTERVALJAR_HPP
 
-AbstractHistory::~AbstractHistory()
-{
-}
+#include <delorean/interval/AbstractInterval.hpp>
+
+typedef std::vector<AbstractInterval::SP> IntervalJar;
+
+#endif // _INTERVALJAR_HPP

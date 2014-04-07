@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 Philippe Proulx <eepp.ca>
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of libdelorean.
  *
@@ -16,8 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _BRANCHNODEFULL_HPP
+#define _BRANCHNODEFULL_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <stdexcept>
+
+class BranchNodeFull :
+    public std::runtime_error
 {
-}
+public:
+    BranchNodeFull() :
+        std::runtime_error("Branch node is full")
+    {
+    }
+};
+
+#endif // _BRANCHNODEFULL_HPP

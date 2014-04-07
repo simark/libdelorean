@@ -10,49 +10,37 @@ target = 'delorean'
 
 main_sources = [
     'AbstractHistory.cpp',
-    'AbstractMemoryHistory.cpp',
-    'AbstractNode.cpp',
-    'CoreNode.cpp',
-    'HistoryConfig.cpp',
-    'History.cpp',
-    'InHistory.cpp',
-    'IntervalCreator.cpp',
-    'LeafNode.cpp',
-    'MemoryHistory.cpp',
-    'MemoryInHistory.cpp',
-    'MemoryOutHistory.cpp',
-    'OutHistory.cpp',
+    'AbstractHistoryFile.cpp',
+    'HistoryFileSink.cpp',
 ]
-
-ex_base = 'ex'
 ex_sources = [
-    'ExistingIntervalTypeEx.cpp',
-    'InvalidFormatEx.cpp',
-    'IOEx.cpp',
-    'NodeFullEx.cpp',
-    'TimeRangeEx.cpp',
-    'UnknownIntervalTypeEx.cpp',
-    'UnknownNodeTypeEx.cpp',
+    'UnknownIntervalType.cpp',
+    'UnknownNodeType.cpp',
+]
+interval_sources = [
+    'IntervalSerializer.cpp',
+    'IntervalDeserializer.cpp',
+    'AbstractInterval.cpp',
+    'StringInterval.cpp',
+]
+node_sources = [
+    'NodeSerializer.cpp',
+    'NodeDeserializer.cpp',
+    'AbstractNode.cpp',
+    'BranchNode.cpp',
+    'LeafNode.cpp',
 ]
 
-intervals_base = 'intervals'
-intervals_sources = [
-    'AbstractInterval.cpp',
-    'FloatInterval.cpp',
-    'FloatIntervalFactory.cpp',
-    'IntInterval.cpp',
-    'IntIntervalFactory.cpp',
-    'NullInterval.cpp',
-    'NullIntervalFactory.cpp',
-    'StringInterval.cpp',
-    'StringIntervalFactory.cpp',
-    'UIntInterval.cpp',
-    'UIntIntervalFactory.cpp',
+subs = [
+    ('.', main_sources),
+    ('ex', ex_sources),
+    ('interval', interval_sources),
+    ('node', node_sources),
 ]
 
 sources = []
-sources += main_sources
-sources += [os.path.join(ex_base, f) for f in ex_sources]
-sources += [os.path.join(intervals_base, f) for f in intervals_sources]
+for base, files in subs:
+    sources += [os.path.join(base, f) for f in files]
 
-root_env.SharedLibrary(target=target, source=sources)
+root_env.SharedLibrary(target=target, source=sources,
+                       LIBS='boost_system')

@@ -16,8 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _NODESERIALIZER_HPP
+#define _NODESERIALIZER_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <vector>
+#include <cstdint>
+#include <memory>
+
+#include <delorean/node/AbstractNode.hpp>
+#include <delorean/BasicTypes.hpp>
+
+class NodeSerializer
 {
-}
+public:
+    NodeSerializer(std::unique_ptr<IntervalSerializer> ser) :
+        _ser {std::move(ser)}
+    {
+    }
+
+    ~NodeSerializer()
+    {
+    }
+
+    void serializeNode(const AbstractNode& node, std::uint8_t* headPtr) const;
+
+private:
+    std::unique_ptr<IntervalSerializer> _ser;
+};
+
+#endif // _NODESERIALIZER_HPP

@@ -16,8 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _IINTERVALFACTORY_HPP
+#define _IINTERVALFACTORY_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <memory>
+#include <cstdint>
+
+#include <delorean/interval/AbstractInterval.hpp>
+#include <delorean/BasicTypes.hpp>
+
+class IIntervalFactory
 {
-}
+public:
+    typedef std::shared_ptr<IIntervalFactory> SP;
+    typedef std::unique_ptr<IIntervalFactory> UP;
+
+public:
+    virtual ~IIntervalFactory()
+    {
+    }
+
+    virtual AbstractInterval::UP create(timestamp_t begin, timestamp_t end,
+                                        interval_id_t id) const = 0;
+};
+
+#endif // _IINTERVALFACTORY_HPP

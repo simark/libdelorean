@@ -16,8 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _INTERVALSERIALIZER_HPP
+#define _INTERVALSERIALIZER_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <vector>
+#include <cstdint>
+
+#include <delorean/interval/AbstractInterval.hpp>
+#include <delorean/BasicTypes.hpp>
+
+class IntervalSerializer
 {
-}
+public:
+    IntervalSerializer()
+    {
+    }
+
+    ~IntervalSerializer()
+    {
+    }
+
+    void serializeInterval(const AbstractInterval& interval,
+                           std::uint8_t* headPtr,
+                           std::uint8_t* varAtPtr,
+                           std::size_t varOffset) const;
+};
+
+#endif // _INTERVALSERIALIZER_HPP

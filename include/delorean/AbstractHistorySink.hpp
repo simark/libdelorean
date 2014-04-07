@@ -16,8 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _ABSTRACTHISTORYSINK_HPP
+#define _ABSTRACTHISTORYSINK_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <delorean/AbstractHistory.hpp>
+#include <delorean/interval/AbstractInterval.hpp>
+
+class AbstractHistorySink :
+    public AbstractHistory
 {
-}
+public:
+    virtual void addInterval(AbstractInterval::SP interval) = 0;
+    virtual void close(timestamp_t end) = 0;
+};
+
+#endif // _ABSTRACTHISTORYSINK_HPP

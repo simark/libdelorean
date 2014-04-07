@@ -1,0 +1,9 @@
+# author: Philippe Proulx <eepp.ca>
+
+
+import os.path
+
+
+Import('root_env')
+
+SConscript(os.path.join('cppunit', 'SConscript'), exports=['root_env'])

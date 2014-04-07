@@ -16,8 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _INDEXOUTOFRANGE_HPP
+#define _INDEXOUTOFRANGE_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <stdexcept>
+#include <cstddef>
+
+#include <delorean/BasicTypes.hpp>
+
+class IndexOutOfRange :
+    public std::out_of_range
 {
-}
+public:
+    IndexOutOfRange(std::size_t size, unsigned int index) :
+        std::out_of_range {"Index out of range"},
+        _size {size},
+        _index {index}
+    {
+    }
+
+    std::size_t getSize() const
+    {
+        return _size;
+    }
+
+    unsigned int getIndex() const
+    {
+        return _index;
+    }
+
+private:
+    std::size_t _size;
+    unsigned int _index;
+};
+
+#endif // _INDEXOUTOFRANGE_HPP

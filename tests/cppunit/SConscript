@@ -1,0 +1,28 @@
+# author: Philippe Proulx <eepp.ca>
+
+
+import os.path
+
+
+Import('root_env')
+
+target = 'testall'
+
+interval_tests = [
+    'IntIntervalTest.cpp',
+    'StringIntervalTest.cpp',
+    'IntervalSerializerTest.cpp',
+    'IntervalDeserializerTest.cpp',
+]
+
+subs = [
+    ('interval', interval_tests),
+]
+
+sources = ['main.cpp']
+for base, files in subs:
+    sources += [os.path.join('tests', base, f) for f in files]
+
+root_env.Program(target=target, source=sources,
+                 LIBS=['cppunit', 'delorean'],
+                 LIBPATH='#/src')

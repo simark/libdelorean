@@ -16,8 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _UNKNOWNINTERVALTYPE_HPP
+#define _UNKNOWNINTERVALTYPE_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <string>
+#include <stdexcept>
+
+#include <delorean/BasicTypes.hpp>
+
+class UnknownIntervalType :
+    public std::runtime_error
 {
-}
+private:
+    static std::string getMsg(interval_type_t type);
+
+public:
+    UnknownIntervalType(interval_type_t type) :
+        std::runtime_error {getMsg(type)},
+        _type {type}
+    {
+    }
+
+    interval_type_t getType() const {
+        return _type;
+    }
+
+private:
+    interval_type_t _type;
+};
+
+#endif // _UNKNOWNINTERVALTYPE_HPP

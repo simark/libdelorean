@@ -16,8 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _NODETYPES_HPP
+#define _NODETYPES_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <delorean/BasicTypes.hpp>
+
+enum class NodeTypes : node_type_t
 {
-}
+    BRANCH = 0,
+    LEAF,
+    EXTENDED_LEAF,
+    COUNT       // number of items above; always last
+};
+
+#endif // _NODETYPES_HPP

@@ -16,8 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef INTERVALDESERIALIZERTEST_HPP
+#define INTERVALDESERIALIZERTEST_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <cppunit/extensions/HelperMacros.h>
+
+class IntervalDeserializerTest :
+    public CppUnit::TestFixture
 {
-}
+    CPPUNIT_TEST_SUITE(IntervalDeserializerTest);
+        CPPUNIT_TEST(testIntervalTypeRegistration);
+        CPPUNIT_TEST(testDeserialization);
+    CPPUNIT_TEST_SUITE_END();
+
+public:
+    void testIntervalTypeRegistration();
+    void testDeserialization();
+};
+
+#endif  // INTERVALDESERIALIZERTEST_HPP

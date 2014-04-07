@@ -16,8 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef STRINGINTERVALTEST_HPP
+#define STRINGINTERVALTEST_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <cppunit/extensions/HelperMacros.h>
+
+class StringIntervalTest :
+    public CppUnit::TestFixture
 {
-}
+    CPPUNIT_TEST_SUITE(StringIntervalTest);
+        CPPUNIT_TEST(testConstructorValue);
+        CPPUNIT_TEST(testSize);
+        CPPUNIT_TEST(testValueSerialization);
+        CPPUNIT_TEST(testValueDeserialization);
+    CPPUNIT_TEST_SUITE_END();
+
+public:
+    void testConstructorValue();
+    void testSize();
+    void testValueSerialization();
+    void testValueDeserialization();
+};
+
+#endif  // STRINGINTERVALTEST_HPP

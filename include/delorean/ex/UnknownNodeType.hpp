@@ -16,8 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _UNKNOWNNODETYPE_HPP
+#define _UNKNOWNNODETYPE_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <string>
+#include <stdexcept>
+
+#include <delorean/BasicTypes.hpp>
+
+class UnknownNodeType :
+    public std::runtime_error
 {
-}
+private:
+    static std::string getMsg(node_type_t type);
+
+public:
+    UnknownNodeType(node_type_t type) :
+        std::runtime_error {getMsg(type)},
+        _type {type}
+    {
+    }
+
+    node_type_t getType() const {
+        return _type;
+    }
+
+private:
+    node_type_t _type;
+};
+
+#endif // _UNKNOWNNODETYPE_HPP

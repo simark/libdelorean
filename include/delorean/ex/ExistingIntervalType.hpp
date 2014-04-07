@@ -16,8 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _EXISTINGINTERVALTYPE_HPP
+#define _EXISTINGINTERVALTYPE_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <stdexcept>
+
+class ExistingIntervalType :
+    public std::runtime_error
 {
-}
+public:
+    using std::runtime_error::runtime_error;
+};
+
+#endif // _EXISTINGINTERVALTYPE_HPP

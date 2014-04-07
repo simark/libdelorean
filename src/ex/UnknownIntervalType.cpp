@@ -16,8 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#include <string>
+#include <sstream>
 
-AbstractHistory::~AbstractHistory()
-{
+#include <delorean/ex/UnknownIntervalType.hpp>
+#include <delorean/BasicTypes.hpp>
+
+std::string UnknownIntervalType::getMsg(interval_type_t type) {
+    std::ostringstream oss;
+    oss << "unknown interval type " << type;
+
+    return oss.str();
 }

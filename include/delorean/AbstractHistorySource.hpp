@@ -16,8 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _ABSTRACTHISTORYSOURCE_HPP
+#define _ABSTRACTHISTORYSOURCE_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <vector>
+
+#include <delorean/AbstractHistory.hpp>
+#include <delorean/interval/IntervalJar.hpp>
+#include <delorean/interval/AbstractInterval.hpp>
+#include <delorean/BasicTypes.hpp>
+
+class AbstractHistorySource :
+    public AbstractHistory
 {
-}
+public:
+    virtual bool query(timestamp_t ts, IntervalJar& intervals) const = 0;
+    virtual AbstractInterval::SP queryFirstMatching(timestamp_t ts,
+                                                    interval_id_t id) const = 0;
+};
+
+#endif // _ABSTRACTHISTORYSOURCE_HPP

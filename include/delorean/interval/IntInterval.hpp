@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2014 Philippe Proulx <eepp.ca>
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of libdelorean.
  *
@@ -16,8 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _INTINTERVAL_HPP
+#define _INTINTERVAL_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <cstdint>
+
+#include <delorean/interval/SimpleValueInterval.hpp>
+#include <delorean/interval/StandardIntervalTypes.hpp>
+#include <delorean/BasicTypes.hpp>
+
+class IntInterval :
+    public SimpleValueInterval<std::int32_t, StandardIntervalTypes::INT32>
 {
-}
+public:
+    typedef std::shared_ptr<IntInterval> SP;
+    typedef std::unique_ptr<IntInterval> UP;
+
+public:
+    using SimpleValueInterval::SimpleValueInterval;
+};
+
+#endif // _INTINTERVAL_HPP

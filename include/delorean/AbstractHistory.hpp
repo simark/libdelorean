@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Philippe Proulx <philippe.proulx@polymtl.ca>
+ * Copyright (c) 2014 Philippe Proulx <eepp.ca>
  *
  * This file is part of libdelorean.
  *
@@ -16,66 +16,97 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _ABSTRACTHISTORYTREE_HPP
-#define _ABSTRACTHISTORYTREE_HPP
+#ifndef _ABSTRACTHISTORY_HPP
+#define _ABSTRACTHISTORY_HPP
 
-#include <vector>
-#include <fstream>
-
-#include "HistoryConfig.hpp"
-#include "AbstractNode.hpp"
-#include "intervals/AbstractInterval.hpp"
-#include "BasicTypes.hpp"
+#include <delorean/node/AbstractNode.hpp>
+#include <delorean/interval/AbstractInterval.hpp>
+#include <delorean/BasicTypes.hpp>
 
 class AbstractHistory
 {
 public:
-    enum OpenMode { TRUNCATE, APPEND };
+    virtual ~AbstractHistory() = 0;
 
-    AbstractHistory();
-    AbstractHistory(HistoryConfig config);
-
-    // TODO: template method design pattern for those?
-    virtual void open() = 0;
-    virtual void close(timestamp_t end) = 0;
-    virtual void close() = 0;
-    virtual ~AbstractHistory();
-
-    void setConfig(HistoryConfig config) {
-        if (!_opened)
-            this->_config = config;
-    }
-    HistoryConfig getConfig(void) const {
-        return this->_config;
-    }
-    timestamp_t getStart() const {
-        return _config._treeStart;
+protected:
+    timestamp_t getBegin() const
+    {
+        return _begin;
     }
 
-    timestamp_t getEnd() const {
+    void setBegin(timestamp_t begin)
+    {
+        _begin = begin;
+    }
+
+    timestamp_t getEnd() const
+    {
         return _end;
     }
 
-    timestamp_t getNodeCount() const {
-        return _node_count;
+    void setEnd(timestamp_t end)
+    {
+        _end = end;
     }
 
-protected:
-    bool checkValidTime(timestamp_t timestamp) const;
-    bool nodeHasChildren(AbstractNode::ConstSharedPtr node) const;
-    std::streampos filePosFromSeq(seq_number_t seq) const {
-        return (uint64_t)this->getHeaderSize() + (uint64_t)seq * (uint64_t)this->_config._blockSize;
+    unsigned int getMaxChildren() const
+    {
+        return _maxChildren;
     }
-    unsigned int getHeaderSize(void) const {
-        return AbstractHistory::HEADER_SIZE;
+
+    void setMaxChildren(unsigned int maxChildren)
+    {
+        _maxChildren = maxChildren;
     }
-    static const unsigned int HEADER_SIZE;
-    HistoryConfig _config;
-    bool _opened;
+
+    void setNodeSize(std::size_t nodeSize)
+    {
+        _nodeSize = nodeSize;
+    }
+
+    unsigned int getNodeSize() const
+    {
+        return _nodeSize;
+    }
+
+    void setNodeCount(unsigned int nodeCount)
+    {
+        _nodeCount = nodeCount;
+    }
+
+    unsigned int getNodeCount() const
+    {
+        return _nodeCount;
+    }
+
+    void setRootNodeSeqNumber(node_seq_t seq)
+    {
+        _rootNodeSeqNumber = seq;
+    }
+
+    node_seq_t getRootNodeSeqNumber() const
+    {
+        return _rootNodeSeqNumber;
+    }
+
+    bool validateTs(timestamp_t ts)
+    {
+        return (ts >= _begin && ts <= _end);
+    }
+
+    std::vector<AbstractNode::SP>& getLatestBranch()
+    {
+        return _latestBranch;
+    }
+
+private:
     timestamp_t _end;
-    unsigned int _node_count;
-    std::vector<AbstractNode::SharedPtr> _latest_branch;
-    mutable std::fstream _stream;
+    timestamp_t _begin;
+    unsigned int _maxChildren;
+    std::size_t _nodeSize;
+    unsigned int _nodeCount;
+    node_seq_t _rootNodeSeqNumber;
+    std::vector<AbstractNode::SP> _latestBranch;
 };
 
-#endif // _ABSTRACTHISTORYTREE_HPP
+#endif // _ABSTRACTHISTORY_HPP

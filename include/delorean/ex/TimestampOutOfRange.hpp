@@ -16,8 +16,44 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _TIMESTAMPOUTOFRANGE_HPP
+#define _TIMESTAMPOUTOFRANGE_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <stdexcept>
+
+#include <delorean/BasicTypes.hpp>
+
+class TimestampOutOfRange :
+    public std::out_of_range
 {
-}
+public:
+    TimestampOutOfRange(timestamp_t begin, timestamp_t end, timestamp_t ts) :
+        std::out_of_range {"Timestamp out of range"},
+        _begin {begin},
+        _end {end},
+        _ts {ts}
+    {
+    }
+
+    timestamp_t getBegin() const
+    {
+        return _begin;
+    }
+
+    timestamp_t getEnd() const
+    {
+        return _end;
+    }
+
+    timestamp_t getTs() const
+    {
+        return _ts;
+    }
+
+private:
+    timestamp_t _begin;
+    timestamp_t _end;
+    timestamp_t _ts;
+};
+
+#endif // _TIMESTAMPOUTOFRANGE_HPP

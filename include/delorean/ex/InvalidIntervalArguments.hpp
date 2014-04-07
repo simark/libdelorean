@@ -16,8 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _INVALIDINTERVALARGUMENTS_HPP
+#define _INVALIDINTERVALARGUMENTS_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <stdexcept>
+
+#include <delorean/BasicTypes.hpp>
+
+class InvalidIntervalArguments :
+    public std::invalid_argument
 {
-}
+public:
+    InvalidIntervalArguments(timestamp_t begin, timestamp_t end) :
+        std::invalid_argument {"Invalid interval arguments when constructing"},
+        _begin {begin},
+        _end {end}
+    {
+    }
+
+    timestamp_t getBegin() const
+    {
+        return _begin;
+    }
+
+    timestamp_t getEnd() const
+    {
+        return _end;
+    }
+
+private:
+    timestamp_t _begin;
+    timestamp_t _end;
+};
+
+#endif // _INVALIDINTERVALARGUMENTS_HPP

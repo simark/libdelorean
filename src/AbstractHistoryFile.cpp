@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#include <delorean/AbstractHistoryFile.hpp>
 
-AbstractHistory::~AbstractHistory()
+AbstractHistoryFile::~AbstractHistoryFile()
 {
 }

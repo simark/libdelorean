@@ -5,7 +5,7 @@ you're gonna see some serious shit._
 libdelorean
 ===========
 
-***libdelorean*** is a cross-platform C++ library that allows you to record
+***libdelorean*** is a cross-platform C++11 library that allows you to record
 and query a history of intervals. Like Doc Brown's
 [famous DeLorean](http://en.wikipedia.org/wiki/DeLorean_time_machine),
 it's super fast to go to a specific point in time.

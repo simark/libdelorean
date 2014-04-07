@@ -16,8 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#ifndef _STANDARDINTERVALTYPES_HPP
+#define _STANDARDINTERVALTYPES_HPP
 
-AbstractHistory::~AbstractHistory()
+#include <delorean/BasicTypes.hpp>
+
+enum class StandardIntervalTypes : interval_type_t
 {
-}
+    INT32 = 0,
+    STRING,
+    UINT32,
+    FLOAT32,
+    TNULL,
+    COUNT       // number of items above; always last
+};
+
+#endif // _STANDARDINTERVALTYPES_HPP

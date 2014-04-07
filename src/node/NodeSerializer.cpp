@@ -16,8 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <delorean/AbstractHistory.hpp>
+#include <cstring>
+#include <cstdint>
+#include <sstream>
 
-AbstractHistory::~AbstractHistory()
+#include <delorean/node/NodeSerializer.hpp>
+#include <delorean/BasicTypes.hpp>
+
+#include "NodeStructs.hpp"
+
+void NodeSerializer::serializeNode(const AbstractNode& node,
+                                   std::uint8_t* headPtr) const
 {
+    // variable pointer end
+    auto varEndPtr = headPtr + node.getSize();
+
+    // build header
+    NodeCommonHeader header;
+    header.setFromNode(node);
+
+    // write header
+    std::memcpy(headPtr, &header, sizeof(header));
+    headPtr += NodeCommonHeader::SIZE;
+
+    // serialize rest of node
+    node.serialize(headPtr, varEndPtr, *_ser);
 }
