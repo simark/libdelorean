@@ -33,6 +33,9 @@ dependencies
 You need [Boost](http://www.boost.org/). Any version somehow recent should
 do it.
 
+You need [CppUnit](http://cppunit.sourceforge.net/) to build and run
+unit tests.
+
 
 building
 --------
@@ -42,7 +45,7 @@ issue:
 
     $ scons
 
-to build the shared library.
+to build the shared library and tests.
 
 
 using
