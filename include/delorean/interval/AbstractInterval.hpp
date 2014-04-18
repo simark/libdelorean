@@ -30,49 +30,142 @@
 #include <delorean/BasicTypes.hpp>
 #include <delorean/interval/StandardIntervalType.hpp>
 
+/**
+ * Base of all intervals.
+ *
+ * All intervals to be used with libdelorean must inherit this abstract
+ * class.
+ *
+ * All intervals are totally ordered by their end timestamp using typical
+ * comparison operators.
+ *
+ * @author Philippe Proulx
+ */
 class AbstractInterval :
     boost::totally_ordered<AbstractInterval>
 {
 public:
+    /**
+     * Shared pointer to abstract interval.
+     */
     typedef std::shared_ptr<AbstractInterval> SP;
+
+    /**
+     * Unique pointer to abstract interval.
+     */
     typedef std::unique_ptr<AbstractInterval> UP;
-    typedef std::shared_ptr<const AbstractInterval> CSP;
-    typedef std::unique_ptr<const AbstractInterval> CUP;
 
 public:
+    /**
+     * Builds an abstract interval with a custom type.
+     *
+     * @param begin Begin timestamp
+     * @param end   End timestamp
+     * @param id    Reference ID
+     * @param type  Type
+     */
     AbstractInterval(timestamp_t begin, timestamp_t end,
                      interval_id_t id, interval_type_t type);
+
+    /**
+     * Builds an abstract interval with a standard type.
+     *
+     * @param begin Begin timestamp
+     * @param end   End timestamp
+     * @param id    Reference ID
+     * @param type  Standard type
+     */
     AbstractInterval(timestamp_t begin, timestamp_t end,
                      interval_id_t id, StandardIntervalType type);
+
     virtual ~AbstractInterval();
 
+    /**
+     * Returns the size of this interval's variable data in bytes. A return
+     * value of 0 means this interval has no variable data.
+     *
+     * @returns Size of variable data in bytes
+     */
     std::size_t getVariableDataSize() const;
+
+    /**
+     * Serializes this interval's variable data at address \p varAtPtr.
+     * Caller must ensure there's at least the size returned by
+     * getVariableDataSize() at \p varAtPtr.
+     *
+     * @param varAtPtr Address at which to write variable data
+     */
     void serializeVariableData(std::uint8_t* varAtPtr) const;
+
+    /**
+     * Deserializes variable data at address \p varAtPtr into this interval.
+     *
+     * @param varAtPtr Address at which to read variable data
+     */
     void deserializeVariableData(const std::uint8_t* varAtPtr);
 
+    /**
+     * Sets the fixed 32-bit value of this interval. Please note it's useless
+     * to call this method if the interval has to contain any variable data.
+     *
+     * @param value Fixed 32-bit value to set
+     */
     void setFixedValue(interval_value_t value);
+
+    /**
+     * Returns the fixed 32-bit value of this interval. Please note this
+     * value is meaningless if the interval contains any variable data.
+     *
+     * @returns Fixed 32-bit value of this interval
+     */
     interval_value_t getFixedValue() const;
 
+    /**
+     * Returns whether timestamp \p ts intersects with this interval or not.
+     *
+     * @param ts Timestamp to check
+     * @returns  True if timestamp \p ts intersects with this interval
+     */
     bool intersects(timestamp_t ts) const
     {
         return ts >= _begin && ts <= _end;
     }
 
+    /**
+     * Returns the begin timestamp.
+     *
+     * @returns Begin timestamp
+     */
     timestamp_t getBegin() const
     {
         return _begin;
     }
 
+    /**
+     * Returns the end timestamp.
+     *
+     * @returns End timestamp
+     */
     timestamp_t getEnd() const
     {
         return _end;
     }
 
+    /**
+     * Returns the reference ID.
+     *
+     * @returns Reference ID
+     */
     interval_id_t getId() const
     {
         return _id;
     }
 
+    /**
+     * Returns the type.
+     *
+     * @returns Interval type
+     */
     interval_type_t getType() const
     {
         return _type;
@@ -89,10 +182,34 @@ public:
     }
 
 private:
+    /**
+     * Virtual implementation of getVariableDataSize(); must be implemented by
+     * child class.
+     */
     virtual std::size_t getVariableDataSizeImpl() const = 0;
+
+    /**
+     * Virtual implementation of serializeVariableData(); must be implemented by
+     * child class.
+     */
     virtual void serializeVariableDataImpl(std::uint8_t* varAtPtr) const = 0;
+
+    /**
+     * Virtual implementation of deserializeVariableData(); must be implemented by
+     * child class.
+     */
     virtual void deserializeVariableDataImpl(const std::uint8_t* varAtPtr) = 0;
+
+    /**
+     * Virtual implementation of setFixedValue(); must be implemented by
+     * child class.
+     */
     virtual void setFixedValueImpl(interval_value_t value) = 0;
+
+    /**
+     * Virtual implementation of getFixedValue(); must be implemented by
+     * child class.
+     */
     virtual interval_value_t getFixedValueImpl() const = 0;
 
 private:
