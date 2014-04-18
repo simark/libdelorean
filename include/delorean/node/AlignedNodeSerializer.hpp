@@ -16,30 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _INTERVALSERIALIZER_HPP
-#define _INTERVALSERIALIZER_HPP
+#ifndef _ALIGNEDNODESERIALIZER_HPP
+#define _ALIGNEDNODESERIALIZER_HPP
 
 #include <vector>
 #include <cstdint>
 
+#include <delorean/node/Node.hpp>
 #include <delorean/interval/AbstractInterval.hpp>
+#include <delorean/node/ChildNodePointer.hpp>
 #include <delorean/BasicTypes.hpp>
 
-class IntervalSerializer
+class AlignedNodeSerializer
 {
 public:
-    IntervalSerializer()
-    {
-    }
+    virtual ~AlignedNodeSerializer();
 
-    ~IntervalSerializer()
-    {
-    }
+    void serializeNode(const Node& node,
+                               std::uint8_t* headPtr) const;
+    std::size_t getHeaderSize(const Node& node);
+    std::size_t getChildNodePointerSize(const ChildNodePointer& cnp);
+    std::size_t getIntervalSize(const AbstractInterval& interval);
 
-    void serializeInterval(const AbstractInterval& interval,
-                           std::uint8_t* headPtr,
-                           std::uint8_t* varAtPtr,
-                           std::size_t varOffset) const;
+protected:
+    void serializeInterval
 };
 
-#endif // _INTERVALSERIALIZER_HPP
+#endif // _ALIGNEDNODESERIALIZER_HPP

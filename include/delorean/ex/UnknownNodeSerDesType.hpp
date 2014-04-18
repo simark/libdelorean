@@ -16,29 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <cstring>
-#include <cstdint>
-#include <sstream>
+#ifndef _UNKNOWNNODESERDESTYPE_HPP
+#define _UNKNOWNNODESERDESTYPE_HPP
 
-#include <delorean/node/NodeSerializer.hpp>
-#include <delorean/BasicTypes.hpp>
+#include <string>
+#include <stdexcept>
 
-#include "NodeStructs.hpp"
+#include <delorean/node/NodeSerDesType.hpp>
 
-void NodeSerializer::serializeNode(const AbstractNode& node,
-                                   std::uint8_t* headPtr) const
+class UnknownNodeSerDesType :
+    public std::runtime_error
 {
-    // variable pointer end
-    auto varEndPtr = headPtr + node.getSize();
+public:
+    UnknownNodeSerDesType(NodeSerDesType type) :
+        std::runtime_error {"unknown node serializer/deserializer type"},
+        _type {type}
+    {
+    }
 
-    // build header
-    NodeCommonHeader header;
-    header.setFromNode(node);
+    NodeSerDesType getType() const {
+        return _type;
+    }
 
-    // write header
-    std::memcpy(headPtr, &header, sizeof(header));
-    headPtr += NodeCommonHeader::SIZE;
+private:
+    NodeSerDesType _type;
+};
 
-    // serialize rest of node
-    node.serialize(headPtr, varEndPtr, *_ser);
-}
+#endif // _UNKNOWNNODESERDESTYPE_HPP

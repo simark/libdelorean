@@ -21,7 +21,7 @@
 #include <cstring>
 
 #include <delorean/interval/IntInterval.hpp>
-#include <delorean/interval/StandardIntervalTypes.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/ex/InvalidIntervalArguments.hpp>
 #include <delorean/BasicTypes.hpp>
 #include "IntIntervalTest.hpp"
@@ -61,7 +61,7 @@ void IntIntervalTest::testConstructorAndAttributes()
     CPPUNIT_ASSERT_EQUAL(interval->getEnd(), end);
     CPPUNIT_ASSERT_EQUAL(interval->getId(), id);
     CPPUNIT_ASSERT_EQUAL(interval->getType(),
-        static_cast<interval_type_t>(StandardIntervalTypes::INT32));
+        static_cast<interval_type_t>(StandardIntervalType::INT32));
 
     // value
     int value = 31987238;
@@ -119,65 +119,25 @@ void IntIntervalTest::testOperators()
     CPPUNIT_ASSERT(!(*interval1 > *interval2));
 }
 
-void IntIntervalTest::testSize()
+void IntIntervalTest::testFixedValue()
+{
+    IntInterval::UP interval {new IntInterval(1939, 1945, 666)};
+
+    // set fixed, get native
+    int i = -1001;
+    interval->setFixedValue(static_cast<uint32_t>(i));
+    CPPUNIT_ASSERT_EQUAL(interval->getValue(), i);
+
+    // set native, get fixed
+    uint32_t u = 0xfffffffe;
+    interval->setValue(static_cast<int>(u));
+    CPPUNIT_ASSERT_EQUAL(interval->getFixedValue(), u);
+}
+
+void IntIntervalTest::testVariableDataSize()
 {
     IntInterval::UP interval {new IntInterval(1534, 1867, 1)};
 
     // no variable data
-    CPPUNIT_ASSERT_EQUAL(interval->getVariableSize(), static_cast<std::size_t>(0));
-
-    /* Both 24 bytes because this interval type doesn't have variable data:
-     *
-     *     begin:   8
-     *     end:     8
-     *     type/ID: 4
-     *     value:   4
-     */
-    CPPUNIT_ASSERT_EQUAL(interval->getHeaderSize(), static_cast<std::size_t>(24));
-    CPPUNIT_ASSERT_EQUAL(interval->getSize(), static_cast<std::size_t>(24));
-}
-
-void IntIntervalTest::testValueSerialization()
-{
-    // allocate and initialize a buffer
-    std::unique_ptr<std::uint8_t[]> bufUp {new std::uint8_t [1024]};
-    auto buf = bufUp.get();
-    for (unsigned int x = 0; x < 1024; ++x) {
-        buf[x] = x & 0xff;
-    }
-
-    // create interval with custom value
-    IntInterval::UP interval {new IntInterval(1608, 2008, 5)};
-    interval->setValue(0x12abcdef);
-
-    // serialize values
-    interval->serializeValues(buf, buf + 1024);
-
-    // check serialized value
-    std::int32_t i;
-    std::memcpy(&i, buf, 4);
-    CPPUNIT_ASSERT_EQUAL(i, static_cast<int32_t>(0x12abcdef));
-
-    // make sure the rest of the buffer wasn't altered (no variable data)
-    for (unsigned int x = 4; x < 1024; ++x) {
-        CPPUNIT_ASSERT_EQUAL(buf[x], static_cast<uint8_t>(x & 0xff));
-    }
-}
-
-void IntIntervalTest::testValueDeserialization()
-{
-    // allocate and initialize a buffer with a value
-    std::unique_ptr<std::uint8_t[]> bufUp {new std::uint8_t [1024]};
-    auto buf = bufUp.get();
-    std::int32_t value = 0x11223344;
-    std::memcpy(buf, &value, 4);
-
-    // create interval
-    IntInterval::UP interval {new IntInterval(1608, 2008, 5)};
-
-    // deserialize values
-    interval->deserializeValues(buf, buf + 1024);
-
-    // check deserialized value
-    CPPUNIT_ASSERT_EQUAL(static_cast<int>(value), interval->getValue());
+    CPPUNIT_ASSERT_EQUAL(interval->getVariableDataSize(), static_cast<std::size_t>(0));
 }

@@ -23,7 +23,7 @@
 #include <memory>
 
 #include <delorean/interval/AbstractInterval.hpp>
-#include <delorean/interval/StandardIntervalTypes.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
 class NullInterval :
@@ -39,7 +39,7 @@ public:
             begin,
             end,
             id,
-            StandardIntervalTypes::TNULL
+            StandardIntervalType::TNULL
         }
     {
     }
@@ -49,19 +49,30 @@ public:
     }
 
 private:
-    std::size_t getVariableSizeImpl() const
+    std::size_t getVariableDataSizeImpl() const
     {
         return 0;
     }
 
-    void serializeValuesImpl(std::uint8_t* fixedPtr,
-                             std::uint8_t* varAtPtr) const
+    void serializeVariableDataImpl(std::uint8_t* varAtPtr) const
     {
+        // no variable data
     }
 
-    void deserializeValuesImpl(const std::uint8_t* fixedPtr,
-                               const std::uint8_t* varEndPtr)
+    void deserializeVariableDataImpl(const std::uint8_t* varAtPtr)
     {
+        // no variable data
+    }
+
+    void setFixedValueImpl(interval_value_t value)
+    {
+        // no fixed value
+    }
+
+    interval_value_t getFixedValueImpl() const
+    {
+        // not used anyway
+        return 0;
     }
 };
 

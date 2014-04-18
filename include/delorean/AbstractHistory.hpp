@@ -19,8 +19,9 @@
 #ifndef _ABSTRACTHISTORY_HPP
 #define _ABSTRACTHISTORY_HPP
 
-#include <delorean/node/AbstractNode.hpp>
+#include <delorean/node/Node.hpp>
 #include <delorean/interval/AbstractInterval.hpp>
+#include <delorean/node/AbstractNodeSerDes.hpp>
 #include <delorean/BasicTypes.hpp>
 
 class AbstractHistory
@@ -49,12 +50,12 @@ protected:
         _end = end;
     }
 
-    unsigned int getMaxChildren() const
+    std::size_t getMaxChildren() const
     {
         return _maxChildren;
     }
 
-    void setMaxChildren(unsigned int maxChildren)
+    void setMaxChildren(std::size_t maxChildren)
     {
         _maxChildren = maxChildren;
     }
@@ -64,17 +65,17 @@ protected:
         _nodeSize = nodeSize;
     }
 
-    unsigned int getNodeSize() const
+    std::size_t getNodeSize() const
     {
         return _nodeSize;
     }
 
-    void setNodeCount(unsigned int nodeCount)
+    void setNodeCount(std::size_t nodeCount)
     {
         _nodeCount = nodeCount;
     }
 
-    unsigned int getNodeCount() const
+    std::size_t getNodeCount() const
     {
         return _nodeCount;
     }
@@ -94,19 +95,35 @@ protected:
         return (ts >= _begin && ts <= _end);
     }
 
-    std::vector<AbstractNode::SP>& getLatestBranch()
+    std::vector<Node::SP>& getLatestBranch()
     {
         return _latestBranch;
+    }
+
+    void setNodeSerDes(AbstractNodeSerDes::UP serdes)
+    {
+        _nodeSerdes = std::move(serdes);
+    }
+
+    AbstractNodeSerDes& getNodeSerDes()
+    {
+        return *_nodeSerdes;
+    }
+
+    AbstractNodeSerDes* getNodeSerDesPtr() const
+    {
+        return _nodeSerdes.get();
     }
 
 private:
     timestamp_t _end;
     timestamp_t _begin;
-    unsigned int _maxChildren;
+    std::size_t _maxChildren;
     std::size_t _nodeSize;
-    unsigned int _nodeCount;
+    std::size_t _nodeCount;
     node_seq_t _rootNodeSeqNumber;
-    std::vector<AbstractNode::SP> _latestBranch;
+    std::vector<Node::SP> _latestBranch;
+    AbstractNodeSerDes::UP _nodeSerdes;
 };
 
 #endif // _ABSTRACTHISTORY_HPP

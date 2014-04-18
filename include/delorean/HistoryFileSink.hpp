@@ -26,9 +26,8 @@
 
 #include <delorean/AbstractHistoryFile.hpp>
 #include <delorean/AbstractHistorySink.hpp>
-#include <delorean/node/NodeSerializer.hpp>
-#include <delorean/node/LeafNode.hpp>
-#include <delorean/node/BranchNode.hpp>
+#include <delorean/node/Node.hpp>
+#include <delorean/node/NodeSerDesType.hpp>
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
@@ -50,9 +49,10 @@ public:
     }
 
     void open(const boost::filesystem::path& path,
-              unsigned int nodeSize = DEF_NODE_SIZE,
-              unsigned int maxChildren = DEF_MAX_CHILDREN,
-              timestamp_t begin = 0);
+              std::size_t nodeSize = DEF_NODE_SIZE,
+              std::size_t maxChildren = DEF_MAX_CHILDREN,
+              timestamp_t begin = 0,
+              NodeSerDesType serdesType = NodeSerDesType::ALIGNED);
     void close(timestamp_t end);
     void close();
 
@@ -60,21 +60,17 @@ public:
 
 private:
     void writeHeader();
-    void tryAddIntervalToNode(AbstractInterval::SP intr, unsigned int index);
+    void tryAddIntervalToNode(AbstractInterval::SP intr, std::size_t index);
     void incNodeCount(timestamp_t begin);
-    void addSiblingNode(unsigned int index);
-    void drawBranchFromIndex(unsigned int parentIndex,
-                             unsigned int height);
-    void commitNodesDownFromIndex(unsigned int index);
-    void commitNode(AbstractNode& node);
-    BranchNode::UP createBranchNode(node_seq_t parentSeqNumber,
-                                    timestamp_t begin) const;
-    LeafNode::UP createLeafNode(node_seq_t parentSeqNumber,
-                                timestamp_t begin) const;
+    void addSiblingNode(std::size_t index);
+    void drawBranchFromIndex(std::size_t parentIndex,
+                             std::size_t height);
+    void commitNodesDownFromIndex(std::size_t index);
+    void commitNode(Node& node);
+    Node::UP createNode(node_seq_t parentSeqNumber, timestamp_t begin) const;
 
 private:
     boost::filesystem::ofstream _outputStream;
-    std::unique_ptr<NodeSerializer> _nodeSer;
     std::unique_ptr<std::uint8_t[]> _nodeBuf;
 };
 

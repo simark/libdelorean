@@ -20,6 +20,7 @@
 #include <cstring>
 
 #include <delorean/interval/StringInterval.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
 StringInterval::StringInterval(timestamp_t begin, timestamp_t end,
@@ -28,34 +29,37 @@ StringInterval::StringInterval(timestamp_t begin, timestamp_t end,
         begin,
         end,
         id,
-        StandardIntervalTypes::STRING
+        StandardIntervalType::STRING
     }
 {
 }
 
-std::size_t StringInterval::getVariableSizeImpl() const
+std::size_t StringInterval::getVariableDataSizeImpl() const
 {
     // includes NUL character
     return _value.size() + 1;
 }
 
-void StringInterval::serializeValuesImpl(std::uint8_t* fixedPtr,
-                                         std::uint8_t* varAtPtr) const
+void StringInterval::serializeVariableDataImpl(std::uint8_t* varAtPtr) const
 {
     // write string to variable section
-    std::memcpy(varAtPtr, _value.c_str(), this->getVariableSize());
+    std::memcpy(varAtPtr, _value.c_str(), this->getVariableDataSizeImpl());
 }
 
-void StringInterval::deserializeValuesImpl(const std::uint8_t* fixedPtr,
-                                           const std::uint8_t* varEndPtr)
+void StringInterval::deserializeVariableDataImpl(const std::uint8_t* varAtPtr)
 {
-    // read variable data offset
-    interval_value_t offset;
-    std::memcpy(&offset, fixedPtr, sizeof(offset));
+    // build string (safe since pointed data is NUL-terminated)
+    const char* cstr = reinterpret_cast<const char*>(varAtPtr);
+    _value = std::string(cstr);
+}
 
-    // point the beginning of the string
-    auto cstr = varEndPtr - offset;
+void StringInterval::setFixedValueImpl(interval_value_t value)
+{
+    // no fixed value
+}
 
-    // build string (pointed data is NUL-terminated)
-    _value = std::string(reinterpret_cast<const char*>(cstr));
+interval_value_t StringInterval::getFixedValueImpl() const
+{
+    // no fixed value
+    return 0;
 }

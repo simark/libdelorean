@@ -75,6 +75,7 @@ protected:
 private:
     bool _isOpened;
     boost::filesystem::path _path;
+
 };
 
 #endif // _ABSTRACTHISTORYFILE_HPP

@@ -16,17 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _NODETYPES_HPP
-#define _NODETYPES_HPP
+#ifndef _CHILDNODEPOINTER_HPP
+#define _CHILDNODEPOINTER_HPP
 
 #include <delorean/BasicTypes.hpp>
 
-enum class NodeTypes : node_type_t
+class ChildNodePointer
 {
-    BRANCH = 0,
-    LEAF,
-    EXTENDED_LEAF,
-    COUNT       // number of items above; always last
+public:
+    ChildNodePointer(timestamp_t begin, node_seq_t seqNumber) :
+        _begin {begin},
+        _seqNumber {seqNumber}
+    {
+    }
+
+    timestamp_t getBegin() const
+    {
+        return _begin;
+    }
+
+    node_seq_t getSeqNumber() const
+    {
+        return _seqNumber;
+    }
+
+private:
+    timestamp_t _begin;
+    node_seq_t _seqNumber;
 };
 
-#endif // _NODETYPES_HPP
+#endif // _CHILDNODEPOINTER_HPP

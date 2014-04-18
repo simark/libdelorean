@@ -21,14 +21,10 @@
 
 #include <cstdint>
 
-typedef std::int64_t        timestamp_t;
-typedef std::uint32_t       interval_type_id_t;
+typedef std::uint64_t       timestamp_t;
 typedef std::uint32_t       interval_id_t;
 typedef std::uint8_t        interval_type_t;
 typedef std::uint32_t       interval_value_t;
-typedef std::uint32_t       node_type_flags_t;
-typedef std::uint8_t        node_type_t;
-typedef std::uint32_t       node_flags_t;
 typedef std::uint32_t       node_seq_t;
 
 #endif // _BASIC_TYPES_HPP

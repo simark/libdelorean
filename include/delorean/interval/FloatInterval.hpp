@@ -21,11 +21,11 @@
 #define _FLOATINTERVAL_HPP
 
 #include <delorean/interval/SimpleValueInterval.hpp>
-#include <delorean/interval/StandardIntervalTypes.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
 class FloatInterval :
-    public SimpleValueInterval<float, StandardIntervalTypes::FLOAT32>
+    public SimpleValueInterval<float, StandardIntervalType::FLOAT32>
 {
 public:
     typedef std::shared_ptr<FloatInterval> SP;

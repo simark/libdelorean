@@ -25,7 +25,6 @@
 #include <cstddef>
 
 #include <delorean/interval/AbstractInterval.hpp>
-#include <delorean/interval/StandardIntervalTypes.hpp>
 #include <delorean/BasicTypes.hpp>
 
 class StringInterval :
@@ -53,11 +52,11 @@ public:
     }
 
 private:
-    std::size_t getVariableSizeImpl() const;
-    void serializeValuesImpl(std::uint8_t* fixedPtr,
-                             std::uint8_t* varAtPtr) const;
-    void deserializeValuesImpl(const std::uint8_t* fixedPtr,
-                               const std::uint8_t* varEndPtr);
+    std::size_t getVariableDataSizeImpl() const;
+    void serializeVariableDataImpl(std::uint8_t* varAtPtr) const;
+    void deserializeVariableDataImpl(const std::uint8_t* varAtPtr);
+    void setFixedValueImpl(interval_value_t value);
+    interval_value_t getFixedValueImpl() const;
 
 private:
     std::string _value;

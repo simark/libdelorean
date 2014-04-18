@@ -20,7 +20,6 @@
 #define INTINTERVALTEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <delorean/interval/IntInterval.hpp>
 
 class IntIntervalTest :
     public CppUnit::TestFixture
@@ -29,18 +28,16 @@ class IntIntervalTest :
         CPPUNIT_TEST(testConstructorAndAttributes);
         CPPUNIT_TEST(testIntersection);
         CPPUNIT_TEST(testOperators);
-        CPPUNIT_TEST(testSize);
-        CPPUNIT_TEST(testValueSerialization);
-        CPPUNIT_TEST(testValueDeserialization);
+        CPPUNIT_TEST(testFixedValue);
+        CPPUNIT_TEST(testVariableDataSize);
     CPPUNIT_TEST_SUITE_END();
 
 public:
     void testConstructorAndAttributes();
     void testIntersection();
     void testOperators();
-    void testSize();
-    void testValueSerialization();
-    void testValueDeserialization();
+    void testFixedValue();
+    void testVariableDataSize();
 };
 
 #endif  // INTINTERVALTEST_HPP

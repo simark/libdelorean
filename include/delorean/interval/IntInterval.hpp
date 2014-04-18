@@ -23,11 +23,11 @@
 #include <cstdint>
 
 #include <delorean/interval/SimpleValueInterval.hpp>
-#include <delorean/interval/StandardIntervalTypes.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
 class IntInterval :
-    public SimpleValueInterval<std::int32_t, StandardIntervalTypes::INT32>
+    public SimpleValueInterval<std::int32_t, StandardIntervalType::INT32>
 {
 public:
     typedef std::shared_ptr<IntInterval> SP;

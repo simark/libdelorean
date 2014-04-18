@@ -15,20 +15,15 @@ main_sources = [
 ]
 ex_sources = [
     'UnknownIntervalType.cpp',
-    'UnknownNodeType.cpp',
 ]
 interval_sources = [
-    'IntervalSerializer.cpp',
-    'IntervalDeserializer.cpp',
     'AbstractInterval.cpp',
     'StringInterval.cpp',
 ]
 node_sources = [
-    'NodeSerializer.cpp',
-    'NodeDeserializer.cpp',
-    'AbstractNode.cpp',
-    'BranchNode.cpp',
-    'LeafNode.cpp',
+    'AbstractNodeSerDes.cpp',
+    'AlignedNodeSerDes.cpp',
+    'Node.cpp',
 ]
 
 subs = [

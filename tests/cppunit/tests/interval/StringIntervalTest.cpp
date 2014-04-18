@@ -41,7 +41,7 @@ void StringIntervalTest::testConstructorValue()
     CPPUNIT_ASSERT(interval->getValue() == value);
 }
 
-void StringIntervalTest::testSize()
+void StringIntervalTest::testVariableDataSize()
 {
     StringInterval::UP interval {new StringInterval(1, 2, 3)};
     std::string value("hello, world!");
@@ -49,17 +49,14 @@ void StringIntervalTest::testSize()
 
     // variable size: string length + NUL character
     std::size_t expectedVariableSize = value.size() + 1;
-    CPPUNIT_ASSERT_EQUAL(interval->getVariableSize(), expectedVariableSize);
+    CPPUNIT_ASSERT_EQUAL(interval->getVariableDataSize(), expectedVariableSize);
 
-    // size should be length of variable data + header size (24)
-    CPPUNIT_ASSERT_EQUAL(interval->getSize(), expectedVariableSize + 24);
-
-    // no value: NUL byte only
+    // no variable data: NUL character only
     interval->setValue("");
-    CPPUNIT_ASSERT_EQUAL(interval->getSize(), static_cast<std::size_t>(24 + 1));
+    CPPUNIT_ASSERT_EQUAL(interval->getVariableDataSize(), static_cast<std::size_t>(1));
 }
 
-void StringIntervalTest::testValueSerialization()
+void StringIntervalTest::testVariableDataSerialization()
 {
     // allocate and initialize a buffer
     std::unique_ptr<std::uint8_t[]> bufUp {new std::uint8_t [1024]};
@@ -74,26 +71,26 @@ void StringIntervalTest::testValueSerialization()
     interval->setValue(value);
 
     // serialize values
-    auto varAt = 512;
-    interval->serializeValues(buf, buf + varAt - interval->getVariableSize());
+    std::size_t varAt = 512;
+    interval->serializeVariableData(buf + varAt);
 
     // check serialized value
-    for (unsigned int x = 0; x < value.size(); ++x) {
-        auto offset = varAt - interval->getVariableSize() + x;
+    for (std::size_t x = 0; x < value.size(); ++x) {
+        auto offset = varAt + x;
         CPPUNIT_ASSERT_EQUAL(buf[offset], static_cast<uint8_t>(value[x]));
     }
-    CPPUNIT_ASSERT_EQUAL(buf[varAt - 1], static_cast<uint8_t>('\0'));
+    CPPUNIT_ASSERT_EQUAL(buf[varAt + value.size()], static_cast<uint8_t>('\0'));
 
     // make sure everything else in the buffer didn't change
-    for (unsigned int x = 0; x < varAt - interval->getVariableSize(); ++x) {
+    for (std::size_t x = 0; x < varAt; ++x) {
         CPPUNIT_ASSERT_EQUAL(buf[x], static_cast<uint8_t>(x & 0xff));
     }
-    for (unsigned int x = varAt + interval->getVariableSize(); x < 1024; ++x) {
+    for (std::size_t x = varAt + interval->getVariableDataSize(); x < 1024; ++x) {
         CPPUNIT_ASSERT_EQUAL(buf[x], static_cast<uint8_t>(x & 0xff));
     }
 }
 
-void StringIntervalTest::testValueDeserialization()
+void StringIntervalTest::testVariableDataDeserialization()
 {
     // allocate and initialize a buffer with a value
     std::unique_ptr<std::uint8_t[]> bufUp {new std::uint8_t [1024]};
@@ -103,18 +100,16 @@ void StringIntervalTest::testValueDeserialization()
     }
 
     // put some string at some offset
-    auto varAt = 256;
+    std::size_t varAt = 256;
     std::string value {"Bacon ipsum dolor sit amet bresaola porchetta pork pork"};
     std::memcpy(buf + varAt, value.c_str(), value.size());
     buf[varAt + value.size()] = '\0';
-    std::uint32_t offsetFromEnd = 1024 - varAt;
-    std::memcpy(buf, &offsetFromEnd, 4);
 
     // create interval
     StringInterval::UP interval {new StringInterval(1608, 2008, 5)};
 
     // deserialize values
-    interval->deserializeValues(buf, buf + 1024);
+    interval->deserializeVariableData(buf + varAt);
 
     // check deserialized value
     CPPUNIT_ASSERT_EQUAL(value, interval->getValue());

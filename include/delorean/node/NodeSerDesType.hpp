@@ -16,34 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _NODEDESERIALIZER_HPP
-#define _NODEDESERIALIZER_HPP
+#ifndef _NODESERDESTYPE_HPP
+#define _NODESERDESTYPE_HPP
 
-#include <vector>
-#include <cstdint>
-
-#include <delorean/node/AbstractNode.hpp>
-#include <delorean/interval/IntervalDeserializer.hpp>
 #include <delorean/BasicTypes.hpp>
 
-class NodeDeserializer
+enum class NodeSerDesType
 {
-public:
-    NodeDeserializer(std::unique_ptr<IntervalDeserializer> deser) :
-        _deser {std::move(deser)}
-    {
-    }
-
-    ~NodeDeserializer()
-    {
-    }
-
-    AbstractNode::UP deserializeNode(const std::uint8_t* headPtr,
-                                     std::size_t size,
-                                     unsigned int maxChildren) const;
-
-private:
-    std::unique_ptr<IntervalDeserializer> _deser;
+    ALIGNED = 0,
+    COUNT       // number of items above; always last
 };
 
-#endif // _NODEDESERIALIZER_HPP
+#endif // _NODESERDESTYPE_HPP

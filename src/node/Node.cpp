@@ -18,74 +18,42 @@
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <algorithm>
-#include <ostream>
-#include <cstring>
 
+#include <delorean/node/Node.hpp>
 #include <delorean/interval/IntervalJar.hpp>
-#include <delorean/interval/IntervalSerializer.hpp>
-#include <delorean/interval/IntervalDeserializer.hpp>
-#include <delorean/node/AbstractNode.hpp>
 #include <delorean/ex/TimestampOutOfRange.hpp>
+#include <delorean/ex/NodeFull.hpp>
 #include <delorean/BasicTypes.hpp>
-#include "NodeStructs.hpp"
 
-AbstractNode::AbstractNode(std::size_t size, node_seq_t seqNumber,
-                           node_seq_t parentSeqNumber, timestamp_t begin,
-                           node_type_t type) :
-    _type {type},
-    _size {size},
+Node::Node(std::size_t size, std::size_t maxChildren, node_seq_t seqNumber,
+           node_seq_t parentSeqNumber, timestamp_t begin,
+           const AbstractNodeSerDes* serdes) :
     _begin {begin},
     _end {begin},
     _seqNumber {seqNumber},
     _parentSeqNumber {parentSeqNumber},
     _isDone {false},
-    _intervalsSize {0}
+    _isExtended {false},
+    _maxChildren {maxChildren},
+    _curHeaderSize {0},
+    _curChildrenSize {0},
+    _curIntervalsSize {0},
+    _totalSize {size},
+    _serdes {serdes}
+{
+    this->computeHeaderSize();
+}
+
+Node::~Node()
 {
 }
 
-AbstractNode::~AbstractNode()
+void Node::computeHeaderSize()
 {
+    _curHeaderSize = _serdes->getHeaderSize(*this);
 }
 
-void AbstractNode::serialize(std::uint8_t* specificHeadPtr,
-                             std::uint8_t* varEndPtr,
-                             IntervalSerializer& ser) const
-{
-    // serialize specific header
-    this->serializeSpecificHeader(specificHeadPtr);
-    specificHeadPtr += this->getSpecificHeaderSize();
-
-    // serialize intervals
-    std::size_t varOffset = 0;
-    for (const auto& interval : _intervals) {
-        varEndPtr -= interval->getVariableSize();
-        varOffset += interval->getVariableSize();
-        ser.serializeInterval(*interval, specificHeadPtr, varEndPtr, varOffset);
-        specificHeadPtr += interval->getHeaderSize();
-    }
-}
-
-void AbstractNode::deserialize(const std::uint8_t* specificHeadPtr,
-                               const std::uint8_t* varEndPtr,
-                               std::size_t intervalCount,
-                               const IntervalDeserializer& deser)
-{
-    // deserialize specific header
-    this->deserializeSpecificHeader(specificHeadPtr);
-    specificHeadPtr += this->getSpecificHeaderSize();
-
-    // deserialize intervals
-    for (unsigned int x = 0; x < intervalCount; ++x) {
-        auto interval = std::move(deser.deserializeInterval(specificHeadPtr, varEndPtr));
-
-        this->addInterval(std::move(interval));
-    }
-
-    // mark this node done
-    _isDone = true;
-}
-
-void AbstractNode::addInterval(AbstractInterval::SP interval)
+void Node::addInterval(AbstractInterval::SP interval)
 {
     if (!_intervals.empty()) {
         // make sure the insertion is in ascending order of end time
@@ -98,21 +66,25 @@ void AbstractNode::addInterval(AbstractInterval::SP interval)
     _intervals.push_back(interval);
 
     // update size cache
-    _intervalsSize += interval->getSize();
+    _curIntervalsSize += _serdes->getIntervalSize(*interval);
 
     // update node's end time
     _end = interval->getEnd();
+
+    // end changed: recompute header size
+    this->computeHeaderSize();
 }
 
-bool AbstractNode::intervalFits(const AbstractInterval& interval)
+bool Node::intervalFits(const AbstractInterval& interval)
 {
-    auto freeSpace = _size - NodeCommonHeader::SIZE -
-        this->getSpecificHeaderSize() - _intervalsSize;
+    auto curSize = _curHeaderSize + _curChildrenSize + _curIntervalsSize;
+    auto freeSpace = _totalSize - curSize;
+    auto intervalSize = _serdes->getIntervalSize(interval);
 
-    return interval.getSize() <= freeSpace;
+    return intervalSize <= freeSpace;
 }
 
-void AbstractNode::close(timestamp_t end)
+void Node::close(timestamp_t end)
 {
     // already closed?
     if (_isDone) {
@@ -126,9 +98,12 @@ void AbstractNode::close(timestamp_t end)
 
 	_isDone = true;
 	_end = end;
+
+    // end changed: recompute header size
+    this->computeHeaderSize();
 }
 
-bool AbstractNode::query(timestamp_t ts, IntervalJar& intervals) const
+bool Node::query(timestamp_t ts, IntervalJar& intervals) const
 {
     // fast path when there's no interval
     if (_intervals.empty()) {
@@ -153,7 +128,7 @@ bool AbstractNode::query(timestamp_t ts, IntervalJar& intervals) const
     return found;
 }
 
-AbstractInterval::SP AbstractNode::queryFirstMatching(timestamp_t ts,
+AbstractInterval::SP Node::queryFirstMatching(timestamp_t ts,
                                                       interval_id_t id) const
 {
     // fast path when there's no interval
@@ -177,7 +152,7 @@ AbstractInterval::SP AbstractNode::queryFirstMatching(timestamp_t ts,
     return nullptr;
 }
 
-IntervalJar::const_iterator AbstractNode::getFirstItForTs(timestamp_t ts) const
+IntervalJar::const_iterator Node::getFirstItForTs(timestamp_t ts) const
 {
     /* Here we know that intervals are already sorted in ascending order of
      * end time because that's like the sole requirement of this whole thing.
@@ -214,4 +189,32 @@ IntervalJar::const_iterator AbstractNode::getFirstItForTs(timestamp_t ts) const
                                ts, compare);
 
     return it;
+}
+
+void Node::addChild(timestamp_t begin, node_seq_t seqNumber)
+{
+    // node full?
+    if (this->isFull()) {
+        throw NodeFull();
+    }
+
+    _children.push_back(ChildNodePointer {begin, seqNumber});
+
+    // child added: update children size
+    _curChildrenSize += _serdes->getChildNodePointerSize(_children.back());
+}
+
+node_seq_t Node::getChildSeqAtTs(timestamp_t ts) const
+{
+	auto potentialNextSeqNumber = this->getSeqNumber();
+
+    for (const auto& child : _children) {
+        if (ts >= child.getBegin()) {
+            potentialNextSeqNumber = child.getSeqNumber();
+        } else {
+            break;
+        }
+    }
+
+	return potentialNextSeqNumber;
 }

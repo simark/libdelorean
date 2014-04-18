@@ -11,8 +11,6 @@ target = 'testall'
 interval_tests = [
     'IntIntervalTest.cpp',
     'StringIntervalTest.cpp',
-    'IntervalSerializerTest.cpp',
-    'IntervalDeserializerTest.cpp',
 ]
 
 subs = [

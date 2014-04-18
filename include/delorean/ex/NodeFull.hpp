@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 Philippe Proulx <eepp.ca>
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of libdelorean.
  *
@@ -16,22 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef INTERVALDESERIALIZERTEST_HPP
-#define INTERVALDESERIALIZERTEST_HPP
+#ifndef _NODEFULL_HPP
+#define _NODEFULL_HPP
 
-#include <cppunit/extensions/HelperMacros.h>
+#include <stdexcept>
 
-class IntervalDeserializerTest :
-    public CppUnit::TestFixture
+class NodeFull :
+    public std::runtime_error
 {
-    CPPUNIT_TEST_SUITE(IntervalDeserializerTest);
-        CPPUNIT_TEST(testIntervalTypeRegistration);
-        CPPUNIT_TEST(testDeserialization);
-    CPPUNIT_TEST_SUITE_END();
-
 public:
-    void testIntervalTypeRegistration();
-    void testDeserialization();
+    NodeFull() :
+        std::runtime_error("Node is full")
+    {
+    }
 };
 
-#endif  // INTERVALDESERIALIZERTEST_HPP
+#endif // _NODEFULL_HPP

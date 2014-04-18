@@ -16,42 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <memory>
-#include <cstdint>
-#include <vector>
+#ifndef _STANDARDINTERVALTYPE_HPP
+#define _STANDARDINTERVALTYPE_HPP
 
-#include <delorean/node/NodeTypes.hpp>
-#include <delorean/node/AbstractNode.hpp>
-#include <delorean/node/LeafNode.hpp>
 #include <delorean/BasicTypes.hpp>
 
-LeafNode::LeafNode(std::size_t size, node_seq_t seqNumber,
-                   node_seq_t parentSeqNumber, timestamp_t begin) :
-    AbstractNode {
-        size,
-        seqNumber,
-        parentSeqNumber,
-        begin,
-        static_cast<node_type_t>(NodeTypes::LEAF)
-    }
+enum class StandardIntervalType : interval_type_t
 {
-}
+    INT32 = 0,
+    STRING,
+    UINT32,
+    FLOAT32,
+    TNULL,
+    COUNT       // number of items above; always last
+};
 
-LeafNode::~LeafNode()
-{
-}
-
-std::size_t LeafNode::getSpecificHeaderSize() const
-{
-    return 0;
-}
-
-void LeafNode::deserializeSpecificHeader(const std::uint8_t* specificHeadPtr)
-{
-    // no specific header
-}
-
-void LeafNode::serializeSpecificHeader(std::uint8_t* specificHeadPtr) const
-{
-    // no specific header
-}
+#endif // _STANDARDINTERVALTYPE_HPP

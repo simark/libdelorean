@@ -26,16 +26,16 @@ class StringIntervalTest :
 {
     CPPUNIT_TEST_SUITE(StringIntervalTest);
         CPPUNIT_TEST(testConstructorValue);
-        CPPUNIT_TEST(testSize);
-        CPPUNIT_TEST(testValueSerialization);
-        CPPUNIT_TEST(testValueDeserialization);
+        CPPUNIT_TEST(testVariableDataSize);
+        CPPUNIT_TEST(testVariableDataSerialization);
+        CPPUNIT_TEST(testVariableDataDeserialization);
     CPPUNIT_TEST_SUITE_END();
 
 public:
     void testConstructorValue();
-    void testSize();
-    void testValueSerialization();
-    void testValueDeserialization();
+    void testVariableDataSize();
+    void testVariableDataSerialization();
+    void testVariableDataDeserialization();
 };
 
 #endif  // STRINGINTERVALTEST_HPP

@@ -23,11 +23,8 @@
 
 #include <delorean/BasicTypes.hpp>
 #include <delorean/interval/AbstractInterval.hpp>
-#include <delorean/interval/IntInterval.hpp>
-#include <delorean/interval/StandardIntervalTypes.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/ex/InvalidIntervalArguments.hpp>
-
-#include "IntervalStructs.hpp"
 
 AbstractInterval::AbstractInterval(timestamp_t begin, timestamp_t end,
                                    interval_id_t id,
@@ -45,46 +42,41 @@ AbstractInterval::AbstractInterval(timestamp_t begin, timestamp_t end,
 
 AbstractInterval::AbstractInterval(timestamp_t begin, timestamp_t end,
                                    interval_id_t id,
-                                   StandardIntervalTypes type) :
-    _begin {begin},
-    _end {end},
-    _type {static_cast<interval_type_t>(type)},
-    _id {id}
-{
-    // check range
-    if (begin > end) {
-        throw InvalidIntervalArguments(begin, end);
+                                   StandardIntervalType type) :
+    AbstractInterval {
+        begin,
+        end,
+        id,
+        static_cast<interval_type_t>(type)
     }
+{
 }
 
 AbstractInterval::~AbstractInterval()
 {
 }
 
-std::size_t AbstractInterval::getSize() const
+std::size_t AbstractInterval::getVariableDataSize() const
 {
-    return this->getHeaderSize() + this->getVariableSize();
+    return this->getVariableDataSizeImpl();
 }
 
-std::size_t AbstractInterval::getHeaderSize() const
+void AbstractInterval::serializeVariableData(std::uint8_t* varAtPtr) const
 {
-    return IntervalHeader::SIZE +
-        sizeof(interval_value_t);
+    this->serializeVariableDataImpl(varAtPtr);
 }
 
-std::size_t AbstractInterval::getVariableSize() const
+void AbstractInterval::deserializeVariableData(const std::uint8_t* varAtPtr)
 {
-    return this->getVariableSizeImpl();
+    this->deserializeVariableDataImpl(varAtPtr);
 }
 
-void AbstractInterval::serializeValues(std::uint8_t* fixedPtr,
-                                       std::uint8_t* varAtPtr) const
+void AbstractInterval::setFixedValue(interval_value_t value)
 {
-    this->serializeValuesImpl(fixedPtr, varAtPtr);
+    this->setFixedValueImpl(value);
 }
 
-void AbstractInterval::deserializeValues(const std::uint8_t* fixedPtr,
-                                         const std::uint8_t* varEndPtr)
+interval_value_t AbstractInterval::getFixedValue() const
 {
-    this->deserializeValuesImpl(fixedPtr, varEndPtr);
+    return this->getFixedValueImpl();
 }

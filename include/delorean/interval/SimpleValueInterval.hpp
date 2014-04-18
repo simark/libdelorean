@@ -25,10 +25,10 @@
 #include <cstring>
 
 #include <delorean/interval/AbstractInterval.hpp>
-#include <delorean/interval/StandardIntervalTypes.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
-template<typename T, StandardIntervalTypes SIT>
+template<typename T, StandardIntervalType SIT>
 class SimpleValueInterval :
     public AbstractInterval
 {
@@ -50,17 +50,17 @@ public:
     }
 
 private:
-    std::size_t getVariableSizeImpl() const;
-    void serializeValuesImpl(std::uint8_t* fixedPtr,
-                             std::uint8_t* varAtPtr) const;
-    void deserializeValuesImpl(const std::uint8_t* fixedPtr,
-                               const std::uint8_t* varEndPtr);
+    std::size_t getVariableDataSizeImpl() const;
+    void serializeVariableDataImpl(std::uint8_t* varAtPtr) const;
+    void deserializeVariableDataImpl(const std::uint8_t* varAtPtr);
+    void setFixedValueImpl(interval_value_t value);
+    interval_value_t getFixedValueImpl() const;
 
 private:
     T _value;
 };
 
-template<typename T, StandardIntervalTypes SIT>
+template<typename T, StandardIntervalType SIT>
 SimpleValueInterval<T, SIT>::SimpleValueInterval(timestamp_t begin,
                                                  timestamp_t end,
                                                  interval_id_t id) :
@@ -72,24 +72,35 @@ SimpleValueInterval<T, SIT>::SimpleValueInterval(timestamp_t begin,
     }
 {
 }
-template<typename T, StandardIntervalTypes SIT>
-std::size_t SimpleValueInterval<T, SIT>::getVariableSizeImpl() const
+
+template<typename T, StandardIntervalType SIT>
+std::size_t SimpleValueInterval<T, SIT>::getVariableDataSizeImpl() const
 {
     return 0;
 }
 
-template<typename T, StandardIntervalTypes SIT>
-void SimpleValueInterval<T, SIT>::serializeValuesImpl(std::uint8_t* fixedPtr,
-                                                      std::uint8_t* varAtPtr) const
+template<typename T, StandardIntervalType SIT>
+void SimpleValueInterval<T, SIT>::serializeVariableDataImpl(std::uint8_t* varAtPtr) const
 {
-    std::memcpy(fixedPtr, &_value, sizeof(_value));
+    // no variable data
 }
 
-template<typename T, StandardIntervalTypes SIT>
-void SimpleValueInterval<T, SIT>::deserializeValuesImpl(const std::uint8_t* fixedPtr,
-                                                        const std::uint8_t* varEndPtr)
+template<typename T, StandardIntervalType SIT>
+void SimpleValueInterval<T, SIT>::deserializeVariableDataImpl(const std::uint8_t* varAtPtr)
 {
-    std::memcpy(&_value, fixedPtr, sizeof(_value));
+    // no variable data
+}
+
+template<typename T, StandardIntervalType SIT>
+void SimpleValueInterval<T, SIT>::setFixedValueImpl(interval_value_t value)
+{
+    _value = static_cast<T>(value);
+}
+
+template<typename T, StandardIntervalType SIT>
+interval_value_t SimpleValueInterval<T, SIT>::getFixedValueImpl() const
+{
+    return static_cast<interval_value_t>(_value);
 }
 
 #endif // _SIMPLEVALUEINTERVAL_HPP

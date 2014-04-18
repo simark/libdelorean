@@ -28,7 +28,7 @@
 #include <boost/operators.hpp>
 
 #include <delorean/BasicTypes.hpp>
-#include <delorean/interval/StandardIntervalTypes.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
 
 class AbstractInterval :
     boost::totally_ordered<AbstractInterval>
@@ -43,16 +43,15 @@ public:
     AbstractInterval(timestamp_t begin, timestamp_t end,
                      interval_id_t id, interval_type_t type);
     AbstractInterval(timestamp_t begin, timestamp_t end,
-                     interval_id_t id, StandardIntervalTypes type);
+                     interval_id_t id, StandardIntervalType type);
     virtual ~AbstractInterval();
 
-    std::size_t getVariableSize() const;
-    void serializeValues(std::uint8_t* fixedPtr, std::uint8_t* varAtPtr) const;
-    void deserializeValues(const std::uint8_t* fixedPtr,
-                           const std::uint8_t* varEndPtr);
+    std::size_t getVariableDataSize() const;
+    void serializeVariableData(std::uint8_t* varAtPtr) const;
+    void deserializeVariableData(const std::uint8_t* varAtPtr);
 
-    std::size_t getSize() const;
-    std::size_t getHeaderSize() const;
+    void setFixedValue(interval_value_t value);
+    interval_value_t getFixedValue() const;
 
     bool intersects(timestamp_t ts) const
     {
@@ -90,11 +89,11 @@ public:
     }
 
 private:
-    virtual std::size_t getVariableSizeImpl() const = 0;
-    virtual void serializeValuesImpl(std::uint8_t* fixedPtr,
-                                     std::uint8_t* varAtPtr) const = 0;
-    virtual void deserializeValuesImpl(const std::uint8_t* fixedPtr,
-                                       const std::uint8_t* varEndPtr) = 0;
+    virtual std::size_t getVariableDataSizeImpl() const = 0;
+    virtual void serializeVariableDataImpl(std::uint8_t* varAtPtr) const = 0;
+    virtual void deserializeVariableDataImpl(const std::uint8_t* varAtPtr) = 0;
+    virtual void setFixedValueImpl(interval_value_t value) = 0;
+    virtual interval_value_t getFixedValueImpl() const = 0;
 
 private:
     // interval

@@ -16,34 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _LEAFNODE_HPP
-#define _LEAFNODE_HPP
+#ifndef _ABSTRACTNODEDESERIALIZER_HPP
+#define _ABSTRACTNODEDESERIALIZER_HPP
 
-#include <memory>
 #include <cstdint>
-#include <vector>
 
-#include <delorean/node/AbstractNode.hpp>
+#include <delorean/node/Node.hpp>
+#include <delorean/interval/IntervalDeserializer.hpp>
 #include <delorean/BasicTypes.hpp>
 
-class LeafNode :
-    public AbstractNode
+class AbstractNodeDeserializer
 {
 public:
-    typedef std::shared_ptr<LeafNode> SP;
-    typedef std::unique_ptr<LeafNode> UP;
-    typedef std::shared_ptr<const LeafNode> CSP;
-    typedef std::unique_ptr<const LeafNode> CUP;
+    virtual ~AbstractNodeDeserializer() = 0;
 
-public:
-    LeafNode(std::size_t size, node_seq_t seqNumber,
-             node_seq_t parentSeqNumber, timestamp_t begin);
-    virtual ~LeafNode();
-
-protected:
-    std::size_t getSpecificHeaderSize() const;
-    void deserializeSpecificHeader(const std::uint8_t* specificHeadPtr);
-    void serializeSpecificHeader(std::uint8_t* specificHeadPtr) const;
+    Node::UP deserializeNode(const std::uint8_t* headPtr,
+                                     std::size_t size,
+                                     unsigned int maxChildren) const;
+    void registerIntervalFactory(interval_type_t type,
+                                 IIntervalFactory::UP factory);
+    void unregisterIntervalFactory(interval_type_t type);
 };
 
-#endif // _LEAFNODE_HPP
+#endif // _ABSTRACTNODEDESERIALIZER_HPP
