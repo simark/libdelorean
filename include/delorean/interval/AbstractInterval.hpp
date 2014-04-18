@@ -45,14 +45,10 @@ class AbstractInterval :
     boost::totally_ordered<AbstractInterval>
 {
 public:
-    /**
-     * Shared pointer to abstract interval.
-     */
+    /// Shared pointer to abstract interval
     typedef std::shared_ptr<AbstractInterval> SP;
 
-    /**
-     * Unique pointer to abstract interval.
-     */
+    /// Unique pointer to abstract interval
     typedef std::unique_ptr<AbstractInterval> UP;
 
 public:
