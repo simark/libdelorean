@@ -24,6 +24,11 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Template class for creating simple interval factories.
+ *
+ * @author Philippe Proulx
+ */
 template<typename T>
 class SimpleIntervalFactory :
     public IIntervalFactory

@@ -26,6 +26,11 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Interval containing a single 32-bit signed integer value.
+ *
+ * @author Philippe Proulx
+ */
 class IntInterval :
     public SimpleValueInterval<std::int32_t, StandardIntervalType::INT32>
 {

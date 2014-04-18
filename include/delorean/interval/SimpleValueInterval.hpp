@@ -28,6 +28,12 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Template class for creating an interval class with a simple 32-bit type
+ * for its value.
+ *
+ * @author Philippe Proulx
+ */
 template<typename T, StandardIntervalType SIT>
 class SimpleValueInterval :
     public AbstractInterval

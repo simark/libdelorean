@@ -21,6 +21,11 @@
 
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Standard interval types.
+ *
+ * @author Philippe Proulx
+ */
 enum class StandardIntervalType : interval_type_t
 {
     INT32 = 0,

@@ -27,6 +27,11 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Interval containing a string value.
+ *
+ * @author Philippe Proulx
+ */
 class StringInterval :
     public AbstractInterval
 {

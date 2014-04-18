@@ -21,6 +21,13 @@
 
 #include <delorean/interval/AbstractInterval.hpp>
 
+/**
+ * Main container for multiple intervals. This jar will be filled with
+ * potentially multiple intervals when querying all intervals at a single
+ * timestamp.
+ *
+ * @author Philippe Proulx
+ */
 typedef std::vector<AbstractInterval::SP> IntervalJar;
 
 #endif // _INTERVALJAR_HPP

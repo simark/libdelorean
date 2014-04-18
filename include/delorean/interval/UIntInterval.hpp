@@ -26,6 +26,11 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Interval containing a single 32-bit unsigned integer value.
+ *
+ * @author Philippe Proulx
+ */
 class UIntInterval :
     public SimpleValueInterval<std::uint32_t, StandardIntervalType::UINT32>
 {

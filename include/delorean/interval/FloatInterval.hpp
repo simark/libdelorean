@@ -24,6 +24,11 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Interval containing a single 32-bit floating point value.
+ *
+ * @author Philippe Proulx
+ */
 class FloatInterval :
     public SimpleValueInterval<float, StandardIntervalType::FLOAT32>
 {

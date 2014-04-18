@@ -25,10 +25,23 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Interval factory interface.
+ *
+ * This is used by a node serializer/deserializer to create custom interval
+ * objects out of a numeric type when deserializing a node. Any custom
+ * interval to be added to a history must also have its own associated
+ * factory so that it can be deserialized properly.
+ *
+ * @author Philippe Proulx
+ */
 class IIntervalFactory
 {
 public:
+    /// Shared pointer to interval factory
     typedef std::shared_ptr<IIntervalFactory> SP;
+
+    /// Unique pointer to interval factory
     typedef std::unique_ptr<IIntervalFactory> UP;
 
 public:
@@ -36,6 +49,14 @@ public:
     {
     }
 
+    /**
+     * Creates a specific interval.
+     *
+     * @param begin Interval begin timestamp
+     * @param end   Interval end timestamp
+     * @param id    Interval reference ID
+     * @returns     Specific interval
+     */
     virtual AbstractInterval::UP create(timestamp_t begin, timestamp_t end,
                                         interval_id_t id) const = 0;
 };

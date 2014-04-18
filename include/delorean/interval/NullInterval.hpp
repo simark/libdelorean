@@ -26,6 +26,11 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Interval containing nothing (null).
+ *
+ * @author Philippe Proulx
+ */
 class NullInterval :
     public AbstractInterval
 {
