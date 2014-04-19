@@ -44,7 +44,7 @@ void StringIntervalTest::testConstructorValue()
 void StringIntervalTest::testVariableDataSize()
 {
     StringInterval::UP interval {new StringInterval(1, 2, 3)};
-    std::string value("hello, world!");
+    std::string value {"hello, world!"};
     interval->setValue(value);
 
     // variable size: string length + NUL character
@@ -67,7 +67,7 @@ void StringIntervalTest::testVariableDataSerialization()
 
     // create interval with custom string value
     StringInterval::UP interval {new StringInterval(1608, 2008, 5)};
-    std::string value("how are you?");
+    std::string value {"how are you?"};
     interval->setValue(value);
 
     // serialize values
