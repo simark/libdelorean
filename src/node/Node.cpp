@@ -198,6 +198,7 @@ void Node::addChild(timestamp_t begin, node_seq_t seqNumber)
         throw NodeFull();
     }
 
+    // add to list
     _children.push_back(ChildNodePointer {begin, seqNumber});
 
     // child added: update children size

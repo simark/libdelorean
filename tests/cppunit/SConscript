@@ -13,8 +13,13 @@ interval_tests = [
     'StringIntervalTest.cpp',
 ]
 
+node_tests = [
+    'NodeTest.cpp',
+]
+
 subs = [
     ('interval', interval_tests),
+    ('node', node_tests),
 ]
 
 sources = ['main.cpp']

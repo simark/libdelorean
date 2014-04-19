@@ -16,38 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _INDEXOUTOFRANGE_HPP
-#define _INDEXOUTOFRANGE_HPP
+#ifndef NODETEST_HPP
+#define NODETEST_HPP
 
-#include <stdexcept>
-#include <cstddef>
+#include <cppunit/extensions/HelperMacros.h>
 
-#include <delorean/BasicTypes.hpp>
-
-class IndexOutOfRange :
-    public std::out_of_range
+class NodeTest :
+    public CppUnit::TestFixture
 {
+    CPPUNIT_TEST_SUITE(NodeTest);
+        CPPUNIT_TEST(testConstructorAndAttributes);
+        CPPUNIT_TEST(testAddInterval);
+        CPPUNIT_TEST(testIntervalFits);
+        CPPUNIT_TEST(testSingleQuery);
+        CPPUNIT_TEST(testMultipleQuery);
+        CPPUNIT_TEST(testChildren);
+    CPPUNIT_TEST_SUITE_END();
+
 public:
-    IndexOutOfRange(std::size_t size, std::size_t index) :
-        std::out_of_range {"Index out of range"},
-        _size {size},
-        _index {index}
-    {
-    }
-
-    std::size_t getSize() const
-    {
-        return _size;
-    }
-
-    std::size_t getIndex() const
-    {
-        return _index;
-    }
-
-private:
-    std::size_t _size;
-    std::size_t _index;
+    void testConstructorAndAttributes();
+    void testAddInterval();
+    void testIntervalFits();
+    void testSingleQuery();
+    void testMultipleQuery();
+    void testChildren();
 };
 
-#endif // _INDEXOUTOFRANGE_HPP
+#endif  // NODETEST_HPP

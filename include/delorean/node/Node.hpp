@@ -135,7 +135,7 @@ public:
      * @param index Index of child to get
      * @returns     Child sequence number
      */
-    node_seq_t getChildSeqAtIndex(unsigned int index) const
+    node_seq_t getChildSeqAtIndex(std::size_t index) const
     {
         // range check
         if (index >= _children.size()) {
@@ -151,7 +151,7 @@ public:
      * @param index Index of child to get
      * @param       Child begin timestamp
      */
-    timestamp_t getChildBeginAtIndex(unsigned int index) const
+    timestamp_t getChildBeginAtIndex(std::size_t index) const
     {
         // range check
         if (index >= _children.size()) {
