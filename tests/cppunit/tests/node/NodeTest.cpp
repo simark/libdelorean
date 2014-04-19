@@ -343,11 +343,9 @@ void NodeTest::testFindAll()
 
     CPPUNIT_ASSERT(!node->findAll(1915, *jar));
     CPPUNIT_ASSERT(jar->size() == 0);
-    jar->clear();
 
     CPPUNIT_ASSERT(!node->findAll(1917, *jar));
     CPPUNIT_ASSERT(jar->size() == 0);
-    jar->clear();
 }
 
 void NodeTest::testChildren()
