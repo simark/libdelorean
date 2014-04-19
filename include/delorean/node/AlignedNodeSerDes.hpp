@@ -26,6 +26,14 @@
 #include <delorean/node/AbstractNodeSerDes.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Aligned node serializer/deserializer.
+ *
+ * Fields of the header, children pointers and intervals are aligned on a
+ * multiple of their size.
+ *
+ * @author Philippe Proulx
+ */
 class AlignedNodeSerDes :
     public AbstractNodeSerDes
 {
@@ -47,18 +55,17 @@ public:
 private:
     struct NodeHeader
     {
-        enum {
-            FLAG_DONE_MASK = 1,
-            FLAG_EXTENDED_MASK = 2,
-        };
-
-        // standard node common header fields
         timestamp_t begin;
         timestamp_t end;
         std::uint32_t childrenCountFlags;
         node_seq_t seqNumber;
         node_seq_t parentSeqNumber;
-        uint32_t intervalCount;
+        std::uint32_t intervalCount;
+
+        enum {
+            FLAG_DONE_MASK = 1,
+            FLAG_EXTENDED_MASK = 2,
+        };
 
         std::size_t getChildrenCount() const
         {
@@ -89,10 +96,10 @@ private:
             parentSeqNumber = node.getParentSeqNumber();
             intervalCount = node.getIntervalCount();
 
-            uint32_t childrenCount = static_cast<uint32_t>(node.getChildrenCount());
+            std::uint32_t childrenCount = static_cast<uint32_t>(node.getChildrenCount());
             childrenCount <<= 8;
-            uint32_t isDone = node.isDone() ? FLAG_DONE_MASK : 0;
-            uint32_t isExtended = node.isExtended() ? FLAG_EXTENDED_MASK : 0;
+            std::uint32_t isDone = node.isDone() ? FLAG_DONE_MASK : 0;
+            std::uint32_t isExtended = node.isExtended() ? FLAG_EXTENDED_MASK : 0;
 
             childrenCountFlags = childrenCount | isDone | isExtended;
         }
@@ -100,10 +107,9 @@ private:
 
     struct IntervalHeader
     {
-        // standard interval header fields
         timestamp_t begin;
         timestamp_t end;
-        uint32_t typeId;
+        std::uint32_t typeId;
         interval_value_t value;
 
         interval_type_t getType() const
@@ -126,9 +132,9 @@ private:
             end = interval.getEnd();
             value = interval.getFixedValue();
 
-            auto type = static_cast<uint32_t>(interval.getType());
+            auto type = static_cast<std::uint32_t>(interval.getType());
             type <<= 24;
-            auto id = static_cast<uint32_t>(interval.getId());
+            auto id = static_cast<std::uint32_t>(interval.getId());
             id &= 0xffffff;
 
             typeId = type | id;

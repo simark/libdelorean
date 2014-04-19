@@ -21,20 +21,45 @@
 
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Pointer of the child of a node.
+ *
+ * A node only keeps track of its children using this pointer. The history
+ * should know how to find a node in its data structure using only the node's
+ * sequence number.
+ *
+ * @author Philippe Proulx
+ */
 class ChildNodePointer
 {
 public:
+    /**
+     * Builds a child node pointer.
+     *
+     * @param begin     Begin timestamp
+     * @param seqNumber Sequence number
+     */
     ChildNodePointer(timestamp_t begin, node_seq_t seqNumber) :
         _begin {begin},
         _seqNumber {seqNumber}
     {
     }
 
+    /**
+     * Returns the child node's begin timestamp.
+     *
+     * @returns Begin timestamp
+     */
     timestamp_t getBegin() const
     {
         return _begin;
     }
 
+    /**
+     * Returns the child node's sequence number.
+     *
+     * @returns Sequence number
+     */
     node_seq_t getSeqNumber() const
     {
         return _seqNumber;

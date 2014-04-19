@@ -21,6 +21,11 @@
 
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Node serializer/deserializer types.
+ *
+ * @author Philippe Proulx
+ */
 enum class NodeSerDesType
 {
     ALIGNED = 0,

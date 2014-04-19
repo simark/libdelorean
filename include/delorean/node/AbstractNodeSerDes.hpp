@@ -29,34 +29,116 @@
 #include <delorean/node/ChildNodePointer.hpp>
 #include <delorean/BasicTypes.hpp>
 
+// needed for cross-references
 class Node;
 
+/**
+ * Base class for all node serializer/deserializer (ser/des).
+ *
+ * The job of a node ser/des is to serialize a complete node (all important
+ * informations, children pointers and intervals) to a byte buffer and do
+ * the exact opposite.
+ *
+ * The node ser/des also provides methods to get sizes of different parts of
+ * the node since nodes track their current total size to be able to accept
+ * or refuse new intervals.
+ *
+ * @author Philippe Proulx
+ */
 class AbstractNodeSerDes
 {
 public:
+    /// Shared pointer to a node ser/des
     typedef std::shared_ptr<AbstractNodeSerDes> SP;
-    typedef std::weak_ptr<AbstractNodeSerDes> WP;
+
+    /// Unique pointer to a node ser/des
     typedef std::unique_ptr<AbstractNodeSerDes> UP;
 
 public:
+    /**
+     * Builds a node ser/des.
+     */
     AbstractNodeSerDes();
+
     virtual ~AbstractNodeSerDes() = 0;
 
-    // serializer side
+    /**
+     * Serializes the node \p node beginning at the address \p headPtr. The
+     * caller must make sure that enough memory is allocated at \p headPtr
+     * to fit a whole node.
+     *
+     * @param node    Node to serialize
+     * @param headPtr Address at which to write serialized data
+     */
     virtual void serializeNode(const Node& node,
                                std::uint8_t* headPtr) const = 0;
+
+    /**
+     * Returns the header size of a node in bytes, according to the specific
+     * way of serializing/deserializing implemented by a concrete node ser/des.
+     *
+     * @param node Node
+     * @returns    Size of the node header
+     */
     virtual std::size_t getHeaderSize(const Node& node) const = 0;
+
+    /**
+     * Returns the size of a child node pointer, according to the specific way
+     * of serializing/deserializing implemented by a concrete node ser/des.
+     *
+     * @param cnp Child node pointer
+     * @returns   Size of the child node pointer
+     */
     virtual std::size_t getChildNodePointerSize(const ChildNodePointer& cnp) const = 0;
+
+    /**
+     * Returns the total size of an interval (header, fixed value and variable
+     * data), according to the specific way of serializing/deserializing
+     * implemented by a concrete node ser/des.
+     *
+     * @param interval Interval
+     * @returns        Interval total size
+     */
     virtual std::size_t getIntervalSize(const AbstractInterval& interval) const = 0;
 
-    // deserializer side
+    /**
+     * Deserializes a node.
+     *
+     * @param headPtr     Address at which to read a node
+     * @param size        Expected node size
+     * @param maxChildren Expected maximum number of children
+     * @returns           Deserialized node
+     */
     virtual std::unique_ptr<Node> deserializeNode(const std::uint8_t* headPtr,
-                                     std::size_t size,
-                                     unsigned int maxChildren) const = 0;
+                                                  std::size_t size,
+                                                  unsigned int maxChildren) const = 0;
+
+    /**
+     * Registers a new interval factory \p factory used to create intervals of
+     * type \p type.
+     *
+     * @param type    Numerical type of intervals to be created by the factory
+     * @param factory Factory
+     */
     void registerIntervalFactory(interval_type_t type,
                                  IIntervalFactory::UP factory);
+
+    /**
+     * Registers a new interval factory \p factory used to create standard intervals
+     * of type \p type.
+     *
+     * @param type    Numerical type of intervals to be created by the factory
+     * @param factory Factory
+     */
     void registerIntervalFactory(StandardIntervalType type,
                                  IIntervalFactory::UP factory);
+
+    /**
+     * Unregisters an interval factory already registered with
+     * registerIntervalFactory().
+     *
+     * @param type Type of interval associated with factory to unregister
+     */
     void unregisterIntervalFactory(interval_type_t type);
 
 protected:

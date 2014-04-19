@@ -82,7 +82,7 @@ void HistoryFileSink::open(const fs::path& path, std::size_t nodeSize,
 
     // add a first leaf node to latest branch (current root node)
     auto rootNode =
-        std::move(this->createNode(Node::ROOT_SEQ_NUMBER(), begin));
+        std::move(this->createNode(Node::ROOT_PARENT_SEQ_NUMBER(), begin));
     this->getLatestBranch().push_back(std::move(rootNode));
 }
 
@@ -226,7 +226,7 @@ void HistoryFileSink::addSiblingNode(std::size_t index)
 
         // create new root
         auto newRootNode =
-            std::move(this->createNode(Node::ROOT_SEQ_NUMBER(),
+            std::move(this->createNode(Node::ROOT_PARENT_SEQ_NUMBER(),
                                        oldRootNode->getBegin()));
 
         // set new root as old root's parent
