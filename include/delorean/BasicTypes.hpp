@@ -27,7 +27,7 @@
  */
 
 /// Timestamp
-typedef std::uint64_t       timestamp_t;
+typedef std::int64_t        timestamp_t;
 
 /// Interval reference ID
 typedef std::uint32_t       interval_id_t;
