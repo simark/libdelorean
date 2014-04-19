@@ -29,6 +29,13 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * History file opened for input. Use an HistoryFileSource object to read and
+ * find intervals within a history file.
+ *
+ * @see HistoryFileSink
+ * @author Philippe Proulx
+ */
 class HistoryFileSource :
     public AbstractFile,
     public IHistorySource
@@ -39,10 +46,26 @@ public:
         this->close();
     }
 
+    /**
+     * Opens the history file for reading.
+     *
+     * @param path        Path to history file to be created
+     */
     void open(const boost::filesystem::path& path);
+
+    /**
+     * Closes the history file.
+     */
     void close();
 
+    /**
+     * @see IHistorySource::query(timestamp_t, IntervalJar&)
+     */
     bool query(timestamp_t ts, IntervalJar& intervals) const;
+
+    /**
+     * @see IHistorySource::queryFirstMatching(timestamp_t, interval_id_t)
+     */
     AbstractInterval::SP queryFirstMatching(timestamp_t ts,
                                             interval_id_t id) const;
 

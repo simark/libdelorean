@@ -22,12 +22,32 @@
 #include <delorean/AbstractHistory.hpp>
 #include <delorean/interval/AbstractInterval.hpp>
 
+/**
+ * History sink interface.
+ *
+ * All history sinks must inherit this interface.
+ *
+ * @author Philippe Proulx
+ */
 class IHistorySink :
     public AbstractHistory
 {
 public:
+    /**
+     * Adds an interval to the history. Intervals must be provided in ascending
+     * order of end timestamp.
+     *
+     * @param interval Shared pointer to interval to add
+     */
     virtual void addInterval(AbstractInterval::SP interval) = 0;
-    virtual void close(timestamp_t end) = 0;
+
+    /**
+     * Closes the history file with a specific timestamp. This timestamp must
+     * be greater than or equal to the current end timestamp.
+     *
+     * @param endTs End timestamp to use for closing the history file
+     */
+    virtual void close(timestamp_t endTs) = 0;
 };
 
 #endif // _IHISTORYSINK_HPP

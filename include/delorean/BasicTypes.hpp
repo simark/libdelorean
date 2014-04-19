@@ -21,10 +21,24 @@
 
 #include <cstdint>
 
+/**
+ * @file
+ * This header holds basic type definitions used throughout libdelorean.
+ */
+
+/// Timestamp
 typedef std::uint64_t       timestamp_t;
+
+/// Interval reference ID
 typedef std::uint32_t       interval_id_t;
+
+/// Interval type
 typedef std::uint8_t        interval_type_t;
+
+/// Interval fixed 32-bit value
 typedef std::uint32_t       interval_value_t;
+
+/// Node sequence number
 typedef std::uint32_t       node_seq_t;
 
 #endif // _BASIC_TYPES_HPP

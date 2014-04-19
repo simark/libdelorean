@@ -23,6 +23,14 @@
 
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * Base class for all history files, that is, HistoryFileSink and
+ * HistoryFileSource.
+ *
+ * @see HistoryFileSink
+ * @see HistoryFileSource
+ * @author Philippe Proulx
+ */
 class AbstractHistoryFile
 {
 public:
@@ -34,14 +42,8 @@ public:
     virtual ~AbstractHistoryFile() = 0;
 
 protected:
-    struct HistoryFileHeader {
-        enum {
-            MAGIC = 0x05eea901,
-            SIZE = 4096,
-            MAJOR = 1,
-            MINOR = 0
-        };
-
+    struct HistoryFileHeader
+    {
         uint32_t magic = MAGIC;
         uint32_t major = MAJOR;
         uint32_t minor = MINOR;
@@ -49,6 +51,13 @@ protected:
         uint32_t maxChildren;
         uint32_t nodeCount;
         node_seq_t rootNodeSeqNumber;
+
+        enum {
+            MAGIC = 0x05eea901,
+            SIZE = 4096,
+            MAJOR = 1,
+            MINOR = 0
+        };
     };
 
 protected:

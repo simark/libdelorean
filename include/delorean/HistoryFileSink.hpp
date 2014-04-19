@@ -31,32 +31,69 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * History file opened for output. Use an HistoryFileSink object to build a
+ * brand new history file.
+ *
+ * @see HistoryFileSource
+ * @author Philippe Proulx
+ */
 class HistoryFileSink :
     public AbstractHistoryFile,
     public IHistorySink
 {
 public:
+    /// Default values used when opening the file
     enum {
+        /// Default node size in bytes
         DEF_NODE_SIZE = (16 * 1024),
+
+        /// Default maximum number of children in a node
         DEF_MAX_CHILDREN = 50
     };
 
 public:
+    /**
+     * Builds a history file sink. The file is closed and need to be opened
+     * with proper parameters in order to start adding intervals.
+     */
     HistoryFileSink();
+
     virtual ~HistoryFileSink()
     {
         this->close();
     }
 
+    /**
+     * Opens the history file for writing.
+     *
+     * @param path        Path to history file to be created
+     * @param nodeSize    Size of each single node
+     * @param maxChildren Maximum number of children in a node
+     * @param begin       Begin timestamp of this history
+     * @param serdesType  Type of node serializer/deserializer to use
+     */
     void open(const boost::filesystem::path& path,
               std::size_t nodeSize = DEF_NODE_SIZE,
               std::size_t maxChildren = DEF_MAX_CHILDREN,
               timestamp_t begin = 0,
               NodeSerDesType serdesType = NodeSerDesType::ALIGNED);
-    void close(timestamp_t end);
+
+    /**
+     * @see IHistoryFileSink::close(timestamp_t)
+     */
+    void close(timestamp_t endTs);
+
+    /**
+     * Closes the history file using its current end timestamp. Use
+     * close(timestamp_t) to specify another end timestamp.
+     */
     void close();
 
-    void addInterval(AbstractInterval::SP i);
+    /**
+     * @see IHistoryFileSink::addInterval(AbstractInterval::SP)
+     */
+    void addInterval(AbstractInterval::SP interval);
 
 private:
     void writeHeader();

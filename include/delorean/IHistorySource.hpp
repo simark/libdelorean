@@ -26,11 +26,35 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+/**
+ * History source interface.
+ *
+ * All history sources must inherit this interface.
+ *
+ * @author Philippe Proulx
+ */
 class IHistorySource :
     public AbstractHistory
 {
 public:
+    /**
+     * Finds all intervals in the history intersecting \p ts and adds them
+     * to \p intervals.
+     *
+     * @param ts        Timestamp
+     * @param intervals Jar of intervals in which to add matching intervals
+     * @returns         True if at least one interval was found
+     */
     virtual bool query(timestamp_t ts, IntervalJar& intervals) const = 0;
+
+    /**
+     * Finds a single interval in the history intersecting \p ts and matching
+     * reference ID \p id.
+     *
+     * @param ts Timestamp
+     * @param id Reference ID
+     * @returns  Shared pointer to matching interval or \a nullptr
+     */
     virtual AbstractInterval::SP queryFirstMatching(timestamp_t ts,
                                                     interval_id_t id) const = 0;
 };
