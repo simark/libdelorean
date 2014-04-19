@@ -137,7 +137,11 @@ Node::UP AlignedNodeSerDes::deserializeNode(const std::uint8_t* headPtr,
 
 std::size_t AlignedNodeSerDes::getHeaderSize(const Node& node) const
 {
-    return sizeof(NodeHeader);
+    /* This is a, hopefully temporary, hack to make sure the maximum number
+     * of children may be added after the node is full of intervals.
+     */
+    return sizeof(NodeHeader) +
+        node.getMaxChildren() * sizeof(ChildNodePointerHeader);
 }
 
 std::size_t AlignedNodeSerDes::getChildNodePointerSize(const ChildNodePointer& cnp) const
