@@ -146,8 +146,8 @@ protected:
                                         interval_id_t id,
                                         interval_type_t type) const;
     std::unique_ptr<Node> createNode(std::size_t size, std::size_t maxChildren,
-                        node_seq_t seqNumber, node_seq_t parentSeqNumber,
-                        timestamp_t begin) const;
+                                     node_seq_t seqNumber, node_seq_t parentSeqNumber,
+                                     timestamp_t begin) const;
 
 private:
     std::vector<IIntervalFactory::UP> _intervalFactories;
