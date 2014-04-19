@@ -59,20 +59,18 @@ public:
     void close();
 
     /**
-     * @see IHistorySource::query(timestamp_t, IntervalJar&)
+     * @see IHistorySource::findAll(timestamp_t, IntervalJar&)
      */
-    bool query(timestamp_t ts, IntervalJar& intervals) const;
+    bool findAll(timestamp_t ts, IntervalJar& intervals) const;
 
     /**
-     * @see IHistorySource::queryFirstMatching(timestamp_t, interval_id_t)
+     * @see IHistorySource::findOne(timestamp_t, interval_id_t)
      */
-    AbstractInterval::SP queryFirstMatching(timestamp_t ts,
-                                            interval_id_t id) const;
+    AbstractInterval::SP findOne(timestamp_t ts, interval_id_t id) const;
 
 protected:
-    bool queryImpl(timestamp_t ts, IntervalJar& intervals) const;
-    AbstractInterval::SP queryFirstMatchingImpl(timestamp_t ts,
-                                                interval_id_t id) const;
+    bool findImpl(timestamp_t ts, IntervalJar& intervals) const;
+    AbstractInterval::SP findOneImpl(timestamp_t ts, interval_id_t id) const;
 
 private:
     boost::filesystem::ifstream _inputStream;

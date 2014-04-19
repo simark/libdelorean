@@ -195,7 +195,7 @@ void NodeTest::testIntervalFits()
     CPPUNIT_ASSERT(!node->intervalFits(*interval));
 }
 
-void NodeTest::testSingleQuery()
+void NodeTest::testFindOne()
 {
     // build node
     std::unique_ptr<MyNodeSerDes> serdes {new MyNodeSerDes()};
@@ -226,50 +226,50 @@ void NodeTest::testSingleQuery()
 
     // range check
     try {
-        node->queryFirstMatching(1533, 1);
+        node->findOne(1533, 1);
         CPPUNIT_FAIL("Querying node before begin timestamp");
     } catch (const TimestampOutOfRange& ex) {
         CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1533));
     }
     try {
-        node->queryFirstMatching(1946, 1);
+        node->findOne(1946, 1);
         CPPUNIT_FAIL("Querying node after end timestamp");
     } catch (const TimestampOutOfRange& ex) {
         CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1946));
     }
 
-    // working queries
+    // working searches
     AbstractInterval::SP result {};
 
-    result = node->queryFirstMatching(1534, 1);
+    result = node->findOne(1534, 1);
     CPPUNIT_ASSERT(result == interval1);
 
-    result = node->queryFirstMatching(1534, 2);
+    result = node->findOne(1534, 2);
     CPPUNIT_ASSERT(result == nullptr);
 
-    result = node->queryFirstMatching(1605, 1);
+    result = node->findOne(1605, 1);
     CPPUNIT_ASSERT(result == interval1);
 
-    result = node->queryFirstMatching(1605, 2);
+    result = node->findOne(1605, 2);
     CPPUNIT_ASSERT(result == interval2);
 
-    result = node->queryFirstMatching(1605, 5);
+    result = node->findOne(1605, 5);
     CPPUNIT_ASSERT(result == nullptr);
 
-    result = node->queryFirstMatching(1915, 4);
+    result = node->findOne(1915, 4);
     CPPUNIT_ASSERT(result == nullptr);
 
-    result = node->queryFirstMatching(1915, 5);
+    result = node->findOne(1915, 5);
     CPPUNIT_ASSERT(result == nullptr);
 
-    result = node->queryFirstMatching(1939, 5);
+    result = node->findOne(1939, 5);
     CPPUNIT_ASSERT(result == interval5);
 
-    result = node->queryFirstMatching(1939, 6);
+    result = node->findOne(1939, 6);
     CPPUNIT_ASSERT(result == interval6);
 }
 
-void NodeTest::testMultipleQuery()
+void NodeTest::testFindAll()
 {
     // build node
     std::unique_ptr<MyNodeSerDes> serdes {new MyNodeSerDes()};
@@ -303,49 +303,49 @@ void NodeTest::testMultipleQuery()
 
     // range check
     try {
-        node->query(1533, *jar);
+        node->findAll(1533, *jar);
         CPPUNIT_FAIL("Querying node before begin timestamp");
     } catch (const TimestampOutOfRange& ex) {
         CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1533));
     }
     try {
-        node->query(1946, *jar);
+        node->findAll(1946, *jar);
         CPPUNIT_FAIL("Querying node after end timestamp");
     } catch (const TimestampOutOfRange& ex) {
         CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1946));
     }
 
-    // working queries
-    CPPUNIT_ASSERT(node->query(1534, *jar));
+    // working searches
+    CPPUNIT_ASSERT(node->findAll(1534, *jar));
     CPPUNIT_ASSERT(jar->size() == 1);
     CPPUNIT_ASSERT(jar->at(0) == interval1);
     jar->clear();
 
-    CPPUNIT_ASSERT(node->query(1545, *jar));
+    CPPUNIT_ASSERT(node->findAll(1545, *jar));
     CPPUNIT_ASSERT(jar->size() == 3);
     CPPUNIT_ASSERT(jar->at(0) == interval1);
     CPPUNIT_ASSERT(jar->at(1) == interval3);
     CPPUNIT_ASSERT(jar->at(2) == interval4);
     jar->clear();
 
-    CPPUNIT_ASSERT(node->query(1777, *jar));
+    CPPUNIT_ASSERT(node->findAll(1777, *jar));
     CPPUNIT_ASSERT(jar->size() == 3);
     CPPUNIT_ASSERT(jar->at(0) == interval2);
     CPPUNIT_ASSERT(jar->at(1) == interval3);
     CPPUNIT_ASSERT(jar->at(2) == interval4);
     jar->clear();
 
-    CPPUNIT_ASSERT(node->query(1939, *jar));
+    CPPUNIT_ASSERT(node->findAll(1939, *jar));
     CPPUNIT_ASSERT(jar->size() == 2);
     CPPUNIT_ASSERT(jar->at(0) == interval5);
     CPPUNIT_ASSERT(jar->at(1) == interval6);
     jar->clear();
 
-    CPPUNIT_ASSERT(!node->query(1915, *jar));
+    CPPUNIT_ASSERT(!node->findAll(1915, *jar));
     CPPUNIT_ASSERT(jar->size() == 0);
     jar->clear();
 
-    CPPUNIT_ASSERT(!node->query(1917, *jar));
+    CPPUNIT_ASSERT(!node->findAll(1917, *jar));
     CPPUNIT_ASSERT(jar->size() == 0);
     jar->clear();
 }

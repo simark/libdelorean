@@ -98,7 +98,7 @@ public:
      * @param intervals Jar in which to add matching intervals
      * @returns         True if at least one interval was found
      */
-    bool query(timestamp_t ts, IntervalJar& intervals) const;
+    bool findAll(timestamp_t ts, IntervalJar& intervals) const;
 
     /**
      * Finds the first interval intersecting \p ts and having ID \p id.
@@ -107,8 +107,7 @@ public:
      * @param id Matching ID
      * @returns  Marching interval or \a nullptr if nothing found
      */
-    AbstractInterval::SP queryFirstMatching(timestamp_t ts,
-                                            interval_id_t id) const;
+    AbstractInterval::SP findOne(timestamp_t ts, interval_id_t id) const;
 
     /**
      * Adds a child (pointer) to this node.

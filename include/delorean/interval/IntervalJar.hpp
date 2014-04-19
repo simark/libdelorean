@@ -23,8 +23,8 @@
 
 /**
  * Main container for multiple intervals. This jar will be filled with
- * potentially multiple intervals when querying all intervals at a single
- * timestamp.
+ * potentially multiple intervals when finding all intervals intersecting
+ * with a given timestamp.
  *
  * @author Philippe Proulx
  */

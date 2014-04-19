@@ -103,7 +103,7 @@ void Node::close(timestamp_t end)
     this->computeHeaderSize();
 }
 
-bool Node::query(timestamp_t ts, IntervalJar& intervals) const
+bool Node::findAll(timestamp_t ts, IntervalJar& intervals) const
 {
     // fast path when there's no interval
     if (_intervals.empty()) {
@@ -128,8 +128,7 @@ bool Node::query(timestamp_t ts, IntervalJar& intervals) const
     return found;
 }
 
-AbstractInterval::SP Node::queryFirstMatching(timestamp_t ts,
-                                                      interval_id_t id) const
+AbstractInterval::SP Node::findOne(timestamp_t ts, interval_id_t id) const
 {
     // fast path when there's no interval
     if (_intervals.empty()) {

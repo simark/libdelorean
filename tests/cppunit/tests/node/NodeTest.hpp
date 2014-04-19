@@ -28,8 +28,8 @@ class NodeTest :
         CPPUNIT_TEST(testConstructorAndAttributes);
         CPPUNIT_TEST(testAddInterval);
         CPPUNIT_TEST(testIntervalFits);
-        CPPUNIT_TEST(testSingleQuery);
-        CPPUNIT_TEST(testMultipleQuery);
+        CPPUNIT_TEST(testFindOne);
+        CPPUNIT_TEST(testFindAll);
         CPPUNIT_TEST(testChildren);
     CPPUNIT_TEST_SUITE_END();
 
@@ -37,8 +37,8 @@ public:
     void testConstructorAndAttributes();
     void testAddInterval();
     void testIntervalFits();
-    void testSingleQuery();
-    void testMultipleQuery();
+    void testFindOne();
+    void testFindAll();
     void testChildren();
 };
 
