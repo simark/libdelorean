@@ -24,14 +24,14 @@
 #include <boost/filesystem.hpp>
 
 #include <delorean/AbstractFile.hpp>
-#include <delorean/AbstractHistorySource.hpp>
+#include <delorean/IHistorySource.hpp>
 #include <delorean/interval/IntervalJar.hpp>
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
 class HistoryFileSource :
     public AbstractFile,
-    public AbstractHistorySource
+    public IHistorySource
 {
 public:
     virtual ~HistoryFileSource()

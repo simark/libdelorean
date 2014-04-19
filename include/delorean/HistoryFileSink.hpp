@@ -25,7 +25,7 @@
 #include <boost/filesystem/fstream.hpp>
 
 #include <delorean/AbstractHistoryFile.hpp>
-#include <delorean/AbstractHistorySink.hpp>
+#include <delorean/IHistorySink.hpp>
 #include <delorean/node/Node.hpp>
 #include <delorean/node/NodeSerDesType.hpp>
 #include <delorean/interval/AbstractInterval.hpp>
@@ -33,7 +33,7 @@
 
 class HistoryFileSink :
     public AbstractHistoryFile,
-    public AbstractHistorySink
+    public IHistorySink
 {
 public:
     enum {
