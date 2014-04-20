@@ -28,7 +28,8 @@
 #include <delorean/BasicTypes.hpp>
 
 /**
- * Interval containing a string value.
+ * Interval containing a string value. Variable data is serialized with a
+ * terminating NUL character internally, so UTF-8 is allowed.
  *
  * @author Philippe Proulx
  */
