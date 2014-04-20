@@ -32,11 +32,11 @@ void IntIntervalTest::testConstructorAndAttributes()
 {
     timestamp_t begin = 100;
     timestamp_t end = 40;
-    interval_id_t id = 4;
+    interval_cat_id_t catId = 4;
 
     // wrong interval parameters
     try {
-        IntInterval::UP interval {new IntInterval(begin, end, id)};
+        IntInterval::UP interval {new IntInterval(begin, end, catId)};
         CPPUNIT_FAIL("Building interval with wrong parameters");
     } catch (const InvalidIntervalArguments& ex) {
         CPPUNIT_ASSERT_EQUAL(ex.getBegin(), begin);
@@ -47,7 +47,7 @@ void IntIntervalTest::testConstructorAndAttributes()
     begin = 50;
     end = 50;
     try {
-        IntInterval::UP interval {new IntInterval(begin, end, id)};
+        IntInterval::UP interval {new IntInterval(begin, end, catId)};
     } catch (const InvalidIntervalArguments& ex) {
         CPPUNIT_FAIL("Interval constructor does not accept equal begin and end times");
     }
@@ -55,11 +55,11 @@ void IntIntervalTest::testConstructorAndAttributes()
     // attributes
     begin = 23;
     end = 67;
-    id = 5;
-    IntInterval::UP interval {new IntInterval(begin, end, id)};
+    catId = 5;
+    IntInterval::UP interval {new IntInterval(begin, end, catId)};
     CPPUNIT_ASSERT_EQUAL(interval->getBegin(), begin);
     CPPUNIT_ASSERT_EQUAL(interval->getEnd(), end);
-    CPPUNIT_ASSERT_EQUAL(interval->getId(), id);
+    CPPUNIT_ASSERT_EQUAL(interval->getCatId(), catId);
     CPPUNIT_ASSERT_EQUAL(interval->getType(),
         static_cast<interval_type_t>(StandardIntervalType::INT32));
 

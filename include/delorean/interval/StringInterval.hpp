@@ -41,7 +41,8 @@ public:
     typedef std::unique_ptr<StringInterval> UP;
 
 public:
-    StringInterval(timestamp_t begin, timestamp_t end, interval_id_t id);
+    StringInterval(timestamp_t begin, timestamp_t end,
+                   interval_cat_id_t catId);
 
     virtual ~StringInterval()
     {

@@ -24,11 +24,11 @@
 #include <delorean/BasicTypes.hpp>
 
 StringInterval::StringInterval(timestamp_t begin, timestamp_t end,
-                               interval_id_t id) :
+                               interval_cat_id_t catId) :
     AbstractInterval {
         begin,
         end,
-        id,
+        catId,
         StandardIntervalType::STRING
     }
 {

@@ -102,7 +102,7 @@ Node::UP AbstractNodeSerDes::createNode(std::size_t size,
 
 AbstractInterval::UP AbstractNodeSerDes::createInterval(timestamp_t begin,
                                                         timestamp_t end,
-                                                        interval_id_t id,
+                                                        interval_cat_id_t catId,
                                                         interval_type_t type) const
 {
     // make sure interval factory exists for this type
@@ -112,7 +112,7 @@ AbstractInterval::UP AbstractNodeSerDes::createInterval(timestamp_t begin,
     }
 
     // create interval
-    auto interval = factory->create(begin, end, id);
+    auto interval = factory->create(begin, end, catId);
 
     return interval;
 }

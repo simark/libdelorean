@@ -54,11 +54,11 @@ public:
      *
      * @param begin Interval begin timestamp
      * @param end   Interval end timestamp
-     * @param id    Interval reference ID
+     * @param catId Interval category ID
      * @returns     Specific interval
      */
     virtual AbstractInterval::UP create(timestamp_t begin, timestamp_t end,
-                                        interval_id_t id) const = 0;
+                                        interval_cat_id_t catId) const = 0;
 };
 
 #endif // _IINTERVALFACTORY_HPP

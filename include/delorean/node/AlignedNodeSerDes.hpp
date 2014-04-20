@@ -109,21 +109,21 @@ private:
     {
         timestamp_t begin;
         timestamp_t end;
-        std::uint32_t typeId;
+        std::uint32_t typeCatId;
         interval_value_t value;
 
         interval_type_t getType() const
         {
-            auto type = (typeId >> 24) & 0xff;
+            auto type = (typeCatId >> 24) & 0xff;
 
             return static_cast<interval_type_t>(type);
         }
 
-        interval_id_t getId() const
+        interval_cat_id_t getCatId() const
         {
-            auto id = typeId & 0xffffff;
+            auto catId = typeCatId & 0xffffff;
 
-            return static_cast<interval_id_t>(id);
+            return static_cast<interval_cat_id_t>(catId);
         }
 
         void setFromInterval(const AbstractInterval& interval)
@@ -134,10 +134,10 @@ private:
 
             auto type = static_cast<std::uint32_t>(interval.getType());
             type <<= 24;
-            auto id = static_cast<std::uint32_t>(interval.getId());
-            id &= 0xffffff;
+            auto catId = static_cast<std::uint32_t>(interval.getCatId());
+            catId &= 0xffffff;
 
-            typeId = type | id;
+            typeCatId = type | catId;
         }
     };
 

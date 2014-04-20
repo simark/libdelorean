@@ -64,13 +64,13 @@ public:
     bool findAll(timestamp_t ts, IntervalJar& intervals) const;
 
     /**
-     * @see IHistorySource::findOne(timestamp_t, interval_id_t)
+     * @see IHistorySource::findOne(timestamp_t, interval_cat_id_t)
      */
-    AbstractInterval::SP findOne(timestamp_t ts, interval_id_t id) const;
+    AbstractInterval::SP findOne(timestamp_t ts, interval_cat_id_t catId) const;
 
 protected:
     bool findImpl(timestamp_t ts, IntervalJar& intervals) const;
-    AbstractInterval::SP findOneImpl(timestamp_t ts, interval_id_t id) const;
+    AbstractInterval::SP findOneImpl(timestamp_t ts, interval_cat_id_t catId) const;
 
 private:
     boost::filesystem::ifstream _inputStream;
