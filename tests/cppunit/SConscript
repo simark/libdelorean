@@ -26,6 +26,7 @@ sources = ['main.cpp']
 for base, files in subs:
     sources += [os.path.join('tests', base, f) for f in files]
 
-root_env.Program(target=target, source=sources,
-                 LIBS=['cppunit', 'delorean'],
-                 LIBPATH='#/src')
+testall = root_env.Program(target=target, source=sources,
+                           LIBS=['cppunit', 'delorean'],
+                           LIBPATH='#/src')
+Return('testall')

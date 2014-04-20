@@ -20,14 +20,11 @@ custom_env = {
     'HOME': os.environ['HOME'],
 }
 
-root_env = Environment(CCFLAGS=ccflags, ENV=custom_env)
-root_env.Append(CPPPATH=['#/include'])
+root_env = Environment(CCFLAGS=ccflags,
+                       ENV=custom_env,
+                       CPPPATH=['#/include'])
+Export('root_env')
 
-subdirs = [
-    'src',
-    'tests',
-]
-
-for basedir in subdirs:
-    sconscript = os.path.join(basedir, 'SConscript')
-    SConscript(sconscript, exports=['root_env'])
+lib = SConscript(os.path.join('src', 'SConscript'))
+tests = SConscript(os.path.join('tests', 'SConscript'))
+Depends(tests, lib)
