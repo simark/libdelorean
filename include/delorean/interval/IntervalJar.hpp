@@ -19,6 +19,8 @@
 #ifndef _INTERVALJAR_HPP
 #define _INTERVALJAR_HPP
 
+#include <vector>
+
 #include <delorean/interval/AbstractInterval.hpp>
 
 /**
