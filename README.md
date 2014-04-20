@@ -19,12 +19,9 @@ allowing logarithmic time queries as well as fast construction.
 There's one major condition (detailed in the paper), though: intervals must
 be provided to the library in ascending order of *end time*.
 
-Speaking of which, "time stamps" are provided to libdelorean as 64-bit
-integers, so your "time" axis doesn't need to contain actual time stamps; the
+Speaking of which, "timestamps" are provided to libdelorean as 64-bit signed
+integers, so your "time" axis doesn't need to contain actual timestamps; the
 integers could represent something else.
-
-Although the output format is optimized for multi-gigabyte files stored on
-a hard disk drive, libdelorean also provides an API for in-memory history.
 
 
 dependencies
