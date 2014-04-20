@@ -67,9 +67,9 @@ void getIntervalsFromTextFile(const bfs::path& path, IntervalJar& jar)
         balgo::split(parts, line, balgo::is_space(), boost::token_compress_on);
 
         // read range and category ID
-        timestamp_t begin = static_cast<timestamp_t>(std::stoul(parts[0]));
-        timestamp_t end = static_cast<timestamp_t>(std::stoul(parts[1]));
-        interval_cat_id_t catId = static_cast<interval_cat_id_t>(std::stoi(parts[2]));
+        timestamp_t begin = static_cast<timestamp_t>(std::stoll(parts[0]));
+        timestamp_t end = static_cast<timestamp_t>(std::stoll(parts[1]));
+        interval_cat_id_t catId = static_cast<interval_cat_id_t>(std::stoul(parts[2]));
 
         // read string value
         std::string value;
