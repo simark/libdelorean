@@ -39,6 +39,9 @@ AlignedNodeSerDes::~AlignedNodeSerDes()
 void AlignedNodeSerDes::serializeNode(const Node& node,
                                       std::uint8_t* headPtr) const
 {
+    // set end of node pointer now before modifying headPtr
+    auto varAtPtr = headPtr + node.getSize();
+
     // build node header
     NodeHeader nodeHeader;
     nodeHeader.setFromNode(node);
@@ -56,7 +59,6 @@ void AlignedNodeSerDes::serializeNode(const Node& node,
     }
 
     // serialize intervals
-    auto varAtPtr = headPtr + node.getSize();
     std::size_t varOffset = 0;
     for (const auto& interval : node.getIntervals()) {
         // update variable data pointer and offset from end
