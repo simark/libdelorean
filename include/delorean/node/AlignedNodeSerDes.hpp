@@ -50,7 +50,7 @@ public:
     // deserializer side
     Node::UP deserializeNode(const std::uint8_t* headPtr,
                              std::size_t size,
-                             unsigned int maxChildren) const;
+                             std::size_t maxChildren) const;
 
 private:
     struct NodeHeader

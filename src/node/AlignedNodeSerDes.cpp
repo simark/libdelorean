@@ -86,7 +86,7 @@ void AlignedNodeSerDes::serializeNode(const Node& node,
 
 Node::UP AlignedNodeSerDes::deserializeNode(const std::uint8_t* headPtr,
                                             std::size_t size,
-                                            unsigned int maxChildren) const
+                                            std::size_t maxChildren) const
 {
     // read header
     NodeHeader nodeHeader;

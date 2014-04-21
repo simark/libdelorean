@@ -111,7 +111,7 @@ public:
      */
     virtual std::unique_ptr<Node> deserializeNode(const std::uint8_t* headPtr,
                                                   std::size_t size,
-                                                  unsigned int maxChildren) const = 0;
+                                                  std::size_t maxChildren) const = 0;
 
     /**
      * Registers a new interval factory \p factory used to create intervals of
