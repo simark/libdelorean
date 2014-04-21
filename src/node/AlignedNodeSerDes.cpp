@@ -90,6 +90,9 @@ Node::UP AlignedNodeSerDes::deserializeNode(const std::uint8_t* headPtr,
                                             std::size_t size,
                                             std::size_t maxChildren) const
 {
+    // set end of node pointer now before modifying headPtr
+    auto varEndPtr = headPtr + size;
+
     // read header
     NodeHeader nodeHeader;
     std::memcpy(&nodeHeader, headPtr, sizeof(nodeHeader));
@@ -111,7 +114,6 @@ Node::UP AlignedNodeSerDes::deserializeNode(const std::uint8_t* headPtr,
     }
 
     // add intervals
-    auto varEndPtr = headPtr + size;
     for (std::size_t x = 0; x < nodeHeader.intervalCount; ++x) {
         // read interval header
         IntervalHeader intervalHeader;
