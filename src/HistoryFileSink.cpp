@@ -45,25 +45,27 @@ void HistoryFileSink::open(const fs::path& path, std::size_t nodeSize,
                            NodeSerDesType serdesType)
 {
     if (this->isOpened()) {
-        throw IO("Trying to open a file already opened");
+        throw IO("Trying to open a history file already opened");
     }
 
     // try opening output stream
     _outputStream.open(path, std::ios::binary);
     if (!_outputStream) {
-        throw IO("Cannot open file for writing");
+        throw IO("Cannot open history file for writing");
     }
 
     // set node serializer/deserializer
     // TODO: use factory when we have too many types
     if (serdesType == NodeSerDesType::ALIGNED) {
-        AbstractNodeSerDes::UP nodeSerdes {new AlignedNodeSerDes()};
+        AbstractNodeSerDes::UP nodeSerdes {new AlignedNodeSerDes {}};
         this->setNodeSerDes(std::move(nodeSerdes));
     } else {
         throw UnknownNodeSerDesType(serdesType);
     }
 
-    // allocate new buffer for node serialization
+    /* Allocate new buffer for node serialization (reallocating because
+     * its size could have changed).
+     */
     std::unique_ptr<std::uint8_t[]> newBuf {new std::uint8_t[nodeSize]};
     _nodeBuf = std::move(newBuf);
 
@@ -80,8 +82,8 @@ void HistoryFileSink::open(const fs::path& path, std::size_t nodeSize,
     this->setOpened(true);
 
     // add a first leaf node to latest branch (current root node)
-    auto rootNode =
-        std::move(this->createNode(Node::ROOT_PARENT_SEQ_NUMBER(), begin));
+    auto rootNode = this->createNode(Node::ROOT_PARENT_SEQ_NUMBER(), begin);
+    this->setRootNodeSeqNumber(rootNode->getSeqNumber());
     this->getLatestBranch().push_back(std::move(rootNode));
 }
 
@@ -118,11 +120,6 @@ void HistoryFileSink::close(timestamp_t end)
 
 void HistoryFileSink::close()
 {
-    if (!this->isOpened()) {
-        // ignore silently
-        return;
-    }
-
     this->close(this->getEnd());
 }
 
@@ -133,33 +130,25 @@ void HistoryFileSink::addInterval(AbstractInterval::SP interval)
             interval->getEnd() < this->getEnd()) {
         throw IntervalOutOfRange {*interval, this->getBegin(), this->getEnd()};
     }
+
+    // update tree's end
+    this->setEnd(interval->getEnd());
 }
 
 Node::UP HistoryFileSink::createNode(node_seq_t parentSeqNumber,
-                                     timestamp_t begin) const
+                                     timestamp_t begin)
 {
-    auto node = new Node {
+    Node::UP nodeUp {new Node {
         this->getNodeSize(),
         this->getMaxChildren(),
         static_cast<node_seq_t>(this->getNodeCount()),
         parentSeqNumber,
         begin,
         this->getNodeSerDesPtr()
-    };
-    Node::UP nodeUp {node};
-
-    return nodeUp;
-}
-
-void HistoryFileSink::incNodeCount(timestamp_t begin)
-{
-    // one more node
+    }};
     this->setNodeCount(this->getNodeCount() + 1);
 
-    // update tree's end if needed
-    if (begin >= this->getEnd()) {
-        this->setEnd(begin);
-    }
+    return nodeUp;
 }
 
 void HistoryFileSink::tryAddIntervalToNode(AbstractInterval::SP intr,
@@ -186,7 +175,7 @@ void HistoryFileSink::addSiblingNode(std::size_t index)
      *         o
      *
      * `index` points to a node which should have a new sibling node. We
-     * need to discard this node and all its descendants.
+     * need to discard this node and all its descendants:
      *
      *     o
      *      \
@@ -211,7 +200,6 @@ void HistoryFileSink::addSiblingNode(std::size_t index)
      * Also, `index` could be 0, in which case we need to create a new root
      * and apply what's written above.
      */
-
     std::size_t newHeight = this->getLatestBranch().size();
     std::size_t parentIndex;
 
@@ -224,9 +212,9 @@ void HistoryFileSink::addSiblingNode(std::size_t index)
         auto oldRootNode = this->getLatestBranch().front();
 
         // create new root
-        auto newRootNode =
-            std::move(this->createNode(Node::ROOT_PARENT_SEQ_NUMBER(),
-                                       oldRootNode->getBegin()));
+        auto newRootNode = this->createNode(Node::ROOT_PARENT_SEQ_NUMBER(),
+                                            this->getBegin());
+        this->setRootNodeSeqNumber(newRootNode->getSeqNumber());
 
         // set new root as old root's parent
         oldRootNode->setParentSeqNumber(newRootNode->getSeqNumber());
@@ -245,16 +233,14 @@ void HistoryFileSink::addSiblingNode(std::size_t index)
         // parent index is root
         parentIndex = 0;
     } else {
-        // pointed node
-        auto node = this->getLatestBranch().at(index);
-
-        // parent (must be a branch node)
-        auto& parent = *(this->getLatestBranch().at(index - 1));
+        // parent
+        const auto& parent = *(this->getLatestBranch().at(index - 1));
 
         // is parent full?
         if (parent.isFull()) {
             // retry with parent
             this->addSiblingNode(index - 1);
+            return;
         }
 
         // commit pointed node and all its descendant
@@ -287,11 +273,9 @@ void HistoryFileSink::commitNode(Node& node)
 
 void HistoryFileSink::commitNodesDownFromIndex(std::size_t index)
 {
-    for (unsigned int i = index; i < this->getLatestBranch().size(); ++i) {
-        auto node = this->getLatestBranch().at(i);
-
-        // commit it
-        this->commitNode(*node);
+    auto& lb = this->getLatestBranch();
+    for (auto it = lb.begin() + index; it != lb.end(); ++it) {
+        this->commitNode(**it);
     }
 }
 
@@ -344,35 +328,33 @@ void HistoryFileSink::drawBranchFromIndex(std::size_t parentIndex,
         return;
     }
 
+    // update tree's end
+    this->setEnd(this->getEnd() + 1);
+
     // first parent node will be the pointed parent
     auto& absParentNode = *(this->getLatestBranch().at(parentIndex));
-
-    /* This dynamic cast should always work because the caller should never
-     * provide the index of a leaf node (makes no sense to do so anyway).
-     */
     auto& parentNode = absParentNode;
 
     // add branch nodes
-    for (unsigned int i = 0; i < newBranchNodes; ++i) {
+    for (std::size_t i = 0; i < newBranchNodes; ++i) {
         // create branch node
-        auto branchNode =
-            std::move(this->createNode(parentNode.getSeqNumber(),
-                                       parentNode.getBegin()));
+        auto node = this->createNode(parentNode.getSeqNumber(),
+                                     this->getEnd());
 
         // set as current parent's child
-        parentNode.addChild(branchNode->getBegin(), branchNode->getSeqNumber());
+        parentNode.addChild(node->getBegin(), node->getSeqNumber());
 
         // make it the new parent
-        parentNode = *branchNode;
+        parentNode = *node;
 
         // append to latest branch
-        this->getLatestBranch().push_back(std::move(branchNode));
+        this->getLatestBranch().push_back(std::move(node));
     }
 
     // add single leaf node
     auto leafNode =
         std::move(this->createNode(parentNode.getSeqNumber(),
-                                   parentNode.getBegin()));
+                                   this->getEnd()));
     parentNode.addChild(leafNode->getBegin(), leafNode->getSeqNumber());
     this->getLatestBranch().push_back(std::move(leafNode));
 }

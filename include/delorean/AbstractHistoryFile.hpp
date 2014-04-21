@@ -19,6 +19,7 @@
 #define _ABSTRACTHISTORYFILE_HPP
 
 #include <boost/filesystem.hpp>
+#include <boost/utility.hpp>
 
 #include <delorean/BasicTypes.hpp>
 
@@ -30,7 +31,8 @@
  * @see HistoryFileSource
  * @author Philippe Proulx
  */
-class AbstractHistoryFile
+class AbstractHistoryFile :
+    boost::noncopyable
 {
 public:
     AbstractHistoryFile() :
@@ -43,20 +45,20 @@ public:
 protected:
     struct HistoryFileHeader
     {
-        uint32_t magic = MAGIC;
-        uint32_t major = MAJOR;
-        uint32_t minor = MINOR;
-        uint32_t nodeSize;
-        uint32_t maxChildren;
-        uint32_t nodeCount;
-        node_seq_t rootNodeSeqNumber;
-
         enum {
-            MAGIC = 0x05eea901,
+            MAGIC = 0x21b4a980,
             SIZE = 4096,
             MAJOR = 1,
             MINOR = 0
         };
+
+        uint32_t magic = MAGIC;
+        uint16_t major = MAJOR;
+        uint16_t minor = MINOR;
+        uint32_t nodeSize;
+        uint32_t maxChildren;
+        uint32_t nodeCount;
+        node_seq_t rootNodeSeqNumber;
     };
 
 protected:

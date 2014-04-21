@@ -103,7 +103,7 @@ private:
                              std::size_t height);
     void commitNodesDownFromIndex(std::size_t index);
     void commitNode(Node& node);
-    Node::UP createNode(node_seq_t parentSeqNumber, timestamp_t begin) const;
+    Node::UP createNode(node_seq_t parentSeqNumber, timestamp_t begin);
 
 private:
     boost::filesystem::ofstream _outputStream;
