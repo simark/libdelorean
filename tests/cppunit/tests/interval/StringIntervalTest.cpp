@@ -61,7 +61,7 @@ void StringIntervalTest::testVariableDataSerialization()
     // allocate and initialize a buffer
     std::unique_ptr<std::uint8_t[]> bufUp {new std::uint8_t [1024]};
     auto buf = bufUp.get();
-    for (unsigned int x = 0; x < 1024; ++x) {
+    for (std::size_t x = 0; x < 1024; ++x) {
         buf[x] = x & 0xff;
     }
 
@@ -95,7 +95,7 @@ void StringIntervalTest::testVariableDataDeserialization()
     // allocate and initialize a buffer with a value
     std::unique_ptr<std::uint8_t[]> bufUp {new std::uint8_t [1024]};
     auto buf = bufUp.get();
-    for (unsigned int x = 0; x < 1024; ++x) {
+    for (std::size_t x = 0; x < 1024; ++x) {
         buf[x] = x & 0xff;
     }
 
