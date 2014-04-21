@@ -1,4 +1,4 @@
-# Head of states chronology by state
+# Heads of states chronology by state
 # Source: Wikipedia
 # Compiled by: Philippe Proulx <eepp.ca>
 
