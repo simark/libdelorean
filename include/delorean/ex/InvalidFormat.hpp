@@ -1,5 +1,4 @@
-/**
- * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
+/* Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of libdelorean.
  *
