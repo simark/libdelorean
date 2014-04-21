@@ -18,10 +18,8 @@
  */
 #include <memory>
 #include <cstddef>
-#include <cstring>
 
 #include <delorean/node/AlignedNodeSerDes.hpp>
-#include <delorean/interval/IntInterval.hpp>
 #include <delorean/interval/StringInterval.hpp>
 #include <delorean/interval/IntervalJar.hpp>
 #include <delorean/BasicTypes.hpp>
