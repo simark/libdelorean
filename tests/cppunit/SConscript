@@ -15,6 +15,7 @@ interval_tests = [
 
 node_tests = [
     'NodeTest.cpp',
+    'AlignedNodeSerDesTest.cpp',
 ]
 
 subs = [
