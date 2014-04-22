@@ -41,4 +41,4 @@ public:
     void testChildren();
 };
 
-#endif  // _NODETEST_HPP
+#endif // _NODETEST_HPP

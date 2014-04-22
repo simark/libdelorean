@@ -39,4 +39,4 @@ public:
     void testVariableDataSize();
 };
 
-#endif  // _INTINTERVALTEST_HPP
+#endif // _INTINTERVALTEST_HPP

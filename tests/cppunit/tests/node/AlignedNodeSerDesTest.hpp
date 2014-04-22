@@ -31,4 +31,4 @@ public:
     void testSerializeDeserialize();
 };
 
-#endif  // _ALIGNEDNODESERDESTEST_HPP
+#endif // _ALIGNEDNODESERDESTEST_HPP

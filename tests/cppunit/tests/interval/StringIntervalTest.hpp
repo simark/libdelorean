@@ -37,4 +37,4 @@ public:
     void testVariableDataDeserialization();
 };
 
-#endif  // _STRINGINTERVALTEST_HPP
+#endif // _STRINGINTERVALTEST_HPP
