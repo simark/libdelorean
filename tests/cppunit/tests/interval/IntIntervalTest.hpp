@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef INTINTERVALTEST_HPP
-#define INTINTERVALTEST_HPP
+#ifndef _INTINTERVALTEST_HPP
+#define _INTINTERVALTEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -39,4 +39,4 @@ public:
     void testVariableDataSize();
 };
 
-#endif  // INTINTERVALTEST_HPP
+#endif  // _INTINTERVALTEST_HPP

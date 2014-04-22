@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef NODETEST_HPP
-#define NODETEST_HPP
+#ifndef _NODETEST_HPP
+#define _NODETEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -41,4 +41,4 @@ public:
     void testChildren();
 };
 
-#endif  // NODETEST_HPP
+#endif  // _NODETEST_HPP

@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef STRINGINTERVALTEST_HPP
-#define STRINGINTERVALTEST_HPP
+#ifndef _STRINGINTERVALTEST_HPP
+#define _STRINGINTERVALTEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -37,4 +37,4 @@ public:
     void testVariableDataDeserialization();
 };
 
-#endif  // STRINGINTERVALTEST_HPP
+#endif  // _STRINGINTERVALTEST_HPP

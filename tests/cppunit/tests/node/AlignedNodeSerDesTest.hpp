@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ALIGNEDNODESERDESTEST_HPP
-#define ALIGNEDNODESERDESTEST_HPP
+#ifndef _ALIGNEDNODESERDESTEST_HPP
+#define _ALIGNEDNODESERDESTEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -31,4 +31,4 @@ public:
     void testSerializeDeserialize();
 };
 
-#endif  // ALIGNEDNODESERDESTEST_HPP
+#endif  // _ALIGNEDNODESERDESTEST_HPP
