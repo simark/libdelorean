@@ -82,7 +82,7 @@ void getIntervalsFromTextFile(const bfs::path& path, IntervalJar& jar)
         }
 
         // create string interval
-        StringInterval::SP interval {new StringInterval(begin, end, catId)};
+        StringInterval::SP interval {new StringInterval {begin, end, catId}};
         interval->setValue(value);
 
         // add to jar
