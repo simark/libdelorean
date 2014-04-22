@@ -125,6 +125,11 @@ protected:
         return _nodeSerdes.get();
     }
 
+    void incNodeCount()
+    {
+        _nodeCount++;
+    }
+
 private:
     timestamp_t _end;
     timestamp_t _begin;

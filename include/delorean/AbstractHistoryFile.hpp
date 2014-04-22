@@ -42,6 +42,16 @@ public:
 
     virtual ~AbstractHistoryFile() = 0;
 
+    const boost::filesystem::path& getPath() const
+    {
+        return _path;
+    }
+
+    bool isOpened() const
+    {
+        return _isOpened;
+    }
+
 protected:
     struct HistoryFileHeader
     {
@@ -62,11 +72,6 @@ protected:
     };
 
 protected:
-    const boost::filesystem::path& getPath() const
-    {
-        return _path;
-    }
-
     void setPath(const boost::filesystem::path& path)
     {
         _path = path;
@@ -74,12 +79,7 @@ protected:
 
     void setOpened(bool isOpened)
     {
-        _isOpened = true;
-    }
-
-    bool isOpened() const
-    {
-        return _isOpened;
+        _isOpened = isOpened;
     }
 
 private:

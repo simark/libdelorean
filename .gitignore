@@ -4,3 +4,5 @@
 *.so.*
 *.os
 .sconsign.dblite
+*.his
+

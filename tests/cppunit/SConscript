@@ -7,27 +7,42 @@ import os.path
 Import('root_env')
 
 target = 'testall'
+libs = [
+    'cppunit',
+    'delorean',
+    'boost_system',
+    'boost_filesystem',
+]
 
 interval_tests = [
     'IntIntervalTest.cpp',
     'StringIntervalTest.cpp',
 ]
-
 node_tests = [
     'NodeTest.cpp',
     'AlignedNodeSerDesTest.cpp',
+]
+history_tests = [
+    'HistoryFileTest.cpp',
 ]
 
 subs = [
     ('interval', interval_tests),
     ('node', node_tests),
+    ('.', history_tests),
 ]
 
-sources = ['main.cpp']
+sources = [
+    'main.cpp',
+    os.path.join('..', 'utils.cpp'),
+]
+
 for base, files in subs:
     sources += [os.path.join('tests', base, f) for f in files]
 
-testall = root_env.Program(target=target, source=sources,
-                           LIBS=['cppunit', 'delorean'],
-                           LIBPATH='#/src')
+env = root_env.Copy()
+env.Append(CPPPATH='#/tests')
+testall = env.Program(target=target, source=sources, LIBS=libs,
+                      LIBPATH='#/src')
+
 Return('testall')

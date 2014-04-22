@@ -48,7 +48,7 @@ public:
         DEF_NODE_SIZE = (16 * 1024),
 
         /// Default maximum number of children in a node
-        DEF_MAX_CHILDREN = 50
+        DEF_MAX_CHILDREN = 64
     };
 
 public:
@@ -97,13 +97,13 @@ public:
 private:
     void writeHeader();
     void tryAddIntervalToNode(AbstractInterval::SP intr, std::size_t index);
-    void incNodeCount(timestamp_t begin);
     void addSiblingNode(std::size_t index);
     void drawBranchFromIndex(std::size_t parentIndex,
                              std::size_t height);
     void commitNodesDownFromIndex(std::size_t index);
     void commitNode(Node& node);
-    Node::UP createNode(node_seq_t parentSeqNumber, timestamp_t begin);
+    Node::UP createBranchNode(node_seq_t parentSeqNumber, timestamp_t begin);
+    Node::UP createLeafNode(node_seq_t parentSeqNumber, timestamp_t begin);
 
 private:
     boost::filesystem::ofstream _outputStream;
