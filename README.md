@@ -46,8 +46,7 @@ See [concepts](#concepts) below for more details.
 dependencies
 ------------
 
-You need [Boost](http://www.boost.org/). Any version somehow recent should
-do it.
+You need [Boost](http://www.boost.org/) 1.55+.
 
 You need [CppUnit](http://cppunit.sourceforge.net/) to build and run
 unit tests.
