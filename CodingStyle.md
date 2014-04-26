@@ -105,6 +105,7 @@ C++11 code. Please respect it if you want to contribute.
 
         _myAttribute = 23;
         this->doSomething(5, _anotherAttribute);
+
   * Use references as much as possible. Use const references for parameters as much
     as possible. Almost no "loose" pointers should be in your code.
   * Use `const` methods as much as possible.
