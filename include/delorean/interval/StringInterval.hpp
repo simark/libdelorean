@@ -41,7 +41,7 @@ public:
 
 public:
     StringInterval(timestamp_t begin, timestamp_t end,
-                   interval_cat_id_t catId);
+                   interval_key_t key);
 
     virtual ~StringInterval()
     {

@@ -39,7 +39,7 @@ class SimpleValueInterval :
 {
 public:
     SimpleValueInterval(timestamp_t begin, timestamp_t end,
-                        interval_cat_id_t catId);
+                        interval_key_t key);
 
     virtual ~SimpleValueInterval()
     {
@@ -69,11 +69,11 @@ private:
 template<typename T, StandardIntervalType SIT>
 SimpleValueInterval<T, SIT>::SimpleValueInterval(timestamp_t begin,
                                                  timestamp_t end,
-                                                 interval_cat_id_t catId) :
+                                                 interval_key_t key) :
     AbstractInterval {
         begin,
         end,
-        catId,
+        key,
         SIT
     }
 {

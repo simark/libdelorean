@@ -100,14 +100,14 @@ public:
     bool findAll(timestamp_t ts, IntervalJar& intervals) const;
 
     /**
-     * Finds the first interval intersecting \p ts and having catetory ID
-     * \p catId.
+     * Finds the first interval intersecting \p ts and having key
+     * \p key.
      *
      * @param ts    Timestamp
-     * @param catId Matching category ID
+     * @param key   Matching key
      * @returns     Marching interval or \a nullptr if nothing found
      */
-    AbstractInterval::SP findOne(timestamp_t ts, interval_cat_id_t catId) const;
+    AbstractInterval::SP findOne(timestamp_t ts, interval_key_t key) const;
 
     /**
      * Adds a child (pointer) to this node.

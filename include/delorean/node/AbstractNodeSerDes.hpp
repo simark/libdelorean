@@ -142,7 +142,7 @@ public:
 
 protected:
     AbstractInterval::UP createInterval(timestamp_t begin, timestamp_t end,
-                                        interval_cat_id_t catId,
+                                        interval_key_t key,
                                         interval_type_t type) const;
     std::unique_ptr<Node> createNode(std::size_t size, std::size_t maxChildren,
                                      node_seq_t seqNumber, node_seq_t parentSeqNumber,

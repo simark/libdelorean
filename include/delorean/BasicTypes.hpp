@@ -28,8 +28,8 @@
 /// Timestamp
 typedef std::int64_t        timestamp_t;
 
-/// Interval category ID
-typedef std::uint32_t       interval_cat_id_t;
+/// Interval key
+typedef std::uint32_t       interval_key_t;
 
 /// Interval type
 typedef std::uint8_t        interval_type_t;

@@ -72,10 +72,11 @@ From a user's point of view, libdelorean involves the following concepts:
     attributes:
     * A **begin** timestamp (inclusive)
     * An **end** timestamp (inclusive)
-    * A **category identifier**. In a history (see below), two intervals
-      in the same _category_ cannot intersect. See the [use cases](#use cases)
-      section for examples of what a category can be. A category ID is
-      a unique numeric identifier for a given category.
+    * A **key**. In a history (see below), two intervals having the same
+      _key_ cannot intersect. See the [use cases](#use cases)
+      section for examples of what a key can be. A key is a unique numeric
+      identifier for a set of related intervals (see it as the primary key
+      of a given timeline).
     * A **value**. The value type depends on the interval type. Standard
       intervals are provided with the library (intervals that carry integers,
       floating point numbers or strings), but you are free to create your
@@ -97,7 +98,7 @@ Once a history is created, you may find intervals in it when opened as a
 history source. "Finding intervals" means providing a single timestamp and
 getting back a list of all intervals intersecting this timestamp. You may
 also find a single interval intersecting a given timestamp and matching
-a given category ID.
+a given key.
 
 
 use cases
@@ -107,15 +108,15 @@ libdelorean is particularly well suited (and was designed) for storing a
 history of **states**. A _state_ is a set of informations defined between
 two given instants in time (i.e. in an interval). Storing states usually
 satisfies the ascending order of end timestamp condition because an interval
-is created everytime a state ends (and a new state for the same category
+is created everytime a state ends (and a new state for the same key
 may begin right after that).
 
 Here are a few possible use cases that make this obvious:
 
   * **Persons in charge of multiple projects**
-    * _Categories_: individual projects.
+    * _Keys_: individual projects.
     * _Interval payload_: name of the person in charge of a project
-      associated with the interval's category ID.
+      associated with the interval's key.
     * _State change_: when the charge of a given project is transfered from
       one person to another, an interval is created.
     * _"Find one" query_: find which person was in charge of a given
@@ -123,9 +124,9 @@ Here are a few possible use cases that make this obvious:
     * _"Find all" query_: find all persons in charge of all projects at a
       given time.
   * **Musical composition**
-    * _Categories_: individual instruments (or tracks).
+    * _Keys_: individual instruments (or tracks).
     * _Interval payload_: volume and notes of an instrument/track
-      associated with the interval's category ID.
+      associated with the interval's key.
     * _State change_: when an instrument stops playing a note, starts
       playing a new note or changes the volume of any note, an interval
       is created.
@@ -134,17 +135,16 @@ Here are a few possible use cases that make this obvious:
     * _"Find all" query_: find all notes/volumes of all instruments/tracks at
       a given time.
   * **States of operating system processes**
-    * _Categories_: individual OS processes.
-    * _Interval payload_: process state associated with the interval's
-      category ID.
+    * _Keys_: individual OS processes.
+    * _Interval payload_: process state associated with the interval's key.
     * _State change_: when a process goes from one state to another,
       an interval is created.
     * _"Find one" query_: find the state of a given process at a given time.
     * _"Find all" query_: find all states of all processes at a given time.
   * **Shipped packages tracking**
-    * _Categories_: individual shipped packages.
+    * _Keys_: individual shipped packages.
     * _Interval payload_: location of a package associated with the
-      interval's category ID.
+      interval's key.
     * _State change_: when a package is transfered from one location to
       another (collection to truck, truck to customs, truck to exchange,
       exchange to truck, truck to post office, delivery, etc.), an interval
@@ -152,10 +152,10 @@ Here are a few possible use cases that make this obvious:
     * _"Find one" query_: find the location of a given package at a given time.
     * _"Find all" query_: find all locations of all packages at a given time.
   * **Meteorology**
-    * _Categories_: individual meteorological stations.
+    * _Keys_: individual meteorological stations.
     * _Interval payload_: meteorological status (condition, pressure,
       temperature, visibility, humidity, wind, etc.) of a station associated
-      with interval's category ID.
+      with interval's key.
     * _State change_: when a station detects a meteorological change,
       an interval is created.
     * _"Find one" query_: find the meteorological status of a given station

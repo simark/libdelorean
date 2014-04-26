@@ -56,22 +56,22 @@ public:
      *
      * @param begin Begin timestamp
      * @param end   End timestamp
-     * @param catId Category ID
+     * @param key   Key
      * @param type  Type
      */
     AbstractInterval(timestamp_t begin, timestamp_t end,
-                     interval_cat_id_t catId, interval_type_t type);
+                     interval_key_t key, interval_type_t type);
 
     /**
      * Builds an abstract interval with a standard type.
      *
      * @param begin Begin timestamp
      * @param end   End timestamp
-     * @param catId Category ID
+     * @param key   Key
      * @param type  Standard type
      */
     AbstractInterval(timestamp_t begin, timestamp_t end,
-                     interval_cat_id_t catId, StandardIntervalType type);
+                     interval_key_t key, StandardIntervalType type);
 
     virtual ~AbstractInterval();
 
@@ -147,13 +147,13 @@ public:
     }
 
     /**
-     * Returns the category ID.
+     * Returns the key.
      *
-     * @returns Category ID
+     * @returns Key
      */
-    interval_cat_id_t getCatId() const
+    interval_key_t getKey() const
     {
-        return _catId;
+        return _key;
     }
 
     /**
@@ -215,8 +215,8 @@ private:
     // type
     interval_type_t _type;
 
-    // category ID
-    interval_cat_id_t _catId;
+    // key
+    interval_key_t _key;
 };
 
 #endif // _ABSTRACTINTERVAL_HPP

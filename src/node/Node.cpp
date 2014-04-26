@@ -127,7 +127,7 @@ bool Node::findAll(timestamp_t ts, IntervalJar& intervals) const
     return found;
 }
 
-AbstractInterval::SP Node::findOne(timestamp_t ts, interval_cat_id_t catId) const
+AbstractInterval::SP Node::findOne(timestamp_t ts, interval_key_t key) const
 {
     // fast path when there's no interval
     if (_intervals.empty()) {
@@ -142,7 +142,7 @@ AbstractInterval::SP Node::findOne(timestamp_t ts, interval_cat_id_t catId) cons
     for (auto it = getFirstItForTs(ts); it != _intervals.end(); it++) {
         auto interval = *it;
 
-        if (interval->getCatId() == catId && interval->getBegin() <= ts) {
+        if (interval->getKey() == key && interval->getBegin() <= ts) {
             return interval;
         }
     }

@@ -21,36 +21,36 @@ import sys
 
 
 class Interval:
-    def __init__(self, begin, end, cat_id, value, orig_line):
+    def __init__(self, begin, end, key, value, orig_line):
         self.begin = begin
         self.end = end
-        self.cat_id = cat_id
+        self.key = key
         self.value = value
         self.orig_line = orig_line
 
 
 def _check_overlaps(intervals):
-    # last end timestamps per category ID
+    # last end timestamps per key
     last_ends = {}
 
     for interval in intervals:
         begin = interval.begin
         end = interval.end
-        cat_id = interval.cat_id
-        if cat_id not in last_ends:
+        key = interval.key
+        if key not in last_ends:
             if int(begin) > int(end):
                 print('begin > end in following line:', file=sys.stderr)
                 print('  {}'.format(interval.orig_line), file=sys.stderr)
                 return False
-            last_ends[cat_id] = int(end)
+            last_ends[key] = int(end)
             continue
-        last_end = last_ends[cat_id]
+        last_end = last_ends[key]
         if last_end >= int(begin):
             print('the following line creates an overlapping interval:',
                   file=sys.stderr)
             print('  {}'.format(interval.orig_line), file=sys.stderr)
             return False
-        last_ends[cat_id] = int(end)
+        last_ends[key] = int(end)
 
     return True
 
@@ -68,15 +68,15 @@ def _parse_line(line):
     tokens = line.split(' ')
     begin = tokens[0]
     end = tokens[1]
-    cat_id = tokens[2]
+    key = tokens[2]
     value = ' '.join(tokens[3:])
 
-    return Interval(begin, end, cat_id, value, line)
+    return Interval(begin, end, key, value, line)
 
 
 def _format_interval_line(interval):
     fmt = '{} {} {} {}'
-    line = fmt.format(interval.begin, interval.end, interval.cat_id,
+    line = fmt.format(interval.begin, interval.end, interval.key,
                       interval.value)
 
     return line

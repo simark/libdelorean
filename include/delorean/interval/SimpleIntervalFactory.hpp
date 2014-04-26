@@ -34,15 +34,15 @@ class SimpleIntervalFactory :
 {
 public:
     AbstractInterval::UP create(timestamp_t begin, timestamp_t end,
-                                interval_cat_id_t catId) const;
+                                interval_key_t key) const;
 };
 
 template<typename T>
 AbstractInterval::UP SimpleIntervalFactory<T>::create(timestamp_t begin,
                                                       timestamp_t end,
-                                                      interval_cat_id_t catId) const
+                                                      interval_key_t key) const
 {
-    auto intervalPtr = new T {begin, end, catId};
+    auto intervalPtr = new T {begin, end, key};
     auto intervalUP = AbstractInterval::UP {intervalPtr};
 
     return std::move(intervalUP);

@@ -38,11 +38,11 @@ public:
     typedef std::unique_ptr<NullInterval> UP;
 
 public:
-    NullInterval(timestamp_t begin, timestamp_t end, interval_cat_id_t catId) :
+    NullInterval(timestamp_t begin, timestamp_t end, interval_key_t key) :
         AbstractInterval {
             begin,
             end,
-            catId,
+            key,
             StandardIntervalType::TNULL
         }
     {

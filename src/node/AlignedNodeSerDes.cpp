@@ -122,7 +122,7 @@ Node::UP AlignedNodeSerDes::deserializeNode(const std::uint8_t* headPtr,
         // create interval
         auto interval = this->createInterval(intervalHeader.begin,
                                              intervalHeader.end,
-                                             intervalHeader.getCatId(),
+                                             intervalHeader.getKey(),
                                              intervalHeader.getType());
 
         // deserialize variable data

@@ -48,14 +48,14 @@ public:
 
     /**
      * Finds a single interval in the history intersecting \p ts and matching
-     * category ID \p catId.
+     * key \p key.
      *
      * @param ts    Timestamp
-     * @param catId Category ID
+     * @param key   Key
      * @returns     Shared pointer to matching interval or \a nullptr
      */
     virtual AbstractInterval::SP findOne(timestamp_t ts,
-                                         interval_cat_id_t catId) const = 0;
+                                         interval_key_t key) const = 0;
 };
 
 #endif // _IHISTORYSOURCE_HPP

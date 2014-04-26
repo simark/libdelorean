@@ -26,12 +26,12 @@
 #include <delorean/ex/InvalidIntervalArguments.hpp>
 
 AbstractInterval::AbstractInterval(timestamp_t begin, timestamp_t end,
-                                   interval_cat_id_t catId,
+                                   interval_key_t key,
                                    interval_type_t type) :
     _begin {begin},
     _end {end},
     _type {type},
-    _catId {catId}
+    _key {key}
 {
     // check range
     if (begin > end) {
@@ -40,12 +40,12 @@ AbstractInterval::AbstractInterval(timestamp_t begin, timestamp_t end,
 }
 
 AbstractInterval::AbstractInterval(timestamp_t begin, timestamp_t end,
-                                   interval_cat_id_t catId,
+                                   interval_key_t key,
                                    StandardIntervalType type) :
     AbstractInterval {
         begin,
         end,
-        catId,
+        key,
         static_cast<interval_type_t>(type)
     }
 {

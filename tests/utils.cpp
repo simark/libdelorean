@@ -65,10 +65,10 @@ void getIntervalsFromTextFile(const bfs::path& path, IntervalJar& jar)
         std::vector<std::string> parts;
         balgo::split(parts, line, balgo::is_space(), boost::token_compress_on);
 
-        // read range and category ID
+        // read range and key
         timestamp_t begin = static_cast<timestamp_t>(std::stoll(parts[0]));
         timestamp_t end = static_cast<timestamp_t>(std::stoll(parts[1]));
-        interval_cat_id_t catId = static_cast<interval_cat_id_t>(std::stoul(parts[2]));
+        interval_key_t key = static_cast<interval_key_t>(std::stoul(parts[2]));
 
         // read string value
         std::string value;
@@ -82,7 +82,7 @@ void getIntervalsFromTextFile(const bfs::path& path, IntervalJar& jar)
         }
 
         // create string interval
-        StringInterval::SP interval {new StringInterval {begin, end, catId}};
+        StringInterval::SP interval {new StringInterval {begin, end, key}};
         interval->setValue(value);
 
         // add to jar

@@ -132,7 +132,7 @@ void AlignedNodeSerDesTest::testSerializeDeserialize()
         CPPUNIT_ASSERT_EQUAL(origInterval.getType(), deserStrInterval.getType());
         CPPUNIT_ASSERT_EQUAL(origInterval.getBegin(), deserStrInterval.getBegin());
         CPPUNIT_ASSERT_EQUAL(origInterval.getEnd(), deserStrInterval.getEnd());
-        CPPUNIT_ASSERT_EQUAL(origInterval.getCatId(), deserStrInterval.getCatId());
+        CPPUNIT_ASSERT_EQUAL(origInterval.getKey(), deserStrInterval.getKey());
         CPPUNIT_ASSERT_EQUAL(origInterval.getValue(), deserStrInterval.getValue());
     }
 }

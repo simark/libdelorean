@@ -2,20 +2,20 @@
 # Source: Wikipedia
 # Compiled by: Philippe Proulx <eepp.ca>
 
-# +---------+------------------------------------------+
-# | Cat. ID | State/role                               |
-# +---------+------------------------------------------+
-# | 1       | USA presidents                           |
-# | 2       | Canada prime ministers                   |
-# | 3       | Québec (Canada province) prime ministers |
-# | 4       | United Kingdom prime ministers           |
-# | 5       | Russia/SFSR leaders/presidents           |
-# | 6       | France presidents                        |
-# | 7       | Germany chancellors                      |
-# | 8       | Australia prime ministers                |
-# +---------+------------------------------------------+
+# +-----+------------------------------------------+
+# | Key | State/role                               |
+# +-----+------------------------------------------+
+# | 1   | USA presidents                           |
+# | 2   | Canada prime ministers                   |
+# | 3   | Québec (Canada province) prime ministers |
+# | 4   | United Kingdom prime ministers           |
+# | 5   | Russia/SFSR leaders/presidents           |
+# | 6   | France presidents                        |
+# | 7   | Germany chancellors                      |
+# | 8   | Australia prime ministers                |
+# +-----+------------------------------------------+
 
-# Line format: <begin> <end> <category ID (see table above)> <head of state>
+# Line format: <begin> <end> <key (see table above)> <head of state>
 # Date format: <4-digit year><2-digit month><2-digit day>
 
 # USA
