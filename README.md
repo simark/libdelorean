@@ -102,6 +102,10 @@ getting back a list of all intervals intersecting this timestamp. You may
 also find a single interval intersecting a given timestamp and matching
 a given key.
 
+Here's a figure summarizing all this:
+
+![libdelorean concepts](docs/concepts.png)
+
 
 use cases
 ---------
