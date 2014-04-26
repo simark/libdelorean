@@ -29,17 +29,17 @@ CPPUNIT_TEST_SUITE_REGISTRATION(AlignedNodeSerDesTest);
 void AlignedNodeSerDesTest::testSerializeDeserialize()
 {
     // create intervals (important time periods in Africa)
-    StringInterval::SP interval1 {new StringInterval(-3000, -2000, 1)};
-    StringInterval::SP interval2 {new StringInterval(-1999, -1300, 2)};
-    StringInterval::SP interval3 {new StringInterval(-1299, -1070, 3)};
-    StringInterval::SP interval4 {new StringInterval(-305, -30, 4)};
-    StringInterval::SP interval5 {new StringInterval(-29, 390, 5)};
-    StringInterval::SP interval6 {new StringInterval(391, 900, 6)};
-    StringInterval::SP interval7 {new StringInterval(909, 1171, 7)};
-    StringInterval::SP interval8 {new StringInterval(1172, 1250, 8)};
-    StringInterval::SP interval9 {new StringInterval(1251, 1517, 9)};
-    StringInterval::SP interval10 {new StringInterval(1518, 1867, 10)};
-    StringInterval::SP interval11 {new StringInterval(1868, 1914, 11)};
+    StringInterval::SP interval1 {new StringInterval {-3000, -2000, 1}};
+    StringInterval::SP interval2 {new StringInterval {-1999, -1300, 2}};
+    StringInterval::SP interval3 {new StringInterval {-1299, -1070, 3}};
+    StringInterval::SP interval4 {new StringInterval {-305, -30, 4}};
+    StringInterval::SP interval5 {new StringInterval {-29, 390, 5}};
+    StringInterval::SP interval6 {new StringInterval {391, 900, 6}};
+    StringInterval::SP interval7 {new StringInterval {909, 1171, 7}};
+    StringInterval::SP interval8 {new StringInterval {1172, 1250, 8}};
+    StringInterval::SP interval9 {new StringInterval {1251, 1517, 9}};
+    StringInterval::SP interval10 {new StringInterval {1518, 1867, 10}};
+    StringInterval::SP interval11 {new StringInterval {1868, 1914, 11}};
     interval1->setValue("Old Kingdom");
     interval2->setValue("Middle Kingdom");
     interval3->setValue("New Kingdom");
@@ -53,7 +53,7 @@ void AlignedNodeSerDesTest::testSerializeDeserialize()
     interval11->setValue("Khedivate");
 
     // create aligned serializer/deserializer
-    std::unique_ptr<AlignedNodeSerDes> serdes {new AlignedNodeSerDes()};
+    std::unique_ptr<AlignedNodeSerDes> serdes {new AlignedNodeSerDes};
 
     // create node
     Node::UP node {new Node {
