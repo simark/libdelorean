@@ -109,11 +109,6 @@ protected:
         return (ts >= _begin && ts <= _end);
     }
 
-    std::vector<Node::SP>& getLatestBranch()
-    {
-        return _latestBranch;
-    }
-
     void setNodeSerDes(AbstractNodeSerDes::UP serdes)
     {
         _nodeSerdes = std::move(serdes);
@@ -142,7 +137,6 @@ private:
     std::size_t _nodeSize;
     std::size_t _nodeCount;
     node_seq_t _rootNodeSeqNumber;
-    std::vector<Node::SP> _latestBranch;
     AbstractNodeSerDes::UP _nodeSerdes;
 };
 

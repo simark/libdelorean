@@ -108,6 +108,7 @@ private:
 private:
     boost::filesystem::ofstream _outputStream;
     std::unique_ptr<std::uint8_t[]> _nodeBuf;
+    std::vector<Node::SP> _latestBranch;
 };
 
 #endif // _HISTORYFILESINK_HPP
