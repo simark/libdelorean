@@ -5,6 +5,8 @@ you're gonna see some serious shit._
 libdelorean
 ===========
 
+[![Build Status](https://travis-ci.org/eepp/libdelorean.svg?branch=master)](https://travis-ci.org/eepp/libdelorean)
+
 ***libdelorean*** is a cross-platform C++11 library that allows you to record
 and query a history of intervals. Like Doc Brown's
 [famous DeLorean](http://en.wikipedia.org/wiki/DeLorean_time_machine),

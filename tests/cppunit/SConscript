@@ -40,7 +40,7 @@ sources = [
 for base, files in subs:
     sources += [os.path.join('tests', base, f) for f in files]
 
-env = root_env.Copy()
+env = root_env.Clone()
 env.Append(CPPPATH='#/tests')
 testall = env.Program(target=target, source=sources, LIBS=libs,
                       LIBPATH='#/src')

@@ -23,6 +23,8 @@ custom_env = {
 root_env = Environment(CCFLAGS=ccflags,
                        ENV=custom_env,
                        CPPPATH=['#/include'])
+if 'CXX' in os.environ:
+    root_env['CXX'] = os.environ['CXX']
 Export('root_env')
 
 lib = SConscript(os.path.join('src', 'SConscript'))
