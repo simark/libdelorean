@@ -105,7 +105,7 @@ void AlignedNodeSerDesTest::testSerializeDeserialize()
     CPPUNIT_ASSERT(!node->isFull());
     CPPUNIT_ASSERT_EQUAL(node->getSeqNumber(), static_cast<node_seq_t>(5));
     CPPUNIT_ASSERT_EQUAL(node->getParentSeqNumber(), Node::ROOT_PARENT_SEQ_NUMBER());
-    CPPUNIT_ASSERT(node->isDone());
+    CPPUNIT_ASSERT(node->isClosed());
     CPPUNIT_ASSERT(!node->isExtended());
     CPPUNIT_ASSERT_EQUAL(node->getMaxChildren(), static_cast<std::size_t>(4));
 

@@ -242,13 +242,13 @@ public:
     }
 
     /**
-     * Returns whether this node is done (finished) or not.
+     * Returns whether this node is closed (finished) or not.
      *
-     * @returns True if this node is done
+     * @returns True if this node is closed
      */
-    bool isDone() const
+    bool isClosed() const
     {
-        return _isDone;
+        return _isClosed;
     }
 
     /**
@@ -325,7 +325,7 @@ private:
     node_seq_t _parentSeqNumber;
 
     // flags
-    bool _isDone;
+    bool _isClosed;
     bool _isExtended;
 
     // jar of intervals

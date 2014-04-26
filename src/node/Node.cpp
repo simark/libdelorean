@@ -31,7 +31,7 @@ Node::Node(std::size_t size, std::size_t maxChildren, node_seq_t seqNumber,
     _end {begin},
     _seqNumber {seqNumber},
     _parentSeqNumber {parentSeqNumber},
-    _isDone {false},
+    _isClosed {false},
     _isExtended {false},
     _maxChildren {maxChildren},
     _curHeaderSize {0},
@@ -84,7 +84,7 @@ bool Node::intervalFits(const AbstractInterval& interval)
 void Node::close(timestamp_t end)
 {
     // already closed?
-    if (_isDone) {
+    if (_isClosed) {
         return;
     }
 
@@ -93,7 +93,7 @@ void Node::close(timestamp_t end)
         throw TimestampOutOfRange {_begin, _end, end};
     }
 
-	_isDone = true;
+	_isClosed = true;
 	_end = end;
 
     // end changed: recompute header size

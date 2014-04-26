@@ -88,8 +88,8 @@ void NodeTest::testConstructorAndAttributes()
     // end should be the same as begin now
     CPPUNIT_ASSERT_EQUAL(node->getEnd(), static_cast<timestamp_t>(1534));
 
-    // not done
-    CPPUNIT_ASSERT(!node->isDone());
+    // not closed
+    CPPUNIT_ASSERT(!node->isClosed());
 
     // not extended
     CPPUNIT_ASSERT(!node->isExtended());
@@ -118,7 +118,7 @@ void NodeTest::testConstructorAndAttributes()
     // this should work, change the end timestamp and mark it done
     node->close(1608);
     CPPUNIT_ASSERT_EQUAL(node->getEnd(), static_cast<timestamp_t>(1608));
-    CPPUNIT_ASSERT(node->isDone());
+    CPPUNIT_ASSERT(node->isClosed());
 }
 
 void NodeTest::testAddInterval()

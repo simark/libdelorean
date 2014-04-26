@@ -62,7 +62,7 @@ private:
         std::uint32_t intervalCount;
 
         enum {
-            FLAG_DONE_MASK = 1,
+            FLAG_CLOSED_MASK = 1,
             FLAG_EXTENDED_MASK = 2,
         };
 
@@ -73,11 +73,11 @@ private:
             return static_cast<std::size_t>(childrenCount);
         }
 
-        bool isDone() const
+        bool isClosed() const
         {
-            auto done = childrenCountFlags & FLAG_DONE_MASK;
+            auto closed = childrenCountFlags & FLAG_CLOSED_MASK;
 
-            return done == FLAG_DONE_MASK;
+            return closed == FLAG_CLOSED_MASK;
         }
 
         bool isExtended() const
@@ -97,10 +97,10 @@ private:
 
             std::uint32_t childrenCount = static_cast<uint32_t>(node.getChildrenCount());
             childrenCount <<= 8;
-            std::uint32_t isDone = node.isDone() ? FLAG_DONE_MASK : 0;
+            std::uint32_t isClosed = node.isClosed() ? FLAG_CLOSED_MASK : 0;
             std::uint32_t isExtended = node.isExtended() ? FLAG_EXTENDED_MASK : 0;
 
-            childrenCountFlags = childrenCount | isDone | isExtended;
+            childrenCountFlags = childrenCount | isClosed | isExtended;
         }
     };
 
