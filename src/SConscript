@@ -23,6 +23,8 @@ interval_sources = [
 node_sources = [
     'AbstractNodeSerDes.cpp',
     'AlignedNodeSerDes.cpp',
+    'AbstractNodeCache.cpp',
+    'DirectMappedNodeCache.cpp',
     'Node.cpp',
 ]
 

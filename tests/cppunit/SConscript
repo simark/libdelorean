@@ -21,6 +21,7 @@ interval_tests = [
 node_tests = [
     'NodeTest.cpp',
     'AlignedNodeSerDesTest.cpp',
+    'DirectMappedNodeCacheTest.cpp',
 ]
 history_tests = [
     'HistoryFileTest.cpp',
