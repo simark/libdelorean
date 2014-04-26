@@ -53,8 +53,8 @@ public:
 
 public:
     /**
-     * Builds a history file sink. The file is closed and need to be opened
-     * with proper parameters in order to start adding intervals.
+     * Builds a history file sink. The file is initially closed and needs
+     * to be opened with proper parameters in order to start adding intervals.
      */
     HistoryFileSink();
 
