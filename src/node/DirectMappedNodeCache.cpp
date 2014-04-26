@@ -38,7 +38,7 @@ DirectMappedNodeCache::DirectMappedNodeCache(std::size_t size,
     _cache.resize(size);
 }
 
-Node::SP DirectMappedNodeCache::getNode(node_seq_t seqNumber)
+Node::SP DirectMappedNodeCache::getNodeImpl(node_seq_t seqNumber)
 {
     // cache position for sequence number
     auto pos = cachePosForSeqNumber(seqNumber);
@@ -60,7 +60,7 @@ Node::SP DirectMappedNodeCache::getNode(node_seq_t seqNumber)
     return node;
 }
 
-bool DirectMappedNodeCache::nodeIsCached(node_seq_t seqNumber) const
+bool DirectMappedNodeCache::nodeIsCachedImpl(node_seq_t seqNumber) const
 {
     const auto& node = _cache.at(this->cachePosForSeqNumber(seqNumber));
 
@@ -71,7 +71,7 @@ bool DirectMappedNodeCache::nodeIsCached(node_seq_t seqNumber) const
     return node->getSeqNumber() == seqNumber;
 }
 
-void DirectMappedNodeCache::invalidate()
+void DirectMappedNodeCache::invalidateImpl()
 {
     for (auto it = _cache.begin(); it != _cache.end(); ++it) {
         *it = nullptr;

@@ -45,26 +45,14 @@ public:
      */
     DirectMappedNodeCache(std::size_t size, GetNodeFromOwnerCb getNodeCb);
 
-    /**
-     * @see AbstractNodeCache::getNode(node_seq_t seqNumber);
-     */
-    Node::SP getNode(node_seq_t seqNumber);
-
-    /**
-     * @see AbstractNodeCache::nodeIsCached(node_seq_t seqNumber) const;
-     */
-    bool nodeIsCached(node_seq_t seqNumber) const;
-
-    /**
-     * @see AbstractNodeCache::invalidate()
-     */
-    void invalidate();
-
 protected:
     std::size_t cachePosForSeqNumber(node_seq_t seqNumber) const
     {
         return static_cast<std::size_t>(seqNumber) & (this->getSize() - 1);
     }
+    Node::SP getNodeImpl(node_seq_t seqNumber);
+    bool nodeIsCachedImpl(node_seq_t seqNumber) const;
+    void invalidateImpl();
 
 private:
     // cache

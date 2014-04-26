@@ -56,7 +56,10 @@ public:
      * @param seqNumber Sequence number of node to get
      * @returns         Retrieved node or \a nullptr if not found
      */
-    virtual Node::SP getNode(node_seq_t seqNumber) = 0;
+    Node::SP getNode(node_seq_t seqNumber)
+    {
+        return this->getNodeImpl(seqNumber);
+    }
 
     /**
      * Checks whether a node is cached or not.
@@ -64,12 +67,18 @@ public:
      * @param seqNumber Sequence number of node to check
      * @returns         True if requested node is cached
      */
-    virtual bool nodeIsCached(node_seq_t seqNumber) const = 0;
+    bool nodeIsCached(node_seq_t seqNumber) const
+    {
+        return this->nodeIsCachedImpl(seqNumber);
+    }
 
     /**
      * Invalidates the cache.
      */
-    virtual void invalidate() = 0;
+    void invalidate()
+    {
+        this->invalidate();
+    }
 
     /**
      * Returns the size of this cache.
@@ -93,6 +102,10 @@ protected:
      * @returns         Node or \a nullptr if not found
      */
     Node::SP getNodeFromOwner(node_seq_t seqNumber);
+
+    virtual Node::SP getNodeImpl(node_seq_t seqNumber) = 0;
+    virtual bool nodeIsCachedImpl(node_seq_t seqNumber) const = 0;
+    virtual void invalidateImpl() = 0;
 
 private:
     // number of nodes that can be contained in this cache
