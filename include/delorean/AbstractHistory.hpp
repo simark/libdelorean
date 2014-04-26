@@ -60,6 +60,16 @@ protected:
         _end = end;
     }
 
+    timestamp_t getLastIntervalEnd() const
+    {
+        return _lastIntervalEnd;
+    }
+
+    void setLastIntervalEnd(timestamp_t end)
+    {
+        _lastIntervalEnd = end;
+    }
+
     std::size_t getMaxChildren() const
     {
         return _maxChildren;
@@ -132,6 +142,7 @@ protected:
 
 private:
     timestamp_t _end;
+    timestamp_t _lastIntervalEnd;
     timestamp_t _begin;
     std::size_t _maxChildren;
     std::size_t _nodeSize;

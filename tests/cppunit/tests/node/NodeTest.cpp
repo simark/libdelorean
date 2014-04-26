@@ -137,17 +137,10 @@ void NodeTest::testAddInterval()
     // create 3 intervals
     IntInterval::SP interval1 {new IntInterval(1602, 2000, 1)};
     IntInterval::SP interval2 {new IntInterval(2000, 3000, 1)};
-    IntInterval::SP interval3 {new IntInterval(1988, 2500, 1)};
 
-    // range check when adding
+    // add intervals
     node->addInterval(interval1);
     node->addInterval(interval2);
-    try {
-        node->addInterval(interval3);
-        CPPUNIT_FAIL("Adding interval to node not in ascending order of end timestamp");
-    } catch (const TimestampOutOfRange& ex) {
-        CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(2500));
-    }
 
     // there are 2 intervals now
     CPPUNIT_ASSERT_EQUAL(node->getIntervalCount(), static_cast<std::size_t>(2));
@@ -223,20 +216,6 @@ void NodeTest::testFindOne()
     node->addInterval(interval5);
     node->addInterval(interval6);
 
-    // range check
-    try {
-        node->findOne(1533, 1);
-        CPPUNIT_FAIL("Querying node before begin timestamp");
-    } catch (const TimestampOutOfRange& ex) {
-        CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1533));
-    }
-    try {
-        node->findOne(1946, 1);
-        CPPUNIT_FAIL("Querying node after end timestamp");
-    } catch (const TimestampOutOfRange& ex) {
-        CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1946));
-    }
-
     // working searches
     AbstractInterval::SP result {};
 
@@ -299,20 +278,6 @@ void NodeTest::testFindAll()
 
     // initiate an interval jar
     std::unique_ptr<IntervalJar> jar {new IntervalJar()};
-
-    // range check
-    try {
-        node->findAll(1533, *jar);
-        CPPUNIT_FAIL("Querying node before begin timestamp");
-    } catch (const TimestampOutOfRange& ex) {
-        CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1533));
-    }
-    try {
-        node->findAll(1946, *jar);
-        CPPUNIT_FAIL("Querying node after end timestamp");
-    } catch (const TimestampOutOfRange& ex) {
-        CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1946));
-    }
 
     // working searches
     CPPUNIT_ASSERT(node->findAll(1534, *jar));

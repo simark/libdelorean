@@ -54,12 +54,10 @@ void Node::computeHeaderSize()
 
 void Node::addInterval(AbstractInterval::SP interval)
 {
-    if (!_intervals.empty()) {
-        // make sure the insertion is in ascending order of end time
-        if (interval->getEnd() < _end) {
-            throw TimestampOutOfRange {_begin, _end, interval->getEnd()};
-        }
-    }
+    /* We don't perform any range check here. Since a node is not exposed
+     * to libdelorean's end user, the history should perform that check
+     * only once.
+     */
 
     // add interval to jar
     _intervals.push_back(interval);
@@ -104,14 +102,14 @@ void Node::close(timestamp_t end)
 
 bool Node::findAll(timestamp_t ts, IntervalJar& intervals) const
 {
+    /* We don't perform any range check here. Since a node is not exposed
+     * to libdelorean's end user, the history should perform that check
+     * only once.
+     */
+
     // fast path when there's no interval
     if (_intervals.empty()) {
         return false;
-    }
-
-    // range check
-    if (ts < _begin || ts > _end) {
-        throw TimestampOutOfRange {_begin, _end, ts};
     }
 
     auto found = false;
@@ -129,14 +127,14 @@ bool Node::findAll(timestamp_t ts, IntervalJar& intervals) const
 
 AbstractInterval::SP Node::findOne(timestamp_t ts, interval_key_t key) const
 {
+    /* We don't perform any range check here. Since a node is not exposed
+     * to libdelorean's end user, the history should perform that check
+     * only once.
+     */
+
     // fast path when there's no interval
     if (_intervals.empty()) {
         return nullptr;
-    }
-
-    // range check
-    if (ts < _begin || ts > _end) {
-        throw TimestampOutOfRange {_begin, _end, ts};
     }
 
     for (auto it = getFirstItForTs(ts); it != _intervals.end(); it++) {

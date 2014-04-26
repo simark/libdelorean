@@ -31,6 +31,7 @@
 #include <delorean/node/AlignedNodeSerDes.hpp>
 #include <delorean/ex/IO.hpp>
 #include <delorean/ex/IntervalOutOfRange.hpp>
+#include <delorean/ex/TimestampOutOfRange.hpp>
 #include <delorean/ex/UnknownNodeSerDesType.hpp>
 #include <delorean/BasicTypes.hpp>
 
@@ -78,6 +79,7 @@ void HistoryFileSink::open(const fs::path& path, std::size_t nodeSize,
     this->setMaxChildren(maxChildren);
     this->setBegin(begin);
     this->setEnd(begin);
+    this->setLastIntervalEnd(begin);
     this->setNodeCount(0);
     this->setOpened(true);
 
@@ -141,10 +143,22 @@ void HistoryFileSink::addInterval(AbstractInterval::SP interval)
 
     // check range
     if (interval->getBegin() < this->getBegin()) {
-        throw IntervalOutOfRange {*interval, this->getBegin(), this->getEnd()};
+        throw IntervalOutOfRange {
+            *interval,
+            this->getBegin(),
+            this->getLastIntervalEnd()
+        };
+    }
+    if (interval->getEnd() < this->getLastIntervalEnd()) {
+        throw TimestampOutOfRange {
+            this->getBegin(),
+            this->getLastIntervalEnd(),
+            interval->getEnd()
+        };
     }
 
-    // update tree end if needed
+    // update end times
+    this->setLastIntervalEnd(interval->getEnd());
     if (interval->getEnd() > this->getEnd()) {
         this->setEnd(interval->getEnd());
     }
