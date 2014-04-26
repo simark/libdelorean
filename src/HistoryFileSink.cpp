@@ -35,13 +35,13 @@
 #include <delorean/ex/UnknownNodeSerDesType.hpp>
 #include <delorean/BasicTypes.hpp>
 
-namespace fs = boost::filesystem;
+namespace bfs = boost::filesystem;
 
 HistoryFileSink::HistoryFileSink()
 {
 }
 
-void HistoryFileSink::open(const fs::path& path, std::size_t nodeSize,
+void HistoryFileSink::open(const bfs::path& path, std::size_t nodeSize,
                            std::size_t maxChildren, timestamp_t begin,
                            NodeSerDesType serdesType)
 {
