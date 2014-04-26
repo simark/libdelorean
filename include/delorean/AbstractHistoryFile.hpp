@@ -21,6 +21,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/utility.hpp>
 
+#include <delorean/AbstractHistory.hpp>
 #include <delorean/BasicTypes.hpp>
 
 /**
@@ -32,6 +33,7 @@
  * @author Philippe Proulx
  */
 class AbstractHistoryFile :
+    public AbstractHistory,
     boost::noncopyable
 {
 public:

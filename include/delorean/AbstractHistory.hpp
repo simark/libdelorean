@@ -26,12 +26,6 @@
 /**
  * Base class for all histories.
  *
- * You should \a not inherit this class directly and use IHistorySink
- * and IHistorySource respectively to implement a history sink and
- * source.
- *
- * @see IHistorySink
- * @see IHistorySource
  * @author Philippe Proulx
  */
 class AbstractHistory

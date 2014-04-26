@@ -24,12 +24,12 @@
 /**
  * History sink interface.
  *
- * All history sinks must inherit this interface.
+ * All history sinks must inherit this interface to be qualified as
+ * legitimate history sinks.
  *
  * @author Philippe Proulx
  */
-class IHistorySink :
-    public AbstractHistory
+class IHistorySink
 {
 public:
     /**

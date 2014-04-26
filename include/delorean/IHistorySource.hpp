@@ -28,12 +28,12 @@
 /**
  * History source interface.
  *
- * All history sources must inherit this interface.
+ * All history sources must inherit this interface to be qualified as
+ * legitimate history sources.
  *
  * @author Philippe Proulx
  */
-class IHistorySource :
-    public AbstractHistory
+class IHistorySource
 {
 public:
     /**
