@@ -36,9 +36,9 @@ public:
 
 public:
     /**
-     * Builds an abstract node cache. The \p getNodeCb callback will be
-     * used by the cache to get a node from its owner when it cannot be
-     * found within the cache.
+     * Builds an abstract node cache. The \p getNodeFromOwnerCb callback
+     * will be used by the cache to get a node from its owner when it
+     * cannot be found within the cache.
      *
      * The \p getNodeFromOwnerCb callback must return \a nullptr if
      * the requested node cannot be found.

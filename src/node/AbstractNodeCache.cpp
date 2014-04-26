@@ -22,9 +22,9 @@
 #include <delorean/BasicTypes.hpp>
 
 AbstractNodeCache::AbstractNodeCache(std::size_t size,
-                                     AbstractNodeCache::GetNodeFromOwnerCb getNodeCb) :
+                                     AbstractNodeCache::GetNodeFromOwnerCb getNodeFromOwnerCb) :
     _size {size},
-    _getNodeFromOwnerCb {getNodeCb}
+    _getNodeFromOwnerCb {getNodeFromOwnerCb}
 {
 }
 
