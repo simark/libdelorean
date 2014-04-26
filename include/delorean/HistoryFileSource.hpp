@@ -20,10 +20,11 @@
 
 #include <vector>
 #include <fstream>
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 
-#include <delorean/AbstractFile.hpp>
+#include <delorean/AbstractHistoryFile.hpp>
 #include <delorean/IHistorySource.hpp>
+#include <delorean/node/AbstractNodeCache.hpp>
 #include <delorean/interval/IntervalJar.hpp>
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
@@ -36,10 +37,17 @@
  * @author Philippe Proulx
  */
 class HistoryFileSource :
-    public AbstractFile,
+    public AbstractHistoryFile,
     public IHistorySource
 {
 public:
+    /**
+     * Builds a history file source. The file is initially closed and needs
+     * to be opened with a valid path in order to start querying the
+     * history.
+     */
+    HistoryFileSource(std::shared_ptr<AbstractNodeCache> cache);
+
     virtual ~HistoryFileSource()
     {
         this->close();
@@ -48,7 +56,7 @@ public:
     /**
      * Opens the history file for reading.
      *
-     * @param path        Path to history file to be created
+     * @param path Path to history file to read
      */
     void open(const boost::filesystem::path& path);
 
@@ -67,13 +75,10 @@ public:
      */
     AbstractInterval::SP findOne(timestamp_t ts, interval_key_t key) const;
 
-protected:
-    bool findImpl(timestamp_t ts, IntervalJar& intervals) const;
-    AbstractInterval::SP findOneImpl(timestamp_t ts, interval_key_t key) const;
-
 private:
     boost::filesystem::ifstream _inputStream;
     std::unique_ptr<uint8_t[]> _nodeBuf;
+    std::shared_ptr<AbstractNodeCache> _cache;
 };
 
 #endif // _HISTORYFILESOURCE_HPP

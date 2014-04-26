@@ -12,6 +12,7 @@ main_sources = [
     'AbstractHistory.cpp',
     'AbstractHistoryFile.cpp',
     'HistoryFileSink.cpp',
+    'HistoryFileSource.cpp',
 ]
 ex_sources = [
     'UnknownIntervalType.cpp',
