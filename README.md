@@ -75,7 +75,7 @@ From a user's point of view, libdelorean involves the following concepts:
     * A **begin** timestamp (inclusive)
     * An **end** timestamp (inclusive)
     * A **key**. In a history (see below), two intervals having the same
-      _key_ cannot intersect. See the [use cases](#use-cases)
+      _key_ cannot overlap. See the [use cases](#use-cases)
       section for examples of what a key can be. A key is a unique numeric
       identifier for a set of related intervals (see it as the primary key
       of a given timeline).
@@ -106,6 +106,9 @@ Here's a figure summarizing all this:
 
 ![libdelorean concepts](docs/concepts.png)
 
+Individual ticks mark the begin/end timestamps of intervals. As you can see,
+gaps are allowed between intervals, but intervals having the same key (here
+the same color to simplify) cannot overlap.
 
 use cases
 ---------
