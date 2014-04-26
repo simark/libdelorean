@@ -121,7 +121,7 @@ Here are a few possible use cases that make this obvious:
 
   * **Persons in charge of multiple projects**
     * _Keys_: individual projects.
-    * _Interval payload_: name of the person in charge of a project
+    * _Interval value_: name of the person in charge of a project
       associated with the interval's key.
     * _State change_: when the charge of a given project is transfered from
       one person to another, an interval is created.
@@ -131,7 +131,7 @@ Here are a few possible use cases that make this obvious:
       given time.
   * **Musical composition**
     * _Keys_: individual instruments (or tracks).
-    * _Interval payload_: volume and notes of an instrument/track
+    * _Interval value_: volume and notes of an instrument/track
       associated with the interval's key.
     * _State change_: when an instrument stops playing a note, starts
       playing a new note or changes the volume of any note, an interval
@@ -142,14 +142,14 @@ Here are a few possible use cases that make this obvious:
       a given time.
   * **States of operating system processes**
     * _Keys_: individual OS processes.
-    * _Interval payload_: process state associated with the interval's key.
+    * _Interval value_: process state associated with the interval's key.
     * _State change_: when a process goes from one state to another,
       an interval is created.
     * _"Find one" query_: find the state of a given process at a given time.
     * _"Find all" query_: find all states of all processes at a given time.
   * **Shipped packages tracking**
     * _Keys_: individual shipped packages.
-    * _Interval payload_: location of a package associated with the
+    * _Interval value_: location of a package associated with the
       interval's key.
     * _State change_: when a package is transfered from one location to
       another (collection to truck, truck to customs, truck to exchange,
@@ -159,7 +159,7 @@ Here are a few possible use cases that make this obvious:
     * _"Find all" query_: find all locations of all packages at a given time.
   * **Meteorology**
     * _Keys_: individual meteorological stations.
-    * _Interval payload_: meteorological status (condition, pressure,
+    * _Interval value_: meteorological status (condition, pressure,
       temperature, visibility, humidity, wind, etc.) of a station associated
       with interval's key.
     * _State change_: when a station detects a meteorological change,
