@@ -58,13 +58,13 @@ protected:
     struct HistoryFileHeader
     {
         enum {
-            MAGIC = 0x21b4a980,
+            MAGIC_ALIGNED_NODE_SERDES = 0x21b4a980,
             SIZE = 4096,
             MAJOR = 1,
             MINOR = 0
         };
 
-        uint32_t magic = MAGIC;
+        uint32_t magic;
         uint16_t major = MAJOR;
         uint16_t minor = MINOR;
         uint32_t nodeSize;

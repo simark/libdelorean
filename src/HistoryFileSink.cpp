@@ -60,6 +60,7 @@ void HistoryFileSink::open(const fs::path& path, std::size_t nodeSize,
     if (serdesType == NodeSerDesType::ALIGNED) {
         AbstractNodeSerDes::UP nodeSerdes {new AlignedNodeSerDes {}};
         this->setNodeSerDes(std::move(nodeSerdes));
+        _magic = HistoryFileHeader::MAGIC_ALIGNED_NODE_SERDES;
     } else {
         throw UnknownNodeSerDesType(serdesType);
     }
@@ -97,6 +98,7 @@ void HistoryFileSink::writeHeader()
 
     // prepare header
     HistoryFileHeader header;
+    header.magic = static_cast<uint32_t>(_magic);
     header.nodeSize = this->getNodeSize();
     header.maxChildren = this->getMaxChildren();
     header.nodeCount = this->getNodeCount();
