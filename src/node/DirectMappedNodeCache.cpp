@@ -72,7 +72,7 @@ bool DirectMappedNodeCache::nodeIsCachedImpl(node_seq_t seqNumber) const
 
 void DirectMappedNodeCache::invalidateImpl()
 {
-    for (auto it = _cache.begin(); it != _cache.end(); ++it) {
-        *it = nullptr;
+    for (auto& node : _cache) {
+        node = nullptr;
     }
 }

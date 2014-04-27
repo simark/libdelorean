@@ -341,9 +341,8 @@ void HistoryFileSink::commitNode(Node& node)
 
 void HistoryFileSink::commitNodesDownFromIndex(std::size_t index)
 {
-    auto& lb = _latestBranch;
-    for (auto it = lb.begin() + index; it != lb.end(); ++it) {
-        this->commitNode(**it);
+    for (auto& nodeSp : _latestBranch) {
+        this->commitNode(*nodeSp);
     }
 }
 
