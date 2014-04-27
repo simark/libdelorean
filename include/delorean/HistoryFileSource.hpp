@@ -80,6 +80,7 @@ public:
 protected:
     void readHeader();
     Node::SP getNode(node_seq_t seqNumber);
+    Node::SP getRootNode();
 
 private:
     boost::filesystem::ifstream _inputStream;

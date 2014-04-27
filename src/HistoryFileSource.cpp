@@ -112,7 +112,30 @@ void HistoryFileSource::readHeader()
 
 Node::SP HistoryFileSource::getNode(node_seq_t seqNumber)
 {
-    return nullptr;
+    // make sure the node exists
+    if (seqNumber > this->getNodeCount()) {
+        return nullptr;
+    }
+
+    // seek input stream to the right offset
+    _inputStream.seekg(HistoryFileHeader::SIZE +
+                       this->getNodeSize() * seqNumber);
+
+    // read node bytes
+    _inputStream.read(reinterpret_cast<char*>(_nodeBuf.get()),
+                      this->getNodeSize());
+
+    // deserialize node into buffer
+    auto node = this->getNodeSerDes().deserializeNode(_nodeBuf.get(), this->getNodeSize(),
+                                                      this->getMaxChildren());
+    Node::SP nodeSp = std::move(node);
+
+    return nodeSp;
+}
+
+Node::SP HistoryFileSource::getRootNode()
+{
+    return this->getNode(this->getRootNodeSeqNumber());
 }
 
 bool HistoryFileSource::findAll(timestamp_t ts, IntervalJar& intervals) const
