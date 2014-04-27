@@ -80,7 +80,7 @@ void HistoryFileSink::open(const bfs::path& path, std::size_t nodeSize,
     this->setMaxChildren(maxChildren);
     this->setBegin(begin);
     this->setEnd(begin);
-    this->setLastIntervalEnd(begin);
+    _lastIntervalEnd = begin;
     this->setNodeCount(0);
     this->setOpened(true);
 
@@ -148,19 +148,19 @@ void HistoryFileSink::addInterval(AbstractInterval::SP interval)
         throw IntervalOutOfRange {
             *interval,
             this->getBegin(),
-            this->getLastIntervalEnd()
+            _lastIntervalEnd
         };
     }
-    if (interval->getEnd() < this->getLastIntervalEnd()) {
+    if (interval->getEnd() < _lastIntervalEnd) {
         throw TimestampOutOfRange {
             this->getBegin(),
-            this->getLastIntervalEnd(),
+            _lastIntervalEnd,
             interval->getEnd()
         };
     }
 
     // update end times
-    this->setLastIntervalEnd(interval->getEnd());
+    _lastIntervalEnd = interval->getEnd();
     if (interval->getEnd() > this->getEnd()) {
         this->setEnd(interval->getEnd());
     }
