@@ -126,7 +126,8 @@ Node::SP HistoryFileSource::getNode(node_seq_t seqNumber)
                       this->getNodeSize());
 
     // deserialize node into buffer
-    auto node = this->getNodeSerDes().deserializeNode(_nodeBuf.get(), this->getNodeSize(),
+    auto node = this->getNodeSerDes().deserializeNode(_nodeBuf.get(),
+                                                      this->getNodeSize(),
                                                       this->getMaxChildren());
     Node::SP nodeSp = std::move(node);
 
