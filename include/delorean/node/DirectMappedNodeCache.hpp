@@ -40,9 +40,8 @@ public:
      * Builds a direct mapped node cache. \p size must be a power of two.
      *
      * @param size      Size of cache (node count, power of two)
-     * @param getNodeCb Function called to get a node from the cache owner
      */
-    DirectMappedNodeCache(std::size_t size, GetNodeFromOwnerCb getNodeCb);
+    DirectMappedNodeCache(std::size_t size);
 
 protected:
     std::size_t cachePosForSeqNumber(node_seq_t seqNumber) const

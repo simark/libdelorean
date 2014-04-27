@@ -43,11 +43,22 @@ public:
      * the requested node cannot be found.
      *
      * @param size               Size of cache (node count)
-     * @param getNodeFromOwnerCb Callback to get a node from the cache owner
      */
-    AbstractNodeCache(std::size_t size, GetNodeFromOwnerCb getNodeFromOwnerCb);
+    AbstractNodeCache(std::size_t size);
 
     virtual ~AbstractNodeCache();
+
+    /**
+     * Sets the callback used by the node cache to get a node from its
+     * owner. The callback must return \a nullptr if the requested node
+     * cannot be found.
+     *
+     * @param getNodeFromOwnerCb Callback to get a node from the cache owner
+     */
+    void setGetNodeFromOwnerCb(GetNodeFromOwnerCb getNodeFromOwnerCb)
+    {
+        _getNodeFromOwnerCb = getNodeFromOwnerCb;
+    }
 
     /**
      * Returns a node with sequence number \p seqNumber from the cache.

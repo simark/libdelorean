@@ -23,9 +23,8 @@
 #include <delorean/node/Node.hpp>
 #include <delorean/BasicTypes.hpp>
 
-DirectMappedNodeCache::DirectMappedNodeCache(std::size_t size,
-                                             AbstractNodeCache::GetNodeFromOwnerCb getNodeCb) :
-    AbstractNodeCache {size, getNodeCb}
+DirectMappedNodeCache::DirectMappedNodeCache(std::size_t size) :
+    AbstractNodeCache {size}
 {
     // power of two?
     if ((size & (size - 1)) != 0) {

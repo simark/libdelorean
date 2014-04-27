@@ -46,7 +46,7 @@ public:
      * to be opened with a valid path in order to start querying the
      * history.
      */
-    HistoryFileSource(std::shared_ptr<AbstractNodeCache> cache);
+    HistoryFileSource();
 
     virtual ~HistoryFileSource()
     {
@@ -56,9 +56,11 @@ public:
     /**
      * Opens the history file for reading.
      *
-     * @param path Path to history file to read
+     * @param path      Path to history file to read
+     * @param nodeCache Specific node cache to use or \a nullptr for no cache
      */
-    void open(const boost::filesystem::path& path);
+    void open(const boost::filesystem::path& path,
+              std::shared_ptr<AbstractNodeCache> nodeCache = nullptr);
 
     /**
      * Closes the history file.
@@ -75,10 +77,14 @@ public:
      */
     AbstractInterval::SP findOne(timestamp_t ts, interval_key_t key) const;
 
+protected:
+    void readHeader();
+    Node::SP getNode(node_seq_t seqNumber);
+
 private:
     boost::filesystem::ifstream _inputStream;
     std::unique_ptr<uint8_t[]> _nodeBuf;
-    std::shared_ptr<AbstractNodeCache> _cache;
+    std::shared_ptr<AbstractNodeCache> _nodeCache;
 };
 
 #endif // _HISTORYFILESOURCE_HPP

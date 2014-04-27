@@ -33,10 +33,7 @@ void DirectMappedNodeCacheTest::testConstructorAndAttributes()
     try {
         std::unique_ptr<DirectMappedNodeCache> cache {
             new DirectMappedNodeCache {
-                205,
-                [] (node_seq_t seqNumber) {
-                    return nullptr;
-                }
+                205
             }
         };
         CPPUNIT_FAIL("Constructed a direct mapped node cache with a size not power of two");
@@ -46,10 +43,7 @@ void DirectMappedNodeCacheTest::testConstructorAndAttributes()
     // build a valid cache
     std::unique_ptr<DirectMappedNodeCache> cache {
         new DirectMappedNodeCache {
-            256,
-            [] (node_seq_t seqNumber) {
-                return nullptr;
-            }
+            256
         }
     };
 
@@ -80,19 +74,17 @@ void DirectMappedNodeCacheTest::testGetNode()
 
     // build cache
     std::unique_ptr<DirectMappedNodeCache> cache {
-        new DirectMappedNodeCache {
-            4,
-            [&] (node_seq_t seqNumber) -> Node::SP {
-                auto it = nodes.find(seqNumber);
-
-                if (it == nodes.end()) {
-                    return nullptr;
-                }
-
-                return (*it).second;
-            }
-        }
+        new DirectMappedNodeCache {4}
     };
+    cache->setGetNodeFromOwnerCb([&] (node_seq_t seqNumber) -> Node::SP {
+        auto it = nodes.find(seqNumber);
+
+        if (it == nodes.end()) {
+            return nullptr;
+        }
+
+        return (*it).second;
+    });
 
     // all the nodes should not be cached
     CPPUNIT_ASSERT(!cache->nodeIsCached(5));

@@ -34,13 +34,12 @@ class PassThroughNodeCache :
 {
 public:
     /**
-     * Builds a direct mapped node cache. \p size must be a power of two.
+     * Builds a pass-through node cache.
      *
-     * @param size      Size of cache (node count, power of two)
      * @param getNodeCb Function called to get a node from the cache owner
      */
-    PassThroughNodeCache(std::size_t size, GetNodeFromOwnerCb getNodeFromOwnerCb) :
-        AbstractNodeCache {size, getNodeFromOwnerCb}
+    PassThroughNodeCache() :
+        AbstractNodeCache {0}
     {
     }
 
