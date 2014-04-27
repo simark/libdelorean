@@ -35,8 +35,8 @@ AlignedNodeSerDes::~AlignedNodeSerDes()
 {
 }
 
-void AlignedNodeSerDes::serializeNode(const Node& node,
-                                      std::uint8_t* headPtr) const
+void AlignedNodeSerDes::serializeNodeImpl(const Node& node,
+                                          std::uint8_t* headPtr) const
 {
     // set end of node pointer now before modifying headPtr
     auto varAtPtr = headPtr + node.getSize();
@@ -85,9 +85,9 @@ void AlignedNodeSerDes::serializeNode(const Node& node,
     }
 }
 
-Node::UP AlignedNodeSerDes::deserializeNode(const std::uint8_t* headPtr,
-                                            std::size_t size,
-                                            std::size_t maxChildren) const
+Node::UP AlignedNodeSerDes::deserializeNodeImpl(const std::uint8_t* headPtr,
+                                                std::size_t size,
+                                                std::size_t maxChildren) const
 {
     // set end of node pointer now before modifying headPtr
     auto varEndPtr = headPtr + size;
@@ -138,7 +138,7 @@ Node::UP AlignedNodeSerDes::deserializeNode(const std::uint8_t* headPtr,
     return node;
 }
 
-std::size_t AlignedNodeSerDes::getHeaderSize(const Node& node) const
+std::size_t AlignedNodeSerDes::getHeaderSizeImpl(const Node& node) const
 {
     /* This is a, hopefully temporary, hack to make sure the maximum number
      * of children may be added after the node is full of intervals.
@@ -147,12 +147,12 @@ std::size_t AlignedNodeSerDes::getHeaderSize(const Node& node) const
         node.getMaxChildren() * sizeof(ChildNodePointerHeader);
 }
 
-std::size_t AlignedNodeSerDes::getChildNodePointerSize(const ChildNodePointer& cnp) const
+std::size_t AlignedNodeSerDes::getChildNodePointerSizeImpl(const ChildNodePointer& cnp) const
 {
     return sizeof(ChildNodePointerHeader);
 }
 
-std::size_t AlignedNodeSerDes::getIntervalSize(const AbstractInterval& interval) const
+std::size_t AlignedNodeSerDes::getIntervalSizeImpl(const AbstractInterval& interval) const
 {
     return sizeof(IntervalHeader) + interval.getVariableDataSize();
 }

@@ -59,7 +59,7 @@ public:
      */
     AbstractNodeSerDes();
 
-    virtual ~AbstractNodeSerDes() = 0;
+    virtual ~AbstractNodeSerDes();
 
     /**
      * Serializes the node \p node beginning at the address \p headPtr. The
@@ -69,8 +69,10 @@ public:
      * @param node    Node to serialize
      * @param headPtr Address at which to write serialized data
      */
-    virtual void serializeNode(const Node& node,
-                               std::uint8_t* headPtr) const = 0;
+    void serializeNode(const Node& node, std::uint8_t* headPtr) const
+    {
+        this->serializeNodeImpl(node, headPtr);
+    }
 
     /**
      * Returns the header size of a node in bytes, according to the specific
@@ -79,7 +81,10 @@ public:
      * @param node Node
      * @returns    Size of the node header
      */
-    virtual std::size_t getHeaderSize(const Node& node) const = 0;
+    std::size_t getHeaderSize(const Node& node) const
+    {
+        return this->getHeaderSizeImpl(node);
+    }
 
     /**
      * Returns the size of a child node pointer, according to the specific way
@@ -88,7 +93,10 @@ public:
      * @param cnp Child node pointer
      * @returns   Size of the child node pointer
      */
-    virtual std::size_t getChildNodePointerSize(const ChildNodePointer& cnp) const = 0;
+    std::size_t getChildNodePointerSize(const ChildNodePointer& cnp) const
+    {
+        return this->getChildNodePointerSizeImpl(cnp);
+    }
 
     /**
      * Returns the total size of an interval (header, fixed value and variable
@@ -98,7 +106,10 @@ public:
      * @param interval Interval
      * @returns        Interval total size
      */
-    virtual std::size_t getIntervalSize(const AbstractInterval& interval) const = 0;
+    std::size_t getIntervalSize(const AbstractInterval& interval) const
+    {
+        return this->getIntervalSizeImpl(interval);
+    }
 
     /**
      * Deserializes a node.
@@ -108,9 +119,12 @@ public:
      * @param maxChildren Expected maximum number of children
      * @returns           Deserialized node
      */
-    virtual std::unique_ptr<Node> deserializeNode(const std::uint8_t* headPtr,
-                                                  std::size_t size,
-                                                  std::size_t maxChildren) const = 0;
+    std::unique_ptr<Node> deserializeNode(const std::uint8_t* headPtr,
+                                          std::size_t size,
+                                          std::size_t maxChildren) const
+    {
+        return this->deserializeNodeImpl(headPtr, size, maxChildren);
+    }
 
     /**
      * Registers a new interval factory \p factory used to create intervals of
@@ -141,6 +155,15 @@ public:
     void unregisterIntervalFactory(interval_type_t type);
 
 protected:
+    virtual void serializeNodeImpl(const Node& node,
+                                   std::uint8_t* headPtr) const = 0;
+    virtual std::size_t getHeaderSizeImpl(const Node& node) const = 0;
+    virtual std::size_t getChildNodePointerSizeImpl(const ChildNodePointer& cnp) const = 0;
+    virtual std::size_t getIntervalSizeImpl(const AbstractInterval& interval) const = 0;
+    virtual std::unique_ptr<Node> deserializeNodeImpl(const std::uint8_t* headPtr,
+                                                      std::size_t size,
+                                                      std::size_t maxChildren) const = 0;
+
     AbstractInterval::UP createInterval(timestamp_t begin, timestamp_t end,
                                         interval_key_t key,
                                         interval_type_t type) const;

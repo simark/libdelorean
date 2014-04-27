@@ -35,30 +35,30 @@ CPPUNIT_TEST_SUITE_REGISTRATION(NodeTest);
 class MyNodeSerDes :
     public AbstractNodeSerDes
 {
-public:
-    void serializeNode(const Node& node, std::uint8_t* headPtr) const
+protected:
+    void serializeNodeImpl(const Node& node, std::uint8_t* headPtr) const
     {
         // we don't care for this test suite
     }
 
-    std::size_t getHeaderSize(const Node& node) const
+    std::size_t getHeaderSizeImpl(const Node& node) const
     {
         return 12;
     }
 
-    std::size_t getChildNodePointerSize(const ChildNodePointer& cnp) const
+    std::size_t getChildNodePointerSizeImpl(const ChildNodePointer& cnp) const
     {
         return 4;
     }
 
-    std::size_t getIntervalSize(const AbstractInterval& interval) const
+    std::size_t getIntervalSizeImpl(const AbstractInterval& interval) const
     {
         return 4;
     }
 
-    Node::UP deserializeNode(const std::uint8_t* headPtr,
-                             std::size_t size,
-                             std::size_t maxChildren) const
+    Node::UP deserializeNodeImpl(const std::uint8_t* headPtr,
+                                 std::size_t size,
+                                 std::size_t maxChildren) const
     {
         // we don't care for this test suite
         return nullptr;
