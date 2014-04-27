@@ -71,19 +71,29 @@ void HistoryFileSource::open(const boost::filesystem::path& path,
             new PassThroughNodeCache {}
         };
     }
-    /*auto getNodeFromOwnerCb = std::bind(&HistoryFileSource::getNode, this,
+    auto getNodeFromOwnerCb = std::bind(&HistoryFileSource::getNode, this,
                                         std::placeholders::_1);
-    nodeCache->setGetNodeFromOwnerCb(getNodeFromOwnerCb);*/
+    nodeCache->setGetNodeFromOwnerCb(getNodeFromOwnerCb);
 
     // set/reset attributes
     this->setPath(path);
     this->setOpened(true);
 
-    // get root node now
+    // get root node now to set begin/end
+    auto node = this->getRootNode();
+    this->setBegin(node->getBegin());
+    this->setEnd(node->getEnd());
 }
 
 void HistoryFileSource::close()
 {
+    if (!this->isOpened()) {
+        // ignore silently
+        return;
+    }
+
+    _inputStream.close();
+    this->setOpened(false);
 }
 
 void HistoryFileSource::readHeader()
@@ -134,9 +144,14 @@ Node::SP HistoryFileSource::getNode(node_seq_t seqNumber)
     return nodeSp;
 }
 
+Node::SP HistoryFileSource::getNodeFromCache(node_seq_t seqNumber)
+{
+    return _nodeCache->getNode(seqNumber);
+}
+
 Node::SP HistoryFileSource::getRootNode()
 {
-    return this->getNode(this->getRootNodeSeqNumber());
+    return this->getNodeFromCache(this->getRootNodeSeqNumber());
 }
 
 bool HistoryFileSource::findAll(timestamp_t ts, IntervalJar& intervals) const

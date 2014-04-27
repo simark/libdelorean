@@ -33,20 +33,32 @@ class AbstractHistory
 public:
     virtual ~AbstractHistory() = 0;
 
-protected:
+    /**
+     * Returns the history begin. Depending on the history implementation,
+     * this may not be valid.
+     *
+     * @returns History begin
+     */
     timestamp_t getBegin() const
     {
         return _begin;
     }
 
-    void setBegin(timestamp_t begin)
-    {
-        _begin = begin;
-    }
-
+    /**
+     * Returns the history end. Depending on the history implementation,
+     * this may not be valid.
+     *
+     * @returns History end
+     */
     timestamp_t getEnd() const
     {
         return _end;
+    }
+
+protected:
+    void setBegin(timestamp_t begin)
+    {
+        _begin = begin;
     }
 
     void setEnd(timestamp_t end)
