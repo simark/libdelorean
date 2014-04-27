@@ -20,6 +20,7 @@
 #include <boost/filesystem.hpp>
 
 #include <delorean/HistoryFileSink.hpp>
+#include <delorean/HistoryFileSource.hpp>
 #include <delorean/BasicTypes.hpp>
 #include <delorean/interval/IntInterval.hpp>
 #include <delorean/interval/StringInterval.hpp>
@@ -92,8 +93,8 @@ void HistoryFileTest::testAddIntervals()
     getIntervalsFromTextFile("../data/headsofstates.txt", *jar);
 
     // create history file sink and open it
-    std::unique_ptr<HistoryFileSink> hfSink {new HistoryFileSink {}};
-    hfSink->open("./history.his", 256, 4);
+    std::unique_ptr<HistoryFileSink> hfSink {new HistoryFileSink};
+    hfSink->open("./history.his", 4096, 16);
 
     // add intervals
     for (auto& interval : *jar) {
@@ -104,12 +105,10 @@ void HistoryFileTest::testAddIntervals()
         }
     }
 
-    // close history file
+    // close history file sink
     try {
         hfSink->close();
     } catch (const std::exception& ex) {
         CPPUNIT_FAIL("Closing the history file threw an exception");
     }
-
-    // TODO: verify file with an history file source
 }

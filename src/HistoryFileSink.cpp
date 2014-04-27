@@ -159,14 +159,14 @@ void HistoryFileSink::addInterval(AbstractInterval::SP interval)
         };
     }
 
+    // try inserting it in current leaf node
+    this->tryAddIntervalToNode(interval, _latestBranch.size() - 1);
+
     // update end times
     _lastIntervalEnd = interval->getEnd();
     if (interval->getEnd() > this->getEnd()) {
         this->setEnd(interval->getEnd());
     }
-
-    // try inserting it in current leaf node
-    this->tryAddIntervalToNode(interval, _latestBranch.size() - 1);
 }
 
 Node::UP HistoryFileSink::createBranchNode(node_seq_t parentSeqNumber,
