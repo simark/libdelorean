@@ -67,17 +67,6 @@ private:
     {
         // no variable data
     }
-
-    void setFixedValueImpl(interval_value_t value)
-    {
-        // no fixed value
-    }
-
-    interval_value_t getFixedValueImpl() const
-    {
-        // not used anyway
-        return 0;
-    }
 };
 
 #endif // _NULLINTERVAL_HPP

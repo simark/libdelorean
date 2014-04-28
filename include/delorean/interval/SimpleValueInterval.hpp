@@ -45,25 +45,20 @@ public:
     {
     }
 
-    void setValue(const T& value)
+    void setValue(const T value)
     {
-        _value = value;
+        this->setFixedValue(static_cast<interval_value_t>(value));
     }
 
     T getValue() const
     {
-        return _value;
+        return static_cast<T>(this->getFixedValue());
     }
 
 private:
     std::size_t getVariableDataSizeImpl() const;
     void serializeVariableDataImpl(std::uint8_t* varAtPtr) const;
     void deserializeVariableDataImpl(const std::uint8_t* varAtPtr);
-    void setFixedValueImpl(interval_value_t value);
-    interval_value_t getFixedValueImpl() const;
-
-private:
-    T _value;
 };
 
 template<typename T, StandardIntervalType SIT>
@@ -95,18 +90,6 @@ template<typename T, StandardIntervalType SIT>
 void SimpleValueInterval<T, SIT>::deserializeVariableDataImpl(const std::uint8_t* varAtPtr)
 {
     // no variable data
-}
-
-template<typename T, StandardIntervalType SIT>
-void SimpleValueInterval<T, SIT>::setFixedValueImpl(interval_value_t value)
-{
-    _value = static_cast<T>(value);
-}
-
-template<typename T, StandardIntervalType SIT>
-interval_value_t SimpleValueInterval<T, SIT>::getFixedValueImpl() const
-{
-    return static_cast<interval_value_t>(_value);
 }
 
 #endif // _SIMPLEVALUEINTERVAL_HPP

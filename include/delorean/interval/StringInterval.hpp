@@ -61,8 +61,6 @@ private:
     std::size_t getVariableDataSizeImpl() const;
     void serializeVariableDataImpl(std::uint8_t* varAtPtr) const;
     void deserializeVariableDataImpl(const std::uint8_t* varAtPtr);
-    void setFixedValueImpl(interval_value_t value);
-    interval_value_t getFixedValueImpl() const;
 
 private:
     std::string _value;

@@ -103,9 +103,9 @@ public:
      * Sets the fixed 32-bit value of this interval. Please note it's useless
      * to call this method if the interval has to contain any variable data.
      *
-     * @param value Fixed 32-bit value to set
+     * @param fixedValue Fixed 32-bit value to set
      */
-    void setFixedValue(interval_value_t value);
+    void setFixedValue(interval_value_t fixedValue);
 
     /**
      * Returns the fixed 32-bit value of this interval. Please note this
@@ -195,18 +195,6 @@ private:
      */
     virtual void deserializeVariableDataImpl(const std::uint8_t* varAtPtr) = 0;
 
-    /**
-     * Virtual implementation of setFixedValue(); must be implemented by
-     * child class.
-     */
-    virtual void setFixedValueImpl(interval_value_t value) = 0;
-
-    /**
-     * Virtual implementation of getFixedValue(); must be implemented by
-     * child class.
-     */
-    virtual interval_value_t getFixedValueImpl() const = 0;
-
 private:
     // interval
     timestamp_t _begin;
@@ -217,6 +205,9 @@ private:
 
     // key
     interval_key_t _key;
+
+    // 32-bit value
+    interval_value_t _fixedValue;
 };
 
 #endif // _ABSTRACTINTERVAL_HPP

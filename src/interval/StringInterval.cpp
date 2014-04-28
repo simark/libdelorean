@@ -51,14 +51,3 @@ void StringInterval::deserializeVariableDataImpl(const std::uint8_t* varAtPtr)
     const char* cstr = reinterpret_cast<const char*>(varAtPtr);
     _value = std::string(cstr);
 }
-
-void StringInterval::setFixedValueImpl(interval_value_t value)
-{
-    // no fixed value
-}
-
-interval_value_t StringInterval::getFixedValueImpl() const
-{
-    // no fixed value
-    return 0;
-}

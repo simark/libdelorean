@@ -70,12 +70,12 @@ void AbstractInterval::deserializeVariableData(const std::uint8_t* varAtPtr)
     this->deserializeVariableDataImpl(varAtPtr);
 }
 
-void AbstractInterval::setFixedValue(interval_value_t value)
+void AbstractInterval::setFixedValue(interval_value_t fixedValue)
 {
-    this->setFixedValueImpl(value);
+    _fixedValue = fixedValue;
 }
 
 interval_value_t AbstractInterval::getFixedValue() const
 {
-    return this->getFixedValueImpl();
+    return _fixedValue;
 }

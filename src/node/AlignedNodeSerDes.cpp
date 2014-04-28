@@ -71,7 +71,7 @@ void AlignedNodeSerDes::serializeNodeImpl(const Node& node,
 
         // override fixed value with variable data offset if there's any
         if (variableDataSize > 0) {
-            intervalHeader.value = static_cast<uint32_t>(varOffset);
+            intervalHeader.value = static_cast<interval_value_t>(varOffset);
         }
 
         // write interval header
@@ -125,6 +125,9 @@ Node::UP AlignedNodeSerDes::deserializeNodeImpl(const std::uint8_t* headPtr,
                                              intervalHeader.getKey(),
                                              intervalHeader.getType());
 
+        // set fixed value
+        interval->setFixedValue(intervalHeader.value);
+
         // deserialize variable data
         auto varDataOffset = static_cast<std::size_t>(interval->getFixedValue());
         auto varAtPtr = varEndPtr - varDataOffset;
@@ -133,6 +136,11 @@ Node::UP AlignedNodeSerDes::deserializeNodeImpl(const std::uint8_t* headPtr,
         // add interval to node
         AbstractInterval::SP intervalSp {std::move(interval)};
         node->addInterval(intervalSp);
+    }
+
+    // close if necessary
+    if (nodeHeader.isClosed()) {
+        node->close(nodeHeader.end);
     }
 
     return node;
