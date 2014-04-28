@@ -44,7 +44,7 @@ public:
      * @param intervals Jar of intervals in which to add matching intervals
      * @returns         True if at least one interval was found
      */
-    virtual bool findAll(timestamp_t ts, IntervalJar& intervals) const = 0;
+    virtual bool findAll(timestamp_t ts, IntervalJar& intervals) = 0;
 
     /**
      * Finds a single interval in the history intersecting \p ts and matching
@@ -55,7 +55,7 @@ public:
      * @returns     Shared pointer to matching interval or \a nullptr
      */
     virtual AbstractInterval::SP findOne(timestamp_t ts,
-                                         interval_key_t key) const = 0;
+                                         interval_key_t key) = 0;
 };
 
 #endif // _IHISTORYSOURCE_HPP

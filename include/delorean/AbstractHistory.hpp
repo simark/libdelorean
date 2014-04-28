@@ -106,7 +106,7 @@ protected:
         return _rootNodeSeqNumber;
     }
 
-    bool validateTs(timestamp_t ts)
+    bool validateTs(timestamp_t ts) const
     {
         return (ts >= _begin && ts <= _end);
     }

@@ -70,12 +70,12 @@ public:
     /**
      * @see IHistorySource::findAll(timestamp_t, IntervalJar&)
      */
-    bool findAll(timestamp_t ts, IntervalJar& intervals) const;
+    bool findAll(timestamp_t ts, IntervalJar& intervals);
 
     /**
      * @see IHistorySource::findOne(timestamp_t, interval_key_t)
      */
-    AbstractInterval::SP findOne(timestamp_t ts, interval_key_t key) const;
+    AbstractInterval::SP findOne(timestamp_t ts, interval_key_t key);
 
 protected:
     void readHeader();

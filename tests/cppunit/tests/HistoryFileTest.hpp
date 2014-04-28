@@ -26,15 +26,17 @@ class HistoryFileTest :
     CPPUNIT_TEST_SUITE(HistoryFileTest);
         CPPUNIT_TEST(testNonExistingFile);
         CPPUNIT_TEST(testAddIntervalWhenClosed);
+        CPPUNIT_TEST(testQueryWhenClosed);
         CPPUNIT_TEST(testBuildEmpty);
-        CPPUNIT_TEST(testAddIntervals);
+        CPPUNIT_TEST(testAddFindIntervals);
     CPPUNIT_TEST_SUITE_END();
 
 public:
     void testNonExistingFile();
     void testAddIntervalWhenClosed();
+    void testQueryWhenClosed();
     void testBuildEmpty();
-    void testAddIntervals();
+    void testAddFindIntervals();
 };
 
 #endif // _HISTORYFILETEST_HPP

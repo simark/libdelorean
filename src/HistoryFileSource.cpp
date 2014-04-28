@@ -24,6 +24,7 @@
 #include <delorean/node/AbstractNodeCache.hpp>
 #include <delorean/node/PassThroughNodeCache.hpp>
 #include <delorean/node/AlignedNodeSerDes.hpp>
+#include <delorean/ex/TimestampOutOfRange.hpp>
 #include <delorean/ex/IO.hpp>
 #include <delorean/AbstractHistory.hpp>
 #include <delorean/HistoryFileSource.hpp>
@@ -68,12 +69,13 @@ void HistoryFileSource::open(const boost::filesystem::path& path,
     // set cache
     if (nodeCache == nullptr) {
         nodeCache = std::shared_ptr<AbstractNodeCache> {
-            new PassThroughNodeCache {}
+            new PassThroughNodeCache
         };
     }
     auto getNodeFromOwnerCb = std::bind(&HistoryFileSource::getNode, this,
                                         std::placeholders::_1);
     nodeCache->setGetNodeFromOwnerCb(getNodeFromOwnerCb);
+    _nodeCache = nodeCache;
 
     // set/reset attributes
     this->setPath(path);
@@ -154,13 +156,46 @@ Node::SP HistoryFileSource::getRootNode()
     return this->getNodeFromCache(this->getRootNodeSeqNumber());
 }
 
-bool HistoryFileSource::findAll(timestamp_t ts, IntervalJar& intervals) const
+bool HistoryFileSource::findAll(timestamp_t ts, IntervalJar& intervals)
 {
-    return false;
+    // make sure this history file is opened
+    if (!this->isOpened()) {
+        throw IO("Trying to query a closed history file source");
+    }
+
+    // check range
+    if (!this->validateTs(ts)) {
+        throw TimestampOutOfRange {this->getBegin(), this->getEnd(), ts};
+    }
+
+    // initial jar size
+    auto initSize = intervals.size();
+
+    // current node: root node
+    auto currentNode = this->getRootNode();
+
+    // climb tree
+    currentNode->findAll(ts, intervals);
+    while (currentNode->getChildrenCount() > 0) {
+        // select next current node, a child of the current node
+        auto nextNodeSeqNumber = currentNode->getChildSeqAtTs(ts);
+        if (nextNodeSeqNumber == currentNode->getSeqNumber()) {
+            break;
+        }
+        currentNode = this->getNodeFromCache(nextNodeSeqNumber);
+        if (currentNode == nullptr) {
+            break;
+        }
+
+        // find all intervals in this node
+        currentNode->findAll(ts, intervals);
+    }
+
+    return intervals.size() > initSize;
 }
 
 AbstractInterval::SP HistoryFileSource::findOne(timestamp_t ts,
-                                                interval_key_t key) const
+                                                interval_key_t key)
 {
     return nullptr;
 }
