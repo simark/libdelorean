@@ -24,6 +24,7 @@
 #include <delorean/BasicTypes.hpp>
 #include <delorean/interval/IntInterval.hpp>
 #include <delorean/interval/StringInterval.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/interval/IntervalJar.hpp>
 #include <delorean/ex/IO.hpp>
 #include <delorean/ex/TimestampOutOfRange.hpp>
@@ -141,6 +142,20 @@ void HistoryFileTest::testBuildEmpty()
 
 void HistoryFileTest::testAddFindIntervals()
 {
+    auto assertStrIntervalEquals =
+        [] (const AbstractInterval& interval,
+            timestamp_t begin, timestamp_t end,
+            interval_key_t key, const std::string& value)
+    {
+        CPPUNIT_ASSERT_EQUAL(static_cast<interval_type_t>(StandardIntervalType::STRING),
+                             interval.getType());
+        auto& strInterval = static_cast<const StringInterval&>(interval);
+        CPPUNIT_ASSERT_EQUAL(begin, interval.getBegin());
+        CPPUNIT_ASSERT_EQUAL(end, interval.getEnd());
+        CPPUNIT_ASSERT_EQUAL(key, interval.getKey());
+        CPPUNIT_ASSERT_EQUAL(value, strInterval.getValue());
+    };
+
     // interval jar
     std::vector<AbstractInterval::UP> intervals;
 
@@ -193,16 +208,18 @@ void HistoryFileTest::testAddFindIntervals()
     res = hfSource->findAll(17210404, tmpJar);
     CPPUNIT_ASSERT(res);
     CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(1), tmpJar.size());
-    auto onlyInterval = tmpJar.at(4);
-    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(17210404), onlyInterval->getBegin());
-    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(17420211), onlyInterval->getEnd());
-    CPPUNIT_ASSERT_EQUAL(static_cast<interval_key_t>(4), onlyInterval->getKey());
-    CPPUNIT_ASSERT_EQUAL(std::string {"Sir Robert Walpole"},
-                         static_cast<StringInterval&>(*onlyInterval).getValue());
+    assertStrIntervalEquals(*tmpJar.at(4), 17210404, 17420211, 4,
+                            "Sir Robert Walpole");
+    tmpJar.clear();
 
     // 1820
     res = hfSource->findAll(18200101, tmpJar);
     CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(2), tmpJar.size());
+    assertStrIntervalEquals(*tmpJar.at(4), 18120608, 18270409, 4,
+                            "Robert Banks Jenkinson, 2nd Earl of Liverpool");
+    assertStrIntervalEquals(*tmpJar.at(1), 18170305, 18250304, 1,
+                            "James Monroe");
+    tmpJar.clear();
 
     // close history file source
     hfSource->close();
