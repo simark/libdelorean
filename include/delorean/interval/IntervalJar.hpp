@@ -18,17 +18,16 @@
 #ifndef _INTERVALJAR_HPP
 #define _INTERVALJAR_HPP
 
-#include <vector>
+#include <map>
 
 #include <delorean/interval/AbstractInterval.hpp>
 
 /**
  * Main container for multiple intervals. This jar will be filled with
  * potentially multiple intervals when finding all intervals intersecting
- * with a given timestamp.
- *
- * @author Philippe Proulx
+ * with a given timestamp. It's a (interval key -> interval) map, which
+ * is safe since two intervals having the same key should not overlap.
  */
-typedef std::vector<AbstractInterval::SP> IntervalJar;
+typedef std::map<interval_key_t, AbstractInterval::SP> IntervalJar;
 
 #endif // _INTERVALJAR_HPP

@@ -30,7 +30,8 @@
 namespace bfs = boost::filesystem;
 namespace balgo = boost::algorithm;
 
-void getIntervalsFromTextFile(const bfs::path& path, IntervalJar& jar)
+void getIntervalsFromTextFile(const bfs::path& path,
+                              std::vector<AbstractInterval::UP>& intervals)
 {
     // open file
     bfs::ifstream file {path};
@@ -82,11 +83,11 @@ void getIntervalsFromTextFile(const bfs::path& path, IntervalJar& jar)
         }
 
         // create string interval
-        StringInterval::SP interval {new StringInterval {begin, end, key}};
+        StringInterval::UP interval {new StringInterval {begin, end, key}};
         interval->setValue(value);
 
-        // add to jar
-        jar.push_back(interval);
+        // add to intervals
+        intervals.push_back(std::move(interval));
     }
 
     // close file now

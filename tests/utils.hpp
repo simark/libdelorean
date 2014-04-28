@@ -15,15 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <vector>
 #include <boost/filesystem.hpp>
 
-#include <delorean/interval/IntervalJar.hpp>
+#include <delorean/interval/AbstractInterval.hpp>
 
 /**
  * Appends intervals found in text file \p path to jar \p jar.
  *
- * @param path Text file path
- * @param jar  Interval jar
+ * @param path      Text file path
+ * @param intervals Vector of intervals to fill
  */
 void getIntervalsFromTextFile(const boost::filesystem::path& path,
-                              IntervalJar& jar);
+                              std::vector<AbstractInterval::UP>& intervals);

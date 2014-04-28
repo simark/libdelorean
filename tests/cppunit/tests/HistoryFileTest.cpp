@@ -142,19 +142,19 @@ void HistoryFileTest::testBuildEmpty()
 void HistoryFileTest::testAddFindIntervals()
 {
     // interval jar
-    std::unique_ptr<IntervalJar> jar {new IntervalJar {}};
+    std::vector<AbstractInterval::UP> intervals;
 
     // fill jar with intervals
-    getIntervalsFromTextFile("../data/headsofstates.txt", *jar);
+    getIntervalsFromTextFile("../data/headsofstates.txt", intervals);
 
     // create history file sink and open it
     std::unique_ptr<HistoryFileSink> hfSink {new HistoryFileSink};
     hfSink->open("./history.his", 1024, 16, 15123456);
 
     // add intervals
-    for (auto& interval : *jar) {
+    for (auto& interval : intervals) {
         try {
-            hfSink->addInterval(interval);
+            hfSink->addInterval(std::move(interval));
         } catch (const std::exception& ex) {
             CPPUNIT_FAIL("Adding an interval threw an exception");
         }
@@ -193,7 +193,7 @@ void HistoryFileTest::testAddFindIntervals()
     res = hfSource->findAll(17210404, tmpJar);
     CPPUNIT_ASSERT(res);
     CPPUNIT_ASSERT_EQUAL(tmpJar.size(), static_cast<std::size_t>(1));
-    auto onlyInterval = tmpJar.at(0);
+    auto onlyInterval = tmpJar.at(4);
     CPPUNIT_ASSERT_EQUAL(onlyInterval->getBegin(), static_cast<timestamp_t>(17210404));
     CPPUNIT_ASSERT_EQUAL(onlyInterval->getEnd(), static_cast<timestamp_t>(17420211));
     CPPUNIT_ASSERT_EQUAL(onlyInterval->getKey(), static_cast<interval_key_t>(4));
@@ -201,8 +201,8 @@ void HistoryFileTest::testAddFindIntervals()
                          std::string {"Sir Robert Walpole"});
 
     // 1820
-    res = hfSource->findAll(17210404, tmpJar);
-    CPPUNIT_ASSERT_EQUAL(tmpJar.size(), static_cast<std::size_t>(2));
+    res = hfSource->findAll(18200101, tmpJar);
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(2), tmpJar.size());
 
     // close history file source
     hfSource->close();

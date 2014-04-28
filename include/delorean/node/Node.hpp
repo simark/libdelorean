@@ -276,7 +276,7 @@ public:
      *
      * @returns Interval jar reference
      */
-    const IntervalJar& getIntervals() const
+    const std::vector<AbstractInterval::SP>& getIntervals() const
     {
         return _intervals;
     }
@@ -312,7 +312,7 @@ public:
     }
 
 private:
-    IntervalJar::const_iterator getFirstItForTs(timestamp_t ts) const;
+    std::vector<AbstractInterval::SP>::const_iterator getFirstItForTs(timestamp_t ts) const;
     void computeHeaderSize();
 
 private:
@@ -329,7 +329,7 @@ private:
     bool _isExtended;
 
     // jar of intervals
-    IntervalJar _intervals;
+    std::vector<AbstractInterval::SP> _intervals;
 
     // maximum number of children
     std::size_t _maxChildren;

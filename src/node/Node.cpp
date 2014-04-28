@@ -117,7 +117,7 @@ bool Node::findAll(timestamp_t ts, IntervalJar& intervals) const
         auto interval = *it;
 
         if (interval->getBegin() <= ts) {
-            intervals.push_back(interval);
+            intervals.insert(std::make_pair(interval->getKey(), interval));
             found = true;
         }
     }
@@ -148,7 +148,7 @@ AbstractInterval::SP Node::findOne(timestamp_t ts, interval_key_t key) const
     return nullptr;
 }
 
-IntervalJar::const_iterator Node::getFirstItForTs(timestamp_t ts) const
+std::vector<AbstractInterval::SP>::const_iterator Node::getFirstItForTs(timestamp_t ts) const
 {
     /* Here we know that intervals are already sorted in ascending order of
      * end time because that's like the sole requirement of this whole thing.

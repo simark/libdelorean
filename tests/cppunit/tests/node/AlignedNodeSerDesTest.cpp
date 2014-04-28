@@ -66,7 +66,7 @@ void AlignedNodeSerDesTest::testSerializeDeserialize()
     }};
 
     // add intervals to node
-    IntervalJar jar;
+    std::vector<AbstractInterval::SP> jar;
     jar.push_back(interval1);
     jar.push_back(interval2);
     jar.push_back(interval3);

@@ -135,7 +135,7 @@ void NodeTest::testAddInterval()
     }};
 
     // create 3 intervals
-    IntInterval::SP interval1 {new IntInterval(1602, 2000, 1)};
+    IntInterval::SP interval1 {new IntInterval(1602, 1999, 1)};
     IntInterval::SP interval2 {new IntInterval(2000, 3000, 1)};
 
     // add intervals
@@ -282,34 +282,34 @@ void NodeTest::testFindAll()
     // working searches
     CPPUNIT_ASSERT(node->findAll(1534, *jar));
     CPPUNIT_ASSERT(jar->size() == 1);
-    CPPUNIT_ASSERT(jar->at(0) == interval1);
+    CPPUNIT_ASSERT(jar->at(1) == interval1);
     jar->clear();
 
     CPPUNIT_ASSERT(node->findAll(1545, *jar));
     CPPUNIT_ASSERT(jar->size() == 3);
-    CPPUNIT_ASSERT(jar->at(0) == interval1);
-    CPPUNIT_ASSERT(jar->at(1) == interval3);
-    CPPUNIT_ASSERT(jar->at(2) == interval4);
+    CPPUNIT_ASSERT(jar->at(1) == interval1);
+    CPPUNIT_ASSERT(jar->at(3) == interval3);
+    CPPUNIT_ASSERT(jar->at(4) == interval4);
     jar->clear();
 
     CPPUNIT_ASSERT(node->findAll(1777, *jar));
     CPPUNIT_ASSERT(jar->size() == 3);
-    CPPUNIT_ASSERT(jar->at(0) == interval2);
-    CPPUNIT_ASSERT(jar->at(1) == interval3);
-    CPPUNIT_ASSERT(jar->at(2) == interval4);
+    CPPUNIT_ASSERT(jar->at(2) == interval2);
+    CPPUNIT_ASSERT(jar->at(3) == interval3);
+    CPPUNIT_ASSERT(jar->at(4) == interval4);
     jar->clear();
 
     CPPUNIT_ASSERT(node->findAll(1939, *jar));
     CPPUNIT_ASSERT(jar->size() == 2);
-    CPPUNIT_ASSERT(jar->at(0) == interval5);
-    CPPUNIT_ASSERT(jar->at(1) == interval6);
+    CPPUNIT_ASSERT(jar->at(5) == interval5);
+    CPPUNIT_ASSERT(jar->at(6) == interval6);
     jar->clear();
 
     CPPUNIT_ASSERT(!node->findAll(1915, *jar));
-    CPPUNIT_ASSERT(jar->size() == 0);
+    CPPUNIT_ASSERT(jar->empty());
 
     CPPUNIT_ASSERT(!node->findAll(1917, *jar));
-    CPPUNIT_ASSERT(jar->size() == 0);
+    CPPUNIT_ASSERT(jar->empty());
 }
 
 void NodeTest::testChildren()
