@@ -8,7 +8,7 @@
 17630416 17650713 4 George Grenville
 17650714 17660730 4 Charles Watson-Wentworth, 2nd Marquess of Rockingham
 17660801 17681014 4 William Pitt the Elder, 1st Earl of Chatham
-17681015 17700128 4 08us FitzRoy, 3rd Duke of Grafton
+17681015 17700128 4 Augustus FitzRoy, 3rd Duke of Grafton
 17700129 17820322 4 Frederick North, Lord North
 17820327 17820701 4 Charles Watson-Wentworth, 2nd Marquess of Rockingham
 17820704 17830402 4 William Petty-FitzMaurice, 2nd Earl of Shelburne
