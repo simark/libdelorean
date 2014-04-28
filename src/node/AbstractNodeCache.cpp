@@ -32,5 +32,9 @@ AbstractNodeCache::~AbstractNodeCache()
 
 Node::SP AbstractNodeCache::getNodeFromOwner(node_seq_t seqNumber)
 {
+    if (!_getNodeFromOwnerCb) {
+        return nullptr;
+    }
+
     return _getNodeFromOwnerCb(seqNumber);
 }
