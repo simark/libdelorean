@@ -33,11 +33,7 @@ void StringIntervalTest::testConstructorValue()
 
     // std::string
     interval->setValue(value);
-    CPPUNIT_ASSERT(interval->getValue() == value);
-
-    // C string
-    interval->setValue(value.c_str());
-    CPPUNIT_ASSERT(interval->getValue() == value);
+    CPPUNIT_ASSERT_EQUAL(value, interval->getValue());
 }
 
 void StringIntervalTest::testVariableDataSize()

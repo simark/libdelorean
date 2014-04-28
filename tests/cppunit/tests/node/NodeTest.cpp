@@ -281,26 +281,26 @@ void NodeTest::testFindAll()
 
     // working searches
     CPPUNIT_ASSERT(node->findAll(1534, *jar));
-    CPPUNIT_ASSERT(jar->size() == 1);
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(1), jar->size());
     CPPUNIT_ASSERT(jar->at(1) == interval1);
     jar->clear();
 
     CPPUNIT_ASSERT(node->findAll(1545, *jar));
-    CPPUNIT_ASSERT(jar->size() == 3);
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(3), jar->size());
     CPPUNIT_ASSERT(jar->at(1) == interval1);
     CPPUNIT_ASSERT(jar->at(3) == interval3);
     CPPUNIT_ASSERT(jar->at(4) == interval4);
     jar->clear();
 
     CPPUNIT_ASSERT(node->findAll(1777, *jar));
-    CPPUNIT_ASSERT(jar->size() == 3);
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(3), jar->size());
     CPPUNIT_ASSERT(jar->at(2) == interval2);
     CPPUNIT_ASSERT(jar->at(3) == interval3);
     CPPUNIT_ASSERT(jar->at(4) == interval4);
     jar->clear();
 
     CPPUNIT_ASSERT(node->findAll(1939, *jar));
-    CPPUNIT_ASSERT(jar->size() == 2);
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(2), jar->size());
     CPPUNIT_ASSERT(jar->at(5) == interval5);
     CPPUNIT_ASSERT(jar->at(6) == interval6);
     jar->clear();
