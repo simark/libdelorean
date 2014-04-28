@@ -184,6 +184,7 @@ bool HistoryFileSource::findAll(timestamp_t ts, IntervalJar& intervals)
         }
         currentNode = this->getNodeFromCache(nextNodeSeqNumber);
         if (currentNode == nullptr) {
+            // weird, but possible
             break;
         }
 
@@ -197,5 +198,36 @@ bool HistoryFileSource::findAll(timestamp_t ts, IntervalJar& intervals)
 AbstractInterval::SP HistoryFileSource::findOne(timestamp_t ts,
                                                 interval_key_t key)
 {
-    return nullptr;
+    // make sure this history file is opened
+    if (!this->isOpened()) {
+        throw IO("Trying to query a closed history file source");
+    }
+
+    // check range
+    if (!this->validateTs(ts)) {
+        throw TimestampOutOfRange {this->getBegin(), this->getEnd(), ts};
+    }
+
+    // current node: root node
+    auto currentNode = this->getRootNode();
+
+    // climb tree
+    auto interval = currentNode->findOne(ts, key);
+    while (currentNode->getChildrenCount() > 0 && interval == nullptr) {
+        // select next current node, a child of the current node
+        auto nextNodeSeqNumber = currentNode->getChildSeqAtTs(ts);
+        if (nextNodeSeqNumber == currentNode->getSeqNumber()) {
+            break;
+        }
+        currentNode = this->getNodeFromCache(nextNodeSeqNumber);
+        if (currentNode == nullptr) {
+            // weird, but possible
+            break;
+        }
+
+        // find one interval in this node
+        interval = currentNode->findOne(ts, key);
+    }
+
+    return interval;
 }
