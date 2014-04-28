@@ -44,11 +44,11 @@ void StringIntervalTest::testVariableDataSize()
 
     // variable size: string length + NUL character
     std::size_t expectedVariableSize = value.size() + 1;
-    CPPUNIT_ASSERT_EQUAL(interval->getVariableDataSize(), expectedVariableSize);
+    CPPUNIT_ASSERT_EQUAL(expectedVariableSize, interval->getVariableDataSize());
 
     // no variable data: NUL character only
     interval->setValue("");
-    CPPUNIT_ASSERT_EQUAL(interval->getVariableDataSize(), static_cast<std::size_t>(1));
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(1), interval->getVariableDataSize());
 }
 
 void StringIntervalTest::testVariableDataSerialization()
@@ -72,16 +72,16 @@ void StringIntervalTest::testVariableDataSerialization()
     // check serialized value
     for (std::size_t x = 0; x < value.size(); ++x) {
         auto offset = varAt + x;
-        CPPUNIT_ASSERT_EQUAL(buf[offset], static_cast<uint8_t>(value[x]));
+        CPPUNIT_ASSERT_EQUAL(static_cast<uint8_t>(value[x]), buf[offset]);
     }
-    CPPUNIT_ASSERT_EQUAL(buf[varAt + value.size()], static_cast<uint8_t>('\0'));
+    CPPUNIT_ASSERT_EQUAL(static_cast<uint8_t>('\0'), buf[varAt + value.size()]);
 
     // make sure everything else in the buffer didn't change
     for (std::size_t x = 0; x < varAt; ++x) {
-        CPPUNIT_ASSERT_EQUAL(buf[x], static_cast<uint8_t>(x & 0xff));
+        CPPUNIT_ASSERT_EQUAL(static_cast<uint8_t>(x & 0xff), buf[x]);
     }
     for (std::size_t x = varAt + interval->getVariableDataSize(); x < 1024; ++x) {
-        CPPUNIT_ASSERT_EQUAL(buf[x], static_cast<uint8_t>(x & 0xff));
+        CPPUNIT_ASSERT_EQUAL(static_cast<uint8_t>(x & 0xff), buf[x]);
     }
 }
 

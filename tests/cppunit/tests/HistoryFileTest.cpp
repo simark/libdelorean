@@ -98,16 +98,16 @@ void HistoryFileTest::testBuildEmpty()
     /* The file created should have a size of (header size + node size) bytes,
      * or 12288 bytes. This is because only one node should be created.
      */
-    CPPUNIT_ASSERT_EQUAL(bfs::file_size("./history.his"),
-                         static_cast<uintmax_t>(12288));
+    CPPUNIT_ASSERT_EQUAL(static_cast<uintmax_t>(12288),
+                         bfs::file_size("./history.his"));
 
     // create and open history file source
     std::unique_ptr<HistoryFileSource> hfSource {new HistoryFileSource};
     hfSource->open("./history.his");
 
     // begin AND end should be 1917 (no intervals added)
-    CPPUNIT_ASSERT_EQUAL(hfSource->getBegin(), static_cast<timestamp_t>(1917));
-    CPPUNIT_ASSERT_EQUAL(hfSource->getEnd(), static_cast<timestamp_t>(1917));
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), hfSource->getBegin());
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), hfSource->getEnd());
 
     // any query outside 1917 should throw
     IntervalJar jar;
@@ -115,18 +115,18 @@ void HistoryFileTest::testBuildEmpty()
         hfSource->findAll(1916, jar);
         CPPUNIT_FAIL("Queried history file source before its range");
     } catch (const TimestampOutOfRange& ex) {
-        CPPUNIT_ASSERT_EQUAL(ex.getBegin(), static_cast<timestamp_t>(1917));
-        CPPUNIT_ASSERT_EQUAL(ex.getEnd(), static_cast<timestamp_t>(1917));
-        CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1916));
+        CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getBegin());
+        CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getEnd());
+        CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1916), ex.getTs());
     }
     CPPUNIT_ASSERT(jar.empty());
     try {
         hfSource->findAll(1918, jar);
         CPPUNIT_FAIL("Queried history file source after its range");
     } catch (const TimestampOutOfRange& ex) {
-        CPPUNIT_ASSERT_EQUAL(ex.getBegin(), static_cast<timestamp_t>(1917));
-        CPPUNIT_ASSERT_EQUAL(ex.getEnd(), static_cast<timestamp_t>(1917));
-        CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1918));
+        CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getBegin());
+        CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getEnd());
+        CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1918), ex.getTs());
     }
     CPPUNIT_ASSERT(jar.empty());
 
@@ -172,7 +172,7 @@ void HistoryFileTest::testAddFindIntervals()
     hfSource->open("./history.his");
 
     // verify some properties
-    CPPUNIT_ASSERT_EQUAL(hfSource->getBegin(), static_cast<timestamp_t>(15123456));
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(15123456), hfSource->getBegin());
 
     // prepare queries
     IntervalJar tmpJar;
@@ -192,13 +192,13 @@ void HistoryFileTest::testAddFindIntervals()
     // try getting first interval only (17210404)
     res = hfSource->findAll(17210404, tmpJar);
     CPPUNIT_ASSERT(res);
-    CPPUNIT_ASSERT_EQUAL(tmpJar.size(), static_cast<std::size_t>(1));
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(1), tmpJar.size());
     auto onlyInterval = tmpJar.at(4);
-    CPPUNIT_ASSERT_EQUAL(onlyInterval->getBegin(), static_cast<timestamp_t>(17210404));
-    CPPUNIT_ASSERT_EQUAL(onlyInterval->getEnd(), static_cast<timestamp_t>(17420211));
-    CPPUNIT_ASSERT_EQUAL(onlyInterval->getKey(), static_cast<interval_key_t>(4));
-    CPPUNIT_ASSERT_EQUAL(static_cast<StringInterval&>(*onlyInterval).getValue(),
-                         std::string {"Sir Robert Walpole"});
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(17210404), onlyInterval->getBegin());
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(17420211), onlyInterval->getEnd());
+    CPPUNIT_ASSERT_EQUAL(static_cast<interval_key_t>(4), onlyInterval->getKey());
+    CPPUNIT_ASSERT_EQUAL(std::string {"Sir Robert Walpole"},
+                         static_cast<StringInterval&>(*onlyInterval).getValue());
 
     // 1820
     res = hfSource->findAll(18200101, tmpJar);

@@ -38,8 +38,8 @@ void IntIntervalTest::testConstructorAndAttributes()
         IntInterval::UP interval {new IntInterval(begin, end, key)};
         CPPUNIT_FAIL("Building interval with wrong parameters");
     } catch (const InvalidIntervalArguments& ex) {
-        CPPUNIT_ASSERT_EQUAL(ex.getBegin(), begin);
-        CPPUNIT_ASSERT_EQUAL(ex.getEnd(), end);
+        CPPUNIT_ASSERT_EQUAL(begin, ex.getBegin());
+        CPPUNIT_ASSERT_EQUAL(end, ex.getEnd());
     }
 
     // begin == end is okay
@@ -56,16 +56,16 @@ void IntIntervalTest::testConstructorAndAttributes()
     end = 67;
     key = 5;
     IntInterval::UP interval {new IntInterval(begin, end, key)};
-    CPPUNIT_ASSERT_EQUAL(interval->getBegin(), begin);
-    CPPUNIT_ASSERT_EQUAL(interval->getEnd(), end);
-    CPPUNIT_ASSERT_EQUAL(interval->getKey(), key);
-    CPPUNIT_ASSERT_EQUAL(interval->getType(),
-        static_cast<interval_type_t>(StandardIntervalType::INT32));
+    CPPUNIT_ASSERT_EQUAL(begin, interval->getBegin());
+    CPPUNIT_ASSERT_EQUAL(end, interval->getEnd());
+    CPPUNIT_ASSERT_EQUAL(key, interval->getKey());
+    CPPUNIT_ASSERT_EQUAL(static_cast<interval_type_t>(StandardIntervalType::INT32),
+                         interval->getType());
 
     // value
     int value = 31987238;
     interval->setValue(value);
-    CPPUNIT_ASSERT_EQUAL(interval->getValue(), value);
+    CPPUNIT_ASSERT_EQUAL(value, interval->getValue());
 }
 
 void IntIntervalTest::testIntersection()
@@ -125,12 +125,12 @@ void IntIntervalTest::testFixedValue()
     // set fixed, get native
     int i = -1001;
     interval->setFixedValue(static_cast<uint32_t>(i));
-    CPPUNIT_ASSERT_EQUAL(interval->getValue(), i);
+    CPPUNIT_ASSERT_EQUAL(i, interval->getValue());
 
     // set native, get fixed
     uint32_t u = 0xfffffffe;
     interval->setValue(static_cast<int>(u));
-    CPPUNIT_ASSERT_EQUAL(interval->getFixedValue(), u);
+    CPPUNIT_ASSERT_EQUAL(u, interval->getFixedValue());
 }
 
 void IntIntervalTest::testVariableDataSize()
@@ -138,5 +138,5 @@ void IntIntervalTest::testVariableDataSize()
     IntInterval::UP interval {new IntInterval(1534, 1867, 1)};
 
     // no variable data
-    CPPUNIT_ASSERT_EQUAL(interval->getVariableDataSize(), static_cast<std::size_t>(0));
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(0), interval->getVariableDataSize());
 }

@@ -79,14 +79,14 @@ void NodeTest::testConstructorAndAttributes()
     }};
 
     // verify all expected attributes
-    CPPUNIT_ASSERT_EQUAL(node->getSize(), static_cast<std::size_t>(1024));
-    CPPUNIT_ASSERT_EQUAL(node->getMaxChildren(), static_cast<std::size_t>(16));
-    CPPUNIT_ASSERT_EQUAL(node->getSeqNumber(), static_cast<node_seq_t>(57));
-    CPPUNIT_ASSERT_EQUAL(node->getParentSeqNumber(), Node::ROOT_PARENT_SEQ_NUMBER());
-    CPPUNIT_ASSERT_EQUAL(node->getBegin(), static_cast<timestamp_t>(1534));
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(1024), node->getSize());
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(16), node->getMaxChildren());
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(57), node->getSeqNumber());
+    CPPUNIT_ASSERT_EQUAL(Node::ROOT_PARENT_SEQ_NUMBER(), node->getParentSeqNumber());
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1534), node->getBegin());
 
     // end should be the same as begin now
-    CPPUNIT_ASSERT_EQUAL(node->getEnd(), static_cast<timestamp_t>(1534));
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1534), node->getEnd());
 
     // not closed
     CPPUNIT_ASSERT(!node->isClosed());
@@ -96,13 +96,13 @@ void NodeTest::testConstructorAndAttributes()
 
     // set a different parent number
     node->setParentSeqNumber(4);
-    CPPUNIT_ASSERT_EQUAL(node->getParentSeqNumber(), static_cast<node_seq_t>(4));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(4), node->getParentSeqNumber());
 
     // no intervals yet
-    CPPUNIT_ASSERT_EQUAL(node->getIntervalCount(), static_cast<std::size_t>(0));
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(0), node->getIntervalCount());
 
     // no children yet
-    CPPUNIT_ASSERT_EQUAL(node->getChildrenCount(), static_cast<std::size_t>(0));
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(0), node->getChildrenCount());
 
     // not full of children either
     CPPUNIT_ASSERT(!node->isFull());
@@ -112,12 +112,12 @@ void NodeTest::testConstructorAndAttributes()
         node->close(1533);
         CPPUNIT_FAIL("Closing node with end timestamp smaller than current");
     } catch (const TimestampOutOfRange& ex) {
-        CPPUNIT_ASSERT_EQUAL(ex.getTs(), static_cast<timestamp_t>(1533));
+        CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1533), ex.getTs());
     }
 
     // this should work, change the end timestamp and mark it done
     node->close(1608);
-    CPPUNIT_ASSERT_EQUAL(node->getEnd(), static_cast<timestamp_t>(1608));
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1608), node->getEnd());
     CPPUNIT_ASSERT(node->isClosed());
 }
 
@@ -143,7 +143,7 @@ void NodeTest::testAddInterval()
     node->addInterval(interval2);
 
     // there are 2 intervals now
-    CPPUNIT_ASSERT_EQUAL(node->getIntervalCount(), static_cast<std::size_t>(2));
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(2), node->getIntervalCount());
 
     // make sure they are the same (pointers)
     const auto& intervals = node->getIntervals();
@@ -341,10 +341,10 @@ void NodeTest::testChildren()
     CPPUNIT_ASSERT(node->isFull());
 
     // get child sequence number at index
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtIndex(0), static_cast<node_seq_t>(10));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtIndex(1), static_cast<node_seq_t>(11));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtIndex(2), static_cast<node_seq_t>(12));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtIndex(3), static_cast<node_seq_t>(13));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(10), node->getChildSeqAtIndex(0));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(11), node->getChildSeqAtIndex(1));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(12), node->getChildSeqAtIndex(2));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(13), node->getChildSeqAtIndex(3));
     try {
         node->getChildSeqAtIndex(4);
         CPPUNIT_FAIL("Getting a child at too big index");
@@ -354,10 +354,10 @@ void NodeTest::testChildren()
     }
 
     // get child begin timestamp at index
-    CPPUNIT_ASSERT_EQUAL(node->getChildBeginAtIndex(0), static_cast<timestamp_t>(1600));
-    CPPUNIT_ASSERT_EQUAL(node->getChildBeginAtIndex(1), static_cast<timestamp_t>(1700));
-    CPPUNIT_ASSERT_EQUAL(node->getChildBeginAtIndex(2), static_cast<timestamp_t>(1800));
-    CPPUNIT_ASSERT_EQUAL(node->getChildBeginAtIndex(3), static_cast<timestamp_t>(1900));
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1600), node->getChildBeginAtIndex(0));
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1700), node->getChildBeginAtIndex(1));
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1800), node->getChildBeginAtIndex(2));
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1900), node->getChildBeginAtIndex(3));
     try {
         node->getChildBeginAtIndex(4);
         CPPUNIT_FAIL("Getting a child at too big index");
@@ -367,16 +367,16 @@ void NodeTest::testChildren()
     }
 
     // get child sequence number at timestamp
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1534), static_cast<node_seq_t>(57));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1575), static_cast<node_seq_t>(57));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1599), static_cast<node_seq_t>(57));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1600), static_cast<node_seq_t>(10));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1699), static_cast<node_seq_t>(10));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1700), static_cast<node_seq_t>(11));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1799), static_cast<node_seq_t>(11));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1800), static_cast<node_seq_t>(12));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1899), static_cast<node_seq_t>(12));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1900), static_cast<node_seq_t>(13));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(1999), static_cast<node_seq_t>(13));
-    CPPUNIT_ASSERT_EQUAL(node->getChildSeqAtTs(2000), static_cast<node_seq_t>(13));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(57), node->getChildSeqAtTs(1534));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(57), node->getChildSeqAtTs(1575));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(57), node->getChildSeqAtTs(1599));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(10), node->getChildSeqAtTs(1600));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(10), node->getChildSeqAtTs(1699));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(11), node->getChildSeqAtTs(1700));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(11), node->getChildSeqAtTs(1799));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(12), node->getChildSeqAtTs(1800));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(12), node->getChildSeqAtTs(1899));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(13), node->getChildSeqAtTs(1900));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(13), node->getChildSeqAtTs(1999));
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(13), node->getChildSeqAtTs(2000));
 }

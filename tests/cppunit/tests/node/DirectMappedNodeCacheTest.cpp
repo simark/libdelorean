@@ -48,7 +48,7 @@ void DirectMappedNodeCacheTest::testConstructorAndAttributes()
     };
 
     // verify size
-    CPPUNIT_ASSERT_EQUAL(cache->getSize(), static_cast<std::size_t>(256));
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(256), cache->getSize());
 }
 
 void DirectMappedNodeCacheTest::testGetNode()
@@ -98,14 +98,14 @@ void DirectMappedNodeCacheTest::testGetNode()
     // get some nodes which should exist
     Node::SP node;
     node = cache->getNode(3);
-    CPPUNIT_ASSERT_EQUAL(node, node4);
+    CPPUNIT_ASSERT_EQUAL(node4, node);
     CPPUNIT_ASSERT(cache->nodeIsCached(3));
     node = cache->getNode(5);
-    CPPUNIT_ASSERT_EQUAL(node, node1);
+    CPPUNIT_ASSERT_EQUAL(node1, node);
     CPPUNIT_ASSERT(cache->nodeIsCached(3));
     CPPUNIT_ASSERT(cache->nodeIsCached(5));
     node = cache->getNode(9);
-    CPPUNIT_ASSERT_EQUAL(node, node5);
+    CPPUNIT_ASSERT_EQUAL(node5, node);
     CPPUNIT_ASSERT(cache->nodeIsCached(3));
     CPPUNIT_ASSERT(cache->nodeIsCached(9));
     CPPUNIT_ASSERT(!cache->nodeIsCached(5));
