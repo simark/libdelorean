@@ -30,25 +30,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION(DirectMappedNodeCacheTest);
 void DirectMappedNodeCacheTest::testConstructorAndAttributes()
 {
     // try building with a size that's not a power of two
-    try {
-        std::unique_ptr<DirectMappedNodeCache> cache {
-            new DirectMappedNodeCache {
-                205
-            }
-        };
-        CPPUNIT_FAIL("Constructed a direct mapped node cache with a size not power of two");
-    } catch (const std::invalid_argument& ex) {
-    }
+    CPPUNIT_ASSERT_THROW(DirectMappedNodeCache cache {205}, std::invalid_argument);
 
     // build a valid cache
-    std::unique_ptr<DirectMappedNodeCache> cache {
-        new DirectMappedNodeCache {
-            256
-        }
-    };
+    DirectMappedNodeCache cache {256};
 
     // verify size
-    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(256), cache->getSize());
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(256), cache.getSize());
 }
 
 void DirectMappedNodeCacheTest::testGetNode()
