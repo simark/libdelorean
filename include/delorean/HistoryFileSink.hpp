@@ -109,7 +109,6 @@ private:
     boost::filesystem::ofstream _outputStream;
     std::unique_ptr<std::uint8_t[]> _nodeBuf;
     std::vector<Node::SP> _latestBranch;
-    timestamp_t _lastIntervalEnd;
     int _magic;
 };
 

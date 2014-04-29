@@ -45,7 +45,7 @@ def _check_overlaps(intervals):
             last_ends[key] = int(end)
             continue
         last_end = last_ends[key]
-        if last_end >= int(begin):
+        if last_end > int(begin):
             print('the following line creates an overlapping interval:',
                   file=sys.stderr)
             print('  {}'.format(interval.orig_line), file=sys.stderr)

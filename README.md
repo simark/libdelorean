@@ -71,8 +71,8 @@ From a user's point of view, libdelorean involves the following concepts:
   * An **interval** is a line between two points in time (or two points in
     whatever dimension you would like). This object has the following
     attributes:
-    * A **begin** timestamp (inclusive)
-    * An **end** timestamp (inclusive)
+    * A **begin** timestamp (included in interval)
+    * An **end** timestamp (excluded from interval)
     * A **key**. In a history (see below), two intervals having the same
       _key_ cannot overlap. See the [use cases](#use-cases)
       section for examples of what a key can be. A key is a unique numeric

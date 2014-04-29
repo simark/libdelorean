@@ -203,7 +203,7 @@ public:
     /**
      * Returns this node's end timestamp.
      *
-     * @returns End timestamp
+     * @returns End timestamp (excluded)
      */
     timestamp_t getEnd() const
     {

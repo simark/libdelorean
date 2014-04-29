@@ -110,7 +110,7 @@ void HistoryFileTest::testBuildEmpty()
     CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), hfSource->getBegin());
     CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), hfSource->getEnd());
 
-    // any query outside 1917 should throw
+    // any query should throw TimestampOutOfRange since the history has nothing
     IntervalJar jar;
     try {
         hfSource->findAll(1916, jar);
@@ -122,6 +122,15 @@ void HistoryFileTest::testBuildEmpty()
     }
     CPPUNIT_ASSERT(jar.empty());
     try {
+        hfSource->findAll(1917, jar);
+        CPPUNIT_FAIL("Queried history file source after its range");
+    } catch (const TimestampOutOfRange& ex) {
+        CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getBegin());
+        CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getEnd());
+        CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getTs());
+    }
+    CPPUNIT_ASSERT(jar.empty());
+    try {
         hfSource->findAll(1918, jar);
         CPPUNIT_FAIL("Queried history file source after its range");
     } catch (const TimestampOutOfRange& ex) {
@@ -129,11 +138,6 @@ void HistoryFileTest::testBuildEmpty()
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getEnd());
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1918), ex.getTs());
     }
-    CPPUNIT_ASSERT(jar.empty());
-
-    // we may query 1917, but it shouldn't return anything
-    auto res = hfSource->findAll(1917, jar);
-    CPPUNIT_ASSERT(!res);
     CPPUNIT_ASSERT(jar.empty());
 
     // close history file source
@@ -188,6 +192,7 @@ void HistoryFileTest::testAddFindIntervals()
 
     // verify some properties
     CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(15123456), hfSource->getBegin());
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(30000101), hfSource->getEnd());
 
     // prepare queries
     IntervalJar tmpJar;
@@ -217,7 +222,7 @@ void HistoryFileTest::testAddFindIntervals()
     CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(2), tmpJar.size());
     assertStrIntervalEquals(*tmpJar.at(4), 18120608, 18270409, 4,
                             "Robert Banks Jenkinson, 2nd Earl of Liverpool");
-    assertStrIntervalEquals(*tmpJar.at(1), 18170305, 18250304, 1,
+    assertStrIntervalEquals(*tmpJar.at(1), 18170304, 18250304, 1,
                             "James Monroe");
     tmpJar.clear();
 

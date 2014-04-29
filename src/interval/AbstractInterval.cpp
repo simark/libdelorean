@@ -33,7 +33,7 @@ AbstractInterval::AbstractInterval(timestamp_t begin, timestamp_t end,
     _type {type},
     _key {key}
 {
-    // check range
+    // check range (begin == end is allowed and means an interval of length 0)
     if (begin > end) {
         throw InvalidIntervalArguments(begin, end);
     }

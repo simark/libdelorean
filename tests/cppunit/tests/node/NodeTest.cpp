@@ -241,7 +241,7 @@ void NodeTest::testFindOne()
     CPPUNIT_ASSERT(result == nullptr);
 
     result = node->findOne(1939, 5);
-    CPPUNIT_ASSERT(result == interval5);
+    CPPUNIT_ASSERT(result == nullptr);
 
     result = node->findOne(1939, 6);
     CPPUNIT_ASSERT(result == interval6);
@@ -293,15 +293,12 @@ void NodeTest::testFindAll()
     jar->clear();
 
     CPPUNIT_ASSERT(node->findAll(1777, *jar));
-    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(3), jar->size());
-    CPPUNIT_ASSERT(jar->at(2) == interval2);
-    CPPUNIT_ASSERT(jar->at(3) == interval3);
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(1), jar->size());
     CPPUNIT_ASSERT(jar->at(4) == interval4);
     jar->clear();
 
     CPPUNIT_ASSERT(node->findAll(1939, *jar));
-    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(2), jar->size());
-    CPPUNIT_ASSERT(jar->at(5) == interval5);
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(1), jar->size());
     CPPUNIT_ASSERT(jar->at(6) == interval6);
     jar->clear();
 

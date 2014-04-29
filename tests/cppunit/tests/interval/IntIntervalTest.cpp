@@ -73,12 +73,12 @@ void IntIntervalTest::testIntersection()
     // build valid interval
     IntInterval::UP interval {new IntInterval(50, 150, 1)};
 
-    // intersection should be inclusive
+    // intersection should include begin, but exclude end
     CPPUNIT_ASSERT(!interval->intersects(49));
     CPPUNIT_ASSERT(interval->intersects(50));
     CPPUNIT_ASSERT(interval->intersects(51));
     CPPUNIT_ASSERT(interval->intersects(149));
-    CPPUNIT_ASSERT(interval->intersects(150));
+    CPPUNIT_ASSERT(!interval->intersects(150));
     CPPUNIT_ASSERT(!interval->intersects(151));
 }
 

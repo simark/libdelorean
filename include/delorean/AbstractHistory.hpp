@@ -46,9 +46,10 @@ public:
 
     /**
      * Returns the history end. Depending on the history implementation,
-     * this may not be valid.
+     * this may not be valid. The history end is excluded from the
+     * history.
      *
-     * @returns History end
+     * @returns History end (excluded)
      */
     timestamp_t getEnd() const
     {
@@ -108,7 +109,7 @@ protected:
 
     bool validateTs(timestamp_t ts) const
     {
-        return (ts >= _begin && ts <= _end);
+        return (ts >= _begin && ts < _end);
     }
 
     void setNodeSerDes(AbstractNodeSerDes::UP serdes)

@@ -80,7 +80,6 @@ void HistoryFileSink::open(const bfs::path& path, std::size_t nodeSize,
     this->setMaxChildren(maxChildren);
     this->setBegin(begin);
     this->setEnd(begin);
-    _lastIntervalEnd = begin;
     this->setNodeCount(0);
     this->setOpened(true);
 
@@ -144,18 +143,12 @@ void HistoryFileSink::addInterval(AbstractInterval::SP interval)
     }
 
     // check range
-    if (interval->getBegin() < this->getBegin()) {
+    if (interval->getBegin() < this->getBegin() ||
+            interval->getEnd() < this->getEnd()) {
         throw IntervalOutOfRange {
             *interval,
             this->getBegin(),
-            _lastIntervalEnd
-        };
-    }
-    if (interval->getEnd() < _lastIntervalEnd) {
-        throw TimestampOutOfRange {
-            this->getBegin(),
-            _lastIntervalEnd,
-            interval->getEnd()
+            this->getEnd()
         };
     }
 
@@ -163,10 +156,7 @@ void HistoryFileSink::addInterval(AbstractInterval::SP interval)
     this->tryAddIntervalToNode(interval, _latestBranch.size() - 1);
 
     // update end times
-    _lastIntervalEnd = interval->getEnd();
-    if (interval->getEnd() > this->getEnd()) {
-        this->setEnd(interval->getEnd());
-    }
+    this->setEnd(interval->getEnd());
 }
 
 Node::UP HistoryFileSink::createBranchNode(node_seq_t parentSeqNumber,
@@ -341,7 +331,9 @@ void HistoryFileSink::commitNode(Node& node)
 
 void HistoryFileSink::commitNodesDownFromIndex(std::size_t index)
 {
-    for (auto& nodeSp : _latestBranch) {
+    auto& lb = _latestBranch;
+    for (auto it = lb.begin() + index; it != lb.end(); ++it) {
+        auto& nodeSp = *it;
         this->commitNode(*nodeSp);
     }
 }
@@ -394,9 +386,6 @@ void HistoryFileSink::drawBranchFromIndex(std::size_t parentIndex,
         // seems like we don't need any new child
         return;
     }
-
-    // update tree's end
-    this->setEnd(this->getEnd() + 1);
 
     // first parent node will be the pointed parent
     auto parentNode = _latestBranch.at(parentIndex).get();

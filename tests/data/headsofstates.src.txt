@@ -20,49 +20,49 @@
 
 # USA
 17890430 17970304 1 George Washington
-17970305 18010304 1 John Adams
-18010305 18090304 1 Thomas Jefferson
-18090305 18170304 1 James Madison
-18170305 18250304 1 James Monroe
-18250305 18290304 1 John Quincy Adams
-18290305 18370304 1 Andrew Jackson
-18370305 18410304 1 Martin Van Buren
-18410305 18410404 1 William Henry Harrison
-18410405 18450304 1 John Tyler
-18450305 18490304 1 James K. Polk
-18490305 18500709 1 Zachary Taylor
-18500710 18530304 1 Millard Fillmore
-18530305 18570304 1 Franklin Pierce
-18570305 18610304 1 James Buchanan
-18610305 18650415 1 Abraham Lincoln
-18650416 18690304 1 Andrew Johnson
-18690305 18770304 1 Ulysses S. Grant
-18770305 18810304 1 Rutherford B. Hayes
-18810305 18810919 1 James A. Garfield
-18810920 18850304 1 Chester A. Arthur
-18850305 18890304 1 Grover Cleveland
-18890305 18930304 1 Benjamin Harrison
-18930305 18970304 1 Grover Cleveland
-18970305 19010914 1 William McKinley
-19010915 19090304 1 Theodore Roosevelt
-19090305 19130304 1 William Howard Taft
-19130305 19210304 1 Woodrow Wilson
-19210305 19230802 1 Warren G. Harding
-19230803 19290304 1 Calvin Coolidge
-19290305 19330304 1 Herbert Hoover
-19330305 19450412 1 Franklin D. Roosevelt
-19450413 19530120 1 Harry S. Truman
-19530121 19610120 1 Dwight D. Eisenhower
-19610121 19631122 1 John F. Kennedy
-19631123 19690120 1 Lyndon B. Johnson
-19690121 19740809 1 Richard Nixon
-19740810 19770120 1 Gerald Ford
-19770121 19810120 1 Jimmy Carter
-19810121 19890120 1 Ronald Reagan
-19890121 19930120 1 George H. W. Bush
-19930121 20010120 1 Bill Clinton
-20010121 20090120 1 George W. Bush
-20090121 30000101 1 Barack Obama
+17970304 18010304 1 John Adams
+18010304 18090304 1 Thomas Jefferson
+18090304 18170304 1 James Madison
+18170304 18250304 1 James Monroe
+18250304 18290304 1 John Quincy Adams
+18290304 18370304 1 Andrew Jackson
+18370304 18410304 1 Martin Van Buren
+18410304 18410404 1 William Henry Harrison
+18410404 18450304 1 John Tyler
+18450304 18490304 1 James K. Polk
+18490304 18500709 1 Zachary Taylor
+18500709 18530304 1 Millard Fillmore
+18530304 18570304 1 Franklin Pierce
+18570304 18610304 1 James Buchanan
+18610304 18650415 1 Abraham Lincoln
+18650415 18690304 1 Andrew Johnson
+18690304 18770304 1 Ulysses S. Grant
+18770304 18810304 1 Rutherford B. Hayes
+18810304 18810919 1 James A. Garfield
+18810919 18850304 1 Chester A. Arthur
+18850304 18890304 1 Grover Cleveland
+18890304 18930304 1 Benjamin Harrison
+18930304 18970304 1 Grover Cleveland
+18970304 19010914 1 William McKinley
+19010914 19090304 1 Theodore Roosevelt
+19090304 19130304 1 William Howard Taft
+19130304 19210304 1 Woodrow Wilson
+19210304 19230802 1 Warren G. Harding
+19230802 19290304 1 Calvin Coolidge
+19290304 19330304 1 Herbert Hoover
+19330304 19450412 1 Franklin D. Roosevelt
+19450412 19530120 1 Harry S. Truman
+19530120 19610120 1 Dwight D. Eisenhower
+19610120 19631122 1 John F. Kennedy
+19631122 19690120 1 Lyndon B. Johnson
+19690120 19740809 1 Richard Nixon
+19740809 19770120 1 Gerald Ford
+19770120 19810120 1 Jimmy Carter
+19810120 19890120 1 Ronald Reagan
+19890120 19930120 1 George H. W. Bush
+19930120 20010120 1 Bill Clinton
+20010120 20090120 1 George W. Bush
+20090120 30000101 1 Barack Obama
 
 # Canada
 18670701 18731105 2 Sir John A. Macdonald
@@ -74,101 +74,101 @@
 18960501 18960708 2 Sir Charles Tupper
 18960711 19111006 2 Sir Wilfrid Laurier
 19111010 19200710 2 Sir Robert Borden
-19200711 19211229 2 Arthur Meighen
-19211230 19260628 2 William Lyon Mackenzie King
-19260629 19260925 2 Arthur Meighen
-19260926 19300807 2 William Lyon Mackenzie King
-19300808 19351023 2 R. B. Bennett
-19351024 19481115 2 William Lyon Mackenzie King
-19481116 19570621 2 Louis St. Laurent
-19570622 19630422 2 John Diefenbaker
+19200710 19211229 2 Arthur Meighen
+19211229 19260628 2 William Lyon Mackenzie King
+19260628 19260925 2 Arthur Meighen
+19260925 19300807 2 William Lyon Mackenzie King
+19300807 19351023 2 R. B. Bennett
+19351023 19481115 2 William Lyon Mackenzie King
+19481115 19570621 2 Louis St. Laurent
+19570621 19630422 2 John Diefenbaker
 19630423 19680420 2 Lester B. Pearson
-19680421 19790603 2 Pierre Trudeau
-19790604 19800302 2 Joe Clark
-19800303 19840629 2 Pierre Trudeau
-19840630 19840916 2 John Turner
-19840917 19930624 2 Brian Mulroney
-19930625 19931103 2 Kim Campbell
-19931104 20031211 2 Jean Chrétien
-20031212 20060205 2 Paul Martin
-20060206 30000101 2 Stephen Harper
+19680420 19790603 2 Pierre Trudeau
+19790603 19800302 2 Joe Clark
+19800302 19840629 2 Pierre Trudeau
+19840629 19840916 2 John Turner
+19840916 19930624 2 Brian Mulroney
+19930624 19931103 2 Kim Campbell
+19931103 20031211 2 Jean Chrétien
+20031211 20060205 2 Paul Martin
+20060205 30000101 2 Stephen Harper
 
 # Québec
 18670715 18730225 3 Pierre-Joseph-Olivier Chauveau
 18730227 18740922 3 Gédéon Ouimet
-18740923 18780308 3 Charles Boucher de Boucherville
-18780309 18791031 3 Henri-Gustave Joly de Lotbinière
-18791101 18820731 3 Sir Joseph-Adolphe Chapleau
-18820801 18840123 3 Joseph-Alfred Mousseau
-18840124 18870125 3 John Jones Ross
-18870126 18870129 3 Louis-Olivier Taillon
-18870130 18911221 3 Honoré Mercier
-18911222 18921216 3 Charles Boucher de Boucherville
-18921217 18960511 3 Louis-Olivier Taillon
-18960512 18970524 3 Edmund James Flynn
-18970525 19000925 3 Félix-Gabriel
+18740922 18780308 3 Charles Boucher de Boucherville
+18780308 18791031 3 Henri-Gustave Joly de Lotbinière
+18791031 18820731 3 Sir Joseph-Adolphe Chapleau
+18820731 18840123 3 Joseph-Alfred Mousseau
+18840123 18870125 3 John Jones Ross
+18870125 18870129 3 Louis-Olivier Taillon
+18870129 18911221 3 Honoré Mercier
+18911221 18921216 3 Charles Boucher de Boucherville
+18921216 18960511 3 Louis-Olivier Taillon
+18960511 18970524 3 Edmund James Flynn
+18970524 19000925 3 Félix-Gabriel
 19001003 19050323 3 Simon-Napoléon Parent
-19050324 19200709 3 Lomer Gouin
-19200710 19360611 3 Louis-Alexandre Taschereau
-19360612 19360826 3 Adélard Godbout
-19360827 19391109 3 Maurice Duplessis
-19391110 19440830 3 Adélard Godbout
-19440831 19590907 3 Maurice Duplessis
+19050323 19200709 3 Lomer Gouin
+19200709 19360611 3 Louis-Alexandre Taschereau
+19360611 19360826 3 Adélard Godbout
+19360826 19391109 3 Maurice Duplessis
+19391109 19440830 3 Adélard Godbout
+19440830 19590907 3 Maurice Duplessis
 19590911 19600102 3 Paul Sauvé
 19600108 19600705 3 Antonio Barrette
-19600706 19660616 3 Jean Lesage
-19660617 19680926 3 Daniel Johnson, Sr.
+19600705 19660616 3 Jean Lesage
+19660616 19680926 3 Daniel Johnson, Sr.
 19681002 19700512 3 Jean-Jacques Bertrand
-19700513 19761125 3 Robert Bourassa
-19761126 19851003 3 René Lévesque
-19851004 19851212 3 Pierre-Marc Johnson
-19851213 19940111 3 Robert Bourassa
-19940112 19940926 3 Daniel Johnson, Jr.
-19940927 19960129 3 Jacques Parizeau
-19960130 20010308 3 Lucien Bouchard
-20010309 20030429 3 Bernard Landry
-20030430 20120919 3 Jean Charest
-20120920 20140425 3 Pauline Marois
-20140426 30000101 3 Philippe Couillard
+19700512 19761125 3 Robert Bourassa
+19761125 19851003 3 René Lévesque
+19851003 19851212 3 Pierre-Marc Johnson
+19851212 19940111 3 Robert Bourassa
+19940111 19940926 3 Daniel Johnson, Jr.
+19940926 19960129 3 Jacques Parizeau
+19960129 20010308 3 Lucien Bouchard
+20010308 20030429 3 Bernard Landry
+20030429 20120919 3 Jean Charest
+20120919 20140425 3 Pauline Marois
+20140425 30000101 3 Philippe Couillard
 
 # United Kingdom
 17210404 17420211 4 Sir Robert Walpole
 17420216 17430702 4 Spencer Compton, 1st Earl of Wilmington
 17430827 17540306 4 Henry Pelham
 17540316 17561116 4 Thomas Pelham-Holles, 1st Duke of Newcastle
-17561117 17570625 4 William Cavendish, 4th Duke of Devonshire
+17561116 17570625 4 William Cavendish, 4th Duke of Devonshire
 17570702 17620526 4 Thomas Pelham-Holles, 1st Duke of Newcastle
-17620527 17630408 4 John Stuart, 3rd Earl of Bute
+17620526 17630408 4 John Stuart, 3rd Earl of Bute
 17630416 17650713 4 George Grenville
-17650714 17660730 4 Charles Watson-Wentworth, 2nd Marquess of Rockingham
-17660801 17681014 4 William Pitt the Elder, 1st Earl of Chatham
-17681015 17700128 4 Augustus FitzRoy, 3rd Duke of Grafton
-17700129 17820322 4 Frederick North, Lord North
+17650713 17660730 4 Charles Watson-Wentworth, 2nd Marquess of Rockingham
+17660730 17681014 4 William Pitt the Elder, 1st Earl of Chatham
+17681014 17700128 4 Augustus FitzRoy, 3rd Duke of Grafton
+17700128 17820322 4 Frederick North, Lord North
 17820327 17820701 4 Charles Watson-Wentworth, 2nd Marquess of Rockingham
 17820704 17830402 4 William Petty-FitzMaurice, 2nd Earl of Shelburne
-17830403 17831219 4 William Cavendish-Bentinck, 3rd Duke of Portland
-17831220 18010314 4 William Pitt the Younger
+17830402 17831219 4 William Cavendish-Bentinck, 3rd Duke of Portland
+17831219 18010314 4 William Pitt the Younger
 18010317 18040510 4 Henry Addington
-18040511 18060123 4 William Pitt the Younger
+18040510 18060123 4 William Pitt the Younger
 18060211 18070331 4 William Wyndham Grenville, 1st Lord Grenville
-18070401 18091004 4 William Cavendish-Bentinck, 3rd Duke of Portland
-18091005 18120511 4 Spencer Perceval
+18070331 18091004 4 William Cavendish-Bentinck, 3rd Duke of Portland
+18091004 18120511 4 Spencer Perceval
 18120608 18270409 4 Robert Banks Jenkinson, 2nd Earl of Liverpool
-18270410 18270808 4 George Canning
+18270409 18270808 4 George Canning
 18270831 18280121 4 Frederick John Robinson, 1st Viscount Goderich
-18280122 18301116 4 Arthur Wellesley, 1st Duke of Wellington
+18280121 18301116 4 Arthur Wellesley, 1st Duke of Wellington
 18301122 18340709 4 Charles Grey, 2nd Earl Grey
 18340716 18341114 4 William Lamb, 2nd Viscount Melbourne
-18341115 18341210 4 Arthur Wellesley, 1st Duke of Wellington
-18341211 18350408 4 Sir Robert Peel
+18341114 18341210 4 Arthur Wellesley, 1st Duke of Wellington
+18341210 18350408 4 Sir Robert Peel
 18350418 18410830 4 William Lamb, 2nd Viscount Melbourne
-18410831 18460629 4 Sir Robert Peel
-18460630 18520221 4 Lord John Russell
+18410830 18460629 4 Sir Robert Peel
+18460629 18520221 4 Lord John Russell
 18520223 18521217 4 Edward Smith-Stanley, 14th Earl of Derby
 18521219 18550130 4 George Hamilton-Gordon, 4th Earl of Aberdeen
 18550206 18580219 4 Henry John Temple, 3rd Viscount Palmerston
-18580220 18590611 4 Edward Smith-Stanley, 14th Earl of Derby
-18590612 18651018 4 Henry John Temple, 3rd Viscount Palmerston
+18580219 18590611 4 Edward Smith-Stanley, 14th Earl of Derby
+18590611 18651018 4 Henry John Temple, 3rd Viscount Palmerston
 18651029 18660626 4 John Russell, 1st Earl Russell
 18660628 18680225 4 Edward Smith-Stanley, 14th Earl of Derby
 18680227 18681201 4 Benjamin Disraeli
@@ -181,151 +181,151 @@
 18920815 18940302 4 William Ewart Gladstone
 18940305 18950622 4 Archibald Primrose, 5th Earl of Rosebery
 18950625 19020711 4 Robert Gascoyne-Cecil, 3rd Marquess of Salisbury
-19020712 19051205 4 Arthur Balfour
-19051206 19080407 4 Sir Henry Campbell-Bannerman
-19080408 19161207 4 Herbert Henry Asquith
-19161208 19221019 4 David Lloyd George
+19020711 19051205 4 Arthur Balfour
+19051205 19080407 4 Sir Henry Campbell-Bannerman
+19080407 19161207 4 Herbert Henry Asquith
+19161207 19221019 4 David Lloyd George
 19221023 19230520 4 Andrew Bonar Law
 19230523 19240116 4 Stanley Baldwin
 19240122 19241104 4 Ramsay MacDonald
-19241105 19290605 4 Stanley Baldwin
-19290606 19350607 4 Ramsay MacDonald
-19350608 19370528 4 Stanley Baldwin
-19370529 19400510 4 Neville Chamberlain
-19400511 19450726 4 Winston Churchill
-19450727 19511026 4 Clement Attlee
-19511027 19550406 4 Sir Winston Churchill
-19550407 19570110 4 Sir Anthony Eden
-19570111 19631019 4 Harold Macmillan
-19631020 19641016 4 Sir Alec Douglas-Home
-19641017 19700619 4 Harold Wilson
-19700620 19740304 4 Edward Heath
-19740305 19760405 4 Harold Wilson
-19760406 19790504 4 James Callaghan
-19790505 19901128 4 Margaret Thatcher
-19901129 19970502 4 John Major
-19970503 20070627 4 Tony Blair
-20070628 20100511 4 Gordon Brown
-20100512 30000101 4 David Cameron
+19241104 19290605 4 Stanley Baldwin
+19290605 19350607 4 Ramsay MacDonald
+19350607 19370528 4 Stanley Baldwin
+19370528 19400510 4 Neville Chamberlain
+19400510 19450726 4 Winston Churchill
+19450726 19511026 4 Clement Attlee
+19511026 19550406 4 Sir Winston Churchill
+19550406 19570110 4 Sir Anthony Eden
+19570110 19631019 4 Harold Macmillan
+19631019 19641016 4 Sir Alec Douglas-Home
+19641016 19700619 4 Harold Wilson
+19700619 19740304 4 Edward Heath
+19740304 19760405 4 Harold Wilson
+19760405 19790504 4 James Callaghan
+19790504 19901128 4 Margaret Thatcher
+19901128 19970502 4 John Major
+19970502 20070627 4 Tony Blair
+20070627 20100511 4 Gordon Brown
+20100511 30000101 4 David Cameron
 
 # Russia
 19221230 19240121 5 Vladimir Lenin
-19240122 19530305 5 Joseph Stalin
-19530306 19550208 5 Georgy Malenkov
-19550209 19641014 5 Nikita Khrushchev
-19641015 19821110 5 Leonid Brezhnev
+19240121 19530305 5 Joseph Stalin
+19530305 19550208 5 Georgy Malenkov
+19550208 19641014 5 Nikita Khrushchev
+19641014 19821110 5 Leonid Brezhnev
 19821112 19840209 5 Yuri Andropov
 19840213 19850310 5 Konstantin Chernenko
-19850311 19910710 5 Mikhail Gorbachev
-19910711 19991231 5 Boris Yeltsin
-20000101 20080507 5 Vladimir Putin
-20080508 20120507 5 Dmitry Medvedev
-20120508 30000101 5 Vladimir Putin
+19850310 19910710 5 Mikhail Gorbachev
+19910710 19991231 5 Boris Yeltsin
+19991231 20080507 5 Vladimir Putin
+20080507 20120507 5 Dmitry Medvedev
+20120507 30000101 5 Vladimir Putin
 
 # France
 18481220 18521202 6 Louis-Napoléon Bonaparte
 18710831 18730524 6 Adolphe Thiers
-18730525 18790130 6 Patrice de Mac-Mahon, duc de Magenta
-18790131 18871202 6 Jules Grévy
-18871203 18940625 6 Marie François Sadi Carnot
+18730524 18790130 6 Patrice de Mac-Mahon, duc de Magenta
+18790130 18871202 6 Jules Grévy
+18871202 18940625 6 Marie François Sadi Carnot
 18940627 18950116 6 Jean Casimir-Perier
-18950117 18990216 6 Félix Faure
+18950116 18990216 6 Félix Faure
 18990218 19060218 6 Émile Loubet
-19060219 19130218 6 Armand Fallières
-19130219 19200218 6 Raymond Poincaré
-19200219 19200921 6 Paul Deschanel
+19060218 19130218 6 Armand Fallières
+19130218 19200218 6 Raymond Poincaré
+19200218 19200921 6 Paul Deschanel
 19200923 19240611 6 Alexandre Millerand
 19240613 19310613 6 Gaston Doumergue
-19310614 19320507 6 Paul Doumer
+19310613 19320507 6 Paul Doumer
 19320510 19400711 6 Albert Lebrun
-19400712 19440819 6 Philippe Pétain
-19440820 19460126 6 Charles de Gaulle
-19460127 19460624 6 Félix Gouin
-19460625 19461128 6 Georges Bidault
-19461129 19461216 6 Vincent Auriol
-19461217 19470116 6 Léon Blum
-19470117 19540116 6 Vincent Auriol
-19540117 19590108 6 René Coty
-19590109 19690428 6 Charles de Gaulle
-19690429 19690620 6 Alain Poher
-19690621 19740402 6 Georges Pompidou
-19740403 19740527 6 Alain Poher
-19740528 19810521 6 Valéry Giscard d'Estaing
-19810522 19950517 6 François Mitterrand
-19950518 20070516 6 Jacques Chirac
-20070517 20120515 6 Nicolas Sarkozy
-20120516 30000101 6 François Hollande
+19400711 19440819 6 Philippe Pétain
+19440819 19460126 6 Charles de Gaulle
+19460126 19460624 6 Félix Gouin
+19460624 19461128 6 Georges Bidault
+19461128 19461216 6 Vincent Auriol
+19461216 19470116 6 Léon Blum
+19470116 19540116 6 Vincent Auriol
+19540116 19590108 6 René Coty
+19590108 19690428 6 Charles de Gaulle
+19690428 19690620 6 Alain Poher
+19690620 19740402 6 Georges Pompidou
+19740402 19740527 6 Alain Poher
+19740527 19810521 6 Valéry Giscard d'Estaing
+19810521 19950517 6 François Mitterrand
+19950517 20070516 6 Jacques Chirac
+20070516 20120515 6 Nicolas Sarkozy
+20120515 30000101 6 François Hollande
 
 # Germany
 18670701 18710321 7 Count Otto von Bismarck
-18710322 18900320 7 Prince Otto von Bismarck
-18900321 18941026 7 Count Leo von Caprivi
+18710321 18900320 7 Prince Otto von Bismarck
+18900320 18941026 7 Count Leo von Caprivi
 18941029 19001017 7 Prince Chlodwig zu Hohenlohe-Schillingsfürst
-19001018 19090714 7 Prince Bernhard von Bülow
-19090715 19170713 7 Theobald von Bethmann-Hollweg
-19170714 19171101 7 Georg Michaelis
-19171102 19180930 7 Count Georg von Hertling
+19001017 19090714 7 Prince Bernhard von Bülow
+19090714 19170713 7 Theobald von Bethmann-Hollweg
+19170713 19171101 7 Georg Michaelis
+19171101 19180930 7 Count Georg von Hertling
 19181003 19181109 7 Prince Maximilian of Baden
-19181110 19190213 7 Friedrich Ebert
-19190214 19190620 7 Philipp Scheidemann
-19190621 19200326 7 Gustav Bauer
-19200327 19200608 7 Hermann Müller
+19181109 19190213 7 Friedrich Ebert
+19190213 19190620 7 Philipp Scheidemann
+19190620 19200326 7 Gustav Bauer
+19200326 19200608 7 Hermann Müller
 19200625 19210504 7 Constantin Fehrenbach
 19210510 19221114 7 Joseph Wirth
 19221122 19230812 7 Wilhelm Cuno
-19230813 19231130 7 Gustav Stresemann
-19231201 19250115 7 Wilhelm Marx
-19250116 19260512 7 Hans Luther
+19230812 19231130 7 Gustav Stresemann
+19231130 19250115 7 Wilhelm Marx
+19250115 19260512 7 Hans Luther
 19260517 19280612 7 Wilhelm Marx
 19280628 19300327 7 Hermann Müller
 19300330 19320530 7 Heinrich Brüning
-19320601 19321117 7 Franz von Papen
+19320530 19321117 7 Franz von Papen
 19321203 19330128 7 Kurt von Schleicher
 19330130 19450430 7 Adolf Hitler
-19450501 19450501 7 Joseph Goebbels
+19450430 19450501 7 Joseph Goebbels
 19450502 19450523 7 Lutz Graf Schwerin von Krosigk
 19490920 19631011 7 Konrad Adenauer
 19631017 19661130 7 Ludwig Erhard
-19661201 19691021 7 Kurt Georg Kiesinger
-19691022 19740507 7 Willy Brandt
-19740508 19740516 7 Walter Scheel
-19740517 19821001 7 Helmut Schmidt
+19661130 19691021 7 Kurt Georg Kiesinger
+19691021 19740507 7 Willy Brandt
+19740507 19740516 7 Walter Scheel
+19740516 19821001 7 Helmut Schmidt
 19821004 19981026 7 Helmut Kohl
-19981027 20051018 7 Gerhard Schröder
+19981026 20051018 7 Gerhard Schröder
 20051122 30000101 7 Angela Merkel
 
 # Australia
 19010101 19030924 8 Sir Edmund Barton
-19030925 19040427 8 Alfred Deakin
-19040428 19040818 8 Chris Watson
-19040819 19050705 8 Sir George Reid
-19050706 19081113 8 Alfred Deakin
-19081114 19090602 8 Andrew Fisher
-19090603 19100429 8 Alfred Deakin
-19100430 19130624 8 Andrew Fisher
-19130625 19140917 8 Joseph Cook
-19140918 19151027 8 Andrew Fisher
-19151028 19230209 8 Billy Hughes
-19230210 19291022 8 Stanley Bruce
-19291023 19320106 8 James Scullin
-19320107 19390407 8 Joseph Lyons
-19390408 19390426 8 Sir Earle Page
-19390427 19410828 8 Robert Menzies
-19410829 19411007 8 Arthur Fadden
-19411008 19450705 8 John Curtin
-19450706 19450713 8 Frank Forde
-19450714 19491219 8 Ben Chifley
-19491220 19660126 8 Sir Robert Menzies
-19660127 19671219 8 Harold Holt
-19671220 19680110 8 John McEwen
-19680111 19710310 8 John Gorton
-19710311 19721205 8 William McMahon
-19721206 19751111 8 Gough Whitlam
-19751112 19830311 8 Malcolm Fraser
-19830312 19911220 8 Bob Hawke
-19911221 19960311 8 Paul Keating
-19960312 20071203 8 John Howard
-20071204 20100624 8 Kevin Rudd
-20100625 20130627 8 Julia Gillard
-20130628 20130918 8 Kevin Rudd
-20130919 30000101 8 Tony Abbott
+19030924 19040427 8 Alfred Deakin
+19040427 19040818 8 Chris Watson
+19040818 19050705 8 Sir George Reid
+19050705 19081113 8 Alfred Deakin
+19081113 19090602 8 Andrew Fisher
+19090602 19100429 8 Alfred Deakin
+19100429 19130624 8 Andrew Fisher
+19130624 19140917 8 Joseph Cook
+19140917 19151027 8 Andrew Fisher
+19151027 19230209 8 Billy Hughes
+19230209 19291022 8 Stanley Bruce
+19291022 19320106 8 James Scullin
+19320106 19390407 8 Joseph Lyons
+19390407 19390426 8 Sir Earle Page
+19390426 19410828 8 Robert Menzies
+19410828 19411007 8 Arthur Fadden
+19411007 19450705 8 John Curtin
+19450705 19450713 8 Frank Forde
+19450713 19491219 8 Ben Chifley
+19491219 19660126 8 Sir Robert Menzies
+19660126 19671219 8 Harold Holt
+19671219 19680110 8 John McEwen
+19680110 19710310 8 John Gorton
+19710310 19721205 8 William McMahon
+19721205 19751111 8 Gough Whitlam
+19751111 19830311 8 Malcolm Fraser
+19830311 19911220 8 Bob Hawke
+19911220 19960311 8 Paul Keating
+19960311 20071203 8 John Howard
+20071203 20100624 8 Kevin Rudd
+20100624 20130627 8 Julia Gillard
+20130627 20130918 8 Kevin Rudd
+20130918 30000101 8 Tony Abbott

@@ -55,7 +55,7 @@ public:
      * Builds an abstract interval with a custom type.
      *
      * @param begin Begin timestamp
-     * @param end   End timestamp
+     * @param end   End timestamp (excluded)
      * @param key   Key
      * @param type  Type
      */
@@ -66,7 +66,7 @@ public:
      * Builds an abstract interval with a standard type.
      *
      * @param begin Begin timestamp
-     * @param end   End timestamp
+     * @param end   End timestamp (excluded)
      * @param key   Key
      * @param type  Standard type
      */
@@ -123,7 +123,7 @@ public:
      */
     bool intersects(timestamp_t ts) const
     {
-        return ts >= _begin && ts <= _end;
+        return ts >= _begin && ts < _end;
     }
 
     /**
@@ -137,7 +137,7 @@ public:
     }
 
     /**
-     * Returns the end timestamp.
+     * Returns the end timestamp (excluded from the interval).
      *
      * @returns End timestamp
      */

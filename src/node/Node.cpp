@@ -65,7 +65,7 @@ void Node::addInterval(AbstractInterval::SP interval)
     // update size cache
     _curIntervalsSize += _serdes->getIntervalSize(*interval);
 
-    // update node's end time
+    // update node's end timestamp
     _end = interval->getEnd();
 
     // end changed: recompute header size
@@ -116,7 +116,7 @@ bool Node::findAll(timestamp_t ts, IntervalJar& intervals) const
     for (auto it = getFirstItForTs(ts); it != _intervals.end(); it++) {
         auto interval = *it;
 
-        if (interval->getBegin() <= ts) {
+        if (ts >= interval->getBegin()) {
             intervals.insert(std::make_pair(interval->getKey(), interval));
             found = true;
         }
@@ -140,7 +140,7 @@ AbstractInterval::SP Node::findOne(timestamp_t ts, interval_key_t key) const
     for (auto it = getFirstItForTs(ts); it != _intervals.end(); it++) {
         auto interval = *it;
 
-        if (interval->getKey() == key && interval->getBegin() <= ts) {
+        if (interval->getKey() == key && ts >= interval->getBegin()) {
             return interval;
         }
     }
@@ -156,15 +156,15 @@ std::vector<AbstractInterval::SP>::const_iterator Node::getFirstItForTs(timestam
      *
      * So we have something like this:
      *
-     *      |                                           ¦
-     *      [==========]                                ¦
-     *      ¦  [==========]                             ¦
-     *      ¦      [==========]                         ¦
-     *      ¦    [===============]                      ¦
-     *      ¦           [====================]          ¦
-     *      ¦        [=======================]          ¦
-     *      ¦                [==================]       ¦
-     *      ¦      [====================================]
+     *      ¦                                           ¦
+     *      [==========[                                ¦
+     *      ¦  [==========[                             ¦
+     *      ¦      [==========[                         ¦
+     *      ¦    [===============[                      ¦
+     *      ¦           [====================[          ¦
+     *      ¦        [=======================[          ¦
+     *      ¦                [==================[       ¦
+     *      ¦      [====================================[
      *      ¦                                           ¦
      *     node                                       node
      *     begin                                       end
@@ -173,15 +173,16 @@ std::vector<AbstractInterval::SP>::const_iterator Node::getFirstItForTs(timestam
      * won't care checking for this again. We want the first interval whose
      * end time is NOT LESS THAN `ts`.
      */
-    auto compare = [] (const AbstractInterval::SP& a, const timestamp_t& b)
+    auto compare = [] (const timestamp_t& b, const AbstractInterval::SP& a)
     {
-        return a->getEnd() < b;
+        return b < a->getEnd();
     };
 
-    /* This will return `_intervals.end()` if nothing is found, although if
-     * we're here, it should always find something.
+    /* This will return `_intervals.end()` if nothing is found, but this
+     * will never happen if a range check has been done prior to calling this
+     * method.
      */
-    auto it = std::lower_bound(_intervals.begin(), _intervals.end(),
+    auto it = std::upper_bound(_intervals.begin(), _intervals.end(),
                                ts, compare);
 
     return it;
