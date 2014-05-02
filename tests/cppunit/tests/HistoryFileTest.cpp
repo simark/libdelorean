@@ -213,16 +213,16 @@ void HistoryFileTest::testAddFindIntervals()
     res = hfSource->findAll(17210404, tmpJar);
     CPPUNIT_ASSERT(res);
     CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(1), tmpJar.size());
-    assertStrIntervalEquals(*tmpJar.at(4), 17210404, 17420211, 4,
+    assertStrIntervalEquals(*tmpJar[4], 17210404, 17420211, 4,
                             "Sir Robert Walpole");
     tmpJar.clear();
 
     // 1820
     res = hfSource->findAll(18200101, tmpJar);
     CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(2), tmpJar.size());
-    assertStrIntervalEquals(*tmpJar.at(4), 18120608, 18270409, 4,
+    assertStrIntervalEquals(*tmpJar[4], 18120608, 18270409, 4,
                             "Robert Banks Jenkinson, 2nd Earl of Liverpool");
-    assertStrIntervalEquals(*tmpJar.at(1), 18170304, 18250304, 1,
+    assertStrIntervalEquals(*tmpJar[1], 18170304, 18250304, 1,
                             "James Monroe");
     tmpJar.clear();
 

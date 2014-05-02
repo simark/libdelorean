@@ -141,7 +141,7 @@ public:
             throw IndexOutOfRange(_children.size(), index);
         }
 
-        return _children.at(index).getSeqNumber();
+        return _children[index].getSeqNumber();
     }
 
     /**
@@ -157,7 +157,7 @@ public:
             throw IndexOutOfRange(_children.size(), index);
         }
 
-        return _children.at(index).getBegin();
+        return _children[index].getBegin();
     }
 
     /**

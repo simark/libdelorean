@@ -112,12 +112,12 @@ void AlignedNodeSerDesTest::testSerializeDeserialize()
     // verify children
     CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(3), deserNode->getChildrenCount());
     auto& children = deserNode->getChildren();
-    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(-3000), children.at(0).getBegin());
-    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(8), children.at(0).getSeqNumber());
-    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(-2700), children.at(1).getBegin());
-    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(17), children.at(1).getSeqNumber());
-    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(152), children.at(2).getBegin());
-    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(3), children.at(2).getSeqNumber());
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(-3000), children[0].getBegin());
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(8), children[0].getSeqNumber());
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(-2700), children[1].getBegin());
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(17), children[1].getSeqNumber());
+    CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(152), children[2].getBegin());
+    CPPUNIT_ASSERT_EQUAL(static_cast<node_seq_t>(3), children[2].getSeqNumber());
 
     // verify intervals
     CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(11), deserNode->getIntervalCount());

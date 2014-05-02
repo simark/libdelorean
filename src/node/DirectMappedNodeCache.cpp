@@ -50,10 +50,10 @@ Node::SP DirectMappedNodeCache::getNodeImpl(node_seq_t seqNumber)
             /* Do not overwrite something else in cache if the node
              * doesn't even exist.
              */
-            _cache.at(pos) = node;
+            _cache[pos] = node;
         }
     } else {
-        node = _cache.at(pos);
+        node = _cache[pos];
     }
 
     return node;
@@ -61,7 +61,7 @@ Node::SP DirectMappedNodeCache::getNodeImpl(node_seq_t seqNumber)
 
 bool DirectMappedNodeCache::nodeIsCachedImpl(node_seq_t seqNumber) const
 {
-    const auto& node = _cache.at(this->cachePosForSeqNumber(seqNumber));
+    const auto& node = _cache[this->cachePosForSeqNumber(seqNumber)];
 
     if (node == nullptr) {
         return false;

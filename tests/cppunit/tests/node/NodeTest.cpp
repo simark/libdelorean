@@ -147,8 +147,8 @@ void NodeTest::testAddInterval()
 
     // make sure they are the same (pointers)
     const auto& intervals = node->getIntervals();
-    CPPUNIT_ASSERT(intervals.at(0) == interval1);
-    CPPUNIT_ASSERT(intervals.at(1) == interval2);
+    CPPUNIT_ASSERT(intervals[0] == interval1);
+    CPPUNIT_ASSERT(intervals[1] == interval2);
 }
 
 void NodeTest::testIntervalFits()

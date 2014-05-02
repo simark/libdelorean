@@ -196,7 +196,7 @@ void HistoryFileSink::tryAddIntervalToNode(AbstractInterval::SP intr,
                                            std::size_t index)
 {
     // target node
-    auto& targetNode = _latestBranch.at(index);
+    auto& targetNode = _latestBranch[index];
 
     // does this interval fits the target node?
     if (!targetNode->intervalFits(*intr)) {
@@ -292,7 +292,7 @@ void HistoryFileSink::addSiblingNode(std::size_t index)
         parentIndex = 0;
     } else {
         // parent
-        const auto& parent = *(_latestBranch.at(index - 1));
+        const auto& parent = *(_latestBranch[index - 1]);
 
         // is parent full?
         if (parent.isFull()) {
@@ -388,7 +388,7 @@ void HistoryFileSink::drawBranchFromIndex(std::size_t parentIndex,
     }
 
     // first parent node will be the pointed parent
-    auto parentNode = _latestBranch.at(parentIndex).get();
+    auto parentNode = _latestBranch[parentIndex].get();
 
     // add branch nodes
     for (std::size_t i = 0; i < newBranchNodes; ++i) {

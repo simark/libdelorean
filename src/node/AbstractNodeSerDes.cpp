@@ -64,18 +64,18 @@ AbstractNodeSerDes::~AbstractNodeSerDes()
 
 void AbstractNodeSerDes::unregisterIntervalFactory(interval_type_t type)
 {
-    _intervalFactories.at(type) = nullptr;
+    _intervalFactories[type] = nullptr;
 }
 
 void AbstractNodeSerDes::registerIntervalFactory(interval_type_t type,
                                                  IIntervalFactory::UP factory)
 {
-    if (_intervalFactories.at(type) != nullptr) {
+    if (_intervalFactories[type] != nullptr) {
         std::ostringstream oss;
         oss << "interval type " << type << " is already registered";
         throw ExistingIntervalType(oss.str());
     } else {
-        _intervalFactories.at(type) = std::move(factory);
+        _intervalFactories[type] = std::move(factory);
     }
 }
 
@@ -105,7 +105,7 @@ AbstractInterval::UP AbstractNodeSerDes::createInterval(timestamp_t begin,
                                                         interval_type_t type) const
 {
     // make sure interval factory exists for this type
-    const auto& factory = _intervalFactories.at(type);
+    const auto& factory = _intervalFactories[type];
     if (factory == nullptr) {
         throw UnknownIntervalType {type};
     }

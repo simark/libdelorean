@@ -58,7 +58,7 @@ void getIntervalsFromTextFile(const bfs::path& path,
         }
 
         // ignore if comment
-        if (line.at(0) == '#') {
+        if (line[0] == '#') {
             continue;
         }
 
