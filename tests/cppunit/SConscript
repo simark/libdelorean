@@ -15,7 +15,7 @@ libs = [
 ]
 
 interval_tests = [
-    'IntIntervalTest.cpp',
+    'Int32IntervalTest.cpp',
     'StringIntervalTest.cpp',
 ]
 node_tests = [

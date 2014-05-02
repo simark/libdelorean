@@ -21,8 +21,8 @@
 
 #include <delorean/node/AbstractNodeSerDes.hpp>
 #include <delorean/interval/IIntervalFactory.hpp>
-#include <delorean/interval/IntInterval.hpp>
-#include <delorean/interval/UIntInterval.hpp>
+#include <delorean/interval/Int32Interval.hpp>
+#include <delorean/interval/Uint32Interval.hpp>
 #include <delorean/interval/NullInterval.hpp>
 #include <delorean/interval/FloatInterval.hpp>
 #include <delorean/interval/StringInterval.hpp>
@@ -39,20 +39,20 @@ AbstractNodeSerDes::AbstractNodeSerDes()
     _intervalFactories.resize(1 << (sizeof(interval_type_t) * 8));
 
     // register basic types we know
-    auto intFactoryPtr = new SimpleIntervalFactory<IntInterval> {};
-    auto uintFactoryPtr = new SimpleIntervalFactory<UIntInterval> {};
+    auto int32FactoryPtr = new SimpleIntervalFactory<Int32Interval> {};
+    auto uint32FactoryPtr = new SimpleIntervalFactory<Uint32Interval> {};
     auto stringFactoryPtr = new SimpleIntervalFactory<StringInterval> {};
     auto floatFactoryPtr = new SimpleIntervalFactory<FloatInterval> {};
     auto nullFactoryPtr = new SimpleIntervalFactory<NullInterval> {};
 
-    IIntervalFactory::UP intFactory {intFactoryPtr};
-    IIntervalFactory::UP uintFactory {uintFactoryPtr};
+    IIntervalFactory::UP int32Factory {int32FactoryPtr};
+    IIntervalFactory::UP uint32Factory {uint32FactoryPtr};
     IIntervalFactory::UP stringFactory {stringFactoryPtr};
     IIntervalFactory::UP floatFactory {floatFactoryPtr};
     IIntervalFactory::UP nullFactory {nullFactoryPtr};
 
-    this->registerIntervalFactory(StandardIntervalType::INT32, std::move(intFactory));
-    this->registerIntervalFactory(StandardIntervalType::UINT32, std::move(uintFactory));
+    this->registerIntervalFactory(StandardIntervalType::INT32, std::move(int32Factory));
+    this->registerIntervalFactory(StandardIntervalType::UINT32, std::move(uint32Factory));
     this->registerIntervalFactory(StandardIntervalType::STRING, std::move(stringFactory));
     this->registerIntervalFactory(StandardIntervalType::FLOAT32, std::move(floatFactory));
     this->registerIntervalFactory(StandardIntervalType::TNULL, std::move(nullFactory));

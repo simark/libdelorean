@@ -19,15 +19,15 @@
 #include <cstddef>
 #include <cstring>
 
-#include <delorean/interval/IntInterval.hpp>
+#include <delorean/interval/Int32Interval.hpp>
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/ex/InvalidIntervalArguments.hpp>
 #include <delorean/BasicTypes.hpp>
-#include "IntIntervalTest.hpp"
+#include "Int32IntervalTest.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(IntIntervalTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(Int32IntervalTest);
 
-void IntIntervalTest::testConstructorAndAttributes()
+void Int32IntervalTest::testConstructorAndAttributes()
 {
     timestamp_t begin = 100;
     timestamp_t end = 40;
@@ -35,7 +35,7 @@ void IntIntervalTest::testConstructorAndAttributes()
 
     // wrong interval parameters
     try {
-        IntInterval::UP interval {new IntInterval(begin, end, key)};
+        Int32Interval::UP interval {new Int32Interval(begin, end, key)};
         CPPUNIT_FAIL("Building interval with wrong parameters");
     } catch (const InvalidIntervalArguments& ex) {
         CPPUNIT_ASSERT_EQUAL(begin, ex.getBegin());
@@ -46,7 +46,7 @@ void IntIntervalTest::testConstructorAndAttributes()
     begin = 50;
     end = 50;
     try {
-        IntInterval::UP interval {new IntInterval(begin, end, key)};
+        Int32Interval::UP interval {new Int32Interval(begin, end, key)};
     } catch (const InvalidIntervalArguments& ex) {
         CPPUNIT_FAIL("Interval constructor does not accept equal begin and end times");
     }
@@ -55,7 +55,7 @@ void IntIntervalTest::testConstructorAndAttributes()
     begin = 23;
     end = 67;
     key = 5;
-    IntInterval::UP interval {new IntInterval(begin, end, key)};
+    Int32Interval::UP interval {new Int32Interval(begin, end, key)};
     CPPUNIT_ASSERT_EQUAL(begin, interval->getBegin());
     CPPUNIT_ASSERT_EQUAL(end, interval->getEnd());
     CPPUNIT_ASSERT_EQUAL(key, interval->getKey());
@@ -68,10 +68,10 @@ void IntIntervalTest::testConstructorAndAttributes()
     CPPUNIT_ASSERT_EQUAL(value, interval->getValue());
 }
 
-void IntIntervalTest::testIntersection()
+void Int32IntervalTest::testIntersection()
 {
     // build valid interval
-    IntInterval::UP interval {new IntInterval(50, 150, 1)};
+    Int32Interval::UP interval {new Int32Interval(50, 150, 1)};
 
     // intersection should include begin, but exclude end
     CPPUNIT_ASSERT(!interval->intersects(49));
@@ -82,14 +82,14 @@ void IntIntervalTest::testIntersection()
     CPPUNIT_ASSERT(!interval->intersects(151));
 }
 
-void IntIntervalTest::testOperators()
+void Int32IntervalTest::testOperators()
 {
     // operators (<, <=, ==, >=, >) compare end time only
 
     // prepare some intervals
-    IntInterval::UP interval1 {new IntInterval(1534, 1867, 1)};
-    IntInterval::UP interval2 {new IntInterval(1988, 2014, 2)};
-    IntInterval::UP interval3 {new IntInterval(2001, 2014, 3)};
+    Int32Interval::UP interval1 {new Int32Interval(1534, 1867, 1)};
+    Int32Interval::UP interval2 {new Int32Interval(1988, 2014, 2)};
+    Int32Interval::UP interval3 {new Int32Interval(2001, 2014, 3)};
 
     // <
     CPPUNIT_ASSERT(*interval1 < *interval2);
@@ -118,9 +118,9 @@ void IntIntervalTest::testOperators()
     CPPUNIT_ASSERT(!(*interval1 > *interval2));
 }
 
-void IntIntervalTest::testFixedValue()
+void Int32IntervalTest::testFixedValue()
 {
-    IntInterval::UP interval {new IntInterval(1939, 1945, 666)};
+    Int32Interval::UP interval {new Int32Interval(1939, 1945, 666)};
 
     // set fixed, get native
     int i = -1001;
@@ -133,9 +133,9 @@ void IntIntervalTest::testFixedValue()
     CPPUNIT_ASSERT_EQUAL(u, interval->getFixedValue());
 }
 
-void IntIntervalTest::testVariableDataSize()
+void Int32IntervalTest::testVariableDataSize()
 {
-    IntInterval::UP interval {new IntInterval(1534, 1867, 1)};
+    Int32Interval::UP interval {new Int32Interval(1534, 1867, 1)};
 
     // no variable data
     CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(0), interval->getVariableDataSize());

@@ -22,7 +22,7 @@
 #include <delorean/node/AbstractNodeSerDes.hpp>
 #include <delorean/node/AlignedNodeSerDes.hpp>
 #include <delorean/interval/AbstractInterval.hpp>
-#include <delorean/interval/IntInterval.hpp>
+#include <delorean/interval/Int32Interval.hpp>
 #include <delorean/interval/IntervalJar.hpp>
 #include <delorean/ex/TimestampOutOfRange.hpp>
 #include <delorean/ex/NodeFull.hpp>
@@ -135,8 +135,8 @@ void NodeTest::testAddInterval()
     }};
 
     // create 3 intervals
-    IntInterval::SP interval1 {new IntInterval(1602, 1999, 1)};
-    IntInterval::SP interval2 {new IntInterval(2000, 3000, 1)};
+    Int32Interval::SP interval1 {new Int32Interval(1602, 1999, 1)};
+    Int32Interval::SP interval2 {new Int32Interval(2000, 3000, 1)};
 
     // add intervals
     node->addInterval(interval1);
@@ -169,7 +169,7 @@ void NodeTest::testIntervalFits()
     node->addChild(1600, 0);
 
     // (12 bytes remaining / 4 bytes/interval) == 3 intervals should fit now
-    IntInterval::SP interval {new IntInterval(1602, 2000, 1)};
+    Int32Interval::SP interval {new Int32Interval(1602, 2000, 1)};
 
     // first fits
     CPPUNIT_ASSERT(node->intervalFits(*interval));
@@ -201,12 +201,12 @@ void NodeTest::testFindOne()
     }};
 
     // create a few intervals
-    IntInterval::SP interval1 {new IntInterval(1534, 1608, 1)};
-    IntInterval::SP interval2 {new IntInterval(1602, 1777, 2)};
-    IntInterval::SP interval3 {new IntInterval(1540, 1867, 3)};
-    IntInterval::SP interval4 {new IntInterval(1540, 1914, 4)};
-    IntInterval::SP interval5 {new IntInterval(1918, 1939, 5)};
-    IntInterval::SP interval6 {new IntInterval(1939, 1945, 6)};
+    Int32Interval::SP interval1 {new Int32Interval(1534, 1608, 1)};
+    Int32Interval::SP interval2 {new Int32Interval(1602, 1777, 2)};
+    Int32Interval::SP interval3 {new Int32Interval(1540, 1867, 3)};
+    Int32Interval::SP interval4 {new Int32Interval(1540, 1914, 4)};
+    Int32Interval::SP interval5 {new Int32Interval(1918, 1939, 5)};
+    Int32Interval::SP interval6 {new Int32Interval(1939, 1945, 6)};
 
     // add them
     node->addInterval(interval1);
@@ -261,12 +261,12 @@ void NodeTest::testFindAll()
     }};
 
     // create a few intervals
-    IntInterval::SP interval1 {new IntInterval(1534, 1608, 1)};
-    IntInterval::SP interval2 {new IntInterval(1602, 1777, 2)};
-    IntInterval::SP interval3 {new IntInterval(1540, 1777, 3)};
-    IntInterval::SP interval4 {new IntInterval(1541, 1914, 4)};
-    IntInterval::SP interval5 {new IntInterval(1918, 1939, 5)};
-    IntInterval::SP interval6 {new IntInterval(1939, 1945, 6)};
+    Int32Interval::SP interval1 {new Int32Interval(1534, 1608, 1)};
+    Int32Interval::SP interval2 {new Int32Interval(1602, 1777, 2)};
+    Int32Interval::SP interval3 {new Int32Interval(1540, 1777, 3)};
+    Int32Interval::SP interval4 {new Int32Interval(1541, 1914, 4)};
+    Int32Interval::SP interval5 {new Int32Interval(1918, 1939, 5)};
+    Int32Interval::SP interval6 {new Int32Interval(1939, 1945, 6)};
 
     // add them
     node->addInterval(interval1);

@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _INTINTERVAL_HPP
-#define _INTINTERVAL_HPP
+#ifndef _INT32INTERVAL_HPP
+#define _INT32INTERVAL_HPP
 
 #include <cstdint>
 
-#include <delorean/interval/SimpleValueInterval.hpp>
+#include <delorean/interval/Simple32BitValueInterval.hpp>
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
@@ -30,15 +30,15 @@
  *
  * @author Philippe Proulx
  */
-class IntInterval :
-    public SimpleValueInterval<std::int32_t, StandardIntervalType::INT32>
+class Int32Interval :
+    public Simple32BitValueInterval<std::int32_t, StandardIntervalType::INT32>
 {
 public:
-    typedef std::shared_ptr<IntInterval> SP;
-    typedef std::unique_ptr<IntInterval> UP;
+    typedef std::shared_ptr<Int32Interval> SP;
+    typedef std::unique_ptr<Int32Interval> UP;
 
 public:
-    using SimpleValueInterval::SimpleValueInterval;
+    using Simple32BitValueInterval::Simple32BitValueInterval;
 };
 
-#endif // _INTINTERVAL_HPP
+#endif // _INT32INTERVAL_HPP

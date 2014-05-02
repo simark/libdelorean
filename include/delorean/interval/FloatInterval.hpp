@@ -19,7 +19,7 @@
 #ifndef _FLOATINTERVAL_HPP
 #define _FLOATINTERVAL_HPP
 
-#include <delorean/interval/SimpleValueInterval.hpp>
+#include <delorean/interval/Simple32BitValueInterval.hpp>
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
@@ -29,14 +29,14 @@
  * @author Philippe Proulx
  */
 class FloatInterval :
-    public SimpleValueInterval<float, StandardIntervalType::FLOAT32>
+    public Simple32BitValueInterval<float, StandardIntervalType::FLOAT32>
 {
 public:
     typedef std::shared_ptr<FloatInterval> SP;
     typedef std::unique_ptr<FloatInterval> UP;
 
 public:
-    using SimpleValueInterval::SimpleValueInterval;
+    using Simple32BitValueInterval::Simple32BitValueInterval;
 };
 
 #endif // _FLOATINTERVAL_HPP

@@ -22,7 +22,7 @@
 #include <delorean/HistoryFileSink.hpp>
 #include <delorean/HistoryFileSource.hpp>
 #include <delorean/BasicTypes.hpp>
-#include <delorean/interval/IntInterval.hpp>
+#include <delorean/interval/Int32Interval.hpp>
 #include <delorean/interval/StringInterval.hpp>
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/interval/IntervalJar.hpp>
@@ -56,7 +56,7 @@ void HistoryFileTest::testAddIntervalWhenClosed()
     std::unique_ptr<HistoryFileSink> hfSink {new HistoryFileSink};
 
     // add interval without opening
-    IntInterval::SP interval {new IntInterval(1939, 1945, 1)};
+    Int32Interval::SP interval {new Int32Interval(1939, 1945, 1)};
     try {
         hfSink->addInterval(interval);
         CPPUNIT_FAIL("Adding an interval to a closed history file sink");

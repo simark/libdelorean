@@ -1,4 +1,5 @@
 /* Copyright (c) 2014 Philippe Proulx <eepp.ca>
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of libdelorean.
  *
@@ -15,28 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _INTINTERVALTEST_HPP
-#define _INTINTERVALTEST_HPP
+#ifndef _UINT32INTERVAL_HPP
+#define _UINT32INTERVAL_HPP
 
-#include <cppunit/extensions/HelperMacros.h>
+#include <cstdint>
 
-class IntIntervalTest :
-    public CppUnit::TestFixture
+#include <delorean/interval/Simple32BitValueInterval.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
+#include <delorean/BasicTypes.hpp>
+
+/**
+ * Interval containing a single 32-bit unsigned integer value.
+ *
+ * @author Philippe Proulx
+ */
+class Uint32Interval :
+    public Simple32BitValueInterval<std::uint32_t, StandardIntervalType::UINT32>
 {
-    CPPUNIT_TEST_SUITE(IntIntervalTest);
-        CPPUNIT_TEST(testConstructorAndAttributes);
-        CPPUNIT_TEST(testIntersection);
-        CPPUNIT_TEST(testOperators);
-        CPPUNIT_TEST(testFixedValue);
-        CPPUNIT_TEST(testVariableDataSize);
-    CPPUNIT_TEST_SUITE_END();
+public:
+    typedef std::shared_ptr<Uint32Interval> SP;
+    typedef std::unique_ptr<Uint32Interval> UP;
 
 public:
-    void testConstructorAndAttributes();
-    void testIntersection();
-    void testOperators();
-    void testFixedValue();
-    void testVariableDataSize();
+    using Simple32BitValueInterval::Simple32BitValueInterval;
 };
 
-#endif // _INTINTERVALTEST_HPP
+#endif // _UINT32INTERVAL_HPP

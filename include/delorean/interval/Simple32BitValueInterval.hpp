@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _SIMPLEVALUEINTERVAL_HPP
-#define _SIMPLEVALUEINTERVAL_HPP
+#ifndef _SIMPLE32BITVALUEINTERVAL_HPP
+#define _SIMPLE32BITVALUEINTERVAL_HPP
 
 #include <memory>
 #include <cstdint>
@@ -34,14 +34,14 @@
  * @author Philippe Proulx
  */
 template<typename T, StandardIntervalType SIT>
-class SimpleValueInterval :
+class Simple32BitValueInterval :
     public AbstractInterval
 {
 public:
-    SimpleValueInterval(timestamp_t begin, timestamp_t end,
+    Simple32BitValueInterval(timestamp_t begin, timestamp_t end,
                         interval_key_t key);
 
-    virtual ~SimpleValueInterval()
+    virtual ~Simple32BitValueInterval()
     {
     }
 
@@ -62,9 +62,9 @@ private:
 };
 
 template<typename T, StandardIntervalType SIT>
-SimpleValueInterval<T, SIT>::SimpleValueInterval(timestamp_t begin,
-                                                 timestamp_t end,
-                                                 interval_key_t key) :
+Simple32BitValueInterval<T, SIT>::Simple32BitValueInterval(timestamp_t begin,
+                                                           timestamp_t end,
+                                                           interval_key_t key) :
     AbstractInterval {
         begin,
         end,
@@ -75,21 +75,21 @@ SimpleValueInterval<T, SIT>::SimpleValueInterval(timestamp_t begin,
 }
 
 template<typename T, StandardIntervalType SIT>
-std::size_t SimpleValueInterval<T, SIT>::getVariableDataSizeImpl() const
+std::size_t Simple32BitValueInterval<T, SIT>::getVariableDataSizeImpl() const
 {
     return 0;
 }
 
 template<typename T, StandardIntervalType SIT>
-void SimpleValueInterval<T, SIT>::serializeVariableDataImpl(std::uint8_t* varAtPtr) const
+void Simple32BitValueInterval<T, SIT>::serializeVariableDataImpl(std::uint8_t* varAtPtr) const
 {
     // no variable data
 }
 
 template<typename T, StandardIntervalType SIT>
-void SimpleValueInterval<T, SIT>::deserializeVariableDataImpl(const std::uint8_t* varAtPtr)
+void Simple32BitValueInterval<T, SIT>::deserializeVariableDataImpl(const std::uint8_t* varAtPtr)
 {
     // no variable data
 }
 
-#endif // _SIMPLEVALUEINTERVAL_HPP
+#endif // _SIMPLE32BITVALUEINTERVAL_HPP
