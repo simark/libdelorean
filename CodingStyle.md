@@ -63,7 +63,8 @@ C++11 code. Please respect it if you want to contribute.
             _someAttribute;
         };
 
-  * Use C++11 initializing list style for everything built, including constructors:
+  * Use C++11 initializing list style for everything built, including
+    constructors:
 
         std::unique_ptr<Hello> myHello {new Hello {3, 4, "lol"}};
 
@@ -77,10 +78,14 @@ C++11 code. Please respect it if you want to contribute.
             }
         };
 
+    Exceptions are when this is ambiguous, for example with constructors
+    accepting an initializer list. In this case, use the old style (with
+    `()`).
+
     Use your judgement to make your code as readable as possible.
     Do not, however, break literal strings used for user messages.
-  * Try to respect 80 columns as much as possible, visually identing the excess if
-    necessary:
+  * Try to respect 80 columns as much as possible, visually identing the excess
+    if necessary:
 
         void HistoryFileSink::drawBranchFromIndex(std::size_t parentIndex,
                                                   std::size_t height)
@@ -95,8 +100,8 @@ C++11 code. Please respect it if you want to contribute.
 
   * Use `auto` as much as possible.
   * Make sure to use `auto&` when you don't want to copy a returned reference.
-  * Use smart pointers as much as possible, particularly `std::unique_ptr` when it's
-    semantically correct to do so.
+  * Use smart pointers as much as possible, particularly `std::unique_ptr`
+    when it's semantically correct to do so.
   * Do not use `std::move(ptr)` when returning a `std::unique_ptr`.
   * Use iterators as much as possible, even with `std::vector`.
   * Use range-based for loop as much as possible.
