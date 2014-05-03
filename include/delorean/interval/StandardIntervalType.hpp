@@ -34,7 +34,7 @@ enum class StandardIntervalType : interval_type_t
     STRING,
     UINT32,
     FLOAT32,
-    TNULL,
+    NUL,
     INT64,
     UINT64,
     COUNT       // number of items above; always last

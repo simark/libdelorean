@@ -66,7 +66,7 @@ AbstractNodeSerDes::AbstractNodeSerDes()
     this->registerIntervalFactory(StandardIntervalType::UINT64, std::move(uint64Factory));
     this->registerIntervalFactory(StandardIntervalType::STRING, std::move(stringFactory));
     this->registerIntervalFactory(StandardIntervalType::FLOAT32, std::move(floatFactory));
-    this->registerIntervalFactory(StandardIntervalType::TNULL, std::move(nullFactory));
+    this->registerIntervalFactory(StandardIntervalType::NUL, std::move(nullFactory));
 }
 
 AbstractNodeSerDes::~AbstractNodeSerDes()

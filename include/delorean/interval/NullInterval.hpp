@@ -46,7 +46,7 @@ public:
             begin,
             end,
             key,
-            StandardIntervalType::TNULL
+            StandardIntervalType::NUL
         }
     {
     }
