@@ -1,4 +1,5 @@
 /* Copyright (c) 2014 Philippe Proulx <eepp.ca>
+ * Copyright (c) 2012 François Rajotte <francois.rajotte@polymtl.ca>
  *
  * This file is part of libdelorean.
  *
@@ -15,31 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _STANDARDINTERVALTYPE_HPP
-#define _STANDARDINTERVALTYPE_HPP
+#ifndef _INT64INTERVAL_HPP
+#define _INT64INTERVAL_HPP
 
+#include <cstdint>
+
+#include <delorean/interval/Simple64BitValueInterval.hpp>
+#include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
 namespace delo
 {
 
 /**
- * Standard interval types.
+ * Interval containing a single 32-bit signed integer value.
  *
  * @author Philippe Proulx
  */
-enum class StandardIntervalType : interval_type_t
+class Int64Interval :
+    public Simple64BitValueInterval<std::int64_t, StandardIntervalType::INT64>
 {
-    INT32 = 0,
-    STRING,
-    UINT32,
-    FLOAT32,
-    TNULL,
-    INT64,
-    UINT64,
-    COUNT       // number of items above; always last
+public:
+    typedef std::shared_ptr<Int64Interval> SP;
+    typedef std::unique_ptr<Int64Interval> UP;
+
+public:
+    using Simple64BitValueInterval::Simple64BitValueInterval;
 };
 
 }
 
-#endif // _STANDARDINTERVALTYPE_HPP
+#endif // _INT64INTERVAL_HPP

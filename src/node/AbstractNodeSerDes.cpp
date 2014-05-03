@@ -23,6 +23,8 @@
 #include <delorean/interval/IIntervalFactory.hpp>
 #include <delorean/interval/Int32Interval.hpp>
 #include <delorean/interval/Uint32Interval.hpp>
+#include <delorean/interval/Int64Interval.hpp>
+#include <delorean/interval/Uint64Interval.hpp>
 #include <delorean/interval/NullInterval.hpp>
 #include <delorean/interval/FloatInterval.hpp>
 #include <delorean/interval/StringInterval.hpp>
@@ -44,18 +46,24 @@ AbstractNodeSerDes::AbstractNodeSerDes()
     // register basic types we know
     auto int32FactoryPtr = new SimpleIntervalFactory<Int32Interval> {};
     auto uint32FactoryPtr = new SimpleIntervalFactory<Uint32Interval> {};
+    auto int64FactoryPtr = new SimpleIntervalFactory<Int64Interval> {};
+    auto uint64FactoryPtr = new SimpleIntervalFactory<Uint64Interval> {};
     auto stringFactoryPtr = new SimpleIntervalFactory<StringInterval> {};
     auto floatFactoryPtr = new SimpleIntervalFactory<FloatInterval> {};
     auto nullFactoryPtr = new SimpleIntervalFactory<NullInterval> {};
 
     IIntervalFactory::UP int32Factory {int32FactoryPtr};
     IIntervalFactory::UP uint32Factory {uint32FactoryPtr};
+    IIntervalFactory::UP int64Factory {int64FactoryPtr};
+    IIntervalFactory::UP uint64Factory {uint64FactoryPtr};
     IIntervalFactory::UP stringFactory {stringFactoryPtr};
     IIntervalFactory::UP floatFactory {floatFactoryPtr};
     IIntervalFactory::UP nullFactory {nullFactoryPtr};
 
     this->registerIntervalFactory(StandardIntervalType::INT32, std::move(int32Factory));
     this->registerIntervalFactory(StandardIntervalType::UINT32, std::move(uint32Factory));
+    this->registerIntervalFactory(StandardIntervalType::INT64, std::move(int64Factory));
+    this->registerIntervalFactory(StandardIntervalType::UINT64, std::move(uint64Factory));
     this->registerIntervalFactory(StandardIntervalType::STRING, std::move(stringFactory));
     this->registerIntervalFactory(StandardIntervalType::FLOAT32, std::move(floatFactory));
     this->registerIntervalFactory(StandardIntervalType::TNULL, std::move(nullFactory));

@@ -15,31 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with libdelorean.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _STANDARDINTERVALTYPE_HPP
-#define _STANDARDINTERVALTYPE_HPP
+#ifndef _INT32INTERVALTEST_HPP
+#define _INT32INTERVALTEST_HPP
 
-#include <delorean/BasicTypes.hpp>
+#include <cppunit/extensions/HelperMacros.h>
 
-namespace delo
+class Int64IntervalTest :
+    public CppUnit::TestFixture
 {
+    CPPUNIT_TEST_SUITE(Int64IntervalTest);
+        CPPUNIT_TEST(testValue);
+        CPPUNIT_TEST(testValueSerDes);
+    CPPUNIT_TEST_SUITE_END();
 
-/**
- * Standard interval types.
- *
- * @author Philippe Proulx
- */
-enum class StandardIntervalType : interval_type_t
-{
-    INT32 = 0,
-    STRING,
-    UINT32,
-    FLOAT32,
-    TNULL,
-    INT64,
-    UINT64,
-    COUNT       // number of items above; always last
+public:
+    void testValue();
+    void testValueSerDes();
 };
 
-}
-
-#endif // _STANDARDINTERVALTYPE_HPP
+#endif // _INT32INTERVALTEST_HPP
