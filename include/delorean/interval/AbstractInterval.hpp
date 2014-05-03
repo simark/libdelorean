@@ -179,7 +179,7 @@ public:
         return _end < interval._end;
     }
 
-private:
+protected:
     /**
      * Virtual implementation of getVariableDataSize(); must be implemented by
      * child class.

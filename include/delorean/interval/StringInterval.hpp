@@ -60,7 +60,7 @@ public:
         return _value;
     }
 
-private:
+protected:
     std::size_t getVariableDataSizeImpl() const;
     void serializeVariableDataImpl(std::uint8_t* varAtPtr) const;
     void deserializeVariableDataImpl(const std::uint8_t* varAtPtr);

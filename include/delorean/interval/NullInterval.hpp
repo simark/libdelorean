@@ -55,7 +55,7 @@ public:
     {
     }
 
-private:
+protected:
     std::size_t getVariableDataSizeImpl() const
     {
         return 0;
