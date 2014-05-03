@@ -29,6 +29,9 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * History file opened for input. Use an HistoryFileSource object to read and
  * find intervals within a history file.
@@ -88,5 +91,7 @@ private:
     std::unique_ptr<uint8_t[]> _nodeBuf;
     std::shared_ptr<AbstractNodeCache> _nodeCache;
 };
+
+}
 
 #endif // _HISTORYFILESOURCE_HPP

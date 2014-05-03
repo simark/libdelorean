@@ -25,6 +25,9 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/ex/InvalidIntervalArguments.hpp>
 
+namespace delo
+{
+
 AbstractInterval::AbstractInterval(timestamp_t begin, timestamp_t end,
                                    interval_key_t key,
                                    interval_type_t type) :
@@ -35,7 +38,7 @@ AbstractInterval::AbstractInterval(timestamp_t begin, timestamp_t end,
 {
     // check range (begin == end is allowed and means an interval of length 0)
     if (begin > end) {
-        throw InvalidIntervalArguments(begin, end);
+        throw ex::InvalidIntervalArguments(begin, end);
     }
 }
 
@@ -78,4 +81,6 @@ void AbstractInterval::setFixedValue(interval_value_t fixedValue)
 interval_value_t AbstractInterval::getFixedValue() const
 {
     return _fixedValue;
+}
+
 }

@@ -20,6 +20,9 @@
 
 #include <cstdint>
 
+namespace delo
+{
+
 /**
  * @file
  * This header holds basic type definitions used throughout libdelorean.
@@ -39,5 +42,7 @@ typedef std::uint32_t       interval_value_t;
 
 /// Node sequence number
 typedef std::uint32_t       node_seq_t;
+
+}
 
 #endif // _BASIC_TYPES_HPP

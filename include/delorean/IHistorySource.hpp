@@ -25,6 +25,9 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * History source interface.
  *
@@ -57,5 +60,7 @@ public:
     virtual AbstractInterval::SP findOne(timestamp_t ts,
                                          interval_key_t key) = 0;
 };
+
+}
 
 #endif // _IHISTORYSOURCE_HPP

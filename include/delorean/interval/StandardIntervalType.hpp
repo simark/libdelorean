@@ -20,6 +20,9 @@
 
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Standard interval types.
  *
@@ -34,5 +37,7 @@ enum class StandardIntervalType : interval_type_t
     TNULL,
     COUNT       // number of items above; always last
 };
+
+}
 
 #endif // _STANDARDINTERVALTYPE_HPP

@@ -24,6 +24,8 @@
 #include <delorean/BasicTypes.hpp>
 #include "StringIntervalTest.hpp"
 
+using namespace delo;
+
 CPPUNIT_TEST_SUITE_REGISTRATION(StringIntervalTest);
 
 void StringIntervalTest::testConstructorValue()

@@ -26,6 +26,9 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Interval containing a string value. Variable data is serialized with a
  * terminating NUL character internally, so UTF-8 is allowed.
@@ -65,5 +68,7 @@ private:
 private:
     std::string _value;
 };
+
+}
 
 #endif // _STRINGINTERVAL_HPP

@@ -29,6 +29,9 @@
 #include <delorean/ex/IndexOutOfRange.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * A history tree node.
  *
@@ -138,7 +141,7 @@ public:
     {
         // range check
         if (index >= _children.size()) {
-            throw IndexOutOfRange(_children.size(), index);
+            throw ex::IndexOutOfRange(_children.size(), index);
         }
 
         return _children[index].getSeqNumber();
@@ -154,7 +157,7 @@ public:
     {
         // range check
         if (index >= _children.size()) {
-            throw IndexOutOfRange(_children.size(), index);
+            throw ex::IndexOutOfRange(_children.size(), index);
         }
 
         return _children[index].getBegin();
@@ -348,5 +351,7 @@ private:
     // serializer/deserializer
     const AbstractNodeSerDes* _serdes;
 };
+
+}
 
 #endif // _NODE_HPP

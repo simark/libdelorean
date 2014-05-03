@@ -29,6 +29,9 @@
 #include <delorean/BasicTypes.hpp>
 #include <delorean/interval/StandardIntervalType.hpp>
 
+namespace delo
+{
+
 /**
  * Base of all intervals.
  *
@@ -209,5 +212,7 @@ private:
     // 32-bit value
     interval_value_t _fixedValue;
 };
+
+}
 
 #endif // _ABSTRACTINTERVAL_HPP

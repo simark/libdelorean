@@ -37,6 +37,9 @@
 
 namespace bfs = boost::filesystem;
 
+namespace delo
+{
+
 HistoryFileSink::HistoryFileSink()
 {
 }
@@ -46,13 +49,13 @@ void HistoryFileSink::open(const bfs::path& path, std::size_t nodeSize,
                            NodeSerDesType serdesType)
 {
     if (this->isOpened()) {
-        throw IO("Trying to open a history file already opened");
+        throw ex::IO("Trying to open a history file already opened");
     }
 
     // try opening output stream
     _outputStream.open(path, std::ios::binary);
     if (!_outputStream) {
-        throw IO("Cannot open history file for writing");
+        throw ex::IO("Cannot open history file for writing");
     }
 
     // set node serializer/deserializer
@@ -62,7 +65,7 @@ void HistoryFileSink::open(const bfs::path& path, std::size_t nodeSize,
         this->setNodeSerDes(std::move(nodeSerdes));
         _magic = HistoryFileHeader::MAGIC_ALIGNED_NODE_SERDES;
     } else {
-        throw UnknownNodeSerDesType(serdesType);
+        throw ex::UnknownNodeSerDesType(serdesType);
     }
 
     /* Allocate new buffer for node serialization (reallocating because
@@ -139,13 +142,13 @@ void HistoryFileSink::addInterval(AbstractInterval::SP interval)
 {
     // check if opened
     if (!this->isOpened()) {
-        throw IO("Adding an interval to a close history file sink");
+        throw ex::IO("Adding an interval to a close history file sink");
     }
 
     // check range
     if (interval->getBegin() < this->getBegin() ||
             interval->getEnd() < this->getEnd()) {
-        throw IntervalOutOfRange {
+        throw ex::IntervalOutOfRange {
             *interval,
             this->getBegin(),
             this->getEnd()
@@ -412,4 +415,6 @@ void HistoryFileSink::drawBranchFromIndex(std::size_t parentIndex,
                                          this->getEnd());
     parentNode->addChild(leafNode->getBegin(), leafNode->getSeqNumber());
     _latestBranch.push_back(std::move(leafNode));
+}
+
 }

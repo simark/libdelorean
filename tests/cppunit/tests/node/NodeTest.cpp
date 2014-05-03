@@ -30,6 +30,8 @@
 #include <delorean/BasicTypes.hpp>
 #include "NodeTest.hpp"
 
+using namespace delo;
+
 CPPUNIT_TEST_SUITE_REGISTRATION(NodeTest);
 
 class MyNodeSerDes :
@@ -111,7 +113,7 @@ void NodeTest::testConstructorAndAttributes()
     try {
         node->close(1533);
         CPPUNIT_FAIL("Closing node with end timestamp smaller than current");
-    } catch (const TimestampOutOfRange& ex) {
+    } catch (const ex::TimestampOutOfRange& ex) {
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1533), ex.getTs());
     }
 
@@ -333,7 +335,7 @@ void NodeTest::testChildren()
     try {
         node->addChild(2000, 14);
         CPPUNIT_FAIL("Adding a child when the node is full");
-    } catch (const NodeFull& ex) {
+    } catch (const ex::NodeFull& ex) {
     }
     CPPUNIT_ASSERT(node->isFull());
 
@@ -345,7 +347,7 @@ void NodeTest::testChildren()
     try {
         node->getChildSeqAtIndex(4);
         CPPUNIT_FAIL("Getting a child at too big index");
-    } catch (const IndexOutOfRange& ex) {
+    } catch (const ex::IndexOutOfRange& ex) {
         CPPUNIT_ASSERT_EQUAL(ex.getSize(), static_cast<std::size_t>(4));
         CPPUNIT_ASSERT_EQUAL(ex.getIndex(), static_cast<std::size_t>(4));
     }
@@ -358,7 +360,7 @@ void NodeTest::testChildren()
     try {
         node->getChildBeginAtIndex(4);
         CPPUNIT_FAIL("Getting a child at too big index");
-    } catch (const IndexOutOfRange& ex) {
+    } catch (const ex::IndexOutOfRange& ex) {
         CPPUNIT_ASSERT_EQUAL(ex.getSize(), static_cast<std::size_t>(4));
         CPPUNIT_ASSERT_EQUAL(ex.getIndex(), static_cast<std::size_t>(4));
     }

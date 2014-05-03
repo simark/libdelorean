@@ -17,6 +17,11 @@
  */
 #include <delorean/AbstractHistory.hpp>
 
+namespace delo
+{
+
 AbstractHistory::~AbstractHistory()
 {
+}
+
 }

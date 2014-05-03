@@ -25,6 +25,9 @@
 #include <delorean/node/AbstractNodeSerDes.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Aligned node serializer/deserializer.
  *
@@ -150,5 +153,7 @@ private:
         }
     };
 };
+
+}
 
 #endif // _ALIGNEDNODEDESER_HPP

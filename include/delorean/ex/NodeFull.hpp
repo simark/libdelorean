@@ -20,6 +20,11 @@
 
 #include <stdexcept>
 
+namespace delo
+{
+namespace ex
+{
+
 class NodeFull :
     public std::runtime_error
 {
@@ -29,5 +34,8 @@ public:
     {
     }
 };
+
+}
+}
 
 #endif // _NODEFULL_HPP

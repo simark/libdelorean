@@ -24,6 +24,9 @@
 #include <delorean/AbstractHistory.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Base class for all history files, that is, HistoryFileSink and
  * HistoryFileSource.
@@ -89,5 +92,7 @@ private:
     boost::filesystem::path _path;
 
 };
+
+}
 
 #endif // _ABSTRACTHISTORYFILE_HPP

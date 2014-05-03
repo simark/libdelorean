@@ -23,6 +23,11 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+namespace ex
+{
+
 class IntervalOutOfRange :
     public std::out_of_range
 {
@@ -63,5 +68,8 @@ private:
     timestamp_t _intervalBegin;
     timestamp_t _intervalEnd;
 };
+
+}
+}
 
 #endif // _INTERVALOUTOFRANGE_HPP

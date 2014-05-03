@@ -30,6 +30,9 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * History file opened for output. Use an HistoryFileSink object to build a
  * brand new history file.
@@ -111,5 +114,7 @@ private:
     std::vector<Node::SP> _latestBranch;
     int _magic;
 };
+
+}
 
 #endif // _HISTORYFILESINK_HPP

@@ -23,6 +23,9 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Template class for creating simple interval factories.
  *
@@ -46,6 +49,8 @@ AbstractInterval::UP SimpleIntervalFactory<T>::create(timestamp_t begin,
     auto intervalUP = AbstractInterval::UP {intervalPtr};
 
     return std::move(intervalUP);
+}
+
 }
 
 #endif // _SIMPLEINTERVALFACTORY_HPP

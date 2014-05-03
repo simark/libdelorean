@@ -21,6 +21,9 @@
 #include <delorean/node/Node.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 AbstractNodeCache::AbstractNodeCache(std::size_t size) :
     _size {size}
 {
@@ -37,4 +40,6 @@ Node::SP AbstractNodeCache::getNodeFromOwner(node_seq_t seqNumber)
     }
 
     return _getNodeFromOwnerCb(seqNumber);
+}
+
 }

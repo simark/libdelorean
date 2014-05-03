@@ -27,4 +27,4 @@
  * @param intervals Vector of intervals to fill
  */
 void getIntervalsFromTextFile(const boost::filesystem::path& path,
-                              std::vector<AbstractInterval::UP>& intervals);
+                              std::vector<delo::AbstractInterval::UP>& intervals);

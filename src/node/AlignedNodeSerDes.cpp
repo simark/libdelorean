@@ -27,6 +27,9 @@
 #include <delorean/ex/ExistingIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 AlignedNodeSerDes::AlignedNodeSerDes()
 {
 }
@@ -163,4 +166,6 @@ std::size_t AlignedNodeSerDes::getChildNodePointerSizeImpl(const ChildNodePointe
 std::size_t AlignedNodeSerDes::getIntervalSizeImpl(const AbstractInterval& interval) const
 {
     return sizeof(IntervalHeader) + interval.getVariableDataSize();
+}
+
 }

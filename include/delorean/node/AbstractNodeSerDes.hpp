@@ -28,6 +28,9 @@
 #include <delorean/node/ChildNodePointer.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 // needed for cross-references
 class Node;
 
@@ -174,5 +177,7 @@ protected:
 private:
     std::vector<IIntervalFactory::UP> _intervalFactories;
 };
+
+}
 
 #endif // _ABSTRACTNODESERDES_HPP

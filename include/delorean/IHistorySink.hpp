@@ -21,6 +21,9 @@
 #include <delorean/AbstractHistory.hpp>
 #include <delorean/interval/AbstractInterval.hpp>
 
+namespace delo
+{
+
 /**
  * History sink interface.
  *
@@ -48,5 +51,7 @@ public:
      */
     virtual void close(timestamp_t endTs) = 0;
 };
+
+}
 
 #endif // _IHISTORYSINK_HPP

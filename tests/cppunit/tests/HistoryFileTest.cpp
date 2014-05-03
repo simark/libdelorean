@@ -32,6 +32,7 @@
 #include "HistoryFileTest.hpp"
 
 namespace bfs = boost::filesystem;
+using namespace delo;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(HistoryFileTest);
 
@@ -44,7 +45,7 @@ void HistoryFileTest::testNonExistingFile()
     try {
         hfSink->open("/this/path/should/not/exist");
         CPPUNIT_FAIL("Opened a history file sink with a non existing file");
-    } catch (const IO& ex) {
+    } catch (const ex::IO& ex) {
     }
 
     CPPUNIT_ASSERT(!hfSink->isOpened());
@@ -60,7 +61,7 @@ void HistoryFileTest::testAddIntervalWhenClosed()
     try {
         hfSink->addInterval(interval);
         CPPUNIT_FAIL("Adding an interval to a closed history file sink");
-    } catch (const IO& ex) {
+    } catch (const ex::IO& ex) {
     }
 
     // close
@@ -77,7 +78,7 @@ void HistoryFileTest::testQueryWhenClosed()
         IntervalJar jar;
         hfSource->findAll(1923, jar);
         CPPUNIT_FAIL("Querying a closed history file sink");
-    } catch (const IO& ex) {
+    } catch (const ex::IO& ex) {
     }
 
     // close
@@ -115,7 +116,7 @@ void HistoryFileTest::testBuildEmpty()
     try {
         hfSource->findAll(1916, jar);
         CPPUNIT_FAIL("Queried history file source before its range");
-    } catch (const TimestampOutOfRange& ex) {
+    } catch (const ex::TimestampOutOfRange& ex) {
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getBegin());
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getEnd());
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1916), ex.getTs());
@@ -124,7 +125,7 @@ void HistoryFileTest::testBuildEmpty()
     try {
         hfSource->findAll(1917, jar);
         CPPUNIT_FAIL("Queried history file source after its range");
-    } catch (const TimestampOutOfRange& ex) {
+    } catch (const ex::TimestampOutOfRange& ex) {
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getBegin());
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getEnd());
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getTs());
@@ -133,7 +134,7 @@ void HistoryFileTest::testBuildEmpty()
     try {
         hfSource->findAll(1918, jar);
         CPPUNIT_FAIL("Queried history file source after its range");
-    } catch (const TimestampOutOfRange& ex) {
+    } catch (const ex::TimestampOutOfRange& ex) {
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getBegin());
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1917), ex.getEnd());
         CPPUNIT_ASSERT_EQUAL(static_cast<timestamp_t>(1918), ex.getTs());

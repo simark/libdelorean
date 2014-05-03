@@ -24,6 +24,9 @@
 #include <delorean/ex/NodeFull.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 Node::Node(std::size_t size, std::size_t maxChildren, node_seq_t seqNumber,
            node_seq_t parentSeqNumber, timestamp_t begin,
            const AbstractNodeSerDes* serdes) :
@@ -90,7 +93,7 @@ void Node::close(timestamp_t end)
 
     // range check
     if (end < _end) {
-        throw TimestampOutOfRange {_begin, _end, end};
+        throw ex::TimestampOutOfRange {_begin, _end, end};
     }
 
 	_isClosed = true;
@@ -192,7 +195,7 @@ void Node::addChild(timestamp_t begin, node_seq_t seqNumber)
 {
     // node full?
     if (this->isFull()) {
-        throw NodeFull();
+        throw ex::NodeFull();
     }
 
     // add to list
@@ -215,4 +218,6 @@ node_seq_t Node::getChildSeqAtTs(timestamp_t ts) const
     }
 
 	return potentialNextSeqNumber;
+}
+
 }

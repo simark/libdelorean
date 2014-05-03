@@ -22,6 +22,9 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 StringInterval::StringInterval(timestamp_t begin, timestamp_t end,
                                interval_key_t key) :
     AbstractInterval {
@@ -50,4 +53,6 @@ void StringInterval::deserializeVariableDataImpl(const std::uint8_t* varAtPtr)
     // build string (safe since pointed data is NUL-terminated)
     const char* cstr = reinterpret_cast<const char*>(varAtPtr);
     _value = std::string(cstr);
+}
+
 }

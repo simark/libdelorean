@@ -33,6 +33,9 @@
 #include <delorean/ex/ExistingIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 AbstractNodeSerDes::AbstractNodeSerDes()
 {
     // reserve space in factories vector
@@ -73,7 +76,7 @@ void AbstractNodeSerDes::registerIntervalFactory(interval_type_t type,
     if (_intervalFactories[type] != nullptr) {
         std::ostringstream oss;
         oss << "interval type " << type << " is already registered";
-        throw ExistingIntervalType(oss.str());
+        throw ex::ExistingIntervalType(oss.str());
     } else {
         _intervalFactories[type] = std::move(factory);
     }
@@ -107,11 +110,13 @@ AbstractInterval::UP AbstractNodeSerDes::createInterval(timestamp_t begin,
     // make sure interval factory exists for this type
     const auto& factory = _intervalFactories[type];
     if (factory == nullptr) {
-        throw UnknownIntervalType {type};
+        throw ex::UnknownIntervalType {type};
     }
 
     // create interval
     auto interval = factory->create(begin, end, key);
 
     return interval;
+}
+
 }

@@ -20,11 +20,19 @@
 
 #include <stdexcept>
 
+namespace delo
+{
+namespace ex
+{
+
 class IO :
     public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;
 };
+
+}
+}
 
 #endif // _IO_HPP

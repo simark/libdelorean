@@ -23,6 +23,11 @@
 
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+namespace ex
+{
+
 class UnknownIntervalType :
     public std::runtime_error
 {
@@ -43,5 +48,8 @@ public:
 private:
     interval_type_t _type;
 };
+
+}
+}
 
 #endif // _UNKNOWNINTERVALTYPE_HPP

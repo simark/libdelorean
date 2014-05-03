@@ -23,6 +23,9 @@
 #include <delorean/node/Node.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 DirectMappedNodeCache::DirectMappedNodeCache(std::size_t size) :
     AbstractNodeCache {size}
 {
@@ -75,4 +78,6 @@ void DirectMappedNodeCache::invalidateImpl()
     for (auto& node : _cache) {
         node = nullptr;
     }
+}
+
 }

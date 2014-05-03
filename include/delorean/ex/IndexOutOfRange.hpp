@@ -23,6 +23,11 @@
 
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+namespace ex
+{
+
 class IndexOutOfRange :
     public std::out_of_range
 {
@@ -48,5 +53,8 @@ private:
     std::size_t _size;
     std::size_t _index;
 };
+
+}
+}
 
 #endif // _INDEXOUTOFRANGE_HPP

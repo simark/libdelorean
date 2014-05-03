@@ -23,6 +23,9 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Interval containing a single 32-bit floating point value.
  *
@@ -38,5 +41,7 @@ public:
 public:
     using Simple32BitValueInterval::Simple32BitValueInterval;
 };
+
+}
 
 #endif // _FLOATINTERVAL_HPP

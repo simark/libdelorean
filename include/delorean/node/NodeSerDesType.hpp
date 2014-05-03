@@ -20,6 +20,9 @@
 
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Node serializer/deserializer types.
  *
@@ -30,5 +33,7 @@ enum class NodeSerDesType
     ALIGNED = 0,
     COUNT       // number of items above; always last
 };
+
+}
 
 #endif // _NODESERDESTYPE_HPP

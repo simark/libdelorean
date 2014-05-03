@@ -25,6 +25,8 @@
 #include <delorean/BasicTypes.hpp>
 #include "Int32IntervalTest.hpp"
 
+using namespace delo;
+
 CPPUNIT_TEST_SUITE_REGISTRATION(Int32IntervalTest);
 
 void Int32IntervalTest::testConstructorAndAttributes()
@@ -37,7 +39,7 @@ void Int32IntervalTest::testConstructorAndAttributes()
     try {
         Int32Interval::UP interval {new Int32Interval(begin, end, key)};
         CPPUNIT_FAIL("Building interval with wrong parameters");
-    } catch (const InvalidIntervalArguments& ex) {
+    } catch (const ex::InvalidIntervalArguments& ex) {
         CPPUNIT_ASSERT_EQUAL(begin, ex.getBegin());
         CPPUNIT_ASSERT_EQUAL(end, ex.getEnd());
     }
@@ -47,7 +49,7 @@ void Int32IntervalTest::testConstructorAndAttributes()
     end = 50;
     try {
         Int32Interval::UP interval {new Int32Interval(begin, end, key)};
-    } catch (const InvalidIntervalArguments& ex) {
+    } catch (const ex::InvalidIntervalArguments& ex) {
         CPPUNIT_FAIL("Interval constructor does not accept equal begin and end times");
     }
 

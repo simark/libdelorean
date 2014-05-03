@@ -23,6 +23,11 @@
 
 #include <delorean/node/NodeSerDesType.hpp>
 
+namespace delo
+{
+namespace ex
+{
+
 class UnknownNodeSerDesType :
     public std::runtime_error
 {
@@ -40,5 +45,8 @@ public:
 private:
     NodeSerDesType _type;
 };
+
+}
+}
 
 #endif // _UNKNOWNNODESERDESTYPE_HPP

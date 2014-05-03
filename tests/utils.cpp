@@ -31,7 +31,7 @@ namespace bfs = boost::filesystem;
 namespace balgo = boost::algorithm;
 
 void getIntervalsFromTextFile(const bfs::path& path,
-                              std::vector<AbstractInterval::UP>& intervals)
+                              std::vector<delo::AbstractInterval::UP>& intervals)
 {
     // open file
     bfs::ifstream file {path};
@@ -67,9 +67,9 @@ void getIntervalsFromTextFile(const bfs::path& path,
         balgo::split(parts, line, balgo::is_space(), boost::token_compress_on);
 
         // read range and key
-        timestamp_t begin = static_cast<timestamp_t>(std::stoll(parts[0]));
-        timestamp_t end = static_cast<timestamp_t>(std::stoll(parts[1]));
-        interval_key_t key = static_cast<interval_key_t>(std::stoul(parts[2]));
+        delo::timestamp_t begin = static_cast<delo::timestamp_t>(std::stoll(parts[0]));
+        delo::timestamp_t end = static_cast<delo::timestamp_t>(std::stoll(parts[1]));
+        delo::interval_key_t key = static_cast<delo::interval_key_t>(std::stoul(parts[2]));
 
         // read string value
         std::string value;
@@ -83,7 +83,9 @@ void getIntervalsFromTextFile(const bfs::path& path,
         }
 
         // create string interval
-        StringInterval::UP interval {new StringInterval {begin, end, key}};
+        delo::StringInterval::UP interval {
+            new delo::StringInterval {begin, end, key}
+        };
         interval->setValue(value);
 
         // add to intervals

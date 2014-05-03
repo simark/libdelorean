@@ -25,6 +25,8 @@
 #include <delorean/BasicTypes.hpp>
 #include "DirectMappedNodeCacheTest.hpp"
 
+using namespace delo;
+
 CPPUNIT_TEST_SUITE_REGISTRATION(DirectMappedNodeCacheTest);
 
 void DirectMappedNodeCacheTest::testConstructorAndAttributes()

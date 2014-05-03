@@ -22,6 +22,9 @@
 
 #include <delorean/interval/AbstractInterval.hpp>
 
+namespace delo
+{
+
 /**
  * Main container for multiple intervals. This jar will be filled with
  * potentially multiple intervals when finding all intervals intersecting
@@ -29,5 +32,7 @@
  * is safe since two intervals having the same key should not overlap.
  */
 typedef std::map<interval_key_t, AbstractInterval::SP> IntervalJar;
+
+}
 
 #endif // _INTERVALJAR_HPP

@@ -20,6 +20,9 @@
 
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Pointer of the child of a node.
  *
@@ -68,5 +71,7 @@ private:
     timestamp_t _begin;
     node_seq_t _seqNumber;
 };
+
+}
 
 #endif // _CHILDNODEPOINTER_HPP

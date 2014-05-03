@@ -23,6 +23,9 @@
 #include <delorean/node/AbstractNodeSerDes.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Base class for all histories.
  *
@@ -141,5 +144,7 @@ private:
     node_seq_t _rootNodeSeqNumber;
     AbstractNodeSerDes::UP _nodeSerdes;
 };
+
+}
 
 #endif // _ABSTRACTHISTORY_HPP

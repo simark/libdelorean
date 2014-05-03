@@ -22,6 +22,11 @@
 
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+namespace ex
+{
+
 class TimestampOutOfRange :
     public std::out_of_range
 {
@@ -54,5 +59,8 @@ private:
     timestamp_t _end;
     timestamp_t _ts;
 };
+
+}
+}
 
 #endif // _TIMESTAMPOUTOFRANGE_HPP

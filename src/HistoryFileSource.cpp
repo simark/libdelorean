@@ -29,8 +29,10 @@
 #include <delorean/AbstractHistory.hpp>
 #include <delorean/HistoryFileSource.hpp>
 
-
 namespace bfs = boost::filesystem;
+
+namespace delo
+{
 
 HistoryFileSource::HistoryFileSource()
 {
@@ -40,20 +42,20 @@ void HistoryFileSource::open(const boost::filesystem::path& path,
                              std::shared_ptr<AbstractNodeCache> nodeCache)
 {
     if (this->isOpened()) {
-        throw IO("Trying to open a history file already opened");
+        throw ex::IO("Trying to open a history file already opened");
     }
 
     // try opening input stream
     _inputStream.open(path, std::ios::binary);
     if (!_inputStream) {
-        throw IO("Cannot open history file for reading");
+        throw ex::IO("Cannot open history file for reading");
     }
 
     // make sure file is at least as large as its header
     _inputStream.seekg(0, std::ifstream::end);
     if (_inputStream.tellg() < HistoryFileHeader::SIZE) {
         _inputStream.close();
-        throw IO("History file is too small");
+        throw ex::IO("History file is too small");
     }
 
     // read header
@@ -112,7 +114,7 @@ void HistoryFileSource::readHeader()
         std::unique_ptr<AlignedNodeSerDes> serdes {new AlignedNodeSerDes};
         this->setNodeSerDes(std::move(serdes));
     } else {
-        throw IO("Unknown history file magic number");
+        throw ex::IO("Unknown history file magic number");
     }
 
     // set other parameters
@@ -160,12 +162,12 @@ bool HistoryFileSource::findAll(timestamp_t ts, IntervalJar& intervals)
 {
     // make sure this history file is opened
     if (!this->isOpened()) {
-        throw IO("Trying to query a closed history file source");
+        throw ex::IO("Trying to query a closed history file source");
     }
 
     // check range
     if (!this->validateTs(ts)) {
-        throw TimestampOutOfRange {this->getBegin(), this->getEnd(), ts};
+        throw ex::TimestampOutOfRange {this->getBegin(), this->getEnd(), ts};
     }
 
     // initial jar size
@@ -200,12 +202,12 @@ AbstractInterval::SP HistoryFileSource::findOne(timestamp_t ts,
 {
     // make sure this history file is opened
     if (!this->isOpened()) {
-        throw IO("Trying to query a closed history file source");
+        throw ex::IO("Trying to query a closed history file source");
     }
 
     // check range
     if (!this->validateTs(ts)) {
-        throw TimestampOutOfRange {this->getBegin(), this->getEnd(), ts};
+        throw ex::TimestampOutOfRange {this->getBegin(), this->getEnd(), ts};
     }
 
     // current node: root node
@@ -230,4 +232,6 @@ AbstractInterval::SP HistoryFileSource::findOne(timestamp_t ts,
     }
 
     return interval;
+}
+
 }

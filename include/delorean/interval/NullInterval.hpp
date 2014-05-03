@@ -25,6 +25,9 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Interval containing nothing (null).
  *
@@ -68,5 +71,7 @@ private:
         // no variable data
     }
 };
+
+}
 
 #endif // _NULLINTERVAL_HPP

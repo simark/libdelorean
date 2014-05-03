@@ -21,9 +21,17 @@
 #include <delorean/ex/UnknownIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+namespace ex
+{
+
 std::string UnknownIntervalType::getMsg(interval_type_t type) {
     std::ostringstream oss;
     oss << "unknown interval type " << type;
 
     return oss.str();
+}
+}
+
 }

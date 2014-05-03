@@ -27,6 +27,9 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Template class for creating an interval class with a simple 32-bit type
  * for its value.
@@ -90,6 +93,8 @@ template<typename T, StandardIntervalType SIT>
 void Simple32BitValueInterval<T, SIT>::deserializeVariableDataImpl(const std::uint8_t* varAtPtr)
 {
     // no variable data
+}
+
 }
 
 #endif // _SIMPLE32BITVALUEINTERVAL_HPP

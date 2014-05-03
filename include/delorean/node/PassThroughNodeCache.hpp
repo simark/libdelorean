@@ -24,6 +24,9 @@
 #include <delorean/node/Node.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Pass-through node cache. This effectively means no cache.
  *
@@ -58,5 +61,7 @@ protected:
     {
     }
 };
+
+}
 
 #endif // _PASSTHROUGHNODECACHE_HPP

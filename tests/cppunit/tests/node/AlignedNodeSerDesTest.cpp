@@ -24,6 +24,8 @@
 #include <delorean/BasicTypes.hpp>
 #include "AlignedNodeSerDesTest.hpp"
 
+using namespace delo;
+
 CPPUNIT_TEST_SUITE_REGISTRATION(AlignedNodeSerDesTest);
 
 void AlignedNodeSerDesTest::testSerializeDeserialize()

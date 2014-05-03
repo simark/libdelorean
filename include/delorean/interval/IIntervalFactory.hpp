@@ -24,6 +24,9 @@
 #include <delorean/interval/AbstractInterval.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Interval factory interface.
  *
@@ -59,5 +62,7 @@ public:
     virtual AbstractInterval::UP create(timestamp_t begin, timestamp_t end,
                                         interval_key_t key) const = 0;
 };
+
+}
 
 #endif // _IINTERVALFACTORY_HPP

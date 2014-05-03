@@ -22,6 +22,11 @@
 
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+namespace ex
+{
+
 class InvalidIntervalArguments :
     public std::invalid_argument
 {
@@ -47,5 +52,8 @@ private:
     timestamp_t _begin;
     timestamp_t _end;
 };
+
+}
+}
 
 #endif // _INVALIDINTERVALARGUMENTS_HPP

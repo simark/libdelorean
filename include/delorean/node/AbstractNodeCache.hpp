@@ -23,6 +23,9 @@
 #include <delorean/node/Node.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Abstract node cache. Any node cache must inherit this.
  *
@@ -124,5 +127,7 @@ private:
     // callback to get a node from the cache owner
     GetNodeFromOwnerCb _getNodeFromOwnerCb;
 };
+
+}
 
 #endif // _ABSTRACTNODECACHE_HPP

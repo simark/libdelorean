@@ -24,6 +24,9 @@
 #include <delorean/node/Node.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Direct mapped node cache. This node cache implementation maps each
  * sequence number to one specific entry (many to one) in the cache. The
@@ -56,5 +59,7 @@ private:
     // cache
     std::vector<Node::SP> _cache;
 };
+
+}
 
 #endif // _DIRECTMAPPEDNODECACHE_HPP

@@ -25,6 +25,9 @@
 #include <delorean/interval/StandardIntervalType.hpp>
 #include <delorean/BasicTypes.hpp>
 
+namespace delo
+{
+
 /**
  * Interval containing a single 32-bit signed integer value.
  *
@@ -40,5 +43,7 @@ public:
 public:
     using Simple32BitValueInterval::Simple32BitValueInterval;
 };
+
+}
 
 #endif // _INT32INTERVAL_HPP
