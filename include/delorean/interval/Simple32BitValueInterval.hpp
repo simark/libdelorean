@@ -42,7 +42,7 @@ class Simple32BitValueInterval :
 {
 public:
     Simple32BitValueInterval(timestamp_t begin, timestamp_t end,
-                        interval_key_t key);
+                            interval_key_t key);
 
     virtual ~Simple32BitValueInterval()
     {
