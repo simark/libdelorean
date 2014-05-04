@@ -26,6 +26,7 @@ node_sources = [
     'AlignedNodeSerDes.cpp',
     'AbstractNodeCache.cpp',
     'DirectMappedNodeCache.cpp',
+    'LRUNodeCache.cpp',
     'Node.cpp',
 ]
 
