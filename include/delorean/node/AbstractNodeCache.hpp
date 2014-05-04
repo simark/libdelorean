@@ -71,6 +71,7 @@ public:
      */
     Node::SP getNode(node_seq_t seqNumber)
     {
+        _accesses++;
         return this->getNodeImpl(seqNumber);
     }
 
@@ -103,6 +104,45 @@ public:
         return _size;
     }
 
+    /**
+     * Returns the number of caches misses.
+     *
+     * A cache miss is counted every time the cache needs to obtain a
+     * node from the underlying model.
+     *
+     * @returns Number of cache misses
+     */
+    uint64_t getMisses() const
+    {
+        return _misses;
+    }
+
+    /**
+     * Returns the number of cache hits.
+     *
+     * A cache hit is counted every time a cache access is done and we
+     * can process it without going to the underlying model.
+     *
+     * @returns Number of cache hits
+     */
+    uint64_t getHits() const
+    {
+        return _accesses - _misses;
+    }
+
+    /**
+     * Returns the number of cache accesses.
+     *
+     * A cache access is counted every time getNode(node_seq_t) is called. A
+     * cache access can result in either a cache hit or a cache miss.
+     *
+     * @returns Number of cache accesses
+     */
+    uint64_t getAccesses() const
+    {
+        return _accesses;
+    }
+
 protected:
     /**
      * A concrete node cache may call this to get a node with sequence
@@ -126,6 +166,10 @@ private:
 
     // callback to get a node from the cache owner
     GetNodeFromOwnerCb _getNodeFromOwnerCb;
+
+    // statistics
+    uint64_t _accesses;
+    uint64_t _misses;
 };
 
 }

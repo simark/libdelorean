@@ -125,4 +125,11 @@ void LruNodeCacheTest::testGetNode()
     checkCached(cache, {false, false, false, false, true, true, false, false, true, true});
     getAndCheckNode(cache, 1, nodes);
     checkCached(cache, {false, true, false, false, true, false, false, false, true, true});
+
+    CPPUNIT_ASSERT_EQUAL(static_cast<uint64_t>(15), cache.getAccesses());
+    CPPUNIT_ASSERT_EQUAL(static_cast<uint64_t>(4), cache.getHits());
+    CPPUNIT_ASSERT_EQUAL(static_cast<uint64_t>(11), cache.getMisses());
+
+    cache.invalidate();
+    checkCached(cache, {false, false, false, false, false, false, false, false, false, false});
 }

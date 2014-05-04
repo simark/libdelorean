@@ -25,7 +25,9 @@ namespace delo
 {
 
 AbstractNodeCache::AbstractNodeCache(std::size_t size) :
-    _size {size}
+    _size {size},
+    _accesses {0},
+    _misses {0}
 {
 }
 
@@ -38,6 +40,8 @@ Node::SP AbstractNodeCache::getNodeFromOwner(node_seq_t seqNumber)
     if (!_getNodeFromOwnerCb) {
         return nullptr;
     }
+
+    _misses++;
 
     return _getNodeFromOwnerCb(seqNumber);
 }
