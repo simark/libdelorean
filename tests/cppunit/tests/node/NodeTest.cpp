@@ -225,7 +225,7 @@ void NodeTest::testFindOne()
     CPPUNIT_ASSERT(result == interval1);
 
     result = node->findOne(1534, 2);
-    CPPUNIT_ASSERT(result == nullptr);
+    CPPUNIT_ASSERT(!result);
 
     result = node->findOne(1605, 1);
     CPPUNIT_ASSERT(result == interval1);
@@ -234,16 +234,16 @@ void NodeTest::testFindOne()
     CPPUNIT_ASSERT(result == interval2);
 
     result = node->findOne(1605, 5);
-    CPPUNIT_ASSERT(result == nullptr);
+    CPPUNIT_ASSERT(!result);
 
     result = node->findOne(1915, 4);
-    CPPUNIT_ASSERT(result == nullptr);
+    CPPUNIT_ASSERT(!result);
 
     result = node->findOne(1915, 5);
-    CPPUNIT_ASSERT(result == nullptr);
+    CPPUNIT_ASSERT(!result);
 
     result = node->findOne(1939, 5);
-    CPPUNIT_ASSERT(result == nullptr);
+    CPPUNIT_ASSERT(!result);
 
     result = node->findOne(1939, 6);
     CPPUNIT_ASSERT(result == interval6);

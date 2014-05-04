@@ -102,6 +102,6 @@ void DirectMappedNodeCacheTest::testGetNode()
 
     // get a non existing node
     node = cache->getNode(4);
-    CPPUNIT_ASSERT(node == nullptr);
+    CPPUNIT_ASSERT(!node);
     CPPUNIT_ASSERT(!cache->nodeIsCached(4));
 }

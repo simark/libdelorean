@@ -49,7 +49,7 @@ Node::SP DirectMappedNodeCache::getNodeImpl(node_seq_t seqNumber)
     Node::SP node;
     if (!this->nodeIsCached(seqNumber)) {
         node = this->getNodeFromOwner(seqNumber);
-        if (node != nullptr) {
+        if (node) {
             /* Do not overwrite something else in cache if the node
              * doesn't even exist.
              */
@@ -66,7 +66,7 @@ bool DirectMappedNodeCache::nodeIsCachedImpl(node_seq_t seqNumber) const
 {
     const auto& node = _cache[this->cachePosForSeqNumber(seqNumber)];
 
-    if (node == nullptr) {
+    if (!node) {
         return false;
     }
 

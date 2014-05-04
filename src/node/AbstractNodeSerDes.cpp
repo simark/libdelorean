@@ -81,7 +81,7 @@ void AbstractNodeSerDes::unregisterIntervalFactory(interval_type_t type)
 void AbstractNodeSerDes::registerIntervalFactory(interval_type_t type,
                                                  IIntervalFactory::UP factory)
 {
-    if (_intervalFactories[type] != nullptr) {
+    if (_intervalFactories[type]) {
         std::ostringstream oss;
         oss << "interval type " << type << " is already registered";
         throw ex::ExistingIntervalType(oss.str());
@@ -117,7 +117,7 @@ AbstractInterval::UP AbstractNodeSerDes::createInterval(timestamp_t begin,
 {
     // make sure interval factory exists for this type
     const auto& factory = _intervalFactories[type];
-    if (factory == nullptr) {
+    if (!factory) {
         throw ex::UnknownIntervalType {type};
     }
 

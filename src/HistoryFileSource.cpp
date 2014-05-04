@@ -69,7 +69,7 @@ void HistoryFileSource::open(const boost::filesystem::path& path,
     _nodeBuf = std::move(newBuf);
 
     // set cache
-    if (nodeCache == nullptr) {
+    if (!nodeCache) {
         nodeCache = std::shared_ptr<AbstractNodeCache> {
             new PassThroughNodeCache
         };
@@ -185,7 +185,7 @@ bool HistoryFileSource::findAll(timestamp_t ts, IntervalJar& intervals)
             break;
         }
         currentNode = this->getNodeFromCache(nextNodeSeqNumber);
-        if (currentNode == nullptr) {
+        if (!currentNode) {
             // weird, but possible
             break;
         }
@@ -215,14 +215,14 @@ AbstractInterval::SP HistoryFileSource::findOne(timestamp_t ts,
 
     // climb tree
     auto interval = currentNode->findOne(ts, key);
-    while (currentNode->getChildrenCount() > 0 && interval == nullptr) {
+    while (currentNode->getChildrenCount() > 0 && !interval) {
         // select next current node, a child of the current node
         auto nextNodeSeqNumber = currentNode->getChildSeqAtTs(ts);
         if (nextNodeSeqNumber == currentNode->getSeqNumber()) {
             break;
         }
         currentNode = this->getNodeFromCache(nextNodeSeqNumber);
-        if (currentNode == nullptr) {
+        if (!currentNode) {
             // weird, but possible
             break;
         }
