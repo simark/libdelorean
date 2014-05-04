@@ -112,7 +112,7 @@ public:
      *
      * @returns Number of cache misses
      */
-    uint64_t getMisses() const
+    std::size_t getMisses() const
     {
         return _misses;
     }
@@ -125,7 +125,7 @@ public:
      *
      * @returns Number of cache hits
      */
-    uint64_t getHits() const
+    std::size_t getHits() const
     {
         return _accesses - _misses;
     }
@@ -138,7 +138,7 @@ public:
      *
      * @returns Number of cache accesses
      */
-    uint64_t getAccesses() const
+    std::size_t getAccesses() const
     {
         return _accesses;
     }
@@ -168,8 +168,8 @@ private:
     GetNodeFromOwnerCb _getNodeFromOwnerCb;
 
     // statistics
-    uint64_t _accesses;
-    uint64_t _misses;
+    std::size_t _accesses;
+    std::size_t _misses;
 };
 
 }
