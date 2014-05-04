@@ -90,7 +90,7 @@ public:
      */
     void invalidate()
     {
-        this->invalidate();
+        this->invalidateImpl();
     }
 
     /**
