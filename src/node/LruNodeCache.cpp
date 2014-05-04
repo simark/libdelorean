@@ -30,36 +30,35 @@ namespace delo {
 LruNodeCache::LruNodeCache(std::size_t size) :
     AbstractNodeCache {size}
 {
-
 }
 
 Node::SP LruNodeCache::getNodeImpl(node_seq_t seqNumber)
 {
-    nodes_map_t::iterator it;
     Node::SP node;
 
-    it = nm.find(seqNumber);
+    // try finding the requested node in our map
+    auto it = _map.find(seqNumber);
 
-    if (it != nm.end()) {
-        /* Item is present in cache, put it back in front */
-        lru_list_t::iterator list_it = it->second;
-        node = *list_it;
-        lru.erase(list_it);
-        lru.push_front(node);
+    if (it != _map.end()) {
+        // hit: put it back in front
+        auto listIt = it->second;
+        node = *listIt;
+        _list.erase(listIt);
+        _list.push_front(node);
     } else {
-        /* Item is not in cache */
+        // miss
         node = this->getNodeFromOwner(seqNumber);
-        if (node != nullptr) {
-            lru.push_front(node);
-            lru_list_t::iterator newNodeIt = lru.begin();
-            nm[seqNumber] = newNodeIt;
+        if (node) {
+            _list.push_front(node);
+            auto newNodeIt = _list.begin();
+            _map[seqNumber] = newNodeIt;
 
-            if (lru.size() > getSize()) {
-                Node::SP droppedNode = lru.back();
-                lru.pop_back();
+            if (_list.size() > this->getSize()) {
+                auto droppedNode = _list.back();
+                _list.pop_back();
 
-                node_seq_t droppedSeqNumber = droppedNode->getSeqNumber();
-                nm.erase(droppedSeqNumber);
+                auto droppedSeqNumber = droppedNode->getSeqNumber();
+                _map.erase(droppedSeqNumber);
             }
         }
     }
@@ -69,17 +68,15 @@ Node::SP LruNodeCache::getNodeImpl(node_seq_t seqNumber)
 
 bool LruNodeCache::nodeIsCachedImpl(node_seq_t seqNumber) const
 {
-    nodes_map_t::const_iterator it;
+    auto it = _map.find(seqNumber);
 
-    it = nm.find(seqNumber);
-
-    return it != nm.end();
+    return it != _map.end();
 }
 
 void LruNodeCache::invalidateImpl()
 {
-    lru.clear();
-    nm.clear();
+    _list.clear();
+    _map.clear();
 }
 
-} // namespace delo
+}

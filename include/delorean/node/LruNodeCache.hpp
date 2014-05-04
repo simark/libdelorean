@@ -30,22 +30,23 @@
 namespace delo {
 
 /**
- * Some description.
+ * Least recently used node cache. The cache always replaces the least
+ * recently used node on a cache miss.
  *
  * @author Simon Marchi
  */
 class LruNodeCache :
     public AbstractNodeCache
 {
-
-    typedef std::list<Node::SP> lru_list_t;
-    typedef std::map<node_seq_t, lru_list_t::iterator> nodes_map_t;
+private:
+    typedef std::list<Node::SP> NodeList;
+    typedef std::map<node_seq_t, NodeList::iterator> NodeMap;
 
 public:
     /**
      * Builds an LRU node cache.
      *
-     * @param size      Size of cache (node count)
+     * @param size Size of cache (node count)
      */
     LruNodeCache(std::size_t size);
 
@@ -55,11 +56,10 @@ protected:
     void invalidateImpl();
 
 private:
-    lru_list_t lru;
-    nodes_map_t nm;
-
+    NodeList _list;
+    NodeMap _map;
 };
 
-} // namespace delo
+}
 
 #endif // _LRUNODECACHE_HPP
