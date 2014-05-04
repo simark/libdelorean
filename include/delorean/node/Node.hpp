@@ -60,6 +60,7 @@ public:
      *
      * @param size            Node total size
      * @param maxChildren     Maximum number of children to allow
+     * @param seqNumber       Sequence number of node
      * @param parentSeqNumber Sequence number of parent
      * @param begin           Begin timestamp
      * @param serdes          Node ser/des pointer
