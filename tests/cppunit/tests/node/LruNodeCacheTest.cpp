@@ -30,34 +30,41 @@ using namespace delo;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(LruNodeCacheTest);
 
-void LruNodeCacheTest::testConstructorAndAttributes()
+namespace
 {
-    // Test creation
-    LruNodeCache cache{10};
 
-    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(10), cache.getSize());
-}
-
-void checkCached(LruNodeCache &cache, std::vector<bool> expectedCached)
+void checkCached(LruNodeCache& cache, std::vector<bool> expectedCached)
 {
     for (auto i = 0U; i < expectedCached.size(); i++) {
-        bool isCached = cache.nodeIsCached(i);
+        auto isCached = cache.nodeIsCached(i);
         bool expectedIsCached = expectedCached[i];
+
         CPPUNIT_ASSERT_EQUAL(expectedIsCached, isCached);
     }
 }
 
-void getAndCheckNode(LruNodeCache &cache, node_seq_t num, std::map<node_seq_t, Node::SP> &nodes)
+void getAndCheckNode(LruNodeCache& cache, node_seq_t seqNumber,
+                     std::map<node_seq_t, Node::SP>& nodes)
 {
-    Node::SP gotNode = cache.getNode(num);
+    auto receivedNode = cache.getNode(seqNumber);
     Node::SP expectedNode = nullptr;
-    auto it = nodes.find(num);
+    auto it = nodes.find(seqNumber);
 
     if (it != nodes.end()) {
-        expectedNode = (*it).second;
+        expectedNode = it->second;
     }
 
-    CPPUNIT_ASSERT_EQUAL(expectedNode, gotNode);
+    CPPUNIT_ASSERT_EQUAL(expectedNode, receivedNode);
+}
+
+}
+
+void LruNodeCacheTest::testConstructorAndAttributes()
+{
+    // test creation
+    LruNodeCache cache {10};
+
+    CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(10), cache.getSize());
 }
 
 void LruNodeCacheTest::testGetNode()
@@ -84,7 +91,7 @@ void LruNodeCacheTest::testGetNode()
             return nullptr;
         }
 
-        return (*it).second;
+        return it->second;
     });
 
     checkCached(cache, {false, false, false, false, false, false, false, false, false, false});
