@@ -22,23 +22,23 @@
 
 #include <delorean/node/Node.hpp>
 #include <delorean/node/AlignedNodeSerDes.hpp>
-#include <delorean/node/LRUNodeCache.hpp>
+#include <delorean/node/LruNodeCache.hpp>
 #include <delorean/BasicTypes.hpp>
-#include "LRUNodeCacheTest.hpp"
+#include "LruNodeCacheTest.hpp"
 
 using namespace delo;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(LRUNodeCacheTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(LruNodeCacheTest);
 
-void LRUNodeCacheTest::testConstructorAndAttributes()
+void LruNodeCacheTest::testConstructorAndAttributes()
 {
     // Test creation
-    LRUNodeCache cache{10};
+    LruNodeCache cache{10};
 
     CPPUNIT_ASSERT_EQUAL(static_cast<std::size_t>(10), cache.getSize());
 }
 
-void checkCached(LRUNodeCache &cache, std::vector<bool> expectedCached)
+void checkCached(LruNodeCache &cache, std::vector<bool> expectedCached)
 {
     for (auto i = 0U; i < expectedCached.size(); i++) {
         bool isCached = cache.nodeIsCached(i);
@@ -47,7 +47,7 @@ void checkCached(LRUNodeCache &cache, std::vector<bool> expectedCached)
     }
 }
 
-void getAndCheckNode(LRUNodeCache &cache, node_seq_t num, std::map<node_seq_t, Node::SP> &nodes)
+void getAndCheckNode(LruNodeCache &cache, node_seq_t num, std::map<node_seq_t, Node::SP> &nodes)
 {
     Node::SP gotNode = cache.getNode(num);
     Node::SP expectedNode = nullptr;
@@ -60,7 +60,7 @@ void getAndCheckNode(LRUNodeCache &cache, node_seq_t num, std::map<node_seq_t, N
     CPPUNIT_ASSERT_EQUAL(expectedNode, gotNode);
 }
 
-void LRUNodeCacheTest::testGetNode()
+void LruNodeCacheTest::testGetNode()
 {
     AlignedNodeSerDes serdes;
     Node::SP node;
@@ -76,7 +76,7 @@ void LRUNodeCacheTest::testGetNode()
     };
 
     // build cache
-    LRUNodeCache cache {4};
+    LruNodeCache cache {4};
     cache.setGetNodeFromOwnerCb([&] (node_seq_t seqNumber) -> Node::SP {
         auto it = nodes.find(seqNumber);
 

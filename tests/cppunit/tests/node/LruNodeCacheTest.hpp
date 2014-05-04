@@ -21,10 +21,10 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-class LRUNodeCacheTest :
+class LruNodeCacheTest :
     public CppUnit::TestFixture
 {
-    CPPUNIT_TEST_SUITE(LRUNodeCacheTest);
+    CPPUNIT_TEST_SUITE(LruNodeCacheTest);
         CPPUNIT_TEST(testConstructorAndAttributes);
         CPPUNIT_TEST(testGetNode);
     CPPUNIT_TEST_SUITE_END();

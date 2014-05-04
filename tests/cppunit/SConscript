@@ -23,7 +23,7 @@ node_tests = [
     'NodeTest.cpp',
     'AlignedNodeSerDesTest.cpp',
     'DirectMappedNodeCacheTest.cpp',
-    'LRUNodeCacheTest.cpp',
+    'LruNodeCacheTest.cpp',
 ]
 history_tests = [
     'HistoryFileTest.cpp',

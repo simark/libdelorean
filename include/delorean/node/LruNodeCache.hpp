@@ -20,7 +20,6 @@
 #define _LRUNODECACHE_HPP
 
 #include <cstddef>
-
 #include <list>
 #include <map>
 
@@ -35,7 +34,7 @@ namespace delo {
  *
  * @author Simon Marchi
  */
-class LRUNodeCache :
+class LruNodeCache :
     public AbstractNodeCache
 {
 
@@ -48,7 +47,7 @@ public:
      *
      * @param size      Size of cache (node count)
      */
-    LRUNodeCache(std::size_t size);
+    LruNodeCache(std::size_t size);
 
 protected:
     Node::SP getNodeImpl(node_seq_t seqNumber);

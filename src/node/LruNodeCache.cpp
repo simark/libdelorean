@@ -21,19 +21,19 @@
 #include <iostream>
 
 #include <delorean/node/AbstractNodeCache.hpp>
-#include <delorean/node/LRUNodeCache.hpp>
+#include <delorean/node/LruNodeCache.hpp>
 #include <delorean/node/Node.hpp>
 #include <delorean/BasicTypes.hpp>
 
 namespace delo {
 
-LRUNodeCache::LRUNodeCache(std::size_t size) :
+LruNodeCache::LruNodeCache(std::size_t size) :
     AbstractNodeCache {size}
 {
 
 }
 
-Node::SP LRUNodeCache::getNodeImpl(node_seq_t seqNumber)
+Node::SP LruNodeCache::getNodeImpl(node_seq_t seqNumber)
 {
     nodes_map_t::iterator it;
     Node::SP node;
@@ -67,7 +67,7 @@ Node::SP LRUNodeCache::getNodeImpl(node_seq_t seqNumber)
     return node;
 }
 
-bool LRUNodeCache::nodeIsCachedImpl(node_seq_t seqNumber) const
+bool LruNodeCache::nodeIsCachedImpl(node_seq_t seqNumber) const
 {
     nodes_map_t::const_iterator it;
 
@@ -76,7 +76,7 @@ bool LRUNodeCache::nodeIsCachedImpl(node_seq_t seqNumber) const
     return it != nm.end();
 }
 
-void LRUNodeCache::invalidateImpl()
+void LruNodeCache::invalidateImpl()
 {
     lru.clear();
     nm.clear();
