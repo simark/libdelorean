@@ -1,0 +1,14 @@
+# author: Simon Marchi <legrandantonio@yahoo.fr>
+
+import os.path
+
+Import('root_env')
+
+history_builder_target = 'build-history'
+history_builder_sources = [
+    'HistoryFileBuildTool.cpp',
+]
+
+history_builder = root_env.Program(target=history_builder_target,
+                                   source=history_builder_sources,
+                                   LIBS='boost_program_options')

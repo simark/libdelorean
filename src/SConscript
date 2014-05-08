@@ -43,4 +43,5 @@ for base, files in subs:
 
 lib = root_env.SharedLibrary(target=target, source=sources,
                              LIBS='boost_system')
-Return('lib')
+
+SConscript('tools/SConscript')
