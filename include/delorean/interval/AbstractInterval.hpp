@@ -179,6 +179,8 @@ public:
         return _end < interval._end;
     }
 
+    friend std::ostream& operator<<(std::ostream& out, const AbstractInterval& interval);
+
 protected:
     /**
      * Virtual implementation of getVariableDataSize(); must be implemented by
@@ -212,6 +214,8 @@ private:
     // 32-bit value
     interval_value_t _fixedValue;
 };
+
+std::ostream& operator<<(std::ostream& out, const AbstractInterval& interval);
 
 }
 

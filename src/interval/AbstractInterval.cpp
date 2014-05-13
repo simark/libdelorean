@@ -83,4 +83,10 @@ interval_value_t AbstractInterval::getFixedValue() const
     return _fixedValue;
 }
 
+std::ostream& operator<<(std::ostream& out, const AbstractInterval& interval)
+{
+    out << "Interval [" << interval.getBegin() << ", " << interval.getEnd() << "[";
+    return out;
+}
+
 }
