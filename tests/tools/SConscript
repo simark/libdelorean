@@ -7,6 +7,7 @@ Import('root_env')
 history_builder_target = 'build-history'
 history_builder_sources = [
     'HistoryFileBuildTool.cpp',
+    os.path.join('..', 'utils.cpp'),
 ]
 
 history_builder = root_env.Program(target=history_builder_target,

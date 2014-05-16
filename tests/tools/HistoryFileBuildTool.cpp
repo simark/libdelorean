@@ -55,80 +55,7 @@ static int parse_options(int argc, char* argv[], struct config& cfg)
     return 0;
 }
 
-/**
- * Creates an interval from a read line.
- *
- * @param line Line from the interval text file.
- *
- * @return Created interval.
- */
-static AbstractInterval::SP intervalFromLine(const std::string& line)
-{
-    std::vector<std::string> fields;
-    boost::split(fields, line, boost::is_any_of(" "));
-    timestamp_t begin, end;
-    std::string val;
-    interval_key_t key;
 
-    begin = std::stoll(fields[0]);
-    end = std::stoll(fields[1]);
-    key = std::stoi(fields[2]);
-    val = fields[3];
-
-    StringInterval::SP interval {new StringInterval(begin, end, key)};
-    interval->setValue(val);
-
-    std::cout << "Creating interval with value " << val << std::endl;
-
-    return interval;
-}
-
-/**
- * Gets the next line of the file that is not empty or that is not a
- * comment (begins with '#').
- *
- * @param inputFile Input file stream
- *
- * @return The next line, or an empty string is there is nothing left
- *         to read.
- */
-std::string getNextLine(std::ifstream& inputFile)
-{
-    std::string str;
-    bool done = false;
-
-    while (!done) {
-        getline(inputFile, str);
-
-        if (inputFile.eof()) {
-            str = std::string();
-            done = true;
-        }
-
-        if (str.length() > 0 && str[0] != '#') {
-            done = true;
-        }
-    }
-
-    return str;
-}
-
-/**
- * Reads the next interval from the input file.
- *
- * @param inputFile Input file stream.
- *
- * @return Built interval, or NULL if there is no more intervals to read.
- */
-AbstractInterval::SP getNextInterval(std::ifstream& inputFile)
-{
-    std::string line = getNextLine(inputFile);
-    if (line.length() == 0) {
-        return AbstractInterval::SP();
-    }
-
-    return intervalFromLine(line);
-}
 
 int main(int argc, char* argv[])
 {
@@ -136,6 +63,7 @@ int main(int argc, char* argv[])
     int ret;
     HistoryFileSink hfSink;
     std::string line;
+    std::vector<AbstractInterval::UP> intervals;
 
     ret = parse_options(argc, argv, ctx.cfg);
 
@@ -153,23 +81,15 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    ctx.inputFile.open(ctx.cfg.inputFilename);
-    if (!ctx.inputFile.good())
-    {
-        std::cerr << "Error: could not open input file." << std::endl;
-        return 1;
-    }
+
 
     try {
+        getIntervalsFromTextFile(ctx.cfg.inputFilename, intervals);
+
         hfSink.open(ctx.cfg.outputFilename);
 
-        while (true) {
-            AbstractInterval::SP interval = getNextInterval(ctx.inputFile);
-            if (interval == NULL) {
-                break;
-            }
-
-            hfSink.addInterval(interval);
+        for (auto& interval : intervals) {
+            hfSink.addInterval(std::move(interval));
 
             if (ctx.cfg.verbose) {
                 std::cout << *interval << std::endl;
