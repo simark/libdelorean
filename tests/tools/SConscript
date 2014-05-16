@@ -12,4 +12,5 @@ history_builder_sources = [
 history_builder = root_env.Program(target=history_builder_target,
                                    source=history_builder_sources,
                                    LIBS=['boost_program_options', 'boost_system', 'delorean'],
-                                   LIBPATH=['..'])
+                                   LIBPATH=['#/src'],
+                                   CPPPATH=['#/tests', '#/include'])

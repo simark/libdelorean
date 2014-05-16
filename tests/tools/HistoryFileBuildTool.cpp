@@ -9,6 +9,7 @@
 #include <delorean/HistoryFileSink.hpp>
 #include <delorean/ex/InvalidIntervalArguments.hpp>
 #include <delorean/ex/IO.hpp>
+#include <utils.hpp>
 
 using namespace delo;
 
@@ -91,7 +92,7 @@ static AbstractInterval::SP intervalFromLine(const std::string& line)
  * @return The next line, or an empty string is there is nothing left
  *         to read.
  */
-static std::string getNextLine(std::ifstream& inputFile)
+std::string getNextLine(std::ifstream& inputFile)
 {
     std::string str;
     bool done = false;
@@ -119,7 +120,7 @@ static std::string getNextLine(std::ifstream& inputFile)
  *
  * @return Built interval, or NULL if there is no more intervals to read.
  */
-static AbstractInterval::SP getNextInterval(std::ifstream& inputFile)
+AbstractInterval::SP getNextInterval(std::ifstream& inputFile)
 {
     std::string line = getNextLine(inputFile);
     if (line.length() == 0) {

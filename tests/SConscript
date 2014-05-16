@@ -8,4 +8,5 @@ Import('root_env')
 
 cppunit = SConscript(os.path.join('cppunit', 'SConscript'),
                      exports=['root_env'])
+SConscript(os.path.join('tools', 'SConscript'), exports=['root_env'])
 Return('cppunit')
